@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9C852FB1-3261-4AD6-8ACD-C97B1AAEBA29}</ProjectGuid>
+    <RootNamespace>libawd</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">build\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">build\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">build\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">build\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "{rev}"</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PreBuildEvent>
+      <Command>hg tip --template "{rev}"</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\geomutil.h" />
+    <ClInclude Include="lib\lzma\Alloc.h" />
+    <ClInclude Include="include\attr.h" />
+    <ClInclude Include="include\awd.h" />
+    <ClInclude Include="include\awd_types.h" />
+    <ClInclude Include="include\awdlzma.h" />
+    <ClInclude Include="include\awdzlib.h" />
+    <ClInclude Include="include\block.h" />
+    <ClInclude Include="lib\lzma\Bra.h" />
+    <ClInclude Include="include\camera.h" />
+    <ClInclude Include="lib\zlib\crc32.h" />
+    <ClInclude Include="lib\zlib\deflate.h" />
+    <ClInclude Include="lib\zlib\inffast.h" />
+    <ClInclude Include="lib\zlib\inffixed.h" />
+    <ClInclude Include="lib\zlib\inflate.h" />
+    <ClInclude Include="lib\zlib\inftrees.h" />
+    <ClInclude Include="include\libawd.h" />
+    <ClInclude Include="lib\lzma\LzFind.h" />
+    <ClInclude Include="lib\lzma\LzFindMt.h" />
+    <ClInclude Include="lib\lzma\LzHash.h" />
+    <ClInclude Include="lib\lzma\LzmaDec.h" />
+    <ClInclude Include="lib\lzma\LzmaEnc.h" />
+    <ClInclude Include="lib\lzma\LzmaLib.h" />
+    <ClInclude Include="include\material.h" />
+    <ClInclude Include="include\mesh.h" />
+    <ClInclude Include="include\meta.h" />
+    <ClInclude Include="include\name.h" />
+    <ClInclude Include="include\ns.h" />
+    <ClInclude Include="include\platform.h" />
+    <ClInclude Include="include\scene.h" />
+    <ClInclude Include="include\shading.h" />
+    <ClInclude Include="include\skelanim.h" />
+    <ClInclude Include="include\skeleton.h" />
+    <ClInclude Include="include\stream.h" />
+    <ClInclude Include="include\texture.h" />
+    <ClInclude Include="lib\zlib\trees.h" />
+    <ClInclude Include="lib\lzma\Types.h" />
+    <ClInclude Include="include\util.h" />
+    <ClInclude Include="include\uvanim.h" />
+    <ClInclude Include="lib\zlib\zconf.h" />
+    <ClInclude Include="lib\zlib\zlib.h" />
+    <ClInclude Include="lib\zlib\zutil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="lib\zlib\adler32.c" />
+    <ClCompile Include="lib\lzma\Alloc.c" />
+    <ClCompile Include="src\attr.cc" />
+    <ClCompile Include="src\awd.cc" />
+    <ClCompile Include="src\awdlzma.cc" />
+    <ClCompile Include="src\awdzlib.cc" />
+    <ClCompile Include="src\block.cc" />
+    <ClCompile Include="lib\lzma\Bra.c" />
+    <ClCompile Include="src\camera.cc" />
+    <ClCompile Include="lib\zlib\crc32.c" />
+    <ClCompile Include="lib\zlib\deflate.c" />
+    <ClCompile Include="src\geomutil.cc" />
+    <ClCompile Include="lib\zlib\inffast.c" />
+    <ClCompile Include="lib\zlib\inflate.c" />
+    <ClCompile Include="src\light.cc" />
+    <ClCompile Include="lib\lzma\LzFind.c" />
+    <ClCompile Include="lib\lzma\LzmaDec.c" />
+    <ClCompile Include="lib\lzma\LzmaEnc.c" />
+    <ClCompile Include="lib\lzma\LzmaLib.c" />
+    <ClCompile Include="src\material.cc" />
+    <ClCompile Include="src\mesh.cc" />
+    <ClCompile Include="src\meta.cc" />
+    <ClCompile Include="src\name.cc" />
+    <ClCompile Include="src\ns.cc" />
+    <ClCompile Include="src\primitive.cc" />
+    <ClCompile Include="src\scene.cc" />
+    <ClCompile Include="src\shading.cc" />
+    <ClCompile Include="src\skelanim.cc" />
+    <ClCompile Include="src\skeleton.cc" />
+    <ClCompile Include="src\stream.cc" />
+    <ClCompile Include="src\texture.cc" />
+    <ClCompile Include="lib\zlib\trees.c" />
+    <ClCompile Include="src\util.cc" />
+    <ClCompile Include="src\uvanim.cc" />
+    <ClCompile Include="lib\zlib\zutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib\lzma\README" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

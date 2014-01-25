@@ -136,7 +136,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <PreBuildEvent>
-      <Command>hg tip --template "{rev}"</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>

@@ -15,7 +15,7 @@
 
 
 const int AWD::VERSION_MAJOR = 2;
-const int AWD::VERSION_MINOR = 0;
+const int AWD::VERSION_MINOR = 1;
 const int AWD::VERSION_BUILD = 0;
 const char AWD::VERSION_RELEASE = 'a';
 

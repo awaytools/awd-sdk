@@ -26,7 +26,7 @@ AWDMetaData::override_encoder_metadata(char *name, char *version)
 }
 
 void
-AWDMetaData::prepare_and_add_dependencies()
+AWDMetaData::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
     AWD_field_ptr val;
 

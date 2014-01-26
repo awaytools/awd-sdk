@@ -45,7 +45,7 @@ AWDEnvMapAmbientMethod::AWDEnvMapAmbientMethod()
 }
 
 void
-AWDEnvMapAmbientMethod::prepare_write()
+AWDEnvMapAmbientMethod::prepare_and_add_dependencies()
 {
     __set_tex_prop(properties, PROP_SHAD_ENVMAP_CUBETEX, this->cube_texture);
 }
@@ -60,7 +60,7 @@ AWDColorMatrixMethod::AWDColorMatrixMethod()
 }
 
 void
-AWDColorMatrixMethod::prepare_write()
+AWDColorMatrixMethod::prepare_and_add_dependencies()
 {
     if (this->mtx != NULL) {
         AWD_field_ptr val;
@@ -83,7 +83,7 @@ AWDColorTransformMethod::AWDColorTransformMethod()
 }
 
 void
-AWDColorTransformMethod::prepare_write()
+AWDColorTransformMethod::prepare_and_add_dependencies()
 {
     if (this->alpha_multiplier != 1.0) {
         AWD_field_ptr val;
@@ -132,7 +132,7 @@ AWDEnvMapMethod::AWDEnvMapMethod()
 }
 
 void
-AWDEnvMapMethod::prepare_write()
+AWDEnvMapMethod::prepare_and_add_dependencies()
 {
     if (this->alpha != 1.0) {
         AWD_field_ptr val;

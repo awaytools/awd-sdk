@@ -26,7 +26,7 @@ AWDMetaData::override_encoder_metadata(char *name, char *version)
 }
 
 void
-AWDMetaData::prepare_write()
+AWDMetaData::prepare_and_add_dependencies()
 {
     AWD_field_ptr val;
 
@@ -35,6 +35,14 @@ AWDMetaData::prepare_write()
     
     val.str = this->encoder_version;
     this->properties->set(PROP_META_ENCODER_VER, val, strlen(this->encoder_version), AWD_FIELD_STRING);
+	if (this->generator_name){
+		val.str = this->generator_name;
+		this->properties->set(PROP_META_GENERATOR_NAME, val, strlen(this->generator_name), AWD_FIELD_STRING);
+	}
+	if (this->generator_version){
+		val.str = this->generator_version;
+		this->properties->set(PROP_META_GENERATOR_VER, val, strlen(this->generator_version), AWD_FIELD_STRING);
+	}
 }
 
 

@@ -31,7 +31,7 @@ class AWDPrimitive :
         AWD_primitive_type type;
 
     protected:
-        void prepare_write();
+        void prepare_and_add_dependencies();
         awd_uint32 calc_body_length(bool);
         void write_body(int, bool);
 

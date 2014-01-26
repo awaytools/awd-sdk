@@ -95,9 +95,8 @@ AWDMaterial::calc_body_length(bool wide_mtx)
     return len;
 }
 
-
 void
-AWDMaterial::prepare_write()
+AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
     if (this->type == AWD_MATTYPE_COLOR) {
         if (this->color > 0) {
@@ -109,12 +108,13 @@ AWDMaterial::prepare_write()
     }
     else {
         if (this->texture) {
+			this->texture->prepare_and_add_with_dependencies(export_list);			
             AWD_field_ptr tex_val;
             tex_val.addr = (awd_baddr *)malloc(sizeof(awd_baddr));
             *tex_val.addr = this->texture->get_addr();
             this->properties->set(PROP_MAT_TEXTURE, tex_val, sizeof(awd_baddr), AWD_FIELD_BADDR);
         }
-
+		
         if (this->repeat) {
             AWD_field_ptr rep_val;
             rep_val.b = (awd_bool *)malloc(sizeof(awd_bool));
@@ -137,7 +137,6 @@ AWDMaterial::prepare_write()
         }
     }
 }
-
 
 void
 AWDMaterial::write_body(int fd, bool wide_mtx)

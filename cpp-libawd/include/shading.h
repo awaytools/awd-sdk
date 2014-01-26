@@ -54,7 +54,7 @@ class AWDShadingMethod :
 {
     protected:
         AWD_shade_type type;
-        virtual void prepare_write()=0;
+        virtual void prepare_and_add_dependencies()=0;
 
     public:
         awd_uint32 calc_method_length(bool);
@@ -66,7 +66,7 @@ class AWDEnvMapAmbientMethod :
     public AWDShadingMethod
 {
     protected:
-        void prepare_write();
+        void prepare_and_add_dependencies();
 
     public:
         AWDEnvMapAmbientMethod();
@@ -80,7 +80,7 @@ class AWDColorMatrixMethod :
     public AWDShadingMethod
 {
     protected:
-        void prepare_write();
+        void prepare_and_add_dependencies();
 
     public:
         AWDColorMatrixMethod();
@@ -93,7 +93,7 @@ class AWDColorTransformMethod :
     public AWDShadingMethod
 {
     protected:
-        void prepare_write();
+        void prepare_and_add_dependencies();
 
     public:
         AWDColorTransformMethod();
@@ -110,7 +110,7 @@ class AWDEnvMapMethod :
     public AWDShadingMethod
 {
     protected:
-        void prepare_write();
+        void prepare_and_add_dependencies();
 
     public:
         AWDEnvMapMethod();

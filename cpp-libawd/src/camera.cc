@@ -30,7 +30,7 @@ AWDCamera::set_lens_fov(awd_float64 fov)
 
 
 void
-AWDCamera::prepare_write()
+AWDCamera::prepare_and_add_dependencies()
 {
     AWD_field_ptr fov_val;
 

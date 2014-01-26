@@ -26,7 +26,7 @@ class AWDBitmapTexture :
     
     protected:
         awd_uint32 calc_body_length(bool);
-        void prepare_write();
+        void prepare_and_add_dependencies();
         void write_body(int, bool);
 
     public:
@@ -63,7 +63,7 @@ class AWDCubeTexture :
 
     protected:
         awd_uint32 calc_body_length(bool);
-        void prepare_write();
+        void prepare_and_add_dependencies();
         void write_body(int, bool);
 
     public:

@@ -12,17 +12,29 @@ AWDBlock::AWDBlock(AWD_block_type type)
     // TODO: Allow setting flags
     this->flags = 0;
 	this->addr = 0;
+	this->isExported =false;
 }
 
 
 void
-AWDBlock::prepare_write()
+AWDBlock::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
     // Does nothing by default. Can be optionally
     // overriden by sub-classes to take any actions
     // that need to happen before length is calculated
 }
 
+void
+AWDBlock::prepare_and_add_with_dependencies( AWDBlockList *target_list)
+{
+	if (!this->isExported){
+		this->prepare_and_add_dependencies(target_list);	
+		this->addr = target_list->get_num_blocks();
+		target_list->append(this);
+		this->isExported=true;
+	}
+
+}
 size_t
 AWDBlock::write_block(int fd, awd_baddr addr)
 {
@@ -36,7 +48,6 @@ AWDBlock::write_block(int fd, awd_baddr addr)
 
     this->addr = addr;
 
-    this->prepare_write();
     length = this->calc_body_length(wide_mtx);
 
     //TODO: Get addr of actual namespace

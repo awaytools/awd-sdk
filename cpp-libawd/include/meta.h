@@ -20,7 +20,7 @@ class AWDMetaData :
     protected:
         char *encoder_name;
         char *encoder_version;
-        void prepare_write();
+        void prepare_and_add_dependencies();
         awd_uint32 calc_body_length(bool);
         void write_body(int, bool);
 

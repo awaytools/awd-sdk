@@ -92,6 +92,7 @@ class AWDMeshInst :
     protected:
         awd_uint32 calc_body_length(bool);
         void write_body(int, bool);
+        void prepare_and_add_dependencies(AWDBlockList *);
 
     public:
         AWDMeshInst(const char *, awd_uint16, AWDTriGeom *);

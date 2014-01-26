@@ -82,7 +82,7 @@ AWDBitmapTexture::set_embed_file_data(int fd)
 
 
 void 
-AWDBitmapTexture::prepare_write()
+AWDBitmapTexture::prepare_and_add_dependencies()
 {
     // Do nothing
 }
@@ -156,7 +156,7 @@ AWDCubeTexture::calc_body_length(bool wide_mtx)
 
 
 void
-AWDCubeTexture::prepare_write()
+AWDCubeTexture::prepare_and_add_dependencies()
 {
     // Do nothing
 }

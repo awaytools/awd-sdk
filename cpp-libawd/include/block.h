@@ -6,6 +6,7 @@
 //#include "awd.h"
 #include "awd_types.h"
 
+class AWDBlockList;
 class AWDBlock
 {
     private:
@@ -14,17 +15,18 @@ class AWDBlock
 
     protected:
         AWD_block_type type;
-        virtual void prepare_write();
+        virtual void prepare_and_add_dependencies(AWDBlockList *);
         virtual awd_uint32 calc_body_length(bool)=0;
         virtual void write_body(int,bool)=0;
 
     public:
         AWDBlock(AWD_block_type);
+		bool isExported;
 
         awd_baddr get_addr();
         AWD_block_type get_type();
 
-        //virtual void add_dependencies(AWD *);
+        void prepare_and_add_with_dependencies(AWDBlockList *);
 
         size_t write_block(int, awd_baddr);
 };

@@ -11,7 +11,7 @@ AWDLight::AWDLight(const char *name, awd_uint16 name_len, AWD_light_type type) :
 
 
 void
-AWDLight::prepare_write()
+AWDLight::prepare_and_add_dependencies()
 {
     // TODO: Set all properties
 }

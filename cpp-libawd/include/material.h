@@ -38,7 +38,7 @@ class AWDMaterial :
 
     protected:
         awd_uint32 calc_body_length(bool);
-        void prepare_write();
+        void prepare_and_add_dependencies(AWDBlockList *);
         void write_body(int, bool);
 
     public:

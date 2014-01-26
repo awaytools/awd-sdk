@@ -48,8 +48,9 @@ class AWD
 
         void write_header(int, awd_uint32);
         void flatten_scene(AWDSceneBlock *, AWDBlockList *);
-        size_t write_scene(AWDBlockList *, int);
+        void reorder_scene(AWDBlockList *, AWDBlockList *);
         size_t write_blocks(AWDBlockList *, int);
+        void re_order_blocks(AWDBlockList *, AWDBlockList *);
 
     public:
         AWD(AWD_compression, awd_uint16);

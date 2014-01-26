@@ -16,7 +16,7 @@ AWDPrimitive::~AWDPrimitive()
 
 
 void
-AWDPrimitive::prepare_write()
+AWDPrimitive::prepare_and_add_dependencies()
 {
 }
 

@@ -187,6 +187,16 @@ AWD::write_header(int fd, awd_uint32 body_length)
     write(fd, &body_length, sizeof(awd_uint32));
 }
 
+void
+AWD::re_order_blocks(AWDBlockList *blocks, AWDBlockList *targetList)
+{
+    size_t len;
+    AWDBlock *block;
+    AWDBlockIterator it(blocks);
+    len = 0;
+    while ((block = it.next()) != NULL) 
+		block->prepare_and_add_with_dependencies(targetList);
+}
 size_t
 AWD::write_blocks(AWDBlockList *blocks, int fd)
 {
@@ -209,7 +219,9 @@ AWD::flatten_scene(AWDSceneBlock *cur, AWDBlockList *flat_list)
     AWDBlock *child;
     AWDBlockIterator *children;
 
-    flat_list->append(cur);
+    cur->prepare_and_add_with_dependencies(flat_list);
+
+	cur->isExported=true;
 
     children = cur->child_iter();
     while ((child = children->next()) != NULL) {
@@ -217,20 +229,16 @@ AWD::flatten_scene(AWDSceneBlock *cur, AWDBlockList *flat_list)
     }
 }
 
-size_t
-AWD::write_scene(AWDBlockList *blocks, int fd)
+void
+AWD::reorder_scene(AWDBlockList *blocks, AWDBlockList *ordered)
 {
     AWDBlock *block;
-    AWDBlockList *ordered;
     AWDBlockIterator it(blocks);
-
-    ordered = new AWDBlockList();
-
+	
     while ((block = it.next()) != NULL) {
         this->flatten_scene((AWDSceneBlock*)block, ordered);
     }
 
-    return this->write_blocks(ordered, fd);
 }
 
 
@@ -254,19 +262,26 @@ AWD::flush(int out_fd)
         return AWD_FALSE;
     }
 
-    if (this->metadata) {
-        tmp_len += this->metadata->write_block(tmp_fd, ++this->last_used_baddr);
-    }
-
-    tmp_len += this->write_blocks(this->namespace_blocks, tmp_fd);
-    tmp_len += this->write_blocks(this->skeleton_blocks, tmp_fd);
-    tmp_len += this->write_blocks(this->skelpose_blocks, tmp_fd);
-    tmp_len += this->write_blocks(this->skelanim_blocks, tmp_fd);
-    tmp_len += this->write_blocks(this->texture_blocks, tmp_fd);
-    tmp_len += this->write_blocks(this->material_blocks, tmp_fd);
-    tmp_len += this->write_blocks(this->mesh_data_blocks, tmp_fd);
-    tmp_len += this->write_blocks(this->uvanim_blocks, tmp_fd);
-    tmp_len += this->write_scene(this->scene_blocks, tmp_fd);
+	//this list will contain all sceneBlocks in the correct order
+	AWDBlockList * reorderedBlocks;
+	reorderedBlocks = new AWDBlockList();
+	
+	//make shure the metadtaa block exists, because no other awdblock should have the id=0
+    if (!this->metadata) 
+		this->metadata=new AWDMetaData();
+	this->metadata->prepare_and_add_with_dependencies(reorderedBlocks); 
+	
+    this->re_order_blocks(this->namespace_blocks, reorderedBlocks);
+    this->reorder_scene(this->scene_blocks, reorderedBlocks);	
+    this->re_order_blocks(this->skeleton_blocks, reorderedBlocks);
+    this->re_order_blocks(this->skelpose_blocks, reorderedBlocks);
+    this->re_order_blocks(this->skelanim_blocks, reorderedBlocks);
+    this->re_order_blocks(this->texture_blocks, reorderedBlocks);
+    this->re_order_blocks(this->material_blocks, reorderedBlocks);
+    this->re_order_blocks(this->mesh_data_blocks, reorderedBlocks);
+    this->re_order_blocks(this->uvanim_blocks, reorderedBlocks);
+	// now all blocks should be contained in reorderedBlocks
+    tmp_len += this->write_blocks(reorderedBlocks, tmp_fd);
 
     tmp_buf = (awd_uint8 *) malloc(tmp_len);
 	lseek(tmp_fd, 0, SEEK_SET);

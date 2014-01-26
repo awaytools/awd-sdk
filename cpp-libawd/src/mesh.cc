@@ -334,7 +334,19 @@ AWDMeshInst::calc_body_length(bool wide_mtx)
 		this->calc_attr_length(true, true, wide_mtx);
 }
 
+void
+AWDMeshInst::prepare_and_add_dependencies(AWDBlockList *export_list)
+{
 
+    if (this->geom != NULL)
+		this->geom->prepare_and_add_with_dependencies(export_list);	
+    AWDBlock *block;
+    AWDBlockIterator *it;
+    awd_uint16 num_materials;
+    it = new AWDBlockIterator(this->materials);
+    while ((block = it->next()) != NULL) 
+		block->prepare_and_add_with_dependencies(export_list);
+}
 
 void
 AWDMeshInst::write_body(int fd, bool wide_mtx)

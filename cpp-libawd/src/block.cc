@@ -46,7 +46,6 @@ AWDBlock::write_block(int fd, awd_baddr addr)
 	// TODO: Don't hard-code!
 	bool wide_mtx = false;
 
-    this->addr = addr;
 
     length = this->calc_body_length(wide_mtx);
 

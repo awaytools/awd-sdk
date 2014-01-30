@@ -21,12 +21,15 @@ const char AWD::VERSION_RELEASE = 'a';
 
 
 
-AWD::AWD(AWD_compression compression, awd_uint16 flags)
+AWD::AWD(AWD_compression compression, awd_uint16 flags, char *outPathName, bool splitByRootObjs,  bool openFiles)
 {
     this->major_version = VERSION_MAJOR;
     this->minor_version = VERSION_MINOR;
     this->compression = compression;
     this->flags = flags;
+    this->splitByRootObjs = splitByRootObjs;
+	this->outPath=outPathName;
+	this->openFiles=openFiles;
     this->texture_blocks = new AWDBlockList();
     this->cubetex_blocks = new AWDBlockList();
     this->material_blocks = new AWDBlockList();
@@ -206,12 +209,13 @@ AWD::write_blocks(AWDBlockList *blocks, int fd)
 
     len = 0;
     while ((block = it.next()) != NULL) {
-        len += block->write_block(fd, ++this->last_used_baddr);
+        len += block->write_block(fd);
     }
 
     return len;
 }
 
+ 
 
 void
 AWD::flatten_scene(AWDSceneBlock *cur, AWDBlockList *flat_list)
@@ -240,10 +244,133 @@ AWD::reorder_scene(AWDBlockList *blocks, AWDBlockList *ordered)
     }
 
 }
+void
+AWD::reset_blocks(AWDBlockList *blocks)
+{
+    AWDBlock *block;
+    AWDBlockIterator it(blocks);
+	
+    while ((block = it.next()) != NULL) {
+		block->isExportedToFile=false;
+    }
+
+}
+void
+AWD::reset_all_blocks()
+{
+	this->reset_blocks(this->scene_blocks);
+	this->reset_blocks(this->namespace_blocks);
+	this->reset_blocks(this->skeleton_blocks);
+	this->reset_blocks(this->skelpose_blocks);
+	this->reset_blocks(this->skelanim_blocks);
+	this->reset_blocks(this->texture_blocks);
+	this->reset_blocks(this->material_blocks);
+	this->reset_blocks(this->mesh_data_blocks);
+	this->reset_blocks(this->uvanim_blocks);
+
+}
+void
+AWD::reset_blocks2(AWDBlockList *blocks)
+{
+    AWDBlock *block;
+    AWDBlockIterator it(blocks);
+	
+    while ((block = it.next()) != NULL) {
+		block->isExportedToFile=block->isExported;
+    }
+
+}
+void
+AWD::reset_all_blocks2()
+{
+	this->reset_blocks2(this->namespace_blocks);
+	this->reset_blocks2(this->skeleton_blocks);
+	this->reset_blocks2(this->skelpose_blocks);
+	this->reset_blocks2(this->skelanim_blocks);
+	this->reset_blocks2(this->texture_blocks);
+	this->reset_blocks2(this->material_blocks);
+	this->reset_blocks2(this->mesh_data_blocks);
+	this->reset_blocks2(this->uvanim_blocks);
+
+}
+
 
 
 awd_uint32
 AWD::flush(int out_fd)
+{
+	//contain all blocks that are going to be written in the main AWD file.
+	AWDBlockList * blocks_mainAWD;
+	blocks_mainAWD = new AWDBlockList();
+	//make shure the metadata block exists, because no other awdblock should have the id=0
+	if (!this->metadata) 
+		this->metadata=new AWDMetaData();
+	this->metadata->prepare_and_add_with_dependencies(blocks_mainAWD); 	
+	
+	char *cur_filename=NULL;
+	if (this->splitByRootObjs){
+		AWDBlockList * blocks_splittedAWD;
+		blocks_splittedAWD = new AWDBlockList();
+		AWDBlock *block;
+		AWDBlockIterator it(this->scene_blocks);
+		int objCount=0;
+		while ((block = it.next()) != NULL) {
+			if  (((AWDSceneBlock*)block)->get_parent()==NULL){  
+				this->reset_all_blocks();
+				blocks_splittedAWD = new AWDBlockList();
+				this->metadata->isExportedToFile=false;
+				this->metadata->isExported=false;
+				this->metadata->prepare_and_add_with_dependencies(blocks_splittedAWD); 
+				this->re_order_blocks(this->namespace_blocks, blocks_splittedAWD);
+				this->flatten_scene((AWDSceneBlock*)block, blocks_splittedAWD);
+				// Open file and check for success
+				char awdDrive[4];
+				char awdPath[1024];
+				char awdName[256];
+				char outAWDPath[1024];
+				_splitpath_s(this->outPath, awdDrive, 4, awdPath, 1024, awdName, 256, NULL, 0);
+				_makepath_s(outAWDPath, 1024, awdDrive, awdPath, ((AWDSceneBlock*)block)->get_name(), "awd");
+				int fd = open(outAWDPath, _O_TRUNC | _O_CREAT | _O_BINARY | _O_RDWR, _S_IWRITE);
+				// to do: add error report for failing to export one of multiple files.
+				// atm a error on creating a file is  skipped
+				if (fd != -1){
+					cur_filename=outAWDPath;
+					this->write_blocks_to_file(fd, blocks_splittedAWD);
+				}
+				
+			}
+		}
+	}
+	else{
+		this->re_order_blocks(this->namespace_blocks, blocks_mainAWD);
+		this->reorder_scene(this->scene_blocks, blocks_mainAWD);	
+	}
+	this->reset_all_blocks2();
+    this->re_order_blocks(this->skeleton_blocks, blocks_mainAWD);
+    this->re_order_blocks(this->skelpose_blocks, blocks_mainAWD);
+    this->re_order_blocks(this->skelanim_blocks, blocks_mainAWD);
+    this->re_order_blocks(this->texture_blocks, blocks_mainAWD);
+    this->re_order_blocks(this->material_blocks, blocks_mainAWD);
+    this->re_order_blocks(this->mesh_data_blocks, blocks_mainAWD);
+    this->re_order_blocks(this->uvanim_blocks, blocks_mainAWD);
+
+	// write the main file
+	if (blocks_mainAWD->get_num_blocks()>1){
+		cur_filename=this->outPath;
+		this->write_blocks_to_file(out_fd, blocks_mainAWD);
+	}
+
+	//open the file with the default appliction (e.g. Awaybuilder)
+	if (this->openFiles && cur_filename!=NULL)
+		ShellExecute(NULL, "open", cur_filename, NULL, NULL, SW_SHOWNORMAL);	
+
+	return AWD_TRUE;
+
+}
+
+
+awd_uint32
+AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)
 {
     int tmp_fd;
     char *tmp_path;
@@ -261,27 +388,7 @@ AWD::flush(int out_fd)
         printf("Could not open temporary file necessary for writing, errno=%d\n", errno);
         return AWD_FALSE;
     }
-
-	//this list will contain all sceneBlocks in the correct order
-	AWDBlockList * reorderedBlocks;
-	reorderedBlocks = new AWDBlockList();
-	
-	//make shure the metadtaa block exists, because no other awdblock should have the id=0
-    if (!this->metadata) 
-		this->metadata=new AWDMetaData();
-	this->metadata->prepare_and_add_with_dependencies(reorderedBlocks); 
-	
-    this->re_order_blocks(this->namespace_blocks, reorderedBlocks);
-    this->reorder_scene(this->scene_blocks, reorderedBlocks);	
-    this->re_order_blocks(this->skeleton_blocks, reorderedBlocks);
-    this->re_order_blocks(this->skelpose_blocks, reorderedBlocks);
-    this->re_order_blocks(this->skelanim_blocks, reorderedBlocks);
-    this->re_order_blocks(this->texture_blocks, reorderedBlocks);
-    this->re_order_blocks(this->material_blocks, reorderedBlocks);
-    this->re_order_blocks(this->mesh_data_blocks, reorderedBlocks);
-    this->re_order_blocks(this->uvanim_blocks, reorderedBlocks);
-	// now all blocks should be contained in reorderedBlocks
-    tmp_len += this->write_blocks(reorderedBlocks, tmp_fd);
+    tmp_len += this->write_blocks(blocks, tmp_fd);
 
     tmp_buf = (awd_uint8 *) malloc(tmp_len);
 	lseek(tmp_fd, 0, SEEK_SET);
@@ -386,16 +493,11 @@ AWD::flush(int out_fd)
 
     // Write header and then body from possibly
     // compressed buffer
-    if (this->header_written == AWD_FALSE) {
-        this->header_written = AWD_TRUE;
-        this->write_header(out_fd, body_len);
-    }
+    this->write_header(out_fd, body_len);
+    
 
     write(out_fd, body_buf, body_len);
-
     return AWD_TRUE;
 }
-
-
 
 

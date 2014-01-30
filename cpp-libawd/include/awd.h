@@ -19,6 +19,8 @@
 #define AWD_STREAMING               0x1
 
 
+
+
 class AWD
 {
     private:
@@ -27,9 +29,12 @@ class AWD
         awd_uint8 minor_version;
         awd_uint16 flags;
         AWD_compression compression;
+        bool splitByRootObjs;
+        bool openFiles;
+        char *outPath;
 
         AWDMetaData *metadata;
-
+		
         AWDBlockList * namespace_blocks;
         AWDBlockList * texture_blocks;
         AWDBlockList * cubetex_blocks;
@@ -51,12 +56,18 @@ class AWD
         void reorder_scene(AWDBlockList *, AWDBlockList *);
         size_t write_blocks(AWDBlockList *, int);
         void re_order_blocks(AWDBlockList *, AWDBlockList *);
+        void reset_blocks(AWDBlockList *);
+        void reset_all_blocks();
+        void reset_blocks2(AWDBlockList *);
+        void reset_all_blocks2();
+		int get_root_objs_count(AWDBlockList *);
 
     public:
-        AWD(AWD_compression, awd_uint16);
+        AWD(AWD_compression, awd_uint16, char *, bool, bool);
         ~AWD();
         awd_uint32 flush(int);
-
+        awd_uint32 write_blocks_to_file(int, AWDBlockList *);
+		
         bool has_flag(int);
 
         static const int VERSION_MAJOR;
@@ -65,8 +76,9 @@ class AWD
         static const char VERSION_RELEASE;
 
         void set_metadata(AWDMetaData *);
-
+		
         void add_texture(AWDBitmapTexture *);
+        void set_out_path(char *);
         void add_cube_texture(AWDCubeTexture *);
         void add_material(AWDMaterial *);
         void add_mesh_data(AWDTriGeom *);

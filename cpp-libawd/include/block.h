@@ -22,13 +22,14 @@ class AWDBlock
     public:
         AWDBlock(AWD_block_type);
 		bool isExported;
+		bool isExportedToFile;
 
         awd_baddr get_addr();
         AWD_block_type get_type();
 
         void prepare_and_add_with_dependencies(AWDBlockList *);
 
-        size_t write_block(int, awd_baddr);
+        size_t write_block(int);
 };
 
 typedef struct _list_block
@@ -36,6 +37,7 @@ typedef struct _list_block
     AWDBlock *block;
     struct _list_block *next;
 } list_block;
+
 
 class AWDBlockList
 {
@@ -67,6 +69,7 @@ class AWDBlockIterator
         AWDBlock * next();
         void reset();
 };
+
 
 
 /*

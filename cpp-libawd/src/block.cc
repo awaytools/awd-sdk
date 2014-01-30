@@ -12,7 +12,8 @@ AWDBlock::AWDBlock(AWD_block_type type)
     // TODO: Allow setting flags
     this->flags = 0;
 	this->addr = 0;
-	this->isExported =false;
+	this->isExported =false; //true if block was exported by the export process (for all files)
+	this->isExportedToFile =false; //true if block was exported for one file (gets reset befor exporting one file)
 }
 
 
@@ -27,16 +28,17 @@ AWDBlock::prepare_and_add_dependencies(AWDBlockList *export_list)
 void
 AWDBlock::prepare_and_add_with_dependencies( AWDBlockList *target_list)
 {
-	if (!this->isExported){
+	if (!this->isExportedToFile){
+		this->isExportedToFile=true;
+		this->isExported=true;
 		this->prepare_and_add_dependencies(target_list);	
 		this->addr = target_list->get_num_blocks();
 		target_list->append(this);
-		this->isExported=true;
 	}
 
 }
 size_t
-AWDBlock::write_block(int fd, awd_baddr addr)
+AWDBlock::write_block(int fd)
 {
     awd_uint8 ns_addr;
     awd_uint32 length;

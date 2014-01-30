@@ -18,7 +18,7 @@ class AWDSceneBlock :
         AWDBlockList *children;
 
     protected:
-        void write_scene_common(int, bool);
+        void write_scene_common(int, BlockSettings *);
         awd_uint32 calc_common_length(bool);
 
     public:
@@ -26,9 +26,11 @@ class AWDSceneBlock :
         ~AWDSceneBlock();
 
         void set_transform(awd_float64 *);
-
+        awd_float64 * get_transform();
+		
         AWDBlock *get_parent();
         void set_parent(AWDSceneBlock *);
+        bool isEmpty();
 
         void add_child(AWDSceneBlock *);
         void remove_child(AWDSceneBlock *);
@@ -41,8 +43,8 @@ class AWDScene :
     public AWDSceneBlock
 {
     protected:
-        awd_uint32 calc_body_length(bool);
-        void write_body(int, bool);
+        awd_uint32 calc_body_length(BlockSettings *);
+        void write_body(int,BlockSettings *);
 
     public:
         AWDScene(const char *, awd_uint16);
@@ -54,12 +56,49 @@ class AWDContainer :
     public AWDSceneBlock
 {
     protected:
-        awd_uint32 calc_body_length(bool);
-        void write_body(int, bool);
+        awd_uint32 calc_body_length(BlockSettings *);
+        void write_body(int, BlockSettings *);
 
     public:
         AWDContainer(const char *, awd_uint16);
+        AWDContainer(const char *, awd_uint16, awd_float64 *);
         ~AWDContainer();
 };
 
+
+class AWDCommandBlock :
+    public AWDSceneBlock
+{
+	private:
+		awd_uint8 hasSceneInfos;
+        AWDNumAttrList *commandProperties;
+
+    protected:
+        awd_uint32 calc_body_length( BlockSettings *);
+        void write_body(int, BlockSettings *);
+
+    public:
+        AWDCommandBlock(const char *, awd_uint16);
+		~AWDCommandBlock();
+		void add_target_light(awd_baddr);
+};
+
+class AWDSkyBox :
+    public AWDSceneBlock
+{
+    private:
+        AWDBlock * cubeTex;
+
+    protected:
+        void prepare_and_add_dependencies(AWDBlockList *);
+        awd_uint32 calc_body_length(BlockSettings *);
+        void write_body(int, BlockSettings *);
+
+    public:
+        AWDSkyBox(const char *, awd_uint16);
+        ~AWDSkyBox();
+
+        void set_cube_tex(AWDBlock *);
+};
 #endif
+

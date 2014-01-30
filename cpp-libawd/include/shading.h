@@ -5,48 +5,24 @@
 #include "block.h"
 #include "attr.h"
 
-#define PROP_SHAD_STRENGTH 1
-#define PROP_SHAD_COLOR 2
-#define PROP_SHAD_ALPHA 3
-#define PROP_SHAD_MAP 4
 
-#define PROP_SHAD_ENVMAP_CUBETEX 101
-
-#define PROP_SHAD_CEL_LEVELS 201
-#define PROP_SHAD_CEL_SMOOTHNESS 202
-#define PROP_SHAD_CEL_CUTOFF 203
-
-#define PROP_SHAD_SCATTERING 301
-#define PROP_SHAD_TRANSLUCENCY 302
-
-#define PROP_SHAD_GLOSS 21
-#define PROP_SHAD_GLOSS_MAP 22
-
-#define PROP_SHAD_NORMAL_REFLECTANCE 401
-
-#define PROP_SHAD_EPSILON 501
-#define PROP_SHAD_STEP_SIZE 502
-
-#define PROP_SHAD_COLOR_MATRIX 1001
-#define PROP_SHAD_ALPHA_MULT 1101
-#define PROP_SHAD_RED_MULT 1102
-#define PROP_SHAD_GREEN_MULT 1103
-#define PROP_SHAD_BLUE_MULT 1104
-#define PROP_SHAD_COLOR_OFFS 1105
-
-#define PROP_SHAD_FOG_DIST 1201
-
-#define PROP_SHAD_PROJ_MODE 1301
-#define PROP_SHAD_PROJ_TEXTURE 1302
-
-#define PROP_SHAD_POWER 1401
 
 
 typedef enum {
-    AWD_SHADETYPE_ENVMAP_AMB=1,
-    AWD_SHADETYPE_COLOR_MATRIX=401,
-    AWD_SHADETYPE_COLOR_TRANSFORM,
-    AWD_SHADETYPE_ENVMAP
+    AWD_SHADEMETHOD_ENV_AMBIENT=1,
+    AWD_SHADEMETHOD_DIFFUSE_DEPTH=51,
+    AWD_SHADEMETHOD_DIFFUSE_GRADIENT=52,
+    AWD_SHADEMETHOD_DIFFUSE_WRAP=53,
+    AWD_SHADEMETHOD_DIFFUSE_LIGHTMAP=54,
+    AWD_SHADEMETHOD_DIFFUSE_CELL=55,
+    AWD_SHADEMETHOD_DIFFUSE_SUBSURFACESCATTERING=56,
+    AWD_SHADEMETHOD_SPECULAR_ANISOTROPIC=101,
+    AWD_SHADEMETHOD_SPECULAR_PHONG=102,
+    AWD_SHADEMETHOD_SPECULAR_CELL=103,
+    AWD_SHADEMETHOD_SPECULAR_FRESNEL=104,
+    AWD_SHADEMETHOD_NORMAL_SIMPLE_WATER=152,
+    AWD_SHADOWMETHOD_WRAPPER=998,
+    AWD_EFFECTMETHOD_WRAPPER=999,
 } AWD_shade_type;
 
 class AWDShadingMethod :
@@ -54,69 +30,29 @@ class AWDShadingMethod :
 {
     protected:
         AWD_shade_type type;
-        virtual void prepare_and_add_dependencies()=0;
+        AWDNumAttrList * shading_props;
+        AWDBlock * awdBlock1;
+        AWDBlock * awdBlock2;
+        AWDBlock * awdBlock3;
+        AWDBlock * awdBlock4;
 
     public:
+        AWDShadingMethod(AWD_shade_type);
+        ~AWDShadingMethod();
+        void prepare_and_add_dependencies(AWDBlockList *);
+		void set_awdBlock1(AWDBlock *);
+		void set_awdBlock2(AWDBlock *);
+		void set_awdBlock3(AWDBlock *);
+		void set_awdBlock4(AWDBlock *);
+		AWD_shade_type get_shading_type();
+		AWDNumAttrList * get_shading_props();
         awd_uint32 calc_method_length(bool);
         void write_method(int, bool);
-};
-
-
-class AWDEnvMapAmbientMethod :
-    public AWDShadingMethod
-{
-    protected:
-        void prepare_and_add_dependencies();
-
-    public:
-        AWDEnvMapAmbientMethod();
-
-        AWDCubeTexture *cube_texture;
-};
-
-
-
-class AWDColorMatrixMethod :
-    public AWDShadingMethod
-{
-    protected:
-        void prepare_and_add_dependencies();
-
-    public:
-        AWDColorMatrixMethod();
-
-        awd_float64 *mtx;
-};
-
-
-class AWDColorTransformMethod :
-    public AWDShadingMethod
-{
-    protected:
-        void prepare_and_add_dependencies();
-
-    public:
-        AWDColorTransformMethod();
-
-        awd_float64 alpha_multiplier;
-        awd_float64 red_multiplier;
-        awd_float64 green_multiplier;
-        awd_float64 blue_multiplier;
-        awd_color color_offset;
-};
-
-
-class AWDEnvMapMethod :
-    public AWDShadingMethod
-{
-    protected:
-        void prepare_and_add_dependencies();
-
-    public:
-        AWDEnvMapMethod();
-
-        AWDCubeTexture *cube_texture;
-        awd_float64 alpha;
+        void add_color_property(int, awd_uint32, awd_uint32);
+        void add_number_property(int, float, float);
+        void add_int_property(int, int, int);
+        void add_int8_property(int, bool, bool);
+        void add_bool_property(int, bool, bool);
 };
 
 

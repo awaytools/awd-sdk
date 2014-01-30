@@ -15,6 +15,7 @@ package
 	import away3d.materials.ColorMaterial;
 	import away3d.materials.TextureMaterial;
 	import away3d.materials.lightpickers.StaticLightPicker;
+	import away3d.primitives.SkyBox;
 	
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -35,14 +36,7 @@ package
 		private var _hoverCtrl : HoverController;
 		private var _prevMouseX : Number;
 		private var _prevMouseY : Number;
-		
-		//private var _skeleton : Skeleton;
-		private var _animator : SkeletonAnimator;
-		
-		private var _defDirLight : DirectionalLight;
-		private var _defCamLight : PointLight;
-		private var _defLightPicker : StaticLightPicker;
-		
+						
 		public function AWDViewer()
 		{
 			init();
@@ -67,13 +61,7 @@ package
 			_hoverCtrl.panAngle = 180;
 			_hoverCtrl.minTiltAngle = -60;
 			_hoverCtrl.maxTiltAngle = 60;
-			
-			_defDirLight = new DirectionalLight(1, -3, 1);
-			_defDirLight.specular = 0.1;
-			_defCamLight = new PointLight();
-			_defCamLight.specular = 0.1;
-			_defLightPicker = new StaticLightPicker([_defDirLight,_defCamLight]);
-			
+						
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, onStageMouseDown);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, onStageMouseMove);
 			stage.addEventListener(MouseEvent.MOUSE_WHEEL, onStageMouseWheel);
@@ -99,25 +87,31 @@ package
 		private function onAssetComplete(ev : AssetEvent) : void
 		{
 			if (ev.asset.assetType == AssetType.MESH) {
-				var mesh : Mesh;
-				var texMat : TextureMaterial;
-				
-				mesh = Mesh(ev.asset);
-				texMat = mesh.material as TextureMaterial;
-				
-				if (mesh.material == null || (texMat && texMat.texture == null)) {
-					mesh.material = new ColorMaterial(Math.random() * 0xffffff);
-				}
-				
-				mesh.material.lightPicker = _defLightPicker;
-				
-				trace(mesh.position);
+				trace("Asset: Mesh = " + ev.asset.name);
 			}
-			else if (ev.asset.assetType == AssetType.SKELETON) {
+			else if (ev.asset.assetType == AssetType.SKELETON) {		
+				trace("Asset: Skeleton = "+ev.asset.name);
 				//_skeleton = Skeleton(ev.asset);
 			}
+			else if (ev.asset.assetType == AssetType.SKYBOX) {	
+				var thisSkyBox:SkyBox = SkyBox(ev.asset);
+				trace("Asset: SKYBOX = " + ev.asset.name);
+				_view.scene.addChild(thisSkyBox);
+			}
 			else if (ev.asset.assetType == AssetType.MATERIAL) {
-				trace(_i++, ev.asset.name, ev.asset.assetType, ev.asset);
+				trace("Asset: MATERIAL = "+ev.asset.name);
+				//trace(_i++, ev.asset.name, ev.asset.assetType, ev.asset);
+			}
+			else if (ev.asset.assetType == AssetType.LIGHT) {
+				trace("Asset: LIGHT = "+ev.asset.name);
+				//trace(_i++, ev.asset.name, ev.asset.assetType, ev.asset);
+			}
+			else if (ev.asset.assetType == AssetType.TEXTURE) {		
+				trace("Asset: TEXTURE = "+ev.asset.name);
+				//_skeleton = Skeleton(ev.asset);
+			}
+			else if (ev.asset.assetType == AssetType.ANIMATOR) {		
+				trace("Asset: ANIMATOR = " + ev.asset.name);
 			}
 		}
 		
@@ -128,58 +122,14 @@ package
 			var max : Vector3D;
 			var min : Vector3D;
 			var d : Vector3D;
-			
-			/*
-			if (_skeleton) {
-				var it : AssetLibraryIterator;
-				var mesh : Mesh;
-				var geom : Geometry;
-				var jpv : int;
 				
-				it = AssetLibrary.createIterator(AssetType.MESH);
-				while (mesh = Mesh(it.next())) {
-					if (mesh.geometry && mesh.geometry.subGeometries.length > 0) {
-						var sub : SkinnedSubGeometry = mesh.geometry.subGeometries[0] as SkinnedSubGeometry;
-						if (sub != null) {
-							geom = mesh.geometry;
-							jpv = sub.jointIndexData.length / sub.numVertices;
-							break;
-						}
-					}
-				}
-				
-				if (geom) {
-					var seq : SkeletonAnimationSequence;
-					var name : String;
-					var state : SkeletonAnimationState;
-					
-					geom.animation = new SkeletonAnimation(_skeleton, jpv, true);
-					state = SkeletonAnimationState(mesh.animationState);
-					
-					_animator = new SkeletonAnimator(state);
-					_animator.updateRootPosition = false;
-					
-					it = AssetLibrary.createIterator(AssetType.ANIMATION);
-					while (seq = SkeletonAnimationSequence(it.next())) {
-						_animator.addSequence(seq);
-						
-						if (!name)
-							name = seq.name;
-					}
-					
-					_animator.play(name);
-				}
-			}
-			*/
-			
 			max = new Vector3D(_loader.maxX, _loader.maxY, _loader.maxZ);
 			min = new Vector3D(_loader.minX, _loader.minY, _loader.minZ);
 			d = max.subtract(min);
 			
 			scale = 300 / d.length;
-			_loader.scale(scale);
-			
-			_view.scene.addChild(_loader);
+			_hoverCtrl.distance *=  scale;
+			_view.scene.addChild(_loader);			
 			
 			// Force resize
 			stage.dispatchEvent(new Event(Event.RESIZE));
@@ -197,8 +147,7 @@ package
 			if (ev.buttonDown) {
 				_hoverCtrl.panAngle += (ev.stageX - _prevMouseX);
 				_hoverCtrl.tiltAngle += (ev.stageY - _prevMouseY);
-			}
-			
+			}			
 			_prevMouseX = ev.stageX;
 			_prevMouseY = ev.stageY;
 		}
@@ -209,8 +158,8 @@ package
 			
 			if (_hoverCtrl.distance < 5)
 				_hoverCtrl.distance = 5;
-			else if (_hoverCtrl.distance > 2000)
-				_hoverCtrl.distance = 2000;
+			else if (_hoverCtrl.distance > 6000)
+				_hoverCtrl.distance = 6000;
 		}
 		
 		
@@ -224,11 +173,7 @@ package
 		private function onEnterFrame(ev : Event) : void
 		{
 			_hoverCtrl.update();
-			
-			_defCamLight.x = _view.camera.x;
-			_defCamLight.y = _view.camera.y;
-			_defCamLight.z = _view.camera.z;
-			
+						
 			_view.render();
 		}
 	}

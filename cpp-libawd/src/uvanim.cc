@@ -41,16 +41,16 @@ AWDUVAnimation::~AWDUVAnimation()
 
 
 awd_uint32
-AWDUVAnimation::calc_body_length(bool wide_mtx)
+AWDUVAnimation::calc_body_length(BlockSettings * curBlockSettings)
 {
     return 2 + this->get_name_length() + 2 + 
-        (this->num_frames * (sizeof(awd_uint16) + MTX32_SIZE(wide_mtx))) + 
-        this->calc_attr_length(true,true, wide_mtx);
+        (this->num_frames * (sizeof(awd_uint16) + MTX32_SIZE(curBlockSettings->get_wide_matrix()))) + 
+        this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
 }
 
 
 void
-AWDUVAnimation::write_body(int fd, bool wide_mtx)
+AWDUVAnimation::write_body(int fd, BlockSettings * curBlockSettings)
 {
     AWD_uvanim_fr *cur_fr;
 
@@ -60,19 +60,19 @@ AWDUVAnimation::write_body(int fd, bool wide_mtx)
     num_frames = UI16(this->num_frames);
     write(fd, &num_frames, sizeof(awd_uint16));
 
-    this->properties->write_attributes(fd, wide_mtx);
+    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
 
     cur_fr = this->first_frame;
     while (cur_fr) {
         awd_uint16 dur_be = UI16(cur_fr->duration);
 
-        awdutil_write_floats(fd, cur_fr->transform_mtx, 12, wide_mtx);
+        awdutil_write_floats(fd, cur_fr->transform_mtx, 12, curBlockSettings->get_wide_matrix());
         write(fd, &dur_be, sizeof(awd_uint16));
 
         cur_fr = cur_fr->next;
     }
 
-    this->user_attributes->write_attributes(fd, wide_mtx);
+    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
 }
 
 

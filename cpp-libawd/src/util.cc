@@ -141,7 +141,7 @@ awdutil_write_varstr(int fd, const char *str, awd_uint16 str_len)
 awd_color
 awdutil_float_color(double r, double g, double b, double a)
 {
-    return awdutil_int_color(r*255, g*255, b*255, a*255);
+    return awdutil_int_color((int)(r*255), (int)(g*255), (int)(b*255), (int)(a*255));
 }
 
 
@@ -165,7 +165,7 @@ awdutil_mktmp(char **path)
 
     tmp_path = (char*)malloc(TMPPATH_MAXLEN);
 
-    tpl_len = strlen(TMPFILE_TEMPLATE);
+    tpl_len = (int) strlen(TMPFILE_TEMPLATE);
 	path_len = GetTempPath(TMPPATH_MAXLEN, tmp_path);
     if (path_len==0 || (path_len+tpl_len) > TMPPATH_MAXLEN)
         return -1;

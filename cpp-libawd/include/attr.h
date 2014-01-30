@@ -33,7 +33,7 @@ class AWDUserAttr :
     public AWDAttr
 {
     private:
-        const char *key;
+        char *key;
         awd_uint16 key_len;
         AWDNamespace *ns;
         
@@ -90,6 +90,7 @@ class AWDNumAttr :
         AWDNumAttr *next;
 
         AWDNumAttr();
+        ~AWDNumAttr();
 };
 
 

@@ -11,28 +11,30 @@
 #include "skelanim.h"
 #include "texture.h"
 #include "camera.h"
+#include "anim.h"
 #include "uvanim.h"
+#include "vertexanim.h"
 #include "scene.h"
 #include "meta.h"
+#include "light.h"
+#include "primitive.h"
+#include "method.h"
 
 
 #define AWD_STREAMING               0x1
 
-
-
-
 class AWD
 {
-    private:
-        // File header fields
-        awd_uint8 major_version;
-        awd_uint8 minor_version;
+	private:
+		// File header fields
+		awd_uint8 major_version;
+		awd_uint8 minor_version;
         awd_uint16 flags;
         AWD_compression compression;
         bool splitByRootObjs;
-        bool openFiles;
+        bool exportEmtpyContainers;
         char *outPath;
-
+		BlockSettings * thisBlockSettings;
         AWDMetaData *metadata;
 		
         AWDBlockList * namespace_blocks;
@@ -45,6 +47,14 @@ class AWD
         AWDBlockList * mesh_data_blocks;
         AWDBlockList * uvanim_blocks;
         AWDBlockList * scene_blocks;
+        AWDBlockList * lightPicker_blocks;
+        AWDBlockList * animator_blocks;
+        AWDBlockList * prim_blocks;
+        AWDBlockList * amin_set_blocks;
+        AWDBlockList * vertex_anim_blocks;
+        AWDBlockList * effect_method_blocks;
+        AWDBlockList * command_blocks;
+		AWDLightPicker * darkLightPicker;
 
         // Flags and misc
         awd_baddr last_used_baddr;
@@ -63,7 +73,7 @@ class AWD
 		int get_root_objs_count(AWDBlockList *);
 
     public:
-        AWD(AWD_compression, awd_uint16, char *, bool, bool);
+        AWD(AWD_compression, awd_uint16, char *, bool, BlockSettings *, bool);
         ~AWD();
         awd_uint32 flush(int);
         awd_uint32 write_blocks_to_file(int, AWDBlockList *);
@@ -81,16 +91,27 @@ class AWD
         void set_out_path(char *);
         void add_cube_texture(AWDCubeTexture *);
         void add_material(AWDMaterial *);
-        void add_mesh_data(AWDTriGeom *);
+        void add_mesh_data(AWDBlock *);
         void add_skeleton(AWDSkeleton *);
         void add_skeleton_pose(AWDSkeletonPose *);
         void add_skeleton_anim(AWDSkeletonAnimation *);
+        void add_animator(AWDAnimator *);
         void add_uv_anim(AWDUVAnimation *);
         void add_scene_block(AWDSceneBlock *);
-
-        void add_namespace(AWDNamespace *);
-        AWDNamespace *get_namespace(const char *);
+        void add_light_picker_block(AWDLightPicker *);
+        void add_prim_block(AWDPrimitive *);
+        void add_amin_set_block(AWDAnimationSet *);
+        void add_vertex_anim_block(AWDVertexAnimation *);
+        void add_effect_method_block(AWDEffectMethod *);
+		AWDLightPicker * CreateDarkLightPicker();
+		
+		void add_namespace(AWDNamespace *);
+		AWDNamespace *get_namespace(const char *);
+		AWDBlockList * get_animator_blocks();
+		AWDBlockList * get_mesh_data_blocks();
+		AWDBlockList * get_material_blocks();
 };
+
 
 
 #endif

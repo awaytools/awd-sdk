@@ -4,18 +4,28 @@
 
 #include "platform.h"
 
-AWDBitmapTexture::AWDBitmapTexture(AWD_tex_type type, const char *name, awd_uint16 name_len) :
+AWDBitmapTexture::AWDBitmapTexture(const char *name, awd_uint16 name_len) :
     AWDBlock(BITMAP_TEXTURE),
     AWDNamedElement(name, name_len),
     AWDAttrElement()
 {
-    this->type = type;
+    this->saveType = UNDEFINEDTEXTYPE;
     this->url = NULL;
     this->url_len = 0;
     this->embed_data = NULL;
     this->embed_data_len = 0;
 }
 
+
+AWDBitmapTexture::~AWDBitmapTexture()
+{
+	if (this->embed_data_len>0) free(this->embed_data);
+	if (this->url_len>0) free(this->url);
+    this->url = NULL;
+    this->url_len = 0;
+    this->embed_data = NULL;
+    this->embed_data_len = 0;
+}
 
 const char *
 AWDBitmapTexture::get_url()
@@ -32,27 +42,38 @@ AWDBitmapTexture::get_url_length()
 void
 AWDBitmapTexture::set_url(const char *url, awd_uint16 url_len)
 {
-    this->url = url;
+    this->url = (char *) url;
     this->url_len = url_len;
 }
 
+AWD_tex_type
+AWDBitmapTexture::get_tex_type()
+{
+    return this->saveType;
+}
+void
+AWDBitmapTexture::set_tex_type(AWD_tex_type texType)
+{
+    this->saveType = texType;
+}
 
 awd_uint32
-AWDBitmapTexture::calc_body_length(bool wide_mtx)
+AWDBitmapTexture::calc_body_length(BlockSettings * curBlockSettings)
 {
     awd_uint32 len;
 
-    len = 7;
-    len += this->get_name_length();
+    len = sizeof(awd_uint32); //datalength;
+    len += sizeof(awd_uint16) + this->get_name_length(); //name
+    len += sizeof(awd_uint8); //save type (external/embbed)
 
-    if (this->type == EXTERNAL) {
+    if (this->saveType == EXTERNAL) {
         len += this->url_len;
     }
     else {
         len += this->embed_data_len;
     }
 
-    len += this->calc_attr_length(true, true, wide_mtx);
+    len += this->calc_attr_length(true, true, curBlockSettings->get_wide_matrix());
 
     return len;
 }
@@ -66,37 +87,59 @@ AWDBitmapTexture::set_embed_data(awd_uint8 *buf, awd_uint32 buf_len)
 }
 
 
-void
-AWDBitmapTexture::set_embed_file_data(int fd)
-{
-    struct stat *s;
-
-    s = (struct stat *)malloc(sizeof(struct stat));
-    fstat(fd, s);
-    this->embed_data_len = s->st_size;
-    this->embed_data = (awd_uint8 *)malloc(this->embed_data_len);
-
-    lseek(fd, 0, SEEK_SET);
-    read(fd, this->embed_data, this->embed_data_len);
-}
-
-
 void 
-AWDBitmapTexture::prepare_and_add_dependencies()
+	AWDBitmapTexture::prepare_and_add_dependencies(AWDBlockList * targetList)
 {
     // Do nothing
 }
 
+awd_uint32
+AWDBitmapTexture::calc_body_length_for_CubeTex(AWD_tex_type textype)
+{
+    awd_uint32 len;
+    len = sizeof(awd_uint32); //datalength;
+    if (textype==EXTERNAL){
+		len += this->url_len;   }
+    else {
+		len += this->embed_data_len;    }
+	if (len==sizeof(awd_uint32)){
+		int error=0;
+	}
+    return len;
+}
+void
+	AWDBitmapTexture::write_for_CubeTex(int fd, AWD_tex_type textype)
+{
+    awd_uint32 data_len;
+
+    if (textype == EXTERNAL) {		
+        data_len = UI32(this->url_len);
+		if (data_len==0){
+			int error=0;
+		}
+        write(fd, &data_len, sizeof(awd_uint32));
+        write(fd, this->url, this->url_len);
+    }
+    else {
+        data_len = UI32(this->embed_data_len);
+		if (data_len==0){
+			int error=0;
+		}
+        write(fd, &data_len, sizeof(awd_uint32));
+        write(fd, this->embed_data, this->embed_data_len);
+    }
+
+}
 
 void
-AWDBitmapTexture::write_body(int fd, bool wide_mtx)
+AWDBitmapTexture::write_body(int fd, BlockSettings * curBlockSettings)
 {
     awd_uint32 data_len;
 
     awdutil_write_varstr(fd, this->get_name(), this->get_name_length());
 
-    write(fd, &this->type, sizeof(awd_uint8));
-    if (this->type == EXTERNAL) {
+    write(fd, &this->saveType, sizeof(awd_uint8));
+    if (this->saveType == EXTERNAL) {
         data_len = UI32(this->url_len);
         write(fd, &data_len, sizeof(awd_uint32));
         write(fd, this->url, this->url_len);
@@ -107,9 +150,17 @@ AWDBitmapTexture::write_body(int fd, bool wide_mtx)
         write(fd, this->embed_data, this->embed_data_len);
     }
 
-    this->properties->write_attributes(fd, wide_mtx);
-    this->user_attributes->write_attributes(fd, wide_mtx);
+    this->properties->write_attributes(fd,  curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd,  curBlockSettings->get_wide_matrix());
 }
+
+
+
+
+
+
+
+
 
 
 
@@ -118,75 +169,90 @@ AWDCubeTexture::AWDCubeTexture(const char *name, awd_uint16 name_len) :
     AWDNamedElement(name, name_len),
     AWDAttrElement()
 {
-    this->sides = (AWDBlock **)malloc(6*sizeof(AWDBlock *));
-    this->sides[0] = NULL;
-    this->sides[1] = NULL;
-    this->sides[2] = NULL;
-    this->sides[3] = NULL;
-    this->sides[4] = NULL;
-    this->sides[5] = NULL;
+    this->saveType = UNDEFINEDTEXTYPE;
+	this->texture_blocks=new AWDBlockList();
+
 }
 
 AWDCubeTexture::~AWDCubeTexture()
 {
-    free(this->sides);
+	delete this->texture_blocks;
+	this->texture_blocks=NULL;
 }
 
 
+AWDBlockList *
+AWDCubeTexture::get_texture_blocks()
+{
+    return this->texture_blocks;
+}
 void
-AWDCubeTexture::set_dir_tex(AWD_cube_dir dir, AWDBlock *texture)
+AWDCubeTexture::set_texture_blocks(AWDBlockList * texture_blocks)
 {
-    this->sides[(int)dir] = texture;
+    this->texture_blocks = texture_blocks;
 }
 
-AWDBlock *
-AWDCubeTexture::get_dir_tex(AWD_cube_dir dir)
+AWD_tex_type
+AWDCubeTexture::get_tex_type()
 {
-    return this->sides[(int)dir];
+    return this->saveType;
+}
+void
+AWDCubeTexture::set_tex_type(AWD_tex_type texType)
+{
+    this->saveType = texType;
 }
 
 
 awd_uint32
-AWDCubeTexture::calc_body_length(bool wide_mtx)
+AWDCubeTexture::calc_body_length(BlockSettings * curBlockSettings)
 {
-    return (2 + this->get_name_length()) + 
-        6 * sizeof(awd_baddr) + 
-        this->calc_attr_length(true, true, wide_mtx);
+	int len;
+	
+    len = sizeof(awd_uint16) + this->get_name_length(); //name
+    len += sizeof(awd_uint8); //save type (external/embbed)
+	if (this->texture_blocks->get_num_blocks()==1){
+		this->type=CUBE_TEXTURE_ATF;
+	}
+	else if (this->texture_blocks->get_num_blocks()==6){
+		this->type=CUBE_TEXTURE;
+	}
+	else {
+		//TODO: HANDLE ERROR HERE; OR DO IT BEFORE THIS 
+	}
+    AWDBitmapTexture *block;
+    AWDBlockIterator *it;
+    it = new AWDBlockIterator(this->texture_blocks);
+    while ((block = (AWDBitmapTexture *)it->next()) != NULL) {
+		len += block->calc_body_length_for_CubeTex(this->saveType);
+	}
+	delete it;
+	len += this->calc_attr_length(true, true, curBlockSettings->get_wide_matrix());
+    return len;
+        
 }
 
 
-void
-AWDCubeTexture::prepare_and_add_dependencies()
+void 
+AWDCubeTexture::prepare_and_add_dependencies(AWDBlockList * targetList)
 {
     // Do nothing
 }
 
 
 void
-AWDCubeTexture::write_dir_tex(int fd, AWD_cube_dir dir)
-{
-    AWDBlock *side;
-
-    side = this->sides[(int)dir];
-    if (side != NULL) {
-        awd_baddr addr = UI32(side->get_addr());
-        write(fd, &addr, sizeof(awd_baddr));
-    }
-}
-
-
-void
-AWDCubeTexture::write_body(int fd, bool wide_mtx)
-{
+AWDCubeTexture::write_body(int fd, BlockSettings *curBlockSettings)
+{	
+    awd_uint8 saveType = (awd_uint8)this->saveType;
+    write(fd, &saveType, sizeof(awd_uint8));
     awdutil_write_varstr(fd, this->get_name(), this->get_name_length());
-    this->write_dir_tex(fd, POS_X);
-    this->write_dir_tex(fd, NEG_X);
-    this->write_dir_tex(fd, POS_Y);
-    this->write_dir_tex(fd, NEG_Y);
-    this->write_dir_tex(fd, POS_Z);
-    this->write_dir_tex(fd, NEG_Z);
-
-    this->properties->write_attributes(fd, wide_mtx);
-    this->user_attributes->write_attributes(fd, wide_mtx);
+    AWDBitmapTexture *block;
+    AWDBlockIterator *it;
+    it = new AWDBlockIterator(this->texture_blocks);
+    while ((block = (AWDBitmapTexture *)it->next()) != NULL) 
+		block->write_for_CubeTex(fd,this->saveType);
+	delete it;
+    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
 }
 

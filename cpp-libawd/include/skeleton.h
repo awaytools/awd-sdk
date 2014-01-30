@@ -25,10 +25,9 @@ class AWDSkeletonJoint :
         AWDSkeletonJoint(const char *, awd_uint16, awd_float64 *);
         ~AWDSkeletonJoint();
 
-        int write_joint(int, awd_uint32, bool);
+        int write_joint(int, awd_uint32, BlockSettings * );
         int calc_length(bool);
         int calc_num_children();
-
         awd_uint32 get_id();
 
         void set_bind_mtx(awd_float64 *);
@@ -47,17 +46,29 @@ class AWDSkeleton :
 {
     private:
         AWDSkeletonJoint *root_joint;
-
+		AWDBlockList *clip_blocks;
+		int joints_per_vert;
+		int neutralPose;
+        bool simpleMode;
+		
     protected:
-        awd_uint32 calc_body_length(bool);
-        void write_body(int, bool);
+        awd_uint32 calc_body_length(BlockSettings *);
+        void write_body(int, BlockSettings *);
 
     public:
-        AWDSkeleton(const char *, awd_uint16);
+        AWDSkeleton(const char *, awd_uint16, int);
         ~AWDSkeleton();
-
+		
+		AWDBlockList * get_clip_blocks();
+		void set_clip_blocks(AWDBlockList *);
+		bool get_simpleMode();
+		void set_simpleMode(bool);
         AWDSkeletonJoint *set_root_joint(AWDSkeletonJoint *);
         AWDSkeletonJoint *get_root_joint();
+        int get_joints_per_vert();
+        void set_joints_per_vert(int);
+        int get_neutralPose();
+        void set_neutralPose(int);
 };
 
 #endif

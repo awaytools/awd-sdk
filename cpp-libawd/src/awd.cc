@@ -13,6 +13,15 @@
 #include "Types.h"
 #include "LzmaEnc.h"
 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+   #ifndef DBG_NEW
+      #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+      #define new DBG_NEW
+   #endif
+#endif  // _DEBUG
 
 const int AWD::VERSION_MAJOR = 2;
 const int AWD::VERSION_MINOR = 1;
@@ -20,8 +29,7 @@ const int AWD::VERSION_BUILD = 0;
 const char AWD::VERSION_RELEASE = 'a';
 
 
-
-AWD::AWD(AWD_compression compression, awd_uint16 flags, char *outPathName, bool splitByRootObjs,  bool openFiles)
+AWD::AWD(AWD_compression compression, awd_uint16 flags, char *outPathName, bool splitByRootObjs, BlockSettings * thisBlockSettings, bool exportEmtpyContainers)
 {
     this->major_version = VERSION_MAJOR;
     this->minor_version = VERSION_MINOR;
@@ -29,19 +37,28 @@ AWD::AWD(AWD_compression compression, awd_uint16 flags, char *outPathName, bool 
     this->flags = flags;
     this->splitByRootObjs = splitByRootObjs;
 	this->outPath=outPathName;
-	this->openFiles=openFiles;
-    this->texture_blocks = new AWDBlockList();
-    this->cubetex_blocks = new AWDBlockList();
-    this->material_blocks = new AWDBlockList();
-    this->mesh_data_blocks = new AWDBlockList();
-    this->skeleton_blocks = new AWDBlockList();
-    this->skelanim_blocks = new AWDBlockList();
-    this->skelpose_blocks = new AWDBlockList();
-    this->uvanim_blocks = new AWDBlockList();
-    this->scene_blocks = new AWDBlockList();
-
-    this->namespace_blocks = new AWDBlockList();
-
+	this->exportEmtpyContainers=exportEmtpyContainers;
+	this->thisBlockSettings=thisBlockSettings;
+	// all this block-lists should have non-weak reference set, so they will delete the blocks
+	// this means, that every awdblock should only occur one time in only one of this lists:
+    this->texture_blocks = new AWDBlockList(false);
+    this->cubetex_blocks = new AWDBlockList(false);
+    this->material_blocks = new AWDBlockList(false);
+    this->mesh_data_blocks = new AWDBlockList(false);
+    this->skeleton_blocks = new AWDBlockList(false);
+    this->skelanim_blocks = new AWDBlockList(false);
+    this->skelpose_blocks = new AWDBlockList();//skel_pose-blocks are getting deleted within skelanim_blocks
+    this->uvanim_blocks = new AWDBlockList(false);
+    this->animator_blocks = new AWDBlockList(false);
+    this->scene_blocks = new AWDBlockList(false);
+    this->namespace_blocks = new AWDBlockList(false);
+    this->prim_blocks = new AWDBlockList(false);
+    this->amin_set_blocks = new AWDBlockList(false);
+    this->vertex_anim_blocks = new AWDBlockList(false);
+    this->effect_method_blocks = new AWDBlockList(false);
+    this->command_blocks = new AWDBlockList(false);
+    this->lightPicker_blocks = new AWDBlockList(false);
+	this->darkLightPicker=NULL;
     this->metadata = NULL;
     this->last_used_nsid = 0;
     this->last_used_baddr = 0;
@@ -59,11 +76,27 @@ AWD::~AWD()
     delete this->skelanim_blocks;
     delete this->skelpose_blocks;
     delete this->uvanim_blocks;
+    delete this->animator_blocks;
     delete this->scene_blocks;
     delete this->namespace_blocks;
+    delete this->prim_blocks;
+    delete this->amin_set_blocks;
+    delete this->vertex_anim_blocks;
+    delete this->effect_method_blocks;
+    delete this->lightPicker_blocks; 
+	delete this->command_blocks;
+	if (this->metadata){
+		delete this->metadata;}
+	this->metadata=NULL;
+
+	if (this->darkLightPicker!=NULL)
+		delete this->darkLightPicker;
+	this->darkLightPicker=NULL;
+	delete this->thisBlockSettings;
 }
 
 
+	
 
 bool
 AWD::has_flag(int flag)
@@ -71,77 +104,112 @@ AWD::has_flag(int flag)
     return ((this->flags & flag) > 0);
 }
 
+AWDLightPicker * AWD::CreateDarkLightPicker()
+{
+	if(this->darkLightPicker==NULL){
+		if(this->lightPicker_blocks->get_num_blocks()>0){			
+			AWDLight * awdDarkLight = NULL;
+			char * lightName_ptr="DarkLight";
+			awdDarkLight=new AWDLight(lightName_ptr, strlen(lightName_ptr));
+			awdDarkLight->set_light_type(AWD_LIGHT_POINT);
+			awdDarkLight->set_diffuse(0);
+			awdDarkLight->set_specular(0);
+			awdDarkLight->set_ambient(0);
+			AWDBlockList * lightBlocks=new AWDBlockList();
+			lightBlocks->append(awdDarkLight);
+			char *name = "DarkLightPicker"; 
+			this->darkLightPicker=new AWDLightPicker(name,strlen(name));
+			this->darkLightPicker->set_lights(lightBlocks);
+			this->add_scene_block(awdDarkLight);
+			return this->darkLightPicker;
+		}
+		return NULL;
+	}
+	else 
+		return this->darkLightPicker;
 
+}
+
+void
+AWD::add_light_picker_block(AWDLightPicker *block)
+{
+    this->lightPicker_blocks->append(block);
+}
 void
 AWD::set_metadata(AWDMetaData *block)
 {
     this->metadata = block;
 }
-
-
+void
+AWD::add_effect_method_block(AWDEffectMethod *block)
+{
+    this->effect_method_blocks->append(block);
+}
 void
 AWD::add_material(AWDMaterial *block)
 {
     this->material_blocks->append(block);
 }
-
-
 void
 AWD::add_texture(AWDBitmapTexture *block)
 {
     this->texture_blocks->append(block);
 }
-
-
 void
 AWD::add_cube_texture(AWDCubeTexture *block)
 {
     this->cubetex_blocks->append(block);
 }
-
-
 void
-AWD::add_mesh_data(AWDTriGeom *block)
+AWD::add_mesh_data(AWDBlock *block)
 {
     this->mesh_data_blocks->append(block);
 }
-
-
+void
+AWD::add_prim_block(AWDPrimitive *block)
+{
+    this->prim_blocks->append(block);
+}
+void
+AWD::add_amin_set_block(AWDAnimationSet *block)
+{
+    this->amin_set_blocks->append(block);
+}
+void
+AWD::add_vertex_anim_block(AWDVertexAnimation *block)
+{
+    this->vertex_anim_blocks->append(block);
+}
 void
 AWD::add_scene_block(AWDSceneBlock *block)
 {
     this->scene_blocks->append(block);
 }
-
-
 void
 AWD::add_skeleton(AWDSkeleton *block)
 {
     this->skeleton_blocks->append(block);
 }
-
-
 void
 AWD::add_skeleton_pose(AWDSkeletonPose *block)
 {
     this->skelpose_blocks->append(block);
 }
-
-
 void
 AWD::add_skeleton_anim(AWDSkeletonAnimation *block)
 {
     this->skelanim_blocks->append(block);
 }
-
-
 void
 AWD::add_uv_anim(AWDUVAnimation *block)
 {
     this->uvanim_blocks->append(block);
 }
-
-
+void
+AWD::add_animator(AWDAnimator *block)
+{
+    this->animator_blocks->append(block);
+}
 void
 AWD::add_namespace(AWDNamespace *block)
 {
@@ -150,7 +218,6 @@ AWD::add_namespace(AWDNamespace *block)
         block->set_handle(this->last_used_nsid);
     }
 }
-
 
 AWDNamespace *
 AWD::get_namespace(const char *uri)
@@ -206,10 +273,10 @@ AWD::write_blocks(AWDBlockList *blocks, int fd)
     size_t len;
     AWDBlock *block;
     AWDBlockIterator it(blocks);
-
+	
     len = 0;
     while ((block = it.next()) != NULL) {
-        len += block->write_block(fd);
+		len += block->write_block(fd, this->thisBlockSettings);
     }
 
     return len;
@@ -223,14 +290,39 @@ AWD::flatten_scene(AWDSceneBlock *cur, AWDBlockList *flat_list)
     AWDBlock *child;
     AWDBlockIterator *children;
 
-    cur->prepare_and_add_with_dependencies(flat_list);
+	if ((cur->get_type()==LIGHT)&&(cur->isExported)){
+		cur->isExported=true;
+		AWDCommandBlock * awdCommand=new AWDCommandBlock(cur->get_name(),cur->get_name_length());
+		awdCommand->add_target_light(cur->get_addr());
+		awdCommand->set_transform(cur->get_transform());
+		AWDSceneBlock * parentBlock = (AWDSceneBlock *)cur->get_parent();
+		if (parentBlock!=NULL){
+			awdCommand->set_parent(parentBlock);
+			awdCommand->prepare_and_add_with_dependencies(flat_list);
+		}
+		else 
+			this->command_blocks->append(awdCommand);
 
-	cur->isExported=true;
+		cur->set_parent(NULL);
+	}
+	else{
+		bool exportThis=true;
+		if (this->exportEmtpyContainers)		
+			exportThis=!cur->isEmpty();		
+		// to do: add option to exclude all empty containers.
+		// recursive function to check if a child exists
+		if(exportThis)
+			cur->prepare_and_add_with_dependencies(flat_list);
+
+		cur->isExported=true;
+	}
 
     children = cur->child_iter();
     while ((child = children->next()) != NULL) {
         this->flatten_scene((AWDSceneBlock*)child, flat_list);
     }
+	
+	delete children;
 }
 
 void
@@ -300,14 +392,15 @@ awd_uint32
 AWD::flush(int out_fd)
 {
 	//contain all blocks that are going to be written in the main AWD file.
-	AWDBlockList * blocks_mainAWD;
-	blocks_mainAWD = new AWDBlockList();
+	AWDBlockList * blocks_mainAWD = new AWDBlockList();
+	
 	//make shure the metadata block exists, because no other awdblock should have the id=0
-	if (!this->metadata) 
+	if (this->metadata==NULL) 
 		this->metadata=new AWDMetaData();
 	this->metadata->prepare_and_add_with_dependencies(blocks_mainAWD); 	
 	
-	char *cur_filename=NULL;
+	char * cur_filename=NULL;
+	/*
 	if (this->splitByRootObjs){
 		AWDBlockList * blocks_splittedAWD;
 		blocks_splittedAWD = new AWDBlockList();
@@ -341,39 +434,59 @@ AWD::flush(int out_fd)
 			}
 		}
 	}
-	else{
-		this->re_order_blocks(this->namespace_blocks, blocks_mainAWD);
-		this->reorder_scene(this->scene_blocks, blocks_mainAWD);	
-	}
+	*/
+	//else{
+	this->re_order_blocks(this->namespace_blocks, blocks_mainAWD);
+	this->reorder_scene(this->scene_blocks, blocks_mainAWD);	
+	//}
+	
 	this->reset_all_blocks2();
+    this->re_order_blocks(this->animator_blocks, blocks_mainAWD);
     this->re_order_blocks(this->skeleton_blocks, blocks_mainAWD);
     this->re_order_blocks(this->skelpose_blocks, blocks_mainAWD);
     this->re_order_blocks(this->skelanim_blocks, blocks_mainAWD);
-    this->re_order_blocks(this->texture_blocks, blocks_mainAWD);
+    //this->re_order_blocks(this->texture_blocks, blocks_mainAWD);
     this->re_order_blocks(this->material_blocks, blocks_mainAWD);
     this->re_order_blocks(this->mesh_data_blocks, blocks_mainAWD);
     this->re_order_blocks(this->uvanim_blocks, blocks_mainAWD);
-
+	this->re_order_blocks(this->lightPicker_blocks, blocks_mainAWD);
+	//this->re_order_blocks(this->vertex_anim_blocks, blocks_mainAWD);
+	this->re_order_blocks(this->amin_set_blocks, blocks_mainAWD);
+	this->re_order_blocks(this->effect_method_blocks, blocks_mainAWD);
+	
 	// write the main file
 	if (blocks_mainAWD->get_num_blocks()>1){
 		cur_filename=this->outPath;
 		this->write_blocks_to_file(out_fd, blocks_mainAWD);
 	}
-
-	//open the file with the default appliction (e.g. Awaybuilder)
-	if (this->openFiles && cur_filename!=NULL)
-		ShellExecute(NULL, "open", cur_filename, NULL, NULL, SW_SHOWNORMAL);	
+	delete blocks_mainAWD;
+	//open the last stored file with the default appliction (e.g. Awaybuilder)
 
 	return AWD_TRUE;
 
 }
 
+AWDBlockList *
+AWD::get_animator_blocks()
+{
+	return this->animator_blocks;
+}
+AWDBlockList *
+AWD::get_mesh_data_blocks()
+{
+	return this->mesh_data_blocks;
+}
+AWDBlockList *
+AWD::get_material_blocks()
+{
+	return this->material_blocks;
+}
 
 awd_uint32
 AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)
 {
     int tmp_fd;
-    char *tmp_path;
+    char *tmp_path=NULL;
 
     off_t tmp_len;
     awd_uint8 *tmp_buf;
@@ -388,7 +501,8 @@ AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)
         printf("Could not open temporary file necessary for writing, errno=%d\n", errno);
         return AWD_FALSE;
     }
-    tmp_len += this->write_blocks(blocks, tmp_fd);
+	int sds=(int)this->write_blocks(blocks, tmp_fd);
+    tmp_len += sds;
 
     tmp_buf = (awd_uint8 *) malloc(tmp_len);
 	lseek(tmp_fd, 0, SEEK_SET);
@@ -472,22 +586,21 @@ AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)
         props.algo = 1;
         props.level = 9;
 
-        LzmaEncode(lzma_buf, &lzma_len, tmp_buf, tmp_len,
-            &props, props_buf, &props_len, 0, NULL, &alloc, &alloc);
+        LzmaEncode(lzma_buf, &lzma_len, tmp_buf, tmp_len, &props, props_buf, &props_len, 0, NULL, &alloc, &alloc);
 
         // Body length is the length of the actual
         // compressed body + size of props and an integer
         // definining the uncompressed length (see below)
-        body_len = (awd_uint32)lzma_len + (awd_uint32)props_len + sizeof(awd_uint32);
+        body_len = (awd_uint32)lzma_len + (awd_uint32)props_len;//+ sizeof(awd_uint32);
 
         // Create new buffer containing LZMA props, length
         // of uncompressed body and the actual body data
         // concatenated together.
         tmp_len_bo = UI32(tmp_len);
         body_buf = (awd_uint8*)malloc(body_len);
-        memcpy(body_buf, &tmp_len_bo, sizeof(awd_uint32));
-        memcpy(body_buf+sizeof(awd_uint32), props_buf, props_len);
-        memcpy(body_buf+props_len+sizeof(awd_uint32), lzma_buf, lzma_len);
+        //memcpy(body_buf, &tmp_len_bo, sizeof(awd_uint32));
+        memcpy(body_buf, props_buf, props_len);
+        memcpy(body_buf, lzma_buf, lzma_len);
     }
 
 
@@ -497,6 +610,11 @@ AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)
     
 
     write(out_fd, body_buf, body_len);
+	if (body_buf!=tmp_buf)
+		free(tmp_buf);
+	free (body_buf);
+	if (tmp_path!=NULL)
+		free(tmp_path);
     return AWD_TRUE;
 }
 

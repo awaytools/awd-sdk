@@ -25,8 +25,8 @@ class AWDUVAnimation :
         AWD_uvanim_fr *last_frame;
 
     protected:
-        awd_uint32 calc_body_length(bool);
-        void write_body(int, bool);
+        awd_uint32 calc_body_length(BlockSettings *);
+        void write_body(int, BlockSettings *);
 
     public:
         AWDUVAnimation(const char *, awd_uint16);

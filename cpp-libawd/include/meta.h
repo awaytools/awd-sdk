@@ -17,19 +17,26 @@ class AWDMetaData :
     public AWDBlock,
     public AWDAttrElement
 {
-    protected:
-        char *encoder_name;
+	private:		
+        char * encoder_name;
+        int encoder_name_len;
         char *encoder_version;
+        int encoder_version_len;
+        char * generator_name;
+        int generator_name_len;
+        char * generator_version;
+        int generator_version_len;
+    protected:
         void prepare_and_add_dependencies(AWDBlockList *);
-        awd_uint32 calc_body_length(bool);
-        void write_body(int, bool);
+        awd_uint32 calc_body_length(BlockSettings *);
+		void write_body(int, BlockSettings *);
 
     public:
-        AWDMetaData();
-        char *generator_name;
-        char *generator_version;
+        AWDMetaData();		
+        ~AWDMetaData(); 
 
-        void override_encoder_metadata(char *, char *);
+        void override_encoder_metadata(const char *, const char *);
+        void set_generator_metadata(const char *, const char *);
 };
 
 

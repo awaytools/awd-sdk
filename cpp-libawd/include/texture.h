@@ -9,7 +9,8 @@
 
 typedef enum {
     EXTERNAL=0,
-    EMBEDDED
+    EMBEDDED,
+    UNDEFINEDTEXTYPE
 } AWD_tex_type;
 
 class AWDBitmapTexture : 
@@ -18,26 +19,31 @@ class AWDBitmapTexture :
     public AWDAttrElement
 {
     private:
-        AWD_tex_type type;
-        const char *url;
+        AWD_tex_type saveType;
+        char *url;
         awd_uint16 url_len;
         awd_uint8 *embed_data;
         awd_uint32 embed_data_len;
     
     protected:
-        awd_uint32 calc_body_length(bool);
-        void prepare_and_add_dependencies();
-        void write_body(int, bool);
+        awd_uint32 calc_body_length(BlockSettings *);
+        void prepare_and_add_dependencies(AWDBlockList *);
+        void write_body(int, BlockSettings *);
 
     public:
-        AWDBitmapTexture(AWD_tex_type, const char *, awd_uint16);
+        AWDBitmapTexture(const char *, awd_uint16);
+        ~AWDBitmapTexture();
 
         void set_embed_data(awd_uint8 *, awd_uint32);
-        void set_embed_file_data(int);
 
         const char *get_url();
         awd_uint16 get_url_length();
         void set_url(const char *, awd_uint16);
+
+        AWD_tex_type get_tex_type();
+        void set_tex_type(AWD_tex_type);
+        void write_for_CubeTex(int, AWD_tex_type);
+        awd_uint32 calc_body_length_for_CubeTex(AWD_tex_type);
 };
 
 
@@ -57,21 +63,26 @@ class AWDCubeTexture :
     public AWDAttrElement
 {
     private:
-        AWDBlock **sides; // Array of textures
+		AWD_tex_type saveType;
+		AWDBlockList * texture_blocks;
 
-        void write_dir_tex(int, AWD_cube_dir);
 
     protected:
-        awd_uint32 calc_body_length(bool);
-        void prepare_and_add_dependencies();
-        void write_body(int, bool);
+        awd_uint32 calc_body_length(BlockSettings *);
+        void prepare_and_add_dependencies(AWDBlockList *);
+        void write_body(int, BlockSettings *);
+
 
     public:
         AWDCubeTexture(const char *, awd_uint16);
         ~AWDCubeTexture();
+		
+        AWDBlockList * get_texture_blocks();
+        void set_texture_blocks(AWDBlockList *);
 
-        void set_dir_tex(AWD_cube_dir, AWDBlock *);
-        AWDBlock *get_dir_tex(AWD_cube_dir);
+        AWD_tex_type get_tex_type();
+        void set_tex_type(AWD_tex_type);
+		
 };
 
 #endif

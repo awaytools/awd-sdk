@@ -6,6 +6,7 @@
 #include "block.h"
 #include "attr.h"
 #include "shading.h"
+#include "light.h"
 
 #define PROP_MAT_COLOR 1
 #define PROP_MAT_TEXTURE 2
@@ -20,7 +21,7 @@
 #define PROP_MAT_ALPHA_BLENDING 11
 #define PROP_MAT_ALPHA_THRESHOLD 12
 #define PROP_MAT_REPEAT 13
-#define PROP_MAT_CURRENTLY_NOT_USED 14
+//#define PROP_MAT_CURRENTLY_NOT_USED 14
 #define PROP_MAT_AMBIENT_LEVEL 15
 #define PROP_MAT_AMBIENTCOLOR 16
 #define PROP_MAT_AMBIENTTEXTURE 17  
@@ -32,6 +33,7 @@
 
 
 typedef enum {
+    AWD_MATTYPE_UNDEFINED=0,
     AWD_MATTYPE_COLOR=1,
     AWD_MATTYPE_TEXTURE=2
 } AWD_mat_type;
@@ -48,47 +50,119 @@ class AWDMaterial :
 {
     private:
         AWD_mat_type type;
-        AWDBitmapTexture *texture;
-        AWDBitmapTexture *ambientTexture;
-        AWDBitmapTexture *specTexture;
-        AWDBitmapTexture *normalTexture;
+        int mappingChannel;
+        int secondMappingChannel;
+        bool is_faceted;
+        bool isCreated;//will be true, once the mtl is converted to awd
+        
         AWD_mat_method *first_method;
         AWD_mat_method *last_method;
+
         awd_uint8 num_methods;
 
+        AWDBlockList * effectMethods;
+        
+        AWDBlockList * materialClones;
+
+        // vars for material properties
+        awd_color color;
+        AWDBitmapTexture *texture;
+        AWDBitmapTexture *normalTexture;
+        bool multiPass;//specialID
+        bool smooth;
+        bool mipmap;
+        bool both_sides;
+        bool premultiplied;
+        int blendMode;
+        awd_float32 alpha;
+        bool alpha_blending;
+        awd_float32 alpha_threshold;
+        bool repeat;
+        awd_float32 ambientStrength;
+        awd_color ambientColor;
+        AWDBitmapTexture *ambientTexture;
+        awd_float32 specularStrength;
+        awd_uint16 glossStrength;
+        awd_color specularColor;
+        AWDBitmapTexture *specTexture;
+        AWDLightPicker *lightPicker;
+        awd_float64 * uv_transform_mtx;
+
     protected:
-        awd_uint32 calc_body_length(bool);
+        awd_uint32 calc_body_length(BlockSettings *);
         void prepare_and_add_dependencies(AWDBlockList *);
-        void write_body(int, bool);
+        void write_body(int, BlockSettings *);
 
     public:
-        AWDMaterial(AWD_mat_type, const char *, awd_uint16);
+        AWDMaterial(const char *, awd_uint16);
         ~AWDMaterial();
-		bool isCreated;//will be true, once the mtl is converted to awd
-
-        bool repeat;
-        bool alpha_blending;
-        awd_color color;
-        awd_color ambientColor;
-        awd_color specularColor;
-        double specularStrength;
-        double abmientStrength;
-        double glossStrength;
-        awd_float32 alpha_threshold;
 
         void set_type(AWD_mat_type);
         AWD_mat_type get_type();
 
+        void set_mappingChannel(int);
+        int get_mappingChannel();
+        void set_secondMappingChannel(int);
+        int get_secondMappingChannel();
+        void set_is_faceted(bool);
+        bool get_is_faceted();
+        void set_isCreated(bool);
+        bool get_isCreated();
+        
+        void set_color(awd_color);
+        awd_color get_color();
         void set_texture(AWDBitmapTexture *);
         AWDBitmapTexture *get_texture();
-        void set_ambientTexture(AWDBitmapTexture *);
-        AWDBitmapTexture *get_ambientTexture();
-        void set_specTexture(AWDBitmapTexture *);
-        AWDBitmapTexture *get_specTexture();
         void set_normalTexture(AWDBitmapTexture *);
         AWDBitmapTexture *get_normalTexture();
+        void set_multiPass(bool);
+        bool get_multiPass();
+        void set_smooth(bool);
+        bool get_smooth();
+        void set_mipmap(bool);
+        bool get_mipmap();
+        void set_both_sides(bool);
+        bool get_both_sides();
+        void set_premultiplied(bool);
+        bool get_premultiplied();
+        void set_blendMode(int);
+        int get_blendMode();
+        void set_alpha(awd_float32);
+        awd_float32 get_alpha();
+        void set_alpha_blending(bool);
+        bool get_alpha_blending();
+        void set_alpha_threshold(awd_float32);
+        awd_float32 get_alpha_threshold();
+        void set_repeat(bool);
+        bool get_repeat();
+        void set_ambientStrength(awd_float32);
+        awd_float32 get_ambientStrength();
+        void set_ambientColor(awd_color);
+        awd_color get_ambientColor();
+        void set_ambientTexture(AWDBitmapTexture *);
+        AWDBitmapTexture *get_ambientTexture();
+        void set_specularStrength(awd_float32);
+        awd_float32 get_specularStrength();
+        void set_glossStrength(awd_uint16);
+        awd_uint16 get_glossStrength();
+        void set_specularColor(awd_color);
+        awd_color get_specularColor();
+        void set_specTexture(AWDBitmapTexture *);
+        AWDBitmapTexture *get_specTexture();
+        void set_lightPicker(AWDLightPicker *);
+        AWDLightPicker *get_lightPicker();
+        
+        AWDBlockList *get_materialClones();
 
+        void set_effectMethods(AWDBlockList *);
+        AWDBlockList *get_effectMethods();
+
+        void set_uv_transform_mtx(awd_float64 *);
+        awd_float64 *get_uv_transform_mtx();
+        
+        AWDMaterial* get_material_for_lightPicker(AWDLightPicker *);
         void add_method(AWDShadingMethod *);
+        void resetShadingMethods();
 };
 
 #endif

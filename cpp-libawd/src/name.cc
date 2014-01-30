@@ -13,8 +13,9 @@ AWDNamedElement::AWDNamedElement(const char *name, awd_uint16 name_len)
 
 AWDNamedElement::~AWDNamedElement()
 {
-    if (this->name) {
+    if (this->name_len>0) {
         free(this->name);
+		this->name_len=NULL;
         this->name = NULL;
     }
 }
@@ -30,6 +31,8 @@ AWDNamedElement::get_name()
 void
 AWDNamedElement::set_name(const char *name, awd_uint16 name_len)
 {
+	if (this->name_len>0)
+		free(this->name);
     this->name_len = name_len;
     if (name != NULL) {
         this->name = (char*)malloc(this->name_len+1);

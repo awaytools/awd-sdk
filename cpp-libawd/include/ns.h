@@ -8,19 +8,19 @@ class AWDNamespace :
     public AWDBlock
 {
     private:
-        const char *uri;
+        char *uri;
         awd_uint16 uri_len;
         awd_nsid handle;
 
     protected:
-        awd_uint32 calc_body_length(bool);
-        void write_body(int, bool);
+        awd_uint32 calc_body_length(BlockSettings *);
+        void write_body(int, BlockSettings *);
 
     public:
         AWDNamespace(const char *, awd_uint16);
         ~AWDNamespace();
 
-        const char *get_uri(int *);
+        char *get_uri(int *);
 
         awd_nsid get_handle();
         void set_handle(awd_nsid handle);

@@ -16,6 +16,7 @@ AWDAttr::write_attr(int fd, bool wide_mtx)
     AWD_field_ptr val;
     awd_uint32 bytes_written;
     awd_int16 i16_be;
+    awd_uint8 i8_be;
     awd_int32 i32_be;
     awd_float32 f32_be;
     awd_float64 f64_be;
@@ -28,6 +29,13 @@ AWDAttr::write_attr(int fd, bool wide_mtx)
     while (bytes_written < this->value_len) {
         // Check type, and write data accordingly
         switch (this->type) {
+            case AWD_FIELD_INT8:
+            case AWD_FIELD_UINT8:
+                i8_be = (*val.ui8);
+                write(fd, &i8_be, sizeof(awd_uint8));
+                bytes_written += sizeof(awd_uint8);
+                val.ui8++;
+                break;
             case AWD_FIELD_INT16:
             case AWD_FIELD_UINT16:
                 i16_be = UI16(*val.i16);
@@ -120,14 +128,26 @@ AWDAttr::get_val_len()
 AWDUserAttr::AWDUserAttr(AWDNamespace *ns, const char *key, awd_uint16 key_len)
 {
     this->ns = ns;
-    this->key = key;
     this->key_len = key_len;
+    if (key != NULL) {
+        this->key = (char*)malloc(this->key_len+1);
+        strncpy(this->key, key, this->key_len);
+        this->key[this->key_len] = 0;
+    }
     this->next = NULL;
 }
 
 
 AWDUserAttr::~AWDUserAttr()
 {
+    if (this->key) {
+        free(this->key);
+        this->key = NULL;
+    }
+	if (this->type!=AWD_FIELD_STRING){
+		if(this->value.v!=NULL)
+			free(this->value.v);
+	}
 }
 
 
@@ -279,7 +299,7 @@ void
 AWDUserAttrList::set(AWDNamespace *ns, const char *key, awd_uint16 key_len, 
     AWD_field_ptr value, awd_uint32 value_length, AWD_field_type type)
 {
-    bool created;
+    bool created=false;
     AWDUserAttr *attr;
 
     attr = this->find(ns, key, key_len);
@@ -330,6 +350,15 @@ AWDNumAttr::AWDNumAttr()
     this->next = NULL;
 }
 
+
+AWDNumAttr::~AWDNumAttr()
+{
+    this->next = NULL;
+	if (this->type!=AWD_FIELD_STRING){
+		if(this->value.v!=NULL)
+			free(this->value.v);
+	}
+}
 
 
 void

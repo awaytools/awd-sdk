@@ -4,6 +4,74 @@
 
 #include "platform.h"
 
+BlockSettings::BlockSettings(bool wideMatrix, bool wideGeom, bool wideProps, bool wideAttributes, double scale)
+{
+        this->wideMatrix=wideMatrix;
+        this->wideGeom=wideGeom;
+        this->wideProps=wideProps;
+        this->wideAttributes=wideAttributes;
+        this->scale=scale;
+
+}
+
+
+BlockSettings::~BlockSettings()
+{
+}
+
+
+
+bool
+BlockSettings::get_wide_matrix()
+{
+    return this->wideMatrix;
+}
+void
+BlockSettings::set_wide_matrix(bool wideMatrix)
+{
+    this->wideMatrix=wideMatrix;
+}
+bool
+BlockSettings::get_wide_geom()
+{
+    return this->wideGeom;
+}
+void
+BlockSettings::set_wide_geom(bool wideGeom)
+{
+    this->wideGeom=wideGeom;
+}
+bool
+BlockSettings::get_wide_props()
+{
+    return this->wideProps;
+}
+void
+BlockSettings::set_wide_props(bool wideProps)
+{
+    this->wideProps=wideProps;
+}
+bool
+BlockSettings::get_wide_attributes()
+{
+    return this->wideAttributes;
+}
+void
+BlockSettings::set_wide_attributes(bool wideAttributes)
+{
+    this->wideAttributes=wideAttributes;
+}
+double
+BlockSettings::get_scale()
+{
+    return this->scale;
+}
+void
+BlockSettings::set_scale(double scale)
+{
+    this->scale=scale;
+}
+
 
 AWDBlock::AWDBlock(AWD_block_type type) 
 {
@@ -12,11 +80,21 @@ AWDBlock::AWDBlock(AWD_block_type type)
     // TODO: Allow setting flags
     this->flags = 0;
 	this->addr = 0;
+	this->isValid =true; //true as long as the block is valdi and should get exported
 	this->isExported =false; //true if block was exported by the export process (for all files)
 	this->isExportedToFile =false; //true if block was exported for one file (gets reset befor exporting one file)
 }
 
-
+bool
+AWDBlock::get_isValid()
+{
+	return this->isValid;
+}
+void
+AWDBlock::set_isValid(bool isValid)
+{
+	this->isValid = isValid;
+}
 void
 AWDBlock::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
@@ -28,17 +106,22 @@ AWDBlock::prepare_and_add_dependencies(AWDBlockList *export_list)
 void
 AWDBlock::prepare_and_add_with_dependencies( AWDBlockList *target_list)
 {
-	if (!this->isExportedToFile){
-		this->isExportedToFile=true;
-		this->isExported=true;
-		this->prepare_and_add_dependencies(target_list);	
-		this->addr = target_list->get_num_blocks();
-		target_list->append(this);
+	if(isValid){
+		if (!this->isExportedToFile){
+			this->isExportedToFile=true;
+			this->isExported=true;
+			this->prepare_and_add_dependencies(target_list);	
+			this->addr = target_list->get_num_blocks();
+			target_list->append(this);
+		}
+	}
+	else{
+		this->addr = 0;
 	}
 
 }
 size_t
-AWDBlock::write_block(int fd)
+AWDBlock::write_block(int fd, BlockSettings *curBlockSettings)
 {
     awd_uint8 ns_addr;
     awd_uint32 length;
@@ -49,7 +132,7 @@ AWDBlock::write_block(int fd)
 	bool wide_mtx = false;
 
 
-    length = this->calc_body_length(wide_mtx);
+	length = this->calc_body_length(curBlockSettings);
 
     //TODO: Get addr of actual namespace
     ns_addr = 0;
@@ -67,20 +150,16 @@ AWDBlock::write_block(int fd)
 
     // Write body using concrete implementation
     // in block sub-classes
-    this->write_body(fd, wide_mtx);
+    this->write_body(fd, curBlockSettings);
 
 
     return (size_t)length + 11;
 }
-
-
-
 awd_baddr
 AWDBlock::get_addr()
 {
     return this->addr;
 }
-
 
 AWD_block_type
 AWDBlock::get_type()
@@ -88,26 +167,139 @@ AWDBlock::get_type()
     return this->type;
 }
 
-
-
-
-AWDBlockList::AWDBlockList()
+AWDBlockList::AWDBlockList(bool weakReference)
 {
     this->first_block = NULL;
     this->last_block = NULL;
     this->num_blocks = 0;
+	this->weakReference=weakReference;
 }
 
 AWDBlockList::~AWDBlockList()
 {
     list_block *cur;
-
+	
     cur = this->first_block;
     while(cur) {
         list_block *next = cur->next;
         cur->next = NULL;
-        delete cur->block;
-		delete cur;
+		if(!weakReference){			
+			if(cur->block->get_type()==TRI_GEOM){
+				AWDTriGeom * thisTriGeom=(AWDTriGeom*)cur->block;
+				if (thisTriGeom!=NULL)
+					delete thisTriGeom;
+			}
+			else if(cur->block->get_type()==PRIM_GEOM){
+				AWDPrimitive * thisPrim=(AWDPrimitive*)cur->block;
+				if (thisPrim!=NULL)
+					delete thisPrim;
+			}
+			else if(cur->block->get_type()==SCENE){	// should not be used yet
+				AWDScene * thisScene=(AWDScene*)cur->block;
+				if (thisScene!=NULL)
+					delete thisScene;
+			}
+			else if(cur->block->get_type()==CONTAINER){
+				AWDContainer * thisContainer=(AWDContainer*)cur->block;
+				if (thisContainer!=NULL)
+					delete thisContainer;
+			}
+			else if(cur->block->get_type()==MESH_INSTANCE){	
+				AWDMeshInst * thisMesh=(AWDMeshInst*)cur->block;
+				if (thisMesh!=NULL)
+					delete thisMesh;
+			}
+			else if(cur->block->get_type()==SKYBOX){	
+				AWDSkyBox * thisSkyBox=(AWDSkyBox*)cur->block;
+				if (thisSkyBox!=NULL)
+					delete thisSkyBox;
+			}
+			else if(cur->block->get_type()==LIGHT){	
+				AWDLight * thisLight=(AWDLight*)cur->block;
+				if (thisLight!=NULL)
+					delete thisLight;
+			}
+			else if(cur->block->get_type()==CAMERA){	
+				AWDCamera * thisCam=(AWDCamera*)cur->block;
+				if (thisCam!=NULL)
+					delete thisCam;
+			}
+			else if(cur->block->get_type()==LIGHTPICKER){	
+				AWDLightPicker * thisLightPicker=(AWDLightPicker*)cur->block;
+				if (thisLightPicker!=NULL)
+					delete thisLightPicker;
+			}
+			else if(cur->block->get_type()==SIMPLE_MATERIAL){	
+				AWDMaterial * thisMat=(AWDMaterial*)cur->block;
+				if (thisMat!=NULL)
+					delete thisMat;
+			}
+			else if(cur->block->get_type()==BITMAP_TEXTURE){
+				AWDBitmapTexture * thisTex=(AWDBitmapTexture*)cur->block;
+				if (thisTex!=NULL)
+					delete thisTex;
+			}
+			else if(cur->block->get_type()==CUBE_TEXTURE){	
+				AWDCubeTexture * thisCubeTex=(AWDCubeTexture*)cur->block;
+				if (thisCubeTex!=NULL)
+					delete thisCubeTex;
+			}
+			else if(cur->block->get_type()==CUBE_TEXTURE_ATF){	// should not be used yet
+				AWDCubeTexture * thisCubeTex=(AWDCubeTexture*)cur->block;
+				if (thisCubeTex!=NULL)
+					delete thisCubeTex;
+			}
+			else if(cur->block->get_type()==EFFECT_METHOD){
+				AWDEffectMethod* thisFXMethod=(AWDEffectMethod*)cur->block;
+				if (thisFXMethod!=NULL)
+					delete thisFXMethod;
+			}			
+			//SHADOW_METHOD=92,
+			else if(cur->block->get_type()==SKELETON){
+				AWDSkeleton* thisSkel=(AWDSkeleton*)cur->block;
+				if (thisSkel!=NULL)
+					delete thisSkel;
+			}
+			else if(cur->block->get_type()==SKELETON_ANIM){
+				AWDSkeletonAnimation* thisSkelanim=(AWDSkeletonAnimation*)cur->block;
+				if (thisSkelanim!=NULL)
+					delete thisSkelanim;
+			}
+			else if(cur->block->get_type()==SKELETON_POSE){
+				AWDSkeletonPose* thisSkelpose=(AWDSkeletonPose*)cur->block;
+				if (thisSkelpose!=NULL)
+					delete thisSkelpose;
+			}
+			//VERTEX_POSE=111,
+			else if(cur->block->get_type()==VERTEX_ANIM){
+				AWDVertexAnimation* thisVertexAnim=(AWDVertexAnimation*)cur->block;
+				if (thisVertexAnim!=NULL)
+					delete thisVertexAnim;
+			}
+			else if(cur->block->get_type()==ANIMATION_SET){
+				AWDAnimationSet* thisAnimSet=(AWDAnimationSet*)cur->block;
+				if (thisAnimSet!=NULL)
+					delete thisAnimSet;
+			}
+			else if(cur->block->get_type()==ANIMATOR){
+				AWDAnimator* thisAnimator=(AWDAnimator*)cur->block;
+				if (thisAnimator!=NULL)
+					delete thisAnimator;
+			}
+			//UV_ANIM=121,
+			else if(cur->block->get_type()==COMMAND){
+				AWDCommandBlock * thisCommand=(AWDCommandBlock*)cur->block;
+				if (thisCommand!=NULL)
+					delete thisCommand;
+			}
+			else if(cur->block->get_type()==NAMESPACE){
+				AWDNamespace * thisNS=(AWDNamespace*)cur->block;
+				if (thisNS!=NULL)
+					delete thisNS;
+			}
+			// the Metadata-block never gets stored in a BlockList, so it doenst need to be deleted here
+		}
+		free(cur);
         cur = next;
     }
 
@@ -116,7 +308,6 @@ AWDBlockList::~AWDBlockList()
     this->first_block = NULL;
     this->last_block = NULL;
 }
-
 
 bool
 AWDBlockList::append(AWDBlock *block)
@@ -142,17 +333,35 @@ AWDBlockList::append(AWDBlock *block)
     }
 }
 
+bool
+AWDBlockList::replace(AWDBlock *block, AWDBlock *oldBlock)
+{
+    list_block *cur;
+
+    cur = this->first_block;
+    while (cur) {
+        if (cur->block == block){
+			cur->block=oldBlock;
+            return true;
+		}
+
+        cur = cur->next;
+    }
+
+    return false;
+}
 
 void
 AWDBlockList::force_append(AWDBlock *block)
 {
     list_block *ctr = (list_block *)malloc(sizeof(list_block));
     ctr->block = block;
+	ctr->blockIdx = this->num_blocks;
     if (this->first_block == NULL) {
         this->first_block = ctr;
     }
     else {
-        this->last_block->next = ctr;
+		this->last_block->next = ctr;		
     }
     
     this->last_block = ctr;
@@ -160,6 +369,21 @@ AWDBlockList::force_append(AWDBlock *block)
     this->num_blocks++;
 }
 
+
+AWDBlock *
+AWDBlockList::getByIndex(int idx)
+{
+	if (idx>=this->num_blocks)
+		return NULL;
+    list_block *cur;
+    cur = this->first_block;
+	int i;
+	for (i=0;i<idx;i++){
+        cur = cur->next;
+	}
+	return cur->block;
+
+}
 
 bool
 AWDBlockList::contains(AWDBlock *block)
@@ -195,6 +419,12 @@ AWDBlockIterator::AWDBlockIterator(AWDBlockList *list)
     this->reset();
 }
 
+AWDBlockIterator::~AWDBlockIterator()
+{
+    this->list = list;
+    this->cur_block = NULL;
+    this->reset();
+}
 
 void
 AWDBlockIterator::reset()

@@ -98,16 +98,20 @@ typedef enum {
 
     // Geometry/data
     TRI_GEOM=1,
-    PRIM_GEOM=2,
+    PRIM_GEOM=11,
 
     // Scene objects
     SCENE=21,
     CONTAINER=22,
     MESH_INSTANCE=23,
 
+	SKYBOX=31,
+
     LIGHT=41,
     CAMERA=42,
     SOUND_SOURCE=43,
+
+	LIGHTPICKER=51,
 
     // Partitioning
     BSP_TREE=61,
@@ -117,14 +121,25 @@ typedef enum {
     SIMPLE_MATERIAL=81,
     BITMAP_TEXTURE=82,
     CUBE_TEXTURE=83,
-
+    CUBE_TEXTURE_ATF=84,
+	
+    EFFECT_METHOD=91,
+    SHADOW_METHOD=92,
     // Animation
     SKELETON=101,
     SKELETON_POSE=102,
     SKELETON_ANIM=103,
+	
+    VERTEX_POSE=111,
+    VERTEX_ANIM=112,
+
+    ANIMATION_SET=113,
+    ANIMATOR=122,
+
     UV_ANIM=121,
 
     // Misc
+    COMMAND=253,
     NAMESPACE=254,
     METADATA=255
 

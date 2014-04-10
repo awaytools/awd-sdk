@@ -70,9 +70,9 @@ AWDShadingMethod::add_number_property(int targetID, float targetValue, float def
 {
 	if (targetValue!=defaultValue){
 		AWD_field_ptr newVal;
-		newVal.v = (awd_float32 *)malloc(sizeof(awd_float32));
-		*newVal.f32 = targetValue;
-		this->shading_props->set(targetID, newVal, sizeof(awd_float32), AWD_FIELD_FLOAT32);
+		newVal.v = (awd_float64 *)malloc(sizeof(awd_float64));
+		*newVal.f64 = targetValue;
+		this->shading_props->set(targetID, newVal, sizeof(awd_float64), AWD_FIELD_FLOAT64);
 	}
 
 }
@@ -143,22 +143,22 @@ AWDShadingMethod::prepare_and_add_dependencies(AWDBlockList *export_list)
 
 
 awd_uint32
-AWDShadingMethod::calc_method_length(bool wide_mtx)
+AWDShadingMethod::calc_method_length(BlockSettings * blockSettings)
 {
 	int len;
 	len = sizeof(awd_uint16); // shading type
-	len += this->shading_props->calc_length(wide_mtx); // shading props
-	len += this->calc_attr_length(false,true, wide_mtx); // shading attributes
+	len += this->shading_props->calc_length(blockSettings); // shading props
+	len += this->calc_attr_length(false,true, blockSettings); // shading attributes
     return len; 
 }
 
 
 void
-AWDShadingMethod::write_method(int fd, bool wide_mtx)
+AWDShadingMethod::write_method(int fd, BlockSettings * blockSettings)
 {
     awd_uint16 type_be;
     type_be = UI16(this->type);
     write(fd, &type_be, sizeof(awd_uint16));
-    this->shading_props->write_attributes(fd, wide_mtx);
-    this->user_attributes->write_attributes(fd, wide_mtx);
+    this->shading_props->write_attributes(fd, blockSettings);
+    this->user_attributes->write_attributes(fd, blockSettings);
 }

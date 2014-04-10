@@ -63,7 +63,7 @@ AWDSkeletonPose::calc_body_length(BlockSettings * curBlockSettings)
     AWD_joint_tf *cur;
 
     len = this->get_name_length() + 4; // strlen field + num transforms
-    len += this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
+    len += this->calc_attr_length(true,true, curBlockSettings);
 
     cur = this->first_transform;
     while (cur) {
@@ -90,7 +90,7 @@ AWDSkeletonPose::write_body(int fd, BlockSettings * curBlockSettings)
     num_joints_be = UI16(this->num_transforms);
     write(fd, &num_joints_be, sizeof(awd_uint16));
 
-    this->properties->write_attributes(fd,  curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd,  curBlockSettings);
 
     bt = AWD_TRUE;
     bf = AWD_FALSE;
@@ -120,7 +120,7 @@ AWDSkeletonPose::write_body(int fd, BlockSettings * curBlockSettings)
         cur = cur->next;
     }
 
-    this->user_attributes->write_attributes(fd,  curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd,  curBlockSettings);
 }
 
 
@@ -260,7 +260,7 @@ AWDSkeletonAnimation::calc_body_length(BlockSettings * curBlockSettings)
     len = sizeof(awd_uint16) + this->get_name_length();             // Name varstr
     len += sizeof(awd_uint16);                                      // num frames
     len += (this->num_frames * pose_len);                           // Pose list
-    len += this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());             // Props and attributes
+    len += this->calc_attr_length(true,true, curBlockSettings);             // Props and attributes
     
     return len;
 }
@@ -277,7 +277,7 @@ AWDSkeletonAnimation::write_body(int fd, BlockSettings * curBlockSettings)
     num_frames_be = UI16(this->num_frames);
     write(fd, &num_frames_be, sizeof(awd_uint16));
 
-	this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+	this->properties->write_attributes(fd, curBlockSettings);
 
     frame = this->first_frame;
     while (frame) {
@@ -290,5 +290,5 @@ AWDSkeletonAnimation::write_body(int fd, BlockSettings * curBlockSettings)
         frame = frame->next;
     }
 
-    this->user_attributes->write_attributes(fd,  curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd,  curBlockSettings);
 }

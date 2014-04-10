@@ -49,9 +49,9 @@ AWDSceneBlock::write_scene_common(int fd, BlockSettings *curBlockSettings)
     // Write scene block common fields
     // TODO: Move this to separate base class
     write(fd, &parent_addr, sizeof(awd_baddr));
-    awd_float32 offX=awd_float32(this->transform_mtx[9]*curBlockSettings->get_scale());
-    awd_float32 offY=awd_float32(this->transform_mtx[10]*curBlockSettings->get_scale());
-    awd_float32 offZ=awd_float32(this->transform_mtx[11]*curBlockSettings->get_scale());
+    awd_float64 offX=awd_float64(this->transform_mtx[9]*curBlockSettings->get_scale());
+    awd_float64 offY=awd_float64(this->transform_mtx[10]*curBlockSettings->get_scale());
+    awd_float64 offZ=awd_float64(this->transform_mtx[11]*curBlockSettings->get_scale());
     awdutil_write_floats(fd, this->transform_mtx, 9, curBlockSettings->get_wide_matrix());
     if (!curBlockSettings->get_wide_matrix()){
         write(fd, &offX, sizeof(awd_float32));
@@ -178,7 +178,7 @@ awd_uint32
 AWDScene::calc_body_length(BlockSettings * curBlockSettings)
 {
     return this->calc_common_length(curBlockSettings->get_wide_matrix()) + 
-        this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
+        this->calc_attr_length(true,true, curBlockSettings);
 }
 
 
@@ -186,8 +186,8 @@ void
 AWDScene::write_body(int fd, BlockSettings * curBlockSettings)
 {
     this->write_scene_common(fd, curBlockSettings);
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }
 
 
@@ -214,7 +214,7 @@ AWDContainer::~AWDContainer()
 awd_uint32
 AWDContainer::calc_body_length(BlockSettings * curBlockSettings)
 {
-    return this->calc_common_length(curBlockSettings->get_wide_matrix()) + this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
+    return this->calc_common_length(curBlockSettings) + this->calc_attr_length(true,true, curBlockSettings);
 }
 
 
@@ -222,8 +222,8 @@ void
 AWDContainer::write_body(int fd, BlockSettings *curBlockSettings)
 {
     this->write_scene_common(fd, curBlockSettings);
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }
 
 
@@ -258,8 +258,8 @@ AWDCommandBlock::calc_body_length(BlockSettings * curBlockSettings)
     len += this->calc_common_length(curBlockSettings->get_wide_matrix());
     len += sizeof(awd_uint16);//num commands
     len += sizeof(awd_uint16);//command type (command1)
-    len +=this->commandProperties->calc_length(curBlockSettings->get_wide_matrix());
-    len += this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
+    len +=this->commandProperties->calc_length(curBlockSettings);
+    len += this->calc_attr_length(true,true, curBlockSettings);
     return len;
 }
 
@@ -274,9 +274,9 @@ AWDCommandBlock::write_body(int fd, BlockSettings *curBlockSettings)
     write(fd, &numCommands, sizeof(awd_uint16));//num commands
     int commandtype=1;
     write(fd, &commandtype, sizeof(awd_uint16));//command type: 1='PutintoSceneGraph'(used for lights)
-    this->commandProperties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->commandProperties->write_attributes(fd, curBlockSettings);
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }
 
 
@@ -310,7 +310,7 @@ AWDSkyBox::calc_body_length(BlockSettings * curBlockSettings)
     int len;
     len = sizeof(awd_uint16)+this->get_name_length();//name
     len += sizeof(awd_baddr);//cube Tex 
-    len += this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
+    len += this->calc_attr_length(true,true, curBlockSettings);
     return len;
 }
 
@@ -324,6 +324,6 @@ AWDSkyBox::write_body(int fd, BlockSettings *curBlockSettings)
         cubeTex=this->cubeTex->get_addr();
     }
     write(fd, &cubeTex, sizeof(awd_baddr));//num commands
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }

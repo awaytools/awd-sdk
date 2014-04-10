@@ -30,28 +30,28 @@ AWDPrimitive::set_Yoffset(double yoffset)
 void
 AWDPrimitive::add_number_property(int targetID, float targetValue)
 {
-	AWD_field_ptr newVal;
-	newVal.v = malloc(sizeof(awd_float32));
-    *newVal.f32 = targetValue;
-	this->properties->set(targetID, newVal, sizeof(awd_float32), AWD_FIELD_FLOAT32);
+    AWD_field_ptr newVal;
+    newVal.v = malloc(sizeof(awd_float64));
+    *newVal.f64 = targetValue;
+    this->properties->set(targetID, newVal, sizeof(awd_float64), AWD_FIELD_FLOAT64, 2);
 
 }
 void
 AWDPrimitive::add_int_property(int targetID, int targetValue)
 {
-	AWD_field_ptr newVal;
-	newVal.v = malloc(sizeof(awd_uint16));
+    AWD_field_ptr newVal;
+    newVal.v = malloc(sizeof(awd_uint16));
     *newVal.ui16 = targetValue;
-	this->properties->set(targetID, newVal, sizeof(awd_uint16), AWD_FIELD_UINT16);
+    this->properties->set(targetID, newVal, sizeof(awd_uint16), AWD_FIELD_UINT16);
 
 }
 void
 AWDPrimitive::add_bool_property(int targetID, bool targetValue)
 {
-	AWD_field_ptr newVal;
-	newVal.v = malloc(sizeof(awd_bool));
+    AWD_field_ptr newVal;
+    newVal.v = malloc(sizeof(awd_bool));
     *newVal.b = targetValue;
-	this->properties->set(targetID, newVal, sizeof(awd_bool), AWD_FIELD_BOOL);
+    this->properties->set(targetID, newVal, sizeof(awd_bool), AWD_FIELD_BOOL);
 
 }
 void
@@ -63,16 +63,14 @@ AWDPrimitive::add_dependencies(AWDBlockList *)
 awd_uint32
 AWDPrimitive::calc_body_length(BlockSettings * curBlockSettings)
 {
-    return 1 + sizeof(awd_uint16) + this->get_name_length()+this->calc_attr_length(true, true, curBlockSettings->get_wide_matrix());
+    return 1 + sizeof(awd_uint16) + this->get_name_length()+this->calc_attr_length(true, true, curBlockSettings);
 }
 
 void
 AWDPrimitive::write_body(int fd, BlockSettings * curBlockSettings)
 {
     awdutil_write_varstr(fd, this->get_name(), this->get_name_length()); 
-	write(fd, &this->prim_type, sizeof(awd_uint8));
-	this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    write(fd, &this->prim_type, sizeof(awd_uint8));
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }
-
-

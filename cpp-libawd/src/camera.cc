@@ -51,8 +51,8 @@ AWDCamera::calc_body_length(BlockSettings * curBlockSettings)
 	len += sizeof(awd_uint8) ;//set as active cam
 	len += sizeof(awd_uint16) ;//num - prop lists (for now allways 1)
 	len += sizeof(awd_uint16) ;//prop lists type (lens-type)
-	len += this->lens_properties->calc_length(curBlockSettings->get_wide_matrix());
-    len += this->calc_attr_length(true, true, curBlockSettings->get_wide_matrix());
+	len += this->lens_properties->calc_length(curBlockSettings);
+    len += this->calc_attr_length(true, true, curBlockSettings);
 
     return len;
 }
@@ -69,9 +69,9 @@ AWDCamera::write_body(int fd,BlockSettings *curBlockSettings)
     write(fd, &lengthOfPropsLists, sizeof(awd_uint16));
 	awd_uint16 lens=this->lens;
     write(fd, &lens, sizeof(awd_uint16));	
-	this->lens_properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+	this->lens_properties->write_attributes(fd, curBlockSettings);
 
-	this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd,  curBlockSettings->get_wide_matrix());
+	this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd,  curBlockSettings);
 }
 

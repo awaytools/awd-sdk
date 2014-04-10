@@ -558,9 +558,9 @@ AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
     }
     if (this->alpha != 1.0f) {
        AWD_field_ptr th_val;
-       th_val.v = malloc(sizeof(awd_float32));
-       *th_val.f32 = this->alpha;
-       this->properties->set(PROP_MAT_ALPHA, th_val, sizeof(awd_float32), AWD_FIELD_FLOAT32);
+       th_val.v = malloc(sizeof(awd_float64));
+       *th_val.f64 = this->alpha;
+       this->properties->set(PROP_MAT_ALPHA, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
 
     if (this->alpha_blending) {
@@ -571,9 +571,9 @@ AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
     }
     if (this->alpha_threshold != 0.0f) {
        AWD_field_ptr th_val;
-       th_val.v = malloc(sizeof(awd_float32));
-       *th_val.f32 = this->alpha_threshold;
-       this->properties->set(PROP_MAT_ALPHA_THRESHOLD, th_val, sizeof(awd_float32), AWD_FIELD_FLOAT32);
+       th_val.v = malloc(sizeof(awd_float64));
+       *th_val.f64 = this->alpha_threshold;
+       this->properties->set(PROP_MAT_ALPHA_THRESHOLD, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
     if (this->premultiplied) {
        AWD_field_ptr trans_val;
@@ -603,21 +603,21 @@ AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
     }
     if (this->specularStrength != 1.0f) {
         AWD_field_ptr th_val;
-        th_val.v = malloc(sizeof(awd_float32));
-        *th_val.f32 = this->specularStrength;
-        this->properties->set(PROP_MAT_SPECULARLEVEL, th_val, sizeof(awd_float32), AWD_FIELD_FLOAT32);
+        th_val.v = malloc(sizeof(awd_float64));
+        *th_val.f64 = this->specularStrength;
+        this->properties->set(PROP_MAT_SPECULARLEVEL, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
     if (this->ambientStrength != 1.0f) {
         AWD_field_ptr th_val;
-        th_val.v = malloc(sizeof(awd_float32));
-        *th_val.f32 = this->ambientStrength;
-        this->properties->set(PROP_MAT_AMBIENT_LEVEL, th_val, sizeof(awd_float32), AWD_FIELD_FLOAT32);
+        th_val.v = malloc(sizeof(awd_float64));
+        *th_val.f64 = this->ambientStrength;
+        this->properties->set(PROP_MAT_AMBIENT_LEVEL, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
     if (this->glossStrength != 50) {
         AWD_field_ptr th_val;
-        th_val.v = malloc(sizeof(awd_float32));
-        *th_val.f32 = (float)this->glossStrength;
-        this->properties->set(PROP_MAT_GLOSS, th_val, sizeof(awd_float32), AWD_FIELD_FLOAT32);
+        th_val.v = malloc(sizeof(awd_float64));
+        *th_val.f64 = (float)this->glossStrength;
+        this->properties->set(PROP_MAT_GLOSS, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
     
 }
@@ -683,12 +683,12 @@ AWDMaterial::calc_body_length(BlockSettings * curBlockSettings)
     len += sizeof(awd_uint8); // type
     len += sizeof(awd_uint8); // method count
     
-    len += this->calc_attr_length(true, true, curBlockSettings->get_wide_matrix());
+    len += this->calc_attr_length(true, true, curBlockSettings);
 
     //at this point, all effectmethods should be included as wrappermethods in the materials method-list 
     cur = this->first_method;
     while (cur) {
-        len += cur->method->calc_method_length(curBlockSettings->get_wide_matrix());
+        len += cur->method->calc_method_length(curBlockSettings);
         cur = cur->next;
     }
 
@@ -703,14 +703,14 @@ AWDMaterial::write_body(int fd,  BlockSettings * curBlockSettings)
     write(fd, &this->type, sizeof(awd_uint8));
     write(fd, &this->num_methods, sizeof(awd_uint8));
 
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
     
     AWD_mat_method *cur;
     cur = this->first_method;
     while (cur) {
-        cur->method->write_method(fd, curBlockSettings->get_wide_matrix());
+        cur->method->write_method(fd, curBlockSettings);
         cur = cur->next;
     }
 
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }

@@ -11,8 +11,23 @@
 
 
 void
-AWDAttr::write_attr(int fd, bool wide_mtx)
+AWDAttr::write_attr(int fd, BlockSettings *curBlockSettings)
 {
+    bool thisStoragePrec=false;
+    if (this->type==AWD_FIELD_FLOAT64){
+        bool thisStoragePrec=curBlockSettings->get_wide_props();
+        if (this->storage_type==1)
+            thisStoragePrec=curBlockSettings->get_wide_matrix();
+        else if (this->storage_type==2)
+            thisStoragePrec=curBlockSettings->get_wide_geom();
+        else if (this->storage_type==3)
+            thisStoragePrec=curBlockSettings->get_wide_attributes();
+        if (!thisStoragePrec){
+            this->type=AWD_FIELD_FLOAT32;
+            this->value_len/=2;
+           // *this->value.f32=(awd_float32 *)this->value.f64;
+        }
+    }
     AWD_field_ptr val;
     awd_uint32 bytes_written;
     awd_int16 i16_be;
@@ -55,10 +70,10 @@ AWDAttr::write_attr(int fd, bool wide_mtx)
                 break;
 
             case AWD_FIELD_FLOAT32:
-                f32_be = F32(*val.f32);
+                f32_be = F32(*val.f64);
                 write(fd, &f32_be, sizeof(awd_float32));
                 bytes_written += sizeof(awd_float32);
-                val.f32++;
+                val.f64++;
                 break;
 
             case AWD_FIELD_FLOAT64:
@@ -86,7 +101,7 @@ AWDAttr::write_attr(int fd, bool wide_mtx)
             case AWD_FIELD_MTX3x3:
             case AWD_FIELD_MTX4x3:
             case AWD_FIELD_MTX4x4:
-                bytes_written += awdutil_write_floats(fd, val.f64, this->value_len, wide_mtx);
+                bytes_written += awdutil_write_floats(fd, val.f64, this->value_len, thisStoragePrec);
                 break;
 
             default:
@@ -99,11 +114,12 @@ AWDAttr::write_attr(int fd, bool wide_mtx)
 
 
 void
-AWDAttr::set_val(AWD_field_ptr val, awd_uint32 val_len, AWD_field_type val_type)
+AWDAttr::set_val(AWD_field_ptr val, awd_uint32 val_len, AWD_field_type val_type, int storage_type=0)
 {
     this->value = val;
     this->value_len = val_len;
     this->type = val_type;
+    this->storage_type = storage_type;
 }
 
 
@@ -117,8 +133,20 @@ AWDAttr::get_val(awd_uint32 *val_len, AWD_field_type *val_type)
 
 
 awd_uint32
-AWDAttr::get_val_len()
+AWDAttr::get_val_len(BlockSettings * curBlockSettings)
 {
+    if (this->type==AWD_FIELD_FLOAT64){
+        bool thisStoragePrec=curBlockSettings->get_wide_props();
+        if (this->storage_type==1)
+            thisStoragePrec=curBlockSettings->get_wide_matrix();
+        else if (this->storage_type==2)
+            thisStoragePrec=curBlockSettings->get_wide_geom();
+        else if (this->storage_type==3)
+            thisStoragePrec=curBlockSettings->get_wide_attributes();
+        if (!thisStoragePrec){
+            return this->value_len/2;
+        }
+    }
     return this->value_len;
 }
 
@@ -218,7 +246,7 @@ AWDUserAttrList::~AWDUserAttrList()
 
 
 awd_uint32
-AWDUserAttrList::calc_length(bool wide_mtx)
+AWDUserAttrList::calc_length(BlockSettings * blockSettings)
 {
     awd_uint32 len;
     AWDUserAttr *cur;
@@ -230,7 +258,7 @@ AWDUserAttrList::calc_length(bool wide_mtx)
     cur = this->first_attr;
     while (cur) {
         // Meta-data takes up 8 bytes
-        len += (8 + (awd_uint32)cur->get_key_len() + (awd_uint32)cur->get_val_len());
+        len += (8 + (awd_uint32)cur->get_key_len() + (awd_uint32)cur->get_val_len(blockSettings));
         cur = cur->next;
     }
 
@@ -239,17 +267,17 @@ AWDUserAttrList::calc_length(bool wide_mtx)
 
 
 void
-AWDUserAttrList::write_attributes(int fd, bool wide_mtx)
+AWDUserAttrList::write_attributes(int fd, BlockSettings * blockSettings)
 {
     awd_uint32 len_be;
     AWDUserAttr *cur;
 
-    len_be = UI32(this->calc_length(wide_mtx) - sizeof(awd_uint32));
+    len_be = UI32(this->calc_length(blockSettings) - sizeof(awd_uint32));
     write(fd, &len_be, sizeof(awd_uint32));
 
     cur = this->first_attr;
     while (cur) {
-        cur->write_attr(fd, wide_mtx);
+        cur->write_attr(fd, blockSettings);
         cur = cur->next;
     }
 }
@@ -308,7 +336,7 @@ AWDUserAttrList::set(AWDNamespace *ns, const char *key, awd_uint16 key_len,
         created = true;
     }
 
-    attr->set_val(value, value_length, type);
+    attr->set_val(value, value_length, type, 3);
 
     // Add to internal list if the attribute wasn't
     // originally found there.
@@ -403,7 +431,7 @@ AWDNumAttrList::~AWDNumAttrList()
 
 
 awd_uint32
-AWDNumAttrList::calc_length(bool wide_mtx)
+AWDNumAttrList::calc_length(BlockSettings * blockSettings)
 {
     awd_uint32 len;
     AWDNumAttr *cur;
@@ -414,7 +442,7 @@ AWDNumAttrList::calc_length(bool wide_mtx)
     cur = this->first_attr;
     while (cur) {
         // Meta-data is always six bytes
-        len += (6 + cur->get_val_len());
+        len += (6 + cur->get_val_len(blockSettings));
         cur = cur->next;
     }
 
@@ -423,17 +451,17 @@ AWDNumAttrList::calc_length(bool wide_mtx)
 
 
 void
-AWDNumAttrList::write_attributes(int fd, bool wide_mtx)
+AWDNumAttrList::write_attributes(int fd, BlockSettings * blockSettings)
 {
     awd_uint32 len_be;
     AWDNumAttr *cur;
 
-    len_be = UI32(this->calc_length(wide_mtx) - sizeof(awd_uint32));
+    len_be = UI32(this->calc_length(blockSettings) - sizeof(awd_uint32));
     write(fd, &len_be, sizeof(awd_uint32));
 
     cur = this->first_attr;
     while (cur) {
-        cur->write_attr(fd, wide_mtx);
+        cur->write_attr(fd, blockSettings);
         cur = cur->next;
     }
 }
@@ -476,7 +504,7 @@ AWDNumAttrList::get(awd_propkey key, AWD_field_ptr *val, awd_uint32 *val_len, AW
 
 
 void
-AWDNumAttrList::set(awd_propkey key, AWD_field_ptr value, awd_uint32 value_length, AWD_field_type type)
+AWDNumAttrList::set(awd_propkey key, AWD_field_ptr value, awd_uint32 value_length, AWD_field_type type, int store_type)
 {
     bool created;
     AWDNumAttr *attr;    
@@ -490,7 +518,7 @@ AWDNumAttrList::set(awd_propkey key, AWD_field_ptr value, awd_uint32 value_lengt
         created = true;
     }
 
-    attr->set_val(value, value_length, type);
+    attr->set_val(value, value_length, type, store_type);
 
     // Add to internal list if the attribute wasn't
     // originally found there.
@@ -534,13 +562,13 @@ AWDAttrElement::add_dependencies(AWD *awd)
 
 
 awd_uint32 
-AWDAttrElement::calc_attr_length(bool with_props, bool with_user_attr, bool wide_mtx)
+AWDAttrElement::calc_attr_length(bool with_props, bool with_user_attr, BlockSettings * blockSettings )
 {
     awd_uint32 len;
 
     len = 0;
-    if (with_props) len += this->properties->calc_length(wide_mtx);
-    if (with_user_attr) len += this->user_attributes->calc_length(wide_mtx);
+    if (with_props) len += this->properties->calc_length(blockSettings);
+    if (with_user_attr) len += this->user_attributes->calc_length(blockSettings);
 
     return len;
 }

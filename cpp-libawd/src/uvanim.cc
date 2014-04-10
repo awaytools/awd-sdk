@@ -45,7 +45,7 @@ AWDUVAnimation::calc_body_length(BlockSettings * curBlockSettings)
 {
     return 2 + this->get_name_length() + 2 + 
         (this->num_frames * (sizeof(awd_uint16) + MTX32_SIZE(curBlockSettings->get_wide_matrix()))) + 
-        this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
+        this->calc_attr_length(true,true, curBlockSettings);
 }
 
 
@@ -60,7 +60,7 @@ AWDUVAnimation::write_body(int fd, BlockSettings * curBlockSettings)
     num_frames = UI16(this->num_frames);
     write(fd, &num_frames, sizeof(awd_uint16));
 
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
 
     cur_fr = this->first_frame;
     while (cur_fr) {
@@ -72,7 +72,7 @@ AWDUVAnimation::write_body(int fd, BlockSettings * curBlockSettings)
         cur_fr = cur_fr->next;
     }
 
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }
 
 

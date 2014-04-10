@@ -26,7 +26,7 @@ class AWDSkeletonJoint :
         ~AWDSkeletonJoint();
 
         int write_joint(int, awd_uint32, BlockSettings * );
-        int calc_length(bool);
+        int calc_length(BlockSettings * );
         int calc_num_children();
         awd_uint32 get_id();
 

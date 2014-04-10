@@ -131,7 +131,7 @@ AWDAnimationSet::calc_body_length(BlockSettings *curBlockSettings)
     len = sizeof(awd_uint16) + this->get_name_length();
     len += sizeof(awd_uint16);
     len += this->animationClipNodes->get_num_blocks() * sizeof(awd_baddr);	
-    len += this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
+    len += this->calc_attr_length(true,true, curBlockSettings);
     return len;
 }
 
@@ -167,7 +167,7 @@ AWDAnimationSet::write_body(int fd, BlockSettings *curBlockSettings)
 
 	write(fd, &numClips, sizeof(awd_uint16));	
 
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
 
     it = new AWDBlockIterator(this->animationClipNodes);
     while ((block = it->next()) != NULL) {
@@ -175,7 +175,7 @@ AWDAnimationSet::write_body(int fd, BlockSettings *curBlockSettings)
         write(fd, &addr, sizeof(awd_baddr));
     }
 	delete it;
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }
 
 
@@ -280,8 +280,8 @@ AWDAnimator::calc_body_length(BlockSettings * curBlockSettings)
 
     len = sizeof(awd_uint16) + this->get_name_length();
     len += sizeof(awd_uint16); //animatortype
-    len += this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
-    len += this->animatorProperties->calc_length(curBlockSettings->get_wide_matrix());
+    len += this->calc_attr_length(true,true, curBlockSettings);
+    len += this->animatorProperties->calc_length(curBlockSettings);
     len += sizeof(awd_uint32);//animSetID
     len += sizeof(awd_uint16);//num_targets
     len += sizeof(awd_uint16);//activeState
@@ -303,7 +303,7 @@ AWDAnimator::write_body(int fd, BlockSettings *curBlockSettings)
     awdutil_write_varstr(fd, this->get_name(), this->get_name_length());
     write(fd, &animatorType, sizeof(awd_uint16));
 
-    this->animatorProperties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->animatorProperties->write_attributes(fd, curBlockSettings);
 
     // Write animSet id - TODO-> ERROR IF NULL
     animSet_addr = 0;
@@ -324,6 +324,6 @@ AWDAnimator::write_body(int fd, BlockSettings *curBlockSettings)
 	int autoplay=0;
     write(fd, &autoplay, sizeof(awd_uint8));
 
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }

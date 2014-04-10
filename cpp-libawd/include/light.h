@@ -31,16 +31,16 @@ class AWDLight :
 {
     private:
         AWD_light_type type;
-		awd_float32 radius;
-		awd_float32 falloff;
+		awd_float64 radius;
+		awd_float64 falloff;
 		awd_color color;
-		awd_float32 specular;
-		awd_float32 diffuse;
+		awd_float64 specular;
+		awd_float64 diffuse;
 		awd_color ambientColor;
-		awd_float32 ambient;
-		awd_float32 dirX;
-		awd_float32 dirY;
-		awd_float32 dirZ;
+		awd_float64 ambient;
+		awd_float64 dirX;
+		awd_float64 dirY;
+		awd_float64 dirZ;
 		AWDBlock * shadowMethod;
 		
     protected:
@@ -53,21 +53,21 @@ class AWDLight :
         ~AWDLight();
 		void set_light_type(AWD_light_type);
 		AWD_light_type get_light_type();
-		void set_radius(awd_float32);
-		awd_float32 get_radius();
-		void set_falloff(awd_float32);
-		awd_float32 get_falloff();
+		void set_radius(awd_float64);
+		awd_float64 get_radius();
+		void set_falloff(awd_float64);
+		awd_float64 get_falloff();
 		void set_color(awd_color);
 		awd_color get_color();
-		void set_specular(awd_float32);
-		awd_float32 get_specular();
-		void set_diffuse(awd_float32);
-		awd_float32 get_diffuse();
+		void set_specular(awd_float64);
+		awd_float64 get_specular();
+		void set_diffuse(awd_float64);
+		awd_float64 get_diffuse();
 		void set_ambientColor(awd_color);
 		awd_color get_ambientColor();
-		void set_ambient(awd_float32);
-		awd_float32 get_ambient();
-		void set_directionVec(awd_float32, awd_float32,awd_float32);
+		void set_ambient(awd_float64);
+		awd_float64 get_ambient();
+		void set_directionVec(awd_float64, awd_float64,awd_float64);
 		void set_shadowMethod(AWDBlock *);
 		AWDBlock * get_shadowMethod();
 

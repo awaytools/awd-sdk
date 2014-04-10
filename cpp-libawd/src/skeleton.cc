@@ -115,7 +115,7 @@ AWDSkeletonJoint::add_child_joint(AWDSkeletonJoint *joint)
 
 
 int
-AWDSkeletonJoint::calc_length(bool wide_mtx)
+AWDSkeletonJoint::calc_length(BlockSettings * blockSettings)
 {
     int len;
     AWDSkeletonJoint *child;
@@ -123,13 +123,13 @@ AWDSkeletonJoint::calc_length(bool wide_mtx)
     // id + parent + name varstr + matrix
     len = sizeof(awd_uint16) + sizeof(awd_uint16) + 
         sizeof(awd_uint16) + this->get_name_length() + 
-        MTX43_SIZE(wide_mtx);
+        MTX43_SIZE(blockSettings->get_wide_matrix());
 
-    len += this->calc_attr_length(true,true, wide_mtx);
+    len += this->calc_attr_length(true,true, blockSettings);
 
     child = this->first_child;
     while (child) {
-        len += child->calc_length(wide_mtx);
+        len += child->calc_length(blockSettings);
         child = child->next;
     }
 
@@ -191,8 +191,8 @@ AWDSkeletonJoint::write_joint(int fd, awd_uint32 id, BlockSettings * curBlockSet
 	}
 
     //  TODO: Write attributes
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 
     // Write children
     child_id = id+1;
@@ -277,10 +277,10 @@ AWDSkeleton::calc_body_length(BlockSettings * curBlockSettings)
     awd_uint32 len;
 
     len = sizeof(awd_uint16) + this->get_name_length() + sizeof(awd_uint16);
-    len += this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());
+    len += this->calc_attr_length(true,true, curBlockSettings);
 
     if (this->root_joint != NULL)
-        len += this->root_joint->calc_length(curBlockSettings->get_wide_matrix());
+        len += this->root_joint->calc_length(curBlockSettings);
 
     return len;
 }
@@ -299,14 +299,14 @@ AWDSkeleton::write_body(int fd, BlockSettings * curBlockSettings)
     write(fd, &num_joints_be, sizeof(awd_uint16));
 
     // Write optional properties
-    this->properties->write_attributes(fd,  curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd,  curBlockSettings);
 
     // Write joints (if any)
     if (this->root_joint != NULL)
         this->root_joint->write_joint(fd, 1,  curBlockSettings);
 
     // Write user attributes
-    this->user_attributes->write_attributes(fd,  curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd,  curBlockSettings);
 }
 
 

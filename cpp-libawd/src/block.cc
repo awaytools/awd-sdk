@@ -140,7 +140,12 @@ AWDBlock::write_block(int fd, BlockSettings *curBlockSettings)
     // Convert to big-endian if necessary
     block_addr_be = UI32(this->addr);
     length_be = UI32(length);
-
+    if (curBlockSettings->get_wide_matrix())//bit1 = storagePrecision Matrix
+        this->flags |= 0x01;
+    if (curBlockSettings->get_wide_geom())//bit2 = storagePrecision Geo
+        this->flags |= 0x02;
+    if (curBlockSettings->get_wide_props())//bit3 = storagePrecision Props
+        this->flags |= 0x04;
     // Write header
     write(fd, &block_addr_be, sizeof(awd_baddr));
     write(fd, &ns_addr, sizeof(awd_uint8));

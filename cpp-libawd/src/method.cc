@@ -65,9 +65,9 @@ AWDEffectMethod::add_number_property(int targetID, float targetValue, float defa
 {
     if (targetValue!=defaultValue){
         AWD_field_ptr newVal;
-        newVal.v = malloc(sizeof(awd_float32));
-        *newVal.f32 = targetValue;
-        this->effect_props->set(targetID, newVal, sizeof(awd_float32), AWD_FIELD_FLOAT32);
+        newVal.v = malloc(sizeof(awd_float64));
+        *newVal.f64 = targetValue;
+        this->effect_props->set(targetID, newVal, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
 
 }
@@ -132,8 +132,8 @@ AWDEffectMethod::calc_body_length(BlockSettings * curBlockSettings)
     awd_uint32 len;
     len = sizeof(awd_uint16) + this->get_name_length(); //name
     len += sizeof(awd_uint16); //type
-    len += this->effect_props->calc_length(curBlockSettings->get_wide_matrix());
-    len += this->calc_attr_length(true, true, curBlockSettings->get_wide_matrix());
+    len += this->effect_props->calc_length(curBlockSettings);
+    len += this->calc_attr_length(true, true, curBlockSettings);
     return len;
 }
 
@@ -142,9 +142,9 @@ AWDEffectMethod::write_body(int fd, BlockSettings *curBlockSettings)
 {
     awdutil_write_varstr(fd, this->get_name(), this->get_name_length()); 
     write(fd, &this->type, sizeof(awd_uint16));
-    this->effect_props->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->effect_props->write_attributes(fd, curBlockSettings);
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }
 
 

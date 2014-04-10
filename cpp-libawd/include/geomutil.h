@@ -9,12 +9,12 @@ class AWDGeomUtil
 	private:
 		GUGeoList *preGeoList;
 		GUGeoList *geoList;
-		
+		AWD_field_type geoStreamType;
 		GeomStringCache *geoCache;
 		SubGeoGroupCache *subGeoGroupCache;
 
 	public:
-		AWDGeomUtil(bool split_by_mat, bool force_split, bool useUV, bool useSecUVs, bool useNormals, double normalThreshold, int joints_per_vertex);
+		AWDGeomUtil(bool split_by_mat, bool force_split, bool useUV, bool useSecUVs, bool useNormals, double normalThreshold, int joints_per_vertex, AWD_field_type geoStreamType);
 		~AWDGeomUtil();
 		
 		GUGeoList * get_geoList();

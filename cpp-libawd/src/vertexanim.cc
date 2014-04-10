@@ -227,7 +227,7 @@ AWDVertexAnimation::calc_body_length(BlockSettings * curBlockSettings)
 			lenSubmesh += sizeof(awd_uint32) + frame->pose->get_sub_at(i)->calc_animations_streams_length();
 		}
 		len += (this->num_frames * (lenSubmesh + sizeof(awd_uint16))); // for each frame: datalength + length + duration
-		len += this->calc_attr_length(true,true, curBlockSettings->get_wide_matrix());             // Props and attributes
+		len += this->calc_attr_length(true,true, curBlockSettings);             // Props and attributes
 	}
     return len;
 }
@@ -262,7 +262,7 @@ AWDVertexAnimation::write_body(int fd, BlockSettings * curBlockSettings)
     awd_uint16 streamDataType = 1;//this is so we can change the style of parsing later 
     write(fd, &streamDataType, sizeof(awd_uint16));
 	
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
 
 	// at this time we have to be shure, that all the VertexGeometry have the same number of subGeos (num_subMeshes)
     while (frame) {
@@ -276,6 +276,6 @@ AWDVertexAnimation::write_body(int fd, BlockSettings * curBlockSettings)
 		}
         frame = frame->next;
     }
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 	
 }

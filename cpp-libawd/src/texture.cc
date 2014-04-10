@@ -73,7 +73,7 @@ AWDBitmapTexture::calc_body_length(BlockSettings * curBlockSettings)
         len += this->embed_data_len;
     }
 
-    len += this->calc_attr_length(true, true, curBlockSettings->get_wide_matrix());
+    len += this->calc_attr_length(true, true, curBlockSettings);
 
     return len;
 }
@@ -150,8 +150,8 @@ AWDBitmapTexture::write_body(int fd, BlockSettings * curBlockSettings)
         write(fd, this->embed_data, this->embed_data_len);
     }
 
-    this->properties->write_attributes(fd,  curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd,  curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd,  curBlockSettings);
+    this->user_attributes->write_attributes(fd,  curBlockSettings);
 }
 
 
@@ -227,7 +227,7 @@ AWDCubeTexture::calc_body_length(BlockSettings * curBlockSettings)
 		len += block->calc_body_length_for_CubeTex(this->saveType);
 	}
 	delete it;
-	len += this->calc_attr_length(true, true, curBlockSettings->get_wide_matrix());
+	len += this->calc_attr_length(true, true, curBlockSettings);
     return len;
         
 }
@@ -252,7 +252,7 @@ AWDCubeTexture::write_body(int fd, BlockSettings *curBlockSettings)
     while ((block = (AWDBitmapTexture *)it->next()) != NULL) 
 		block->write_for_CubeTex(fd,this->saveType);
 	delete it;
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }
 

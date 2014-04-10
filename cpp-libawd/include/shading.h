@@ -46,8 +46,8 @@ class AWDShadingMethod :
 		void set_awdBlock4(AWDBlock *);
 		AWD_shade_type get_shading_type();
 		AWDNumAttrList * get_shading_props();
-        awd_uint32 calc_method_length(bool);
-        void write_method(int, bool);
+        awd_uint32 calc_method_length(BlockSettings *);
+        void write_method(int, BlockSettings *);
         void add_color_property(int, awd_uint32, awd_uint32);
         void add_number_property(int, float, float);
         void add_int_property(int, int, int);

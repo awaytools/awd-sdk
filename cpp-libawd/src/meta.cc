@@ -128,13 +128,13 @@ AWDMetaData::prepare_and_add_dependencies(AWDBlockList *export_list)
 awd_uint32
 AWDMetaData::calc_body_length(BlockSettings * curBlockSettings)
 {
-    return this->calc_attr_length(true, false, curBlockSettings->get_wide_matrix());
+    return this->calc_attr_length(true, false, curBlockSettings);
 }
 
 
 void
 AWDMetaData::write_body(int fd, BlockSettings *curBlockSettings)
 {
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
 }
 

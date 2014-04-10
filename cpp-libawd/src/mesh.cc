@@ -155,13 +155,13 @@ AWDSubGeom::calc_streams_length()
 
 
 awd_uint32
-AWDSubGeom::calc_sub_length(bool wide_mtx)
+AWDSubGeom::calc_sub_length(BlockSettings * blockSettings)
 {
     awd_uint32 len;
 
     len = 4; // Sub-mesh header
     len += this->calc_streams_length();
-    len += this->calc_attr_length(true,true, wide_mtx);
+    len += this->calc_attr_length(true,true, blockSettings);
 
     return len;
 }
@@ -179,7 +179,7 @@ AWDSubGeom::write_anim_sub(int fd, bool wide_mtx, double scale)
 }
 
 void
-AWDSubGeom::write_sub(int fd, bool wide_mtx, double scale)
+AWDSubGeom::write_sub(int fd, BlockSettings * blockSettings, double scale)
 {
     AWDDataStream *str;
     awd_uint32 sub_len;
@@ -190,7 +190,7 @@ AWDSubGeom::write_sub(int fd, bool wide_mtx, double scale)
     // Write sub-mesh header
     write(fd, &sub_len, sizeof(awd_uint32));
 
-    this->properties->write_attributes(fd, wide_mtx);
+    this->properties->write_attributes(fd, blockSettings);
 
     str = this->first_stream;
     while(str) {
@@ -198,7 +198,7 @@ AWDSubGeom::write_sub(int fd, bool wide_mtx, double scale)
         str = str->next;
     }
 
-    this->user_attributes->write_attributes(fd, wide_mtx);
+    this->user_attributes->write_attributes(fd, blockSettings);
 }
 
 
@@ -364,10 +364,10 @@ AWDTriGeom::calc_body_length(BlockSettings * curBlockSettings)
     // data (not block header)
     mesh_len = sizeof(awd_uint16); // Num subs
     mesh_len += sizeof(awd_uint16) + this->get_name_length();
-    mesh_len += this->calc_attr_length(true,true,  curBlockSettings->get_wide_matrix());
+    mesh_len += this->calc_attr_length(true,true,  curBlockSettings);
     sub = this->first_sub;
     while (sub) {
-        mesh_len += sub->calc_sub_length( curBlockSettings->get_wide_matrix());
+        mesh_len += sub->calc_sub_length( curBlockSettings);
         sub = sub->next;
     }
 
@@ -387,17 +387,17 @@ AWDTriGeom::write_body(int fd, BlockSettings *curBlockSettings)
     write(fd, &num_subs_be, sizeof(awd_uint16));
 
     // Write list of optional properties
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
 
     // Write all sub-meshes
     sub = this->first_sub;
     while (sub) {
-        sub->write_sub(fd, curBlockSettings->get_wide_matrix(), curBlockSettings->get_scale());
+        sub->write_sub(fd, curBlockSettings, curBlockSettings->get_scale());
         sub = sub->next;
     }
     
     // Write list of user attributes
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }
 
 
@@ -493,7 +493,7 @@ AWDMeshInst::calc_body_length(BlockSettings * curBlockSettings)
 {
     return calc_common_length(curBlockSettings->get_wide_matrix()) + sizeof(awd_baddr) + 
         sizeof(awd_uint16) + (this->materials->get_num_blocks() * sizeof(awd_baddr)) + 
-        this->calc_attr_length(true, true, curBlockSettings->get_wide_matrix());
+        this->calc_attr_length(true, true, curBlockSettings);
 }
 
 void
@@ -531,41 +531,41 @@ AWDMeshInst::prepare_and_add_dependencies(AWDBlockList *export_list)
         if (!hasSubMeshUVTransform){
             if ((uv_trans[0]!=1.0)||(uv_trans[1]!=0.0)||(uv_trans[2]!=1.0)||(uv_trans[3]!=0.0)||(uv_trans[4]!=0.0)||(uv_trans[5]!=0.0)){
                 AWD_field_ptr newVal;
-                newVal.v = malloc(sizeof(awd_float32)*6);
-                newVal.f32[0] = uv_trans[0];
-                newVal.f32[1] = uv_trans[1];
-                newVal.f32[2] = uv_trans[2];
-                newVal.f32[3] = uv_trans[3];
-                newVal.f32[4] = uv_trans[4];
-                newVal.f32[5] = uv_trans[5];
-                this->properties->set(6, newVal, sizeof(awd_float32)*6, AWD_FIELD_FLOAT32);
+                newVal.v = malloc(sizeof(awd_float64)*6);
+                newVal.f64[0] = uv_trans[0];
+                newVal.f64[1] = uv_trans[1];
+                newVal.f64[2] = uv_trans[2];
+                newVal.f64[3] = uv_trans[3];
+                newVal.f64[4] = uv_trans[4];
+                newVal.f64[5] = uv_trans[5];
+                this->properties->set(6, newVal, sizeof(awd_float64)*6, AWD_FIELD_FLOAT64);
             }
         }
         else{
             AWD_field_ptr newVal;
-            //newVal.v = malloc(sizeof(awd_float32)*6*this->materials->get_num_blocks());
+            newVal.v = malloc(sizeof(awd_float64)*6*this->materials->get_num_blocks());
             it->reset();
             int uvTransCnt=0;
             while ((block = (AWDMaterial *)it->next()) != NULL) {
                 awd_float64 * this_uv=block->get_uv_transform_mtx();
                 if (this_uv!=NULL){
-                    newVal.f32[uvTransCnt++] = uv_trans[0];
-                    newVal.f32[uvTransCnt++] = uv_trans[1];
-                    newVal.f32[uvTransCnt++] = uv_trans[2];
-                    newVal.f32[uvTransCnt++] = uv_trans[3];
-                    newVal.f32[uvTransCnt++] = uv_trans[4];
-                    newVal.f32[uvTransCnt++] = uv_trans[5];
+                    newVal.f64[uvTransCnt++] = uv_trans[0];
+                    newVal.f64[uvTransCnt++] = uv_trans[1];
+                    newVal.f64[uvTransCnt++] = uv_trans[2];
+                    newVal.f64[uvTransCnt++] = uv_trans[3];
+                    newVal.f64[uvTransCnt++] = uv_trans[4];
+                    newVal.f64[uvTransCnt++] = uv_trans[5];
                 }
                 else {
-                    newVal.f32[uvTransCnt++] = 1.0;
-                    newVal.f32[uvTransCnt++] = 0.0;
-                    newVal.f32[uvTransCnt++] = 0.0;
-                    newVal.f32[uvTransCnt++] = 1.0;
-                    newVal.f32[uvTransCnt++] = 0.0;
-                    newVal.f32[uvTransCnt++] = 0.0;
+                    newVal.f64[uvTransCnt++] = 1.0;
+                    newVal.f64[uvTransCnt++] = 0.0;
+                    newVal.f64[uvTransCnt++] = 0.0;
+                    newVal.f64[uvTransCnt++] = 1.0;
+                    newVal.f64[uvTransCnt++] = 0.0;
+                    newVal.f64[uvTransCnt++] = 0.0;
                 }
             }
-            this->properties->set(7, newVal, sizeof(awd_float32)*6*this->materials->get_num_blocks(), AWD_FIELD_FLOAT32);
+            this->properties->set(7, newVal, sizeof(awd_float64)*6*this->materials->get_num_blocks(), AWD_FIELD_FLOAT64);
         }
     }
     delete it;
@@ -598,6 +598,6 @@ AWDMeshInst::write_body(int fd, BlockSettings *curBlockSettings)
         write(fd, &addr, sizeof(awd_baddr));
     }
     delete it;
-    this->properties->write_attributes(fd, curBlockSettings->get_wide_matrix());
-    this->user_attributes->write_attributes(fd, curBlockSettings->get_wide_matrix());
+    this->properties->write_attributes(fd, curBlockSettings);
+    this->user_attributes->write_attributes(fd, curBlockSettings);
 }

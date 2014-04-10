@@ -54,8 +54,8 @@ class AWDSubGeom :
         AWD_str_ptr get_original_idx_data();
         awd_uint32 get_original_idx_data_len();
         awd_uint32 calc_animations_streams_length();
-        awd_uint32 calc_sub_length(bool);
-        void write_sub(int, bool, double);
+        awd_uint32 calc_sub_length(BlockSettings *);
+        void write_sub(int, BlockSettings *, double);
         void write_anim_sub(int, bool, double);
         AWDBlockList* get_materials();
         void set_materials(AWDBlockList *);

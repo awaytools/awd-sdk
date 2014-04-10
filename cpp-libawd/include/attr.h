@@ -14,15 +14,16 @@ class AWDAttr
         AWD_field_type type;
         AWD_field_ptr value;
         awd_uint32 value_len;
+        int storage_type;// can be 0: storage_precision_properties, 1: storage_precision_Matrix
 
         virtual void write_metadata(int)=0;
 
     public:
-        void write_attr(int, bool);
+        void write_attr(int, BlockSettings *);
 
-        void set_val(AWD_field_ptr, awd_uint32, AWD_field_type);
+        void set_val(AWD_field_ptr, awd_uint32, AWD_field_type, int);
         AWD_field_ptr get_val(awd_uint32 *, AWD_field_type *);
-        awd_uint32 get_val_len();
+        awd_uint32 get_val_len(BlockSettings *);
 };
 
 
@@ -63,8 +64,8 @@ class AWDUserAttrList {
         AWDUserAttrList();
         ~AWDUserAttrList();
 
-        awd_uint32 calc_length(bool);
-        void write_attributes(int, bool);
+        awd_uint32 calc_length(BlockSettings *);
+        void write_attributes(int, BlockSettings *);
 
         AWD_field_ptr get_val_ptr(AWDNamespace *ns, const char *, awd_uint16);
         bool get(AWDNamespace *, const char *, awd_uint16, AWD_field_ptr *, awd_uint32 *, AWD_field_type *);
@@ -104,12 +105,12 @@ class AWDNumAttrList {
     public:
         AWDNumAttrList();
         ~AWDNumAttrList();
-        awd_uint32 calc_length(bool);
-        void write_attributes(int, bool);
+        awd_uint32 calc_length(BlockSettings *);
+        void write_attributes(int, BlockSettings *);
 
         AWD_field_ptr get_val_ptr(awd_propkey);
         bool get(awd_propkey, AWD_field_ptr *, awd_uint32 *, AWD_field_type *);
-        void set(awd_propkey, AWD_field_ptr, awd_uint32, AWD_field_type);
+        void set(awd_propkey, AWD_field_ptr, awd_uint32, AWD_field_type, int=0);
 };
 
 
@@ -128,7 +129,7 @@ class AWDAttrElement
         AWDNumAttrList *properties;
         AWDUserAttrList *user_attributes;
 
-        awd_uint32 calc_attr_length(bool, bool, bool);
+        awd_uint32 calc_attr_length(bool, bool, BlockSettings *);
 
     public:
         bool get_attr(AWDNamespace *, const char *, awd_uint16, AWD_field_ptr *, awd_uint32 *, AWD_field_type *);

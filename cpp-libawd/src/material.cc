@@ -14,7 +14,7 @@ AWDMaterial::AWDMaterial(const char *name, awd_uint16 name_len) :
     this->mappingChannel = 0;
     this->secondMappingChannel = 0;
 
-    this->color = 0;
+    this->color = 0xffffff;
 
     this->texture = NULL;
     this->normalTexture = NULL;
@@ -29,11 +29,11 @@ AWDMaterial::AWDMaterial(const char *name, awd_uint16 name_len) :
     this->alpha = 1.0;
     this->alpha_threshold = 0.0f;
     this->ambientStrength = 1.0f;
-    this->ambientColor = 0;
+    this->ambientColor = 0xffffff;
     this->ambientTexture = NULL;
     this->specularStrength = 1.0f;
     this->glossStrength = 50;
-    this->specularColor = 0;
+    this->specularColor = 0xffffff;
     this->specTexture = NULL;
     this->lightPicker = NULL;
     
@@ -447,7 +447,7 @@ void
 AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
     if (this->type == AWD_MATTYPE_COLOR) {
-        if (this->color > 0) {
+        if (this->color != 0xffffff) {
             AWD_field_ptr col_val;
             col_val.v = malloc(sizeof(awd_uint32));
             *col_val.col = this->color;
@@ -588,14 +588,14 @@ AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
        this->properties->set(PROP_MAT_BLENDMODE, trans_val, sizeof(awd_uint8), AWD_FIELD_UINT8);
     }
     //TODO: fill in default color
-    if (this->specularColor != 0) {
+    if (this->specularColor != 0xffffff) {
        AWD_field_ptr col_val;
        col_val.v = malloc(sizeof(awd_color));
        *col_val.col = this->specularColor;
        this->properties->set(PROP_MAT_SPECULARCOLOR, col_val, sizeof(awd_color), AWD_FIELD_COLOR);
     }
     //TODO: fill in default color
-    if (this->ambientColor != 0) {
+    if (this->ambientColor != 0xffffff) {
         AWD_field_ptr col_val;
         col_val.v = malloc(sizeof(awd_color));
         *col_val.col = this->ambientColor;

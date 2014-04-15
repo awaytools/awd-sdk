@@ -23,10 +23,13 @@ class AWDCamera :
     public AWDSceneBlock
 {
     private:
-        AWD_cam_type type;
-        AWD_lens_type lens;
+        AWD_cam_type cam_type;
+        AWD_lens_type lens_type;
 		AWDNumAttrList * lens_properties;
         awd_float64 lens_fov;
+        awd_float64 lens_near;
+        awd_float64 lens_far;
+        awd_float64 lens_proj_height;
 
     protected:
         void prepare_and_add_dependencies(AWDBlockList *);
@@ -38,7 +41,13 @@ class AWDCamera :
         ~AWDCamera();
 
         awd_float64 get_lens_fov();
-        void set_lens_fov(awd_float64 fov);
+        void set_lens_fov(awd_float64);
+        awd_float64 get_lens_near();
+        void set_lens_near(awd_float64);
+        awd_float64 get_lens_far();
+        void set_lens_far(awd_float64);
+        awd_float64 get_lens_proj_height();
+        void set_lens_proj_height(awd_float64);
 };
 
 #endif

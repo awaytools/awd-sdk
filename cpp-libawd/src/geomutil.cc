@@ -137,7 +137,7 @@ AWDGeomUtil::add_new_sub_geo_to_preGUgeoms (AWDBlockList * materialList, int mat
 void
 AWDGeomUtil::createGeometries()
 {
-    // if we only one PreGeom exists, we can just output this as geom
+    // if only one PreGeom exists, we can just output this as geom
     if (this->preGeoList->get_num_blocks()==1){
         this->geoList->force_append(this->preGeoList->get_by_idx(0));
     }

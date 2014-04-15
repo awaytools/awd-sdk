@@ -36,11 +36,11 @@ AWD::AWD(AWD_compression compression, awd_uint16 flags, char *outPathName, bool 
     this->compression = compression;
     this->flags = flags;
     this->splitByRootObjs = splitByRootObjs;
-	this->outPath=outPathName;
-	this->exportEmtpyContainers=exportEmtpyContainers;
-	this->thisBlockSettings=thisBlockSettings;
-	// all this block-lists should have non-weak reference set, so they will delete the blocks
-	// this means, that every awdblock should only occur one time in only one of this lists:
+    this->outPath=outPathName;
+    this->exportEmtpyContainers=exportEmtpyContainers;
+    this->thisBlockSettings=thisBlockSettings;
+    // all this block-lists should have non-weak reference set, so they will delete the blocks
+    // this means, that every awdblock should only occur one time in only one of this lists:
     this->texture_blocks = new AWDBlockList(false);
     this->cubetex_blocks = new AWDBlockList(false);
     this->material_blocks = new AWDBlockList(false);
@@ -58,7 +58,7 @@ AWD::AWD(AWD_compression compression, awd_uint16 flags, char *outPathName, bool 
     this->effect_method_blocks = new AWDBlockList(false);
     this->command_blocks = new AWDBlockList(false);
     this->lightPicker_blocks = new AWDBlockList(false);
-	this->darkLightPicker=NULL;
+    this->darkLightPicker=NULL;
     this->metadata = NULL;
     this->last_used_nsid = 0;
     this->last_used_baddr = 0;
@@ -84,19 +84,19 @@ AWD::~AWD()
     delete this->vertex_anim_blocks;
     delete this->effect_method_blocks;
     delete this->lightPicker_blocks; 
-	delete this->command_blocks;
-	if (this->metadata){
-		delete this->metadata;}
-	this->metadata=NULL;
+    delete this->command_blocks;
+    if (this->metadata){
+        delete this->metadata;}
+    this->metadata=NULL;
 
-	if (this->darkLightPicker!=NULL)
-		delete this->darkLightPicker;
-	this->darkLightPicker=NULL;
-	delete this->thisBlockSettings;
+    if (this->darkLightPicker!=NULL)
+        delete this->darkLightPicker;
+    this->darkLightPicker=NULL;
+    delete this->thisBlockSettings;
 }
 
 
-	
+    
 
 bool
 AWD::has_flag(int flag)
@@ -106,27 +106,27 @@ AWD::has_flag(int flag)
 
 AWDLightPicker * AWD::CreateDarkLightPicker()
 {
-	if(this->darkLightPicker==NULL){
-		if(this->lightPicker_blocks->get_num_blocks()>0){			
-			AWDLight * awdDarkLight = NULL;
-			char * lightName_ptr="DarkLight";
-			awdDarkLight=new AWDLight(lightName_ptr, strlen(lightName_ptr));
-			awdDarkLight->set_light_type(AWD_LIGHT_POINT);
-			awdDarkLight->set_diffuse(0);
-			awdDarkLight->set_specular(0);
-			awdDarkLight->set_ambient(0);
-			AWDBlockList * lightBlocks=new AWDBlockList();
-			lightBlocks->append(awdDarkLight);
-			char *name = "DarkLightPicker"; 
-			this->darkLightPicker=new AWDLightPicker(name,strlen(name));
-			this->darkLightPicker->set_lights(lightBlocks);
-			this->add_scene_block(awdDarkLight);
-			return this->darkLightPicker;
-		}
-		return NULL;
-	}
-	else 
-		return this->darkLightPicker;
+    if(this->darkLightPicker==NULL){
+        if(this->lightPicker_blocks->get_num_blocks()>0){			
+            AWDLight * awdDarkLight = NULL;
+            char * lightName_ptr="DarkLight";
+            awdDarkLight=new AWDLight(lightName_ptr, strlen(lightName_ptr));
+            awdDarkLight->set_light_type(AWD_LIGHT_POINT);
+            awdDarkLight->set_diffuse(0);
+            awdDarkLight->set_specular(0);
+            awdDarkLight->set_ambient(0);
+            AWDBlockList * lightBlocks=new AWDBlockList();
+            lightBlocks->append(awdDarkLight);
+            char *name = "DarkLightPicker"; 
+            this->darkLightPicker=new AWDLightPicker(name,strlen(name));
+            this->darkLightPicker->set_lights(lightBlocks);
+            this->add_scene_block(awdDarkLight);
+            return this->darkLightPicker;
+        }
+        return NULL;
+    }
+    else 
+        return this->darkLightPicker;
 
 }
 
@@ -265,7 +265,7 @@ AWD::re_order_blocks(AWDBlockList *blocks, AWDBlockList *targetList)
     AWDBlockIterator it(blocks);
     len = 0;
     while ((block = it.next()) != NULL) 
-		block->prepare_and_add_with_dependencies(targetList);
+        block->prepare_and_add_with_dependencies(targetList);
 }
 size_t
 AWD::write_blocks(AWDBlockList *blocks, int fd)
@@ -273,10 +273,10 @@ AWD::write_blocks(AWDBlockList *blocks, int fd)
     size_t len;
     AWDBlock *block;
     AWDBlockIterator it(blocks);
-	
+    
     len = 0;
     while ((block = it.next()) != NULL) {
-		len += block->write_block(fd, this->thisBlockSettings);
+        len += block->write_block(fd, this->thisBlockSettings);
     }
 
     return len;
@@ -290,39 +290,39 @@ AWD::flatten_scene(AWDSceneBlock *cur, AWDBlockList *flat_list)
     AWDBlock *child;
     AWDBlockIterator *children;
 
-	if ((cur->get_type()==LIGHT)&&(cur->isExported)){
-		cur->isExported=true;
-		AWDCommandBlock * awdCommand=new AWDCommandBlock(cur->get_name(),cur->get_name_length());
-		awdCommand->add_target_light(cur->get_addr());
-		awdCommand->set_transform(cur->get_transform());
-		AWDSceneBlock * parentBlock = (AWDSceneBlock *)cur->get_parent();
-		if (parentBlock!=NULL){
-			awdCommand->set_parent(parentBlock);
-			awdCommand->prepare_and_add_with_dependencies(flat_list);
-		}
-		else 
-			this->command_blocks->append(awdCommand);
+    if ((cur->get_type()==LIGHT)&&(cur->isExported)){
+        cur->isExported=true;
+        AWDCommandBlock * awdCommand=new AWDCommandBlock(cur->get_name(),cur->get_name_length());
+        awdCommand->add_target_light(cur->get_addr());
+        awdCommand->set_transform(cur->get_transform());
+        AWDSceneBlock * parentBlock = (AWDSceneBlock *)cur->get_parent();
+        if (parentBlock!=NULL){
+            awdCommand->set_parent(parentBlock);
+            awdCommand->prepare_and_add_with_dependencies(flat_list);
+        }
+        else 
+            this->command_blocks->append(awdCommand);
 
-		cur->set_parent(NULL);
-	}
-	else{
-		bool exportThis=true;
-		if (this->exportEmtpyContainers)		
-			exportThis=!cur->isEmpty();		
-		// to do: add option to exclude all empty containers.
-		// recursive function to check if a child exists
-		if(exportThis)
-			cur->prepare_and_add_with_dependencies(flat_list);
+        cur->set_parent(NULL);
+    }
+    else{
+        bool exportThis=true;
+        if (this->exportEmtpyContainers)		
+            exportThis=!cur->isEmpty();		
+        // to do: add option to exclude all empty containers.
+        // recursive function to check if a child exists
+        if(exportThis)
+            cur->prepare_and_add_with_dependencies(flat_list);
 
-		cur->isExported=true;
-	}
+        cur->isExported=true;
+    }
 
     children = cur->child_iter();
     while ((child = children->next()) != NULL) {
         this->flatten_scene((AWDSceneBlock*)child, flat_list);
     }
-	
-	delete children;
+    
+    delete children;
 }
 
 void
@@ -330,7 +330,7 @@ AWD::reorder_scene(AWDBlockList *blocks, AWDBlockList *ordered)
 {
     AWDBlock *block;
     AWDBlockIterator it(blocks);
-	
+    
     while ((block = it.next()) != NULL) {
         this->flatten_scene((AWDSceneBlock*)block, ordered);
     }
@@ -341,24 +341,24 @@ AWD::reset_blocks(AWDBlockList *blocks)
 {
     AWDBlock *block;
     AWDBlockIterator it(blocks);
-	
+    
     while ((block = it.next()) != NULL) {
-		block->isExportedToFile=false;
+        block->isExportedToFile=false;
     }
 
 }
 void
 AWD::reset_all_blocks()
 {
-	this->reset_blocks(this->scene_blocks);
-	this->reset_blocks(this->namespace_blocks);
-	this->reset_blocks(this->skeleton_blocks);
-	this->reset_blocks(this->skelpose_blocks);
-	this->reset_blocks(this->skelanim_blocks);
-	this->reset_blocks(this->texture_blocks);
-	this->reset_blocks(this->material_blocks);
-	this->reset_blocks(this->mesh_data_blocks);
-	this->reset_blocks(this->uvanim_blocks);
+    this->reset_blocks(this->scene_blocks);
+    this->reset_blocks(this->namespace_blocks);
+    this->reset_blocks(this->skeleton_blocks);
+    this->reset_blocks(this->skelpose_blocks);
+    this->reset_blocks(this->skelanim_blocks);
+    this->reset_blocks(this->texture_blocks);
+    this->reset_blocks(this->material_blocks);
+    this->reset_blocks(this->mesh_data_blocks);
+    this->reset_blocks(this->uvanim_blocks);
 
 }
 void
@@ -366,23 +366,23 @@ AWD::reset_blocks2(AWDBlockList *blocks)
 {
     AWDBlock *block;
     AWDBlockIterator it(blocks);
-	
+    
     while ((block = it.next()) != NULL) {
-		block->isExportedToFile=block->isExported;
+        block->isExportedToFile=block->isExported;
     }
 
 }
 void
 AWD::reset_all_blocks2()
 {
-	this->reset_blocks2(this->namespace_blocks);
-	this->reset_blocks2(this->skeleton_blocks);
-	this->reset_blocks2(this->skelpose_blocks);
-	this->reset_blocks2(this->skelanim_blocks);
-	this->reset_blocks2(this->texture_blocks);
-	this->reset_blocks2(this->material_blocks);
-	this->reset_blocks2(this->mesh_data_blocks);
-	this->reset_blocks2(this->uvanim_blocks);
+    this->reset_blocks2(this->namespace_blocks);
+    this->reset_blocks2(this->skeleton_blocks);
+    this->reset_blocks2(this->skelpose_blocks);
+    this->reset_blocks2(this->skelanim_blocks);
+    this->reset_blocks2(this->texture_blocks);
+    this->reset_blocks2(this->material_blocks);
+    this->reset_blocks2(this->mesh_data_blocks);
+    this->reset_blocks2(this->uvanim_blocks);
 
 }
 
@@ -391,56 +391,56 @@ AWD::reset_all_blocks2()
 awd_uint32
 AWD::flush(int out_fd)
 {
-	//contain all blocks that are going to be written in the main AWD file.
-	AWDBlockList * blocks_mainAWD = new AWDBlockList();
-	
-	//make shure the metadata block exists, because no other awdblock should have the id=0
-	if (this->metadata==NULL) 
-		this->metadata=new AWDMetaData();
-	this->metadata->prepare_and_add_with_dependencies(blocks_mainAWD); 	
-	
-	char * cur_filename=NULL;
-	/*
-	if (this->splitByRootObjs){
-		AWDBlockList * blocks_splittedAWD;
-		blocks_splittedAWD = new AWDBlockList();
-		AWDBlock *block;
-		AWDBlockIterator it(this->scene_blocks);
-		int objCount=0;
-		while ((block = it.next()) != NULL) {
-			if  (((AWDSceneBlock*)block)->get_parent()==NULL){  
-				this->reset_all_blocks();
-				blocks_splittedAWD = new AWDBlockList();
-				this->metadata->isExportedToFile=false;
-				this->metadata->isExported=false;
-				this->metadata->prepare_and_add_with_dependencies(blocks_splittedAWD); 
-				this->re_order_blocks(this->namespace_blocks, blocks_splittedAWD);
-				this->flatten_scene((AWDSceneBlock*)block, blocks_splittedAWD);
-				// Open file and check for success
-				char awdDrive[4];
-				char awdPath[1024];
-				char awdName[256];
-				char outAWDPath[1024];
-				_splitpath_s(this->outPath, awdDrive, 4, awdPath, 1024, awdName, 256, NULL, 0);
-				_makepath_s(outAWDPath, 1024, awdDrive, awdPath, ((AWDSceneBlock*)block)->get_name(), "awd");
-				int fd = open(outAWDPath, _O_TRUNC | _O_CREAT | _O_BINARY | _O_RDWR, _S_IWRITE);
-				// to do: add error report for failing to export one of multiple files.
-				// atm a error on creating a file is  skipped
-				if (fd != -1){
-					cur_filename=outAWDPath;
-					this->write_blocks_to_file(fd, blocks_splittedAWD);
-				}
-				
-			}
-		}
-	}
-	*/
-	//else{
-	this->re_order_blocks(this->namespace_blocks, blocks_mainAWD);
-	this->reorder_scene(this->scene_blocks, blocks_mainAWD);	
-	//}
-	
-	this->reset_all_blocks2();
+    //contain all blocks that are going to be written in the main AWD file.
+    AWDBlockList * blocks_mainAWD = new AWDBlockList();
+    
+    //make shure the metadata block exists, because no other awdblock should have the id=0
+    if (this->metadata==NULL) 
+        this->metadata=new AWDMetaData();
+    this->metadata->prepare_and_add_with_dependencies(blocks_mainAWD); 	
+    
+    char * cur_filename=NULL;
+    /*
+    if (this->splitByRootObjs){
+        AWDBlockList * blocks_splittedAWD;
+        blocks_splittedAWD = new AWDBlockList();
+        AWDBlock *block;
+        AWDBlockIterator it(this->scene_blocks);
+        int objCount=0;
+        while ((block = it.next()) != NULL) {
+            if  (((AWDSceneBlock*)block)->get_parent()==NULL){  
+                this->reset_all_blocks();
+                blocks_splittedAWD = new AWDBlockList();
+                this->metadata->isExportedToFile=false;
+                this->metadata->isExported=false;
+                this->metadata->prepare_and_add_with_dependencies(blocks_splittedAWD); 
+                this->re_order_blocks(this->namespace_blocks, blocks_splittedAWD);
+                this->flatten_scene((AWDSceneBlock*)block, blocks_splittedAWD);
+                // Open file and check for success
+                char awdDrive[4];
+                char awdPath[1024];
+                char awdName[256];
+                char outAWDPath[1024];
+                _splitpath_s(this->outPath, awdDrive, 4, awdPath, 1024, awdName, 256, NULL, 0);
+                _makepath_s(outAWDPath, 1024, awdDrive, awdPath, ((AWDSceneBlock*)block)->get_name(), "awd");
+                int fd = open(outAWDPath, _O_TRUNC | _O_CREAT | _O_BINARY | _O_RDWR, _S_IWRITE);
+                // to do: add error report for failing to export one of multiple files.
+                // atm a error on creating a file is  skipped
+                if (fd != -1){
+                    cur_filename=outAWDPath;
+                    this->write_blocks_to_file(fd, blocks_splittedAWD);
+                }
+                
+            }
+        }
+    }
+    */
+    //else{
+    this->re_order_blocks(this->namespace_blocks, blocks_mainAWD);
+    this->reorder_scene(this->scene_blocks, blocks_mainAWD);	
+    //}
+    
+    this->reset_all_blocks2();
     this->re_order_blocks(this->animator_blocks, blocks_mainAWD);
     this->re_order_blocks(this->skeleton_blocks, blocks_mainAWD);
     this->re_order_blocks(this->skelpose_blocks, blocks_mainAWD);
@@ -449,37 +449,37 @@ AWD::flush(int out_fd)
     this->re_order_blocks(this->material_blocks, blocks_mainAWD);
     this->re_order_blocks(this->mesh_data_blocks, blocks_mainAWD);
     this->re_order_blocks(this->uvanim_blocks, blocks_mainAWD);
-	this->re_order_blocks(this->lightPicker_blocks, blocks_mainAWD);
-	//this->re_order_blocks(this->vertex_anim_blocks, blocks_mainAWD);
-	this->re_order_blocks(this->amin_set_blocks, blocks_mainAWD);
-	this->re_order_blocks(this->effect_method_blocks, blocks_mainAWD);
-	
-	// write the main file
-	if (blocks_mainAWD->get_num_blocks()>1){
-		cur_filename=this->outPath;
-		this->write_blocks_to_file(out_fd, blocks_mainAWD);
-	}
-	delete blocks_mainAWD;
-	//open the last stored file with the default appliction (e.g. Awaybuilder)
+    this->re_order_blocks(this->lightPicker_blocks, blocks_mainAWD);
+    //this->re_order_blocks(this->vertex_anim_blocks, blocks_mainAWD);
+    this->re_order_blocks(this->amin_set_blocks, blocks_mainAWD);
+    this->re_order_blocks(this->effect_method_blocks, blocks_mainAWD);
+    
+    // write the main file
+    if (blocks_mainAWD->get_num_blocks()>1){
+        cur_filename=this->outPath;
+        this->write_blocks_to_file(out_fd, blocks_mainAWD);
+    }
+    delete blocks_mainAWD;
+    //open the last stored file with the default appliction (e.g. Awaybuilder)
 
-	return AWD_TRUE;
+    return AWD_TRUE;
 
 }
 
 AWDBlockList *
 AWD::get_animator_blocks()
 {
-	return this->animator_blocks;
+    return this->animator_blocks;
 }
 AWDBlockList *
 AWD::get_mesh_data_blocks()
 {
-	return this->mesh_data_blocks;
+    return this->mesh_data_blocks;
 }
 AWDBlockList *
 AWD::get_material_blocks()
 {
-	return this->material_blocks;
+    return this->material_blocks;
 }
 
 awd_uint32
@@ -501,11 +501,11 @@ AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)
         printf("Could not open temporary file necessary for writing, errno=%d\n", errno);
         return AWD_FALSE;
     }
-	int sds=(int)this->write_blocks(blocks, tmp_fd);
+    int sds=(int)this->write_blocks(blocks, tmp_fd);
     tmp_len += sds;
 
     tmp_buf = (awd_uint8 *) malloc(tmp_len);
-	lseek(tmp_fd, 0, SEEK_SET);
+    lseek(tmp_fd, 0, SEEK_SET);
     read(tmp_fd, tmp_buf, tmp_len);
 
     // Temp file no longer needed
@@ -586,20 +586,22 @@ AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)
         props.algo = 1;
         props.level = 9;
 
-        LzmaEncode(lzma_buf, &lzma_len, tmp_buf, tmp_len, &props, props_buf, &props_len, 0, NULL, &alloc, &alloc);
+        int result=LzmaEncode(lzma_buf, &lzma_len, tmp_buf, tmp_len, &props, props_buf, &props_len, 0, NULL, &alloc, &alloc);
+        if (result!=SZ_OK)
+            int error=0;
 
         // Body length is the length of the actual
         // compressed body + size of props and an integer
         // definining the uncompressed length (see below)
-        body_len = (awd_uint32)lzma_len + (awd_uint32)props_len;//+ sizeof(awd_uint32);
+        body_len = (awd_uint32)lzma_len + (awd_uint32)props_len + sizeof(awd_uint32);
 
         // Create new buffer containing LZMA props, length
         // of uncompressed body and the actual body data
         // concatenated together.
         tmp_len_bo = UI32(tmp_len);
         body_buf = (awd_uint8*)malloc(body_len);
-        //memcpy(body_buf, &tmp_len_bo, sizeof(awd_uint32));
         memcpy(body_buf, props_buf, props_len);
+        memcpy(body_buf, &tmp_len_bo, sizeof(awd_uint32));
         memcpy(body_buf, lzma_buf, lzma_len);
     }
 
@@ -610,11 +612,11 @@ AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)
     
 
     write(out_fd, body_buf, body_len);
-	if (body_buf!=tmp_buf)
-		free(tmp_buf);
-	free (body_buf);
-	if (tmp_path!=NULL)
-		free(tmp_path);
+    if (body_buf!=tmp_buf)
+        free(tmp_buf);
+    free (body_buf);
+    if (tmp_path!=NULL)
+        free(tmp_path);
     return AWD_TRUE;
 }
 

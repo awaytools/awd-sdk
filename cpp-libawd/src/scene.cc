@@ -49,19 +49,22 @@ AWDSceneBlock::write_scene_common(int fd, BlockSettings *curBlockSettings)
     // Write scene block common fields
     // TODO: Move this to separate base class
     write(fd, &parent_addr, sizeof(awd_baddr));
-    awd_float64 offX=awd_float64(this->transform_mtx[9]*curBlockSettings->get_scale());
-    awd_float64 offY=awd_float64(this->transform_mtx[10]*curBlockSettings->get_scale());
-    awd_float64 offZ=awd_float64(this->transform_mtx[11]*curBlockSettings->get_scale());
     awdutil_write_floats(fd, this->transform_mtx, 9, curBlockSettings->get_wide_matrix());
-    if (!curBlockSettings->get_wide_matrix()){
-        write(fd, &offX, sizeof(awd_float32));
-        write(fd, &offY, sizeof(awd_float32));
-        write(fd, &offZ, sizeof(awd_float32));
-    }
-    else{
+    if (curBlockSettings->get_wide_matrix()){
+        awd_float64 offX=awd_float64(this->transform_mtx[9]*curBlockSettings->get_scale());
+        awd_float64 offY=awd_float64(this->transform_mtx[10]*curBlockSettings->get_scale());
+        awd_float64 offZ=awd_float64(this->transform_mtx[11]*curBlockSettings->get_scale());
         write(fd, &offX, sizeof(awd_float64));
         write(fd, &offY, sizeof(awd_float64));
         write(fd, &offZ, sizeof(awd_float64));
+    }
+    else{
+        awd_float32 offX=awd_float32(this->transform_mtx[9]*curBlockSettings->get_scale());
+        awd_float32 offY=awd_float32(this->transform_mtx[10]*curBlockSettings->get_scale());
+        awd_float32 offZ=awd_float32(this->transform_mtx[11]*curBlockSettings->get_scale());
+        write(fd, &offX, sizeof(awd_float32));
+        write(fd, &offY, sizeof(awd_float32));
+        write(fd, &offZ, sizeof(awd_float32));
     }
     awdutil_write_varstr(fd, this->get_name(), this->get_name_length());
 }
@@ -79,7 +82,7 @@ AWDSceneBlock::set_transform(awd_float64 *mtx)
 {
     if (this->transform_mtx!=NULL)
         free(this->transform_mtx);
-    this->transform_mtx = (double *)malloc(12*sizeof(double));
+    this->transform_mtx = (double *)malloc(12*sizeof(awd_float64));
     this->transform_mtx[0] = mtx[0];
     this->transform_mtx[1] = mtx[1];
     this->transform_mtx[2] = mtx[2];
@@ -214,7 +217,7 @@ AWDContainer::~AWDContainer()
 awd_uint32
 AWDContainer::calc_body_length(BlockSettings * curBlockSettings)
 {
-    return this->calc_common_length(curBlockSettings) + this->calc_attr_length(true,true, curBlockSettings);
+    return this->calc_common_length(curBlockSettings->get_wide_matrix()) + this->calc_attr_length(true,true, curBlockSettings);
 }
 
 

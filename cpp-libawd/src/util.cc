@@ -111,7 +111,7 @@ awdutil_write_floats(int fd, awd_float64 *list, int len, bool wide)
             awd_float32 n;
             n = F32((awd_float32)list[i]);
             write(fd, &n, sizeof(awd_float32));
-            bytes_written += sizeof(awd_float64);
+            bytes_written += sizeof(awd_float32);
         }
     }
 

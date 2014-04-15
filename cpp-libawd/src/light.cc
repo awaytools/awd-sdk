@@ -7,8 +7,8 @@ AWDLight::AWDLight(const char *name, awd_uint16 name_len) :
     AWDSceneBlock(LIGHT, name, name_len, NULL)
 {
     this->type = AWD_LIGHT_UNDEFINED;
-    this->radius = 0;
-    this->falloff = 0;
+    this->radius = 90000;
+    this->falloff = 100000;
     this->color = 0;
     this->specular = 0;
     this->diffuse = 0;
@@ -25,19 +25,19 @@ void
 AWDLight::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
         
-    if (this->radius != 0) {
+    if (this->radius != 90000) {
         AWD_field_ptr col_val;
         col_val.v = malloc(sizeof(awd_float64));
         *col_val.f64 = this->radius;
         this->properties->set(PROP_LIGHT_RADIUS, col_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
-    if (this->falloff != 0) {
+    if (this->falloff != 100000) {
         AWD_field_ptr col_val;
         col_val.v = malloc(sizeof(awd_float64));
         *col_val.f64 = this->falloff;
         this->properties->set(PROP_LIGHT_FALLOFF, col_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
-    if (this->color > 0) {
+    if (this->color > 0xffffff) {
         AWD_field_ptr col_val;
         col_val.v = malloc(sizeof(awd_uint32));
         *col_val.col = this->color;
@@ -55,7 +55,7 @@ AWDLight::prepare_and_add_dependencies(AWDBlockList *export_list)
         *col_val.f64 = this->diffuse;
         this->properties->set(PROP_LIGHT_DIFFUSE, col_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
-    if (this->ambientColor > 0.0) {
+    if (this->ambientColor > 0xffffff) {
         AWD_field_ptr col_val;
         col_val.v = malloc(sizeof(awd_uint32));
         *col_val.col = this->ambientColor;

@@ -8,8 +8,6 @@
 
 #include "platform.h"
 
-
-
 void
 AWDAttr::write_attr(int fd, BlockSettings *curBlockSettings)
 {
@@ -70,7 +68,7 @@ AWDAttr::write_attr(int fd, BlockSettings *curBlockSettings)
                 break;
 
             case AWD_FIELD_FLOAT32:
-                f32_be = F32(*val.f64);
+                f32_be = awd_float32(F32(*val.f64));
                 write(fd, &f32_be, sizeof(awd_float32));
                 bytes_written += sizeof(awd_float32);
                 val.f64++;
@@ -111,8 +109,6 @@ AWDAttr::write_attr(int fd, BlockSettings *curBlockSettings)
     }
 }
 
-
-
 void
 AWDAttr::set_val(AWD_field_ptr val, awd_uint32 val_len, AWD_field_type val_type, int storage_type=0)
 {
@@ -122,15 +118,13 @@ AWDAttr::set_val(AWD_field_ptr val, awd_uint32 val_len, AWD_field_type val_type,
     this->storage_type = storage_type;
 }
 
-
-AWD_field_ptr 
+AWD_field_ptr
 AWDAttr::get_val(awd_uint32 *val_len, AWD_field_type *val_type)
 {
     *val_len = this->value_len;
     *val_type = this->type;
     return this->value;
 }
-
 
 awd_uint32
 AWDAttr::get_val_len(BlockSettings * curBlockSettings)
@@ -150,21 +144,17 @@ AWDAttr::get_val_len(BlockSettings * curBlockSettings)
     return this->value_len;
 }
 
-
-
-
 AWDUserAttr::AWDUserAttr(AWDNamespace *ns, const char *key, awd_uint16 key_len)
 {
     this->ns = ns;
     this->key_len = key_len;
     if (key != NULL) {
         this->key = (char*)malloc(this->key_len+1);
-        strncpy(this->key, key, this->key_len);
+        strncpy_s(this->key, this->key_len, key, _TRUNCATE);
         this->key[this->key_len] = 0;
     }
     this->next = NULL;
 }
-
 
 AWDUserAttr::~AWDUserAttr()
 {
@@ -172,12 +162,11 @@ AWDUserAttr::~AWDUserAttr()
         free(this->key);
         this->key = NULL;
     }
-	if (this->type!=AWD_FIELD_STRING){
-		if(this->value.v!=NULL)
-			free(this->value.v);
-	}
+    if (this->type!=AWD_FIELD_STRING){
+        if(this->value.v!=NULL)
+            free(this->value.v);
+    }
 }
-
 
 AWDNamespace *
 AWDUserAttr::get_ns()
@@ -185,21 +174,17 @@ AWDUserAttr::get_ns()
     return this->ns;
 }
 
-
 const char *
 AWDUserAttr::get_key()
 {
     return this->key;
 }
 
-
 awd_uint16
 AWDUserAttr::get_key_len()
 {
     return this->key_len;
 }
-
-
 
 void
 AWDUserAttr::write_metadata(int fd)
@@ -218,13 +203,11 @@ AWDUserAttr::write_metadata(int fd)
     write(fd, &len_be, sizeof(awd_uint32));
 }
 
-
 AWDUserAttrList::AWDUserAttrList()
 {
     this->first_attr = NULL;
     this->last_attr = NULL;
 }
-
 
 AWDUserAttrList::~AWDUserAttrList()
 {
@@ -244,7 +227,6 @@ AWDUserAttrList::~AWDUserAttrList()
     this->last_attr = NULL;
 }
 
-
 awd_uint32
 AWDUserAttrList::calc_length(BlockSettings * blockSettings)
 {
@@ -252,7 +234,7 @@ AWDUserAttrList::calc_length(BlockSettings * blockSettings)
     AWDUserAttr *cur;
 
     // List length field always included
-    len = sizeof(awd_uint32); 
+    len = sizeof(awd_uint32);
 
     // Accumulate size of individual attributes
     cur = this->first_attr;
@@ -264,7 +246,6 @@ AWDUserAttrList::calc_length(BlockSettings * blockSettings)
 
     return len;
 }
-
 
 void
 AWDUserAttrList::write_attributes(int fd, BlockSettings * blockSettings)
@@ -281,7 +262,6 @@ AWDUserAttrList::write_attributes(int fd, BlockSettings * blockSettings)
         cur = cur->next;
     }
 }
-
 
 AWDUserAttr *
 AWDUserAttrList::find(AWDNamespace *ns, const char *key, awd_uint16 key_len)
@@ -306,7 +286,6 @@ AWDUserAttrList::find(AWDNamespace *ns, const char *key, awd_uint16 key_len)
     return NULL;
 }
 
-
 bool
 AWDUserAttrList::get(AWDNamespace *ns, const char *key, awd_uint16 key_len,
     AWD_field_ptr *val, awd_uint32 *val_len, AWD_field_type *val_type)
@@ -322,9 +301,8 @@ AWDUserAttrList::get(AWDNamespace *ns, const char *key, awd_uint16 key_len,
     return false;
 }
 
-
 void
-AWDUserAttrList::set(AWDNamespace *ns, const char *key, awd_uint16 key_len, 
+AWDUserAttrList::set(AWDNamespace *ns, const char *key, awd_uint16 key_len,
     AWD_field_ptr value, awd_uint32 value_length, AWD_field_type type)
 {
     bool created=false;
@@ -353,7 +331,6 @@ AWDUserAttrList::set(AWDNamespace *ns, const char *key, awd_uint16 key_len,
     }
 }
 
-
 /*
 void
 AWDUserAttrList::add_namespaces(AWD *awd)
@@ -366,28 +343,19 @@ AWDUserAttrList::add_namespaces(AWD *awd)
 }
 */
 
-
-
-
-
-
-
-
 AWDNumAttr::AWDNumAttr()
 {
     this->next = NULL;
 }
 
-
 AWDNumAttr::~AWDNumAttr()
 {
     this->next = NULL;
-	if (this->type!=AWD_FIELD_STRING){
-		if(this->value.v!=NULL)
-			free(this->value.v);
-	}
+    if (this->type!=AWD_FIELD_STRING){
+        if(this->value.v!=NULL)
+            free(this->value.v);
+    }
 }
-
 
 void
 AWDNumAttr::write_metadata(int fd)
@@ -402,14 +370,11 @@ AWDNumAttr::write_metadata(int fd)
     write(fd, &len_be, sizeof(awd_uint32));
 }
 
-
-
 AWDNumAttrList::AWDNumAttrList()
 {
     this->first_attr = NULL;
     this->last_attr = NULL;
 }
-
 
 AWDNumAttrList::~AWDNumAttrList()
 {
@@ -428,7 +393,6 @@ AWDNumAttrList::~AWDNumAttrList()
     this->first_attr = NULL;
     this->last_attr = NULL;
 }
-
 
 awd_uint32
 AWDNumAttrList::calc_length(BlockSettings * blockSettings)
@@ -449,7 +413,6 @@ AWDNumAttrList::calc_length(BlockSettings * blockSettings)
     return len;
 }
 
-
 void
 AWDNumAttrList::write_attributes(int fd, BlockSettings * blockSettings)
 {
@@ -466,8 +429,6 @@ AWDNumAttrList::write_attributes(int fd, BlockSettings * blockSettings)
     }
 }
 
-
-
 AWDNumAttr *
 AWDNumAttrList::find(awd_propkey key)
 {
@@ -478,14 +439,12 @@ AWDNumAttrList::find(awd_propkey key)
         while (cur) {
             if (cur->key == key)
                 return cur;
-
             cur = cur->next;
         }
     }
 
     return NULL;
 }
-
 
 bool
 AWDNumAttrList::get(awd_propkey key, AWD_field_ptr *val, awd_uint32 *val_len, AWD_field_type *val_type)
@@ -502,12 +461,11 @@ AWDNumAttrList::get(awd_propkey key, AWD_field_ptr *val, awd_uint32 *val_len, AW
     return false;
 }
 
-
 void
 AWDNumAttrList::set(awd_propkey key, AWD_field_ptr value, awd_uint32 value_length, AWD_field_type type, int store_type)
 {
     bool created;
-    AWDNumAttr *attr;    
+    AWDNumAttr *attr;
 
     created = false;
     attr = this->find(key);
@@ -535,10 +493,6 @@ AWDNumAttrList::set(awd_propkey key, AWD_field_ptr value, awd_uint32 value_lengt
     }
 }
 
-
-
-
-
 AWDAttrElement::AWDAttrElement()
 {
     this->properties = new AWDNumAttrList();
@@ -551,7 +505,6 @@ AWDAttrElement::~AWDAttrElement()
     delete this->user_attributes;
 }
 
-
 /*
 void
 AWDAttrElement::add_dependencies(AWD *awd)
@@ -560,8 +513,7 @@ AWDAttrElement::add_dependencies(AWD *awd)
 }
 */
 
-
-awd_uint32 
+awd_uint32
 AWDAttrElement::calc_attr_length(bool with_props, bool with_user_attr, BlockSettings * blockSettings )
 {
     awd_uint32 len;
@@ -573,21 +525,67 @@ AWDAttrElement::calc_attr_length(bool with_props, bool with_user_attr, BlockSett
     return len;
 }
 
-
-
 bool
-AWDAttrElement::get_attr(AWDNamespace *ns, const char *key, awd_uint16 key_len, 
+AWDAttrElement::get_attr(AWDNamespace *ns, const char *key, awd_uint16 key_len,
     AWD_field_ptr *val, awd_uint32 *val_len, AWD_field_type *val_type)
 {
     return this->user_attributes->get(ns, key, key_len, val, val_len, val_type);
 }
 
-
 void
-AWDAttrElement::set_attr(AWDNamespace *ns, const char *key, awd_uint16 key_len, 
+AWDAttrElement::set_attr(AWDNamespace *ns, const char *key, awd_uint16 key_len,
     AWD_field_ptr val, awd_uint32 val_len, AWD_field_type val_type)
 {
     this->user_attributes->set(ns, key, key_len, val, val_len, val_type);
 }
 
-
+void
+AWDAttrElement::add_color_property(int targetID, awd_uint32 targetValue, awd_uint32 defaultValue)
+{
+    if (targetValue!=defaultValue){
+        AWD_field_ptr newVal;
+        newVal.v = malloc(sizeof(awd_uint32));
+        *newVal.col = targetValue;
+        this->properties->set(targetID, newVal, sizeof(awd_uint32), AWD_FIELD_COLOR);
+    }
+}
+void
+AWDAttrElement::add_number_property(int targetID, float targetValue, float defaultValue)
+{
+    if (targetValue!=defaultValue){
+        AWD_field_ptr newVal;
+        newVal.v = malloc(sizeof(awd_float64));
+        *newVal.f64 = targetValue;
+        this->properties->set(targetID, newVal, sizeof(awd_float64), AWD_FIELD_FLOAT64);
+    }
+}
+void
+AWDAttrElement::add_int_property(int targetID, int targetValue, int defaultValue)
+{
+    if (targetValue!=defaultValue){
+        AWD_field_ptr newVal;
+        newVal.v = malloc(sizeof(awd_uint16));
+        *newVal.ui16 = targetValue;
+        this->properties->set(targetID, newVal, sizeof(awd_uint16), AWD_FIELD_UINT16);
+    }
+}
+void
+AWDAttrElement::add_int8_property(int targetID, int targetValue, int defaultValue)
+{
+    if (targetValue!=defaultValue){
+        AWD_field_ptr newVal;
+        newVal.v = malloc(sizeof(awd_uint8));
+        *newVal.ui8 = targetValue;
+        this->properties->set(targetID, newVal, sizeof(awd_uint8), AWD_FIELD_UINT8);
+    }
+}
+void
+AWDAttrElement::add_bool_property(int targetID, bool targetValue, bool defaultValue)
+{
+    if (targetValue!=defaultValue){
+        AWD_field_ptr newVal;
+        newVal.v = malloc(sizeof(awd_bool));
+        *newVal.b = targetValue;
+        this->properties->set(targetID, newVal, sizeof(awd_bool), AWD_FIELD_BOOL);
+    }
+}

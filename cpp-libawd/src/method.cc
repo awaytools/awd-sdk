@@ -50,7 +50,7 @@ AWDEffectMethod::get_effect_props()
 }
 
 void
-AWDEffectMethod::add_color_property(int targetID, awd_uint32 targetValue, awd_uint32 defaultValue)
+AWDEffectMethod::add_color_method_prop(int targetID, awd_uint32 targetValue, awd_uint32 defaultValue)
 {
     if (targetValue!=defaultValue){
         AWD_field_ptr newVal;
@@ -58,10 +58,9 @@ AWDEffectMethod::add_color_property(int targetID, awd_uint32 targetValue, awd_ui
         *newVal.col = targetValue;
         this->effect_props->set(targetID, newVal, sizeof(awd_uint32), AWD_FIELD_COLOR);
     }
-
 }
 void
-AWDEffectMethod::add_number_property(int targetID, float targetValue, float defaultValue)
+AWDEffectMethod::add_number_method_prop(int targetID, float targetValue, float defaultValue)
 {
     if (targetValue!=defaultValue){
         AWD_field_ptr newVal;
@@ -69,10 +68,9 @@ AWDEffectMethod::add_number_property(int targetID, float targetValue, float defa
         *newVal.f64 = targetValue;
         this->effect_props->set(targetID, newVal, sizeof(awd_float64), AWD_FIELD_FLOAT64);
     }
-
 }
 void
-AWDEffectMethod::add_int_property(int targetID, int targetValue, int defaultValue)
+AWDEffectMethod::add_int_method_prop(int targetID, int targetValue, int defaultValue)
 {
     if (targetValue!=defaultValue){
         AWD_field_ptr newVal;
@@ -82,7 +80,7 @@ AWDEffectMethod::add_int_property(int targetID, int targetValue, int defaultValu
     }
 }
 void
-AWDEffectMethod::add_bool_property(int targetID, bool targetValue, bool defaultValue)
+AWDEffectMethod::add_bool_method_prop(int targetID, bool targetValue, bool defaultValue)
 {
     if (targetValue!=defaultValue){
         AWD_field_ptr newVal;
@@ -91,34 +89,32 @@ AWDEffectMethod::add_bool_property(int targetID, bool targetValue, bool defaultV
         this->effect_props->set(targetID, newVal, sizeof(awd_bool), AWD_FIELD_BOOL);
     }
 }
-
-
 void
 AWDEffectMethod::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
     if (this->awdBlock1 != NULL) {
-        this->awdBlock1->prepare_and_add_with_dependencies(export_list);			
+        this->awdBlock1->prepare_and_add_with_dependencies(export_list);
         AWD_field_ptr tex_val;
         tex_val.v = malloc(sizeof(awd_baddr));
         *tex_val.addr = this->awdBlock1->get_addr();
         this->effect_props->set(PROPS_BADDR1, tex_val, sizeof(awd_baddr), AWD_FIELD_BADDR);
     }
     if (this->awdBlock2 != NULL) {
-        this->awdBlock2->prepare_and_add_with_dependencies(export_list);			
+        this->awdBlock2->prepare_and_add_with_dependencies(export_list);
         AWD_field_ptr tex_val;
         tex_val.v = malloc(sizeof(awd_baddr));
         *tex_val.addr = this->awdBlock2->get_addr();
         this->effect_props->set(PROPS_BADDR2, tex_val, sizeof(awd_baddr), AWD_FIELD_BADDR);
     }
     if (this->awdBlock3 != NULL) {
-        this->awdBlock3->prepare_and_add_with_dependencies(export_list);			
+        this->awdBlock3->prepare_and_add_with_dependencies(export_list);
         AWD_field_ptr tex_val;
         tex_val.v = malloc(sizeof(awd_baddr));
         *tex_val.addr = this->awdBlock3->get_addr();
         this->effect_props->set(PROPS_BADDR3, tex_val, sizeof(awd_baddr), AWD_FIELD_BADDR);
     }
     if (this->awdBlock4 != NULL) {
-        this->awdBlock4->prepare_and_add_with_dependencies(export_list);			
+        this->awdBlock4->prepare_and_add_with_dependencies(export_list);
         AWD_field_ptr tex_val;
         tex_val.v = malloc(sizeof(awd_baddr));
         *tex_val.addr = this->awdBlock4->get_addr();
@@ -129,6 +125,8 @@ AWDEffectMethod::prepare_and_add_dependencies(AWDBlockList *export_list)
 awd_uint32
 AWDEffectMethod::calc_body_length(BlockSettings * curBlockSettings)
 {
+    if(!this->get_isValid())
+        return 0;
     awd_uint32 len;
     len = sizeof(awd_uint16) + this->get_name_length(); //name
     len += sizeof(awd_uint16); //type
@@ -140,11 +138,9 @@ AWDEffectMethod::calc_body_length(BlockSettings * curBlockSettings)
 void
 AWDEffectMethod::write_body(int fd, BlockSettings *curBlockSettings)
 {
-    awdutil_write_varstr(fd, this->get_name(), this->get_name_length()); 
+    awdutil_write_varstr(fd, this->get_name(), this->get_name_length());
     write(fd, &this->type, sizeof(awd_uint16));
     this->effect_props->write_attributes(fd, curBlockSettings);
     this->properties->write_attributes(fd, curBlockSettings);
     this->user_attributes->write_attributes(fd, curBlockSettings);
 }
-
-

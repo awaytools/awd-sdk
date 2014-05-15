@@ -3,13 +3,14 @@
 
 #include "platform.h"
 
-AWDMaterial::AWDMaterial(const char *name, awd_uint16 name_len) : 
+AWDMaterial::AWDMaterial(const char *name, awd_uint16 name_len) :
     AWDBlock(SIMPLE_MATERIAL),
     AWDNamedElement(name, name_len),
     AWDAttrElement()
 {
     this->type = AWD_MATTYPE_UNDEFINED;
     this->isCreated = false;//will be true, once the mtl is converted to awd
+    this->isClone = false;//so the destructor knows how to handle stuff for duplicated materials
 
     this->mappingChannel = 0;
     this->secondMappingChannel = 0;
@@ -36,47 +37,49 @@ AWDMaterial::AWDMaterial(const char *name, awd_uint16 name_len) :
     this->specularColor = 0xffffff;
     this->specTexture = NULL;
     this->lightPicker = NULL;
-    
+    this->animator = NULL;
     this->first_method = NULL;
     this->last_method = NULL;
     this->num_methods = 0;
-
+    this->shadowMethod = NULL;
     this->is_faceted = false;
 
     this->uv_transform_mtx = NULL;
 
-    this->effectMethods = new AWDBlockList();
-    this->materialClones = new AWDBlockList(false);// the materialClones will not be added into any of the awd-blocklists
+    this->effectMethods = NULL;//new AWDBlockList();
+    this->materialClones = NULL;//new AWDBlockList(false);// the materialClones will not be added into any of the awd-blocklists
 }
-    
+
 AWDMaterial::~AWDMaterial()
 {
-    delete this->materialClones;
-    if(this->effectMethods!=NULL)
-        delete this->effectMethods;
+    if(this->materialClones!=NULL)
+        delete this->materialClones;
+    if(!this->isClone){
+        if(this->effectMethods!=NULL)
+            delete this->effectMethods;
+        AWD_mat_method *cur;
+        cur = this->first_method;
+        while (cur) {
+            AWD_mat_method *next=cur->next;
+            AWDShadingMethod * thisShadingMethod=cur->method;
+            if (thisShadingMethod!=NULL)
+                delete thisShadingMethod;
+            free(cur);
+            cur = next;
+        }
+    }
     this->texture = NULL;
     this->ambientTexture = NULL;
     this->specTexture = NULL;
     this->normalTexture = NULL;
     this->effectMethods= NULL;
-    
+
     this->type = AWD_MATTYPE_UNDEFINED;
-    AWD_mat_method *cur;
-    cur = this->first_method;
-    while (cur) {
-        AWD_mat_method *next=cur->next;
-        AWDShadingMethod * thisShadingMethod=cur->method;
-        if (thisShadingMethod!=NULL)
-            delete thisShadingMethod;
-        free(cur);
-        cur = next;
-    }
     if (this->uv_transform_mtx!=NULL) {
         free(this->uv_transform_mtx);
         this->uv_transform_mtx = NULL;
     }
 }
-
 
 void
 AWDMaterial::resetShadingMethods()
@@ -107,6 +110,17 @@ AWDMaterial::set_type(AWD_mat_type type)
     this->type = type;
 }
 
+bool
+AWDMaterial::get_isClone()
+{
+    return this->isClone;
+}
+
+void
+AWDMaterial::set_isClone(bool isClone)
+{
+    this->isClone = isClone;
+}
 
 AWDBlockList *
 AWDMaterial::get_materialClones()
@@ -116,18 +130,19 @@ AWDMaterial::get_materialClones()
 AWDBlockList *
 AWDMaterial::get_effectMethods()
 {
+    if(this->effectMethods==NULL){
+        this->effectMethods=new AWDBlockList();
+    }
     return this->effectMethods;
 }
 
 void
 AWDMaterial::set_effectMethods(AWDBlockList *effectMethods)
 {
-    if(this->effectMethods!=NULL)
-        delete this->effectMethods;
     this->effectMethods = effectMethods;
 }
 
-bool 
+bool
 AWDMaterial::get_isCreated()
 {
     return this->isCreated;
@@ -156,7 +171,7 @@ AWDMaterial::set_uv_transform_mtx(awd_float64 * new_uv_transform_mtx)
     this->uv_transform_mtx[5] = new_uv_transform_mtx[5];
 }
 
-bool 
+bool
 AWDMaterial::get_is_faceted()
 {
     return this->is_faceted;
@@ -167,7 +182,7 @@ AWDMaterial::set_is_faceted(bool isfaceted)
     this->is_faceted = isfaceted;
 }
 
-int 
+int
 AWDMaterial::get_mappingChannel()
 {
     return this->mappingChannel;
@@ -177,7 +192,7 @@ AWDMaterial::set_mappingChannel(int mappingChannel)
 {
     this->mappingChannel = mappingChannel;
 }
-int 
+int
 AWDMaterial::get_secondMappingChannel()
 {
     return this->secondMappingChannel;
@@ -207,7 +222,6 @@ AWDMaterial::add_method(AWDShadingMethod *method)
 
     this->num_methods++;
 }
-
 
 awd_color
 AWDMaterial::get_color()
@@ -241,8 +255,8 @@ AWDMaterial::set_normalTexture(AWDBitmapTexture *normalTexture)
 {
     this->normalTexture = normalTexture;
 }
-        
-bool 
+
+bool
 AWDMaterial::get_multiPass()
 {
     return this->multiPass;
@@ -252,8 +266,8 @@ AWDMaterial::set_multiPass(bool multiPass)
 {
     this->multiPass = multiPass;
 }
-        
-bool 
+
+bool
 AWDMaterial::get_smooth()
 {
     return this->smooth;
@@ -263,8 +277,8 @@ AWDMaterial::set_smooth(bool smooth)
 {
     this->smooth = smooth;
 }
-        
-bool 
+
+bool
 AWDMaterial::get_mipmap()
 {
     return this->mipmap;
@@ -274,8 +288,8 @@ AWDMaterial::set_mipmap(bool mipmap)
 {
     this->mipmap = mipmap;
 }
-        
-bool 
+
+bool
 AWDMaterial::get_both_sides()
 {
     return this->both_sides;
@@ -286,7 +300,7 @@ AWDMaterial::set_both_sides(bool both_sides)
     this->both_sides = both_sides;
 }
 
-bool 
+bool
 AWDMaterial::get_premultiplied()
 {
     return this->premultiplied;
@@ -297,7 +311,7 @@ AWDMaterial::set_premultiplied(bool premultiplied)
     this->premultiplied = premultiplied;
 }
 
-int 
+int
 AWDMaterial::get_blendMode()
 {
     return this->blendMode;
@@ -308,7 +322,7 @@ AWDMaterial::set_blendMode(int blendMode)
     this->blendMode = blendMode;
 }
 
-awd_float32 
+awd_float32
 AWDMaterial::get_alpha()
 {
     return this->alpha;
@@ -319,7 +333,7 @@ AWDMaterial::set_alpha(awd_float32 alpha)
     this->alpha = alpha;
 }
 
-bool 
+bool
 AWDMaterial::get_alpha_blending()
 {
     return this->alpha_blending;
@@ -330,7 +344,7 @@ AWDMaterial::set_alpha_blending(bool alpha_blending)
     this->alpha_blending = alpha_blending;
 }
 
-awd_float32 
+awd_float32
 AWDMaterial::get_alpha_threshold()
 {
     return this->alpha_threshold;
@@ -341,7 +355,7 @@ AWDMaterial::set_alpha_threshold(awd_float32 alpha_threshold)
     this->alpha_threshold = alpha_threshold;
 }
 
-bool 
+bool
 AWDMaterial::get_repeat()
 {
     return this->repeat;
@@ -352,7 +366,7 @@ AWDMaterial::set_repeat(bool repeat)
     this->repeat = repeat;
 }
 
-awd_float32 
+awd_float32
 AWDMaterial::get_ambientStrength()
 {
     return this->ambientStrength;
@@ -385,7 +399,7 @@ AWDMaterial::set_ambientTexture(AWDBitmapTexture *ambientTexture)
     this->ambientTexture = ambientTexture;
 }
 
-awd_float32 
+awd_float32
 AWDMaterial::get_specularStrength()
 {
     return this->specularStrength;
@@ -396,7 +410,7 @@ AWDMaterial::set_specularStrength(awd_float32 specularStrength)
     this->specularStrength = specularStrength;
 }
 
-awd_uint16 
+awd_uint16
 AWDMaterial::get_glossStrength()
 {
     return this->glossStrength;
@@ -441,23 +455,39 @@ AWDMaterial::set_lightPicker(AWDLightPicker *lightPicker_block)
     this->lightPicker = lightPicker_block;
 }
 
+AWDBlock *
+AWDMaterial::get_animator()
+{
+    return this->animator;
+}
 
+void
+AWDMaterial::set_animator(AWDBlock *animator)
+{
+    this->animator = animator;
+}
 
+AWDBlock *
+AWDMaterial::get_shadowMethod()
+{
+    return this->shadowMethod;
+}
+
+void
+AWDMaterial::set_shadowMethod(AWDBlock *shadowMethod)
+{
+    this->shadowMethod = shadowMethod;
+}
 void
 AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
     if (this->type == AWD_MATTYPE_COLOR) {
-        if (this->color != 0xffffff) {
-            AWD_field_ptr col_val;
-            col_val.v = malloc(sizeof(awd_uint32));
-            *col_val.col = this->color;
-            this->properties->set(PROP_MAT_COLOR, col_val, sizeof(awd_color), AWD_FIELD_COLOR);
-        }
+        this->add_color_property(PROP_MAT_COLOR,this->color,0xffffff);
     }
     else {
         if (this->texture) {
             if (this->texture->get_tex_type()!=UNDEFINEDTEXTYPE){
-                this->texture->prepare_and_add_with_dependencies(export_list);			
+                this->texture->prepare_and_add_with_dependencies(export_list);
                 AWD_field_ptr tex_val;
                 tex_val.v = malloc(sizeof(awd_baddr));
                 *tex_val.addr = this->texture->get_addr();
@@ -473,9 +503,8 @@ AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
                 this->properties->set(PROP_MAT_AMBIENTTEXTURE, ambientTex_val, sizeof(awd_baddr), AWD_FIELD_BADDR);
             }
         }
-        
     }
-    
+
     // create wrapper-methods for all effectMethods (wrapper methods only consist of awdID thats pointing to the EffectMethods-Block)
     AWDEffectMethod *block;
     AWDBlockIterator *it;
@@ -490,7 +519,7 @@ AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
         this->add_method(newWrapperMethod);
     }
     delete it;
-    
+
     //tell all shading-methods to export their dependencies...
     AWD_mat_method *cur;
     cur = this->first_method;
@@ -499,17 +528,26 @@ AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
         cur = cur->next;
     }
 
+    if (this->shadowMethod!=NULL) {
+        this->shadowMethod->prepare_and_add_with_dependencies(export_list);
+        AWDShadingMethod * newWrapperMethod = new AWDShadingMethod(AWD_SHADOWMETHOD_WRAPPER);
+        AWD_field_ptr shadowBlock_val;
+        shadowBlock_val.v = malloc(sizeof(awd_baddr));
+        *shadowBlock_val.addr = this->shadowMethod->get_addr();
+        newWrapperMethod->get_shading_props()->set(PROPS_BADDR1, shadowBlock_val, sizeof(awd_baddr), AWD_FIELD_BADDR);
+        this->add_method(newWrapperMethod);
+    }
     // this properties can be set for texture and for color materials
     if (this->lightPicker!=NULL) {
-        this->lightPicker->prepare_and_add_with_dependencies(export_list);		
+        this->lightPicker->prepare_and_add_with_dependencies(export_list);
         AWD_field_ptr lightPicker_val;
         lightPicker_val.v = malloc(sizeof(awd_baddr));
         *lightPicker_val.addr = this->lightPicker->get_addr();
-        this->properties->set(PROP_MAT_LIGHTPICKER, lightPicker_val, sizeof(awd_baddr), AWD_FIELD_BADDR);		
+        this->properties->set(PROP_MAT_LIGHTPICKER, lightPicker_val, sizeof(awd_baddr), AWD_FIELD_BADDR);
     }
     if (this->normalTexture) {
         if (this->normalTexture->get_tex_type()!=UNDEFINEDTEXTYPE){
-            this->normalTexture->prepare_and_add_with_dependencies(export_list);		
+            this->normalTexture->prepare_and_add_with_dependencies(export_list);
             AWD_field_ptr normaltex_val;
             normaltex_val.v = malloc(sizeof(awd_baddr));
             *normaltex_val.addr = this->normalTexture->get_addr();
@@ -525,123 +563,45 @@ AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
              this->properties->set(PROP_MAT_SPECULARTEXTURE, specTex_val, sizeof(awd_baddr), AWD_FIELD_BADDR);
         }
     }
-    
-    if (this->multiPass) {
-        AWD_field_ptr rep_val2;
-        rep_val2.v = malloc(sizeof(awd_uint8));
-        *rep_val2.ui8 = (awd_uint8)1;
-        this->properties->set(PROP_MAT_SPECIAL_ID, rep_val2, sizeof(awd_uint8), AWD_FIELD_UINT8);
-    }
-    if (this->repeat) {
-        AWD_field_ptr rep_val;
-        rep_val.v = malloc(sizeof(awd_bool));
-        *rep_val.b = AWD_TRUE;
-        this->properties->set(PROP_MAT_REPEAT, rep_val, sizeof(awd_bool), AWD_FIELD_BOOL);
-    }
-    if (!this->smooth) {
-        AWD_field_ptr rep_val;
-        rep_val.v = malloc(sizeof(awd_bool));
-        *rep_val.b = AWD_FALSE;
-        this->properties->set(PROP_MAT_SMOOTH, rep_val, sizeof(awd_bool), AWD_FIELD_BOOL);
-    }
-    if (!this->mipmap) {
-        AWD_field_ptr rep_val;
-        rep_val.v = malloc(sizeof(awd_bool));
-        *rep_val.b = AWD_FALSE;
-        this->properties->set(PROP_MAT_MIPMAP, rep_val, sizeof(awd_bool), AWD_FIELD_BOOL);
-    }
-    if (this->both_sides) {
-        AWD_field_ptr rep_val;
-        rep_val.v = malloc(sizeof(awd_bool));
-        *rep_val.b = AWD_TRUE;
-        this->properties->set(PROP_MAT_BOTHSIDES, rep_val, sizeof(awd_bool), AWD_FIELD_BOOL);
-    }
-    if (this->alpha != 1.0f) {
-       AWD_field_ptr th_val;
-       th_val.v = malloc(sizeof(awd_float64));
-       *th_val.f64 = this->alpha;
-       this->properties->set(PROP_MAT_ALPHA, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
-    }
-
-    if (this->alpha_blending) {
-       AWD_field_ptr trans_val;
-       trans_val.v = malloc(sizeof(awd_bool));
-       *trans_val.b = AWD_TRUE;
-       this->properties->set(PROP_MAT_ALPHA_BLENDING, trans_val, sizeof(awd_bool), AWD_FIELD_BOOL);
-    }
-    if (this->alpha_threshold != 0.0f) {
-       AWD_field_ptr th_val;
-       th_val.v = malloc(sizeof(awd_float64));
-       *th_val.f64 = this->alpha_threshold;
-       this->properties->set(PROP_MAT_ALPHA_THRESHOLD, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
-    }
-    if (this->premultiplied) {
-       AWD_field_ptr trans_val;
-       trans_val.v = malloc(sizeof(awd_bool));
-       *trans_val.b = AWD_TRUE;
-       this->properties->set(PROP_MAT_APLHA_PREMULTIPLIED, trans_val, sizeof(awd_bool), AWD_FIELD_BOOL);
-    }
-    if (this->blendMode!=0) {
-       AWD_field_ptr trans_val;
-       trans_val.v = malloc(sizeof(awd_uint8));
-       *trans_val.ui8 = this->blendMode;
-       this->properties->set(PROP_MAT_BLENDMODE, trans_val, sizeof(awd_uint8), AWD_FIELD_UINT8);
-    }
-    //TODO: fill in default color
-    if (this->specularColor != 0xffffff) {
-       AWD_field_ptr col_val;
-       col_val.v = malloc(sizeof(awd_color));
-       *col_val.col = this->specularColor;
-       this->properties->set(PROP_MAT_SPECULARCOLOR, col_val, sizeof(awd_color), AWD_FIELD_COLOR);
-    }
-    //TODO: fill in default color
-    if (this->ambientColor != 0xffffff) {
-        AWD_field_ptr col_val;
-        col_val.v = malloc(sizeof(awd_color));
-        *col_val.col = this->ambientColor;
-        this->properties->set(PROP_MAT_AMBIENTCOLOR, col_val, sizeof(awd_color), AWD_FIELD_COLOR);
-    }
-    if (this->specularStrength != 1.0f) {
-        AWD_field_ptr th_val;
-        th_val.v = malloc(sizeof(awd_float64));
-        *th_val.f64 = this->specularStrength;
-        this->properties->set(PROP_MAT_SPECULARLEVEL, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
-    }
-    if (this->ambientStrength != 1.0f) {
-        AWD_field_ptr th_val;
-        th_val.v = malloc(sizeof(awd_float64));
-        *th_val.f64 = this->ambientStrength;
-        this->properties->set(PROP_MAT_AMBIENT_LEVEL, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
-    }
-    if (this->glossStrength != 50) {
-        AWD_field_ptr th_val;
-        th_val.v = malloc(sizeof(awd_float64));
-        *th_val.f64 = (float)this->glossStrength;
-        this->properties->set(PROP_MAT_GLOSS, th_val, sizeof(awd_float64), AWD_FIELD_FLOAT64);
-    }
-    
+    this->add_bool_property(PROP_MAT_SPECIAL_ID,this->multiPass,false);
+    this->add_bool_property(PROP_MAT_REPEAT,this->repeat,false);
+    this->add_bool_property(PROP_MAT_SMOOTH,this->smooth,true);
+    this->add_bool_property(PROP_MAT_MIPMAP,this->mipmap,true);
+    this->add_bool_property(PROP_MAT_BOTHSIDES,this->both_sides,false);
+    this->add_number_property(PROP_MAT_ALPHA,this->alpha,1.0f);
+    this->add_bool_property(PROP_MAT_ALPHA_BLENDING,this->alpha_blending,false);
+    this->add_number_property(PROP_MAT_ALPHA_THRESHOLD,this->alpha_threshold,0.0f);
+    this->add_bool_property(PROP_MAT_APLHA_PREMULTIPLIED,this->premultiplied,false);
+    this->add_int8_property(PROP_MAT_BLENDMODE,this->blendMode,0);
+    this->add_color_property(PROP_MAT_SPECULARCOLOR,this->specularColor,0xffffff);
+    this->add_color_property(PROP_MAT_AMBIENTCOLOR,this->ambientColor,0xffffff);
+    this->add_number_property(PROP_MAT_SPECULARLEVEL,this->specularStrength,1.0f);
+    this->add_number_property(PROP_MAT_AMBIENT_LEVEL,this->ambientStrength,1.0f);
+    this->add_number_property(PROP_MAT_GLOSS,this->glossStrength,50);
 }
 
 AWDMaterial*
-AWDMaterial::get_material_for_lightPicker(AWDLightPicker * lightPicker)
+AWDMaterial::get_material_for_lightPicker(AWDLightPicker * lightPicker, AWDBlock * animator)
 {
-    if (this->lightPicker==lightPicker){
+    if ((this->lightPicker==NULL)&&(this->animator==NULL)){
+        this->lightPicker=lightPicker;
+        this->animator=animator;
         return this;
     }
-    if (this->lightPicker==NULL){
-        this->lightPicker=lightPicker;
+    if ((this->lightPicker==lightPicker)&&(this->animator==animator)){
         return this;
     }
     AWDMaterial * block;
     AWDBlockIterator * it;
     it = new AWDBlockIterator(this->materialClones);
     while ((block = (AWDMaterial *)it->next()) != NULL) {
-        if (block->lightPicker==lightPicker){
+        if ((block->lightPicker==lightPicker)&&(block->animator==animator)){
             return block;
         }
     }
     delete it;
     AWDMaterial * clonedMat = new AWDMaterial(this->get_name(), this->get_name_length());
+    clonedMat->set_isClone(true);
     clonedMat->set_type(this->type);
     clonedMat->set_is_faceted(this->is_faceted);
     clonedMat->set_ambientTexture(this->ambientTexture);
@@ -665,27 +625,33 @@ AWDMaterial::get_material_for_lightPicker(AWDLightPicker * lightPicker)
     clonedMat->last_method=this->last_method;
     clonedMat->num_methods=this->num_methods;
     clonedMat->set_multiPass(this->multiPass);
+    clonedMat->set_shadowMethod(this->shadowMethod);
+    if(animator!=NULL)
+        clonedMat->set_animator(animator);
+    if(lightPicker!=NULL)
+        clonedMat->set_lightPicker(lightPicker);
 
-    clonedMat->set_lightPicker(lightPicker);
-    
+    if(this->materialClones==NULL)
+        this->materialClones=new AWDBlockList(false);
     this->materialClones->append(clonedMat);
     return clonedMat;
 }
 
-
 awd_uint32
 AWDMaterial::calc_body_length(BlockSettings * curBlockSettings)
 {
+    if(!this->get_isValid())
+        return 0;
     AWD_mat_method *cur;
     awd_uint32 len;
-    
+
     len = sizeof(awd_uint16) + this->get_name_length(); //name
     len += sizeof(awd_uint8); // type
     len += sizeof(awd_uint8); // method count
-    
+
     len += this->calc_attr_length(true, true, curBlockSettings);
 
-    //at this point, all effectmethods should be included as wrappermethods in the materials method-list 
+    //at this point, all effectmethods should be included as wrappermethods in the materials method-list
     cur = this->first_method;
     while (cur) {
         len += cur->method->calc_method_length(curBlockSettings);
@@ -698,13 +664,12 @@ AWDMaterial::calc_body_length(BlockSettings * curBlockSettings)
 void
 AWDMaterial::write_body(int fd,  BlockSettings * curBlockSettings)
 {
-
     awdutil_write_varstr(fd, this->get_name(), this->get_name_length());
     write(fd, &this->type, sizeof(awd_uint8));
     write(fd, &this->num_methods, sizeof(awd_uint8));
 
     this->properties->write_attributes(fd, curBlockSettings);
-    
+
     AWD_mat_method *cur;
     cur = this->first_method;
     while (cur) {

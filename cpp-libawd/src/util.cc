@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cstdio>
-
+#include "Share.h."
 #include "util.h"
 #include "awd_types.h"
 
@@ -22,7 +22,6 @@ awdutil_id_mtx4x4(awd_float64 *mtx)
 
     return mtx;
 }
-
 
 //TODO: Consider replacing with macro
 size_t
@@ -90,9 +89,7 @@ awdutil_get_type_size(AWD_field_type type, bool wide_mtx)
     }
 
     return elem_size;
-
 }
-
 
 awd_uint32
 awdutil_write_floats(int fd, awd_float64 *list, int len, bool wide)
@@ -118,7 +115,6 @@ awdutil_write_floats(int fd, awd_float64 *list, int len, bool wide)
     return bytes_written;
 }
 
-
 awd_uint32
 awdutil_write_varstr(int fd, const char *str, awd_uint16 str_len)
 {
@@ -137,20 +133,17 @@ awdutil_write_varstr(int fd, const char *str, awd_uint16 str_len)
     return str_len + sizeof(awd_uint16);
 }
 
-
 awd_color
 awdutil_float_color(double r, double g, double b, double a)
 {
     return awdutil_int_color((int)(r*255), (int)(g*255), (int)(b*255), (int)(a*255));
 }
 
-
 awd_color
 awdutil_int_color(int r, int g, int b, int a)
 {
     return ((r&0xff)<<24) | ((g&0xff)<<16) | ((b&0xff)<<8) | (a&0xff);
 }
-
 
 int
 awdutil_mktmp(char **path)
@@ -161,39 +154,42 @@ awdutil_mktmp(char **path)
 
 #ifdef WIN32
     int ret;
-	int path_len;
+    int path_len;
 
     tmp_path = (char*)malloc(TMPPATH_MAXLEN);
 
     tpl_len = (int) strlen(TMPFILE_TEMPLATE);
-	path_len = GetTempPath(TMPPATH_MAXLEN, tmp_path);
+    path_len = GetTempPath(TMPPATH_MAXLEN, tmp_path);
     if (path_len==0 || (path_len+tpl_len) > TMPPATH_MAXLEN)
         return -1;
 
     // Concatenate path and template and null-terminate.
+    //strncpy_s(tmp_path+path_len, tpl_len, TMPFILE_TEMPLATE, tpl_len);
     strncpy(tmp_path+path_len, TMPFILE_TEMPLATE, tpl_len);
     memset(tmp_path+path_len+tpl_len, 0, 1);
 
     ret = _mktemp_s(tmp_path, path_len+tpl_len+1);
-	if (ret==0)
-		fd = _open(tmp_path, _O_CREAT|_O_TEMPORARY|_O_RDWR|_O_BINARY, _S_IWRITE);
-	else fd = -1;
+    if (ret==0){
+        int error = _sopen_s(&fd, tmp_path,  _O_CREAT|_O_TEMPORARY|_O_RDWR|_O_BINARY, _SH_DENYNO, _S_IWRITE);
+        if (error!=0)
+            fd=-1;
+    }
+    else fd = -1;
 
 #else
     tpl_len = strlen(TMPFILE_TEMPLATE);
     tmp_path = (char *)malloc(tpl_len);
-    strncpy(tmp_path, TMPFILE_TEMPLATE, tpl_len);
+    strncpy_s(tmp_path, tpl_len, TMPFILE_TEMPLATE, tpl_len);
 
     fd = mkstemp(tmp_path);
 #endif
 
     if (path)
-	    *path = tmp_path;
+        *path = tmp_path;
     else free(tmp_path);
 
     return fd;
 }
-
 
 awd_uint16
 awdutil_swapui16(awd_uint16 n)
@@ -205,14 +201,13 @@ awdutil_swapui16(awd_uint16 n)
 
     in.i = n;
 
-
     out.b[0] = in.b[1];
     out.b[1] = in.b[0];
 
     return out.i;
 }
 
-awd_uint32 
+awd_uint32
 awdutil_swapui32(awd_uint32 n)
 {
     union {
@@ -229,7 +224,7 @@ awdutil_swapui32(awd_uint32 n)
     return out.i;
 }
 
-awd_float32 
+awd_float32
 awdutil_swapf32(awd_float32 n)
 {
     union {
@@ -246,7 +241,7 @@ awdutil_swapf32(awd_float32 n)
     return out.f;
 }
 
-awd_float64 
+awd_float64
 awdutil_swapf64(awd_float64 n)
 {
     union {
@@ -266,8 +261,3 @@ awdutil_swapf64(awd_float64 n)
 
     return out.f;
 }
-
-
-
-
-

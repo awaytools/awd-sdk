@@ -6,9 +6,6 @@
 #include "mesh.h"
 #include "util.h"
 
-
-
-
 AWDSubGeom::AWDSubGeom(AWDBlockList * newMaterials) :
     AWDAttrElement()
 {
@@ -40,7 +37,6 @@ AWDSubGeom::~AWDSubGeom()
     this->first_stream = NULL;
 }
 
-
 unsigned int
 AWDSubGeom::get_num_streams()
 {
@@ -56,7 +52,7 @@ void
 AWDSubGeom::set_materials(AWDBlockList * newMaterials)
 {
     //if(this->materials!=NULL)
-    //	delete this->materials;
+    //    delete this->materials;
 
     this->materials = newMaterials;
 }
@@ -82,8 +78,7 @@ AWDSubGeom::get_stream_at(unsigned int idx)
     return NULL;
 }
 
-
-void 
+void
 AWDSubGeom::add_stream(AWD_mesh_str_type type, AWD_field_type data_type, AWD_str_ptr data, awd_uint32 num_elements)
 {
     AWDDataStream *str;
@@ -102,24 +97,21 @@ AWDSubGeom::add_stream(AWD_mesh_str_type type, AWD_field_type data_type, AWD_str
     this->last_stream->next = NULL;
 }
 
-void 
+void
 AWDSubGeom::add_original_idx_data(AWD_str_ptr data, awd_uint32 num_elements)
 {
     this->originalIdx = data;
     this->originalIdx_num = num_elements;
-
 }
-AWD_str_ptr 
+AWD_str_ptr
 AWDSubGeom::get_original_idx_data()
 {
     return this->originalIdx;
-
 }
-awd_uint32 
+awd_uint32
 AWDSubGeom::get_original_idx_data_len()
 {
     return this->originalIdx_num;
-
 }
 
 awd_uint32
@@ -153,7 +145,6 @@ AWDSubGeom::calc_streams_length()
     return len;
 }
 
-
 awd_uint32
 AWDSubGeom::calc_sub_length(BlockSettings * blockSettings)
 {
@@ -170,7 +161,7 @@ void
 AWDSubGeom::write_anim_sub(int fd, bool wide_mtx, double scale)
 {
     AWDDataStream *str;
-    
+
     str = this->first_stream;
     while(str) {
         str->write_anim_stream(fd, scale);
@@ -201,15 +192,10 @@ AWDSubGeom::write_sub(int fd, BlockSettings * blockSettings, double scale)
     this->user_attributes->write_attributes(fd, blockSettings);
 }
 
-
-
-
-
-
 AWDTriGeom::AWDTriGeom(const char *name, awd_uint16 name_len) :
     AWDBlock(TRI_GEOM),
     AWDNamedElement(name, name_len),
-    AWDAttrElement() 
+    AWDAttrElement()
 {
     this->first_sub = NULL;
     this->last_sub = NULL;
@@ -238,16 +224,16 @@ AWDTriGeom::~AWDTriGeom()
         this->bind_mtx = NULL;
     }
     //if(this->meshInstanceList!=NULL)
-    //	delete this->meshInstanceList;
+    //    delete this->meshInstanceList;
     this->first_sub = NULL;
     this->last_sub = NULL;
 }
 
-AWDBlockList* 
+AWDBlockList*
 AWDTriGeom::get_mesh_instance_list()
 {
     return this->meshInstanceList;
-}	
+}
 void
 AWDTriGeom::set_mesh_instance_list(AWDBlockList *meshInstanceList)
 {
@@ -256,7 +242,7 @@ AWDTriGeom::set_mesh_instance_list(AWDBlockList *meshInstanceList)
     this->meshInstanceList=meshInstanceList;
 }
 
-void 
+void
 AWDTriGeom::add_sub_mesh(AWDSubGeom *sub)
 {
     if (this->first_sub == NULL) {
@@ -265,18 +251,16 @@ AWDTriGeom::add_sub_mesh(AWDSubGeom *sub)
     else {
         this->last_sub->next = sub;
     }
-    
+
     this->num_subs++;
     this->last_sub = sub;
 }
-
 
 unsigned int
 AWDTriGeom::get_num_subs()
 {
     return this->num_subs;
 }
-
 
 AWDSubGeom *
 AWDTriGeom::get_sub_at(unsigned int idx)
@@ -299,14 +283,11 @@ AWDTriGeom::get_sub_at(unsigned int idx)
     return NULL;
 }
 
-
-
 awd_float64 *
 AWDTriGeom::get_bind_mtx()
 {
     return this->bind_mtx;
 }
-
 
 void
 AWDTriGeom::set_bind_mtx(awd_float64 *bind_mtx)
@@ -336,7 +317,6 @@ AWDTriGeom::set_split_faces(bool split_faces)
     this->split_faces=split_faces;
 }
 
-
 int
 AWDTriGeom::get_originalPointCnt()
 {
@@ -348,7 +328,7 @@ AWDTriGeom::set_originalPointCnt(int newPointCnt)
     this->originalPointCnt = newPointCnt;
 }
 
-AWDSubGeom * 
+AWDSubGeom *
 AWDTriGeom::get_first_sub()
 {
     return this->first_sub;
@@ -357,10 +337,12 @@ AWDTriGeom::get_first_sub()
 awd_uint32
 AWDTriGeom::calc_body_length(BlockSettings * curBlockSettings)
 {
+    if(!this->get_isValid())
+        return 0;
     AWDSubGeom *sub;
     awd_uint32 mesh_len;
 
-    // Calculate length of entire mesh 
+    // Calculate length of entire mesh
     // data (not block header)
     mesh_len = sizeof(awd_uint16); // Num subs
     mesh_len += sizeof(awd_uint16) + this->get_name_length();
@@ -374,7 +356,6 @@ AWDTriGeom::calc_body_length(BlockSettings * curBlockSettings)
     return mesh_len;
 }
 
-
 void
 AWDTriGeom::write_body(int fd, BlockSettings *curBlockSettings)
 {
@@ -383,7 +364,7 @@ AWDTriGeom::write_body(int fd, BlockSettings *curBlockSettings)
 
     // Write name and sub count
     num_subs_be = UI16(this->num_subs);
-    awdutil_write_varstr(fd, this->get_name(), this->get_name_length()); 
+    awdutil_write_varstr(fd, this->get_name(), this->get_name_length());
     write(fd, &num_subs_be, sizeof(awd_uint16));
 
     // Write list of optional properties
@@ -395,14 +376,10 @@ AWDTriGeom::write_body(int fd, BlockSettings *curBlockSettings)
         sub->write_sub(fd, curBlockSettings, curBlockSettings->get_scale());
         sub = sub->next;
     }
-    
+
     // Write list of user attributes
     this->user_attributes->write_attributes(fd, curBlockSettings);
 }
-
-
-
-
 
 AWDMeshInst::AWDMeshInst(const char *name, awd_uint16 name_len, AWDBlock *geom) :
     AWDSceneBlock(MESH_INSTANCE, name, name_len, NULL)
@@ -411,9 +388,7 @@ AWDMeshInst::AWDMeshInst(const char *name, awd_uint16 name_len, AWDBlock *geom) 
     this->materials = new AWDBlockList();
     this->pre_materials = new AWDBlockList();
     this->defaultMat = NULL;
-
 }
-
 
 AWDMeshInst::AWDMeshInst(const char *name, awd_uint16 name_len, AWDBlock *geom, awd_float64 *mtx) :
     AWDSceneBlock(MESH_INSTANCE, name, name_len, mtx)
@@ -423,8 +398,8 @@ AWDMeshInst::AWDMeshInst(const char *name, awd_uint16 name_len, AWDBlock *geom, 
     this->pre_materials = new AWDBlockList();
     this->lightPicker = NULL;
     this->defaultMat = NULL;
+    this->animator = NULL;
 }
-
 
 AWDMeshInst::~AWDMeshInst()
 {
@@ -435,7 +410,6 @@ AWDMeshInst::~AWDMeshInst()
     this->defaultMat = NULL;
     this->geom = NULL;
 }
-
 
 AWDBlock *
 AWDMeshInst::get_defaultMat()
@@ -481,25 +455,35 @@ AWDMeshInst::get_geom()
     return this->geom;
 }
 
-
 void
 AWDMeshInst::set_geom(AWDBlock *geom)
 {
     this->geom = geom;
 }
 
+AWDBlock *
+AWDMeshInst::get_animator()
+{
+    return this->animator;
+}
+void
+AWDMeshInst::set_animator(AWDBlock *animator)
+{
+    this->animator = animator;
+}
 awd_uint32
 AWDMeshInst::calc_body_length(BlockSettings * curBlockSettings)
 {
-    return calc_common_length(curBlockSettings->get_wide_matrix()) + sizeof(awd_baddr) + 
-        sizeof(awd_uint16) + (this->materials->get_num_blocks() * sizeof(awd_baddr)) + 
+    if(!this->get_isValid())
+        return 0;
+    return calc_common_length(curBlockSettings->get_wide_matrix()) + sizeof(awd_baddr) +
+        sizeof(awd_uint16) + (this->materials->get_num_blocks() * sizeof(awd_baddr)) +
         this->calc_attr_length(true, true, curBlockSettings);
 }
 
 void
 AWDMeshInst::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
-
     if (this->geom != NULL)
         this->geom->prepare_and_add_with_dependencies(export_list);
     AWDMaterial *block;

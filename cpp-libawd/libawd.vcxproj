@@ -629,7 +629,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level2</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <PostBuildEvent>
@@ -875,8 +875,10 @@
     <ClInclude Include="include\geomutil.h" />
     <ClInclude Include="include\geomutilhelper.h" />
     <ClInclude Include="include\light.h" />
+    <ClInclude Include="include\message.h" />
     <ClInclude Include="include\method.h" />
     <ClInclude Include="include\primitive.h" />
+    <ClInclude Include="include\shadows.h" />
     <ClInclude Include="include\vertexanim.h" />
     <ClInclude Include="lib\lzma\Alloc.h" />
     <ClInclude Include="include\attr.h" />
@@ -933,6 +935,7 @@
     <ClCompile Include="src\camera.cc" />
     <ClCompile Include="lib\zlib\crc32.c" />
     <ClCompile Include="lib\zlib\deflate.c" />
+    <ClCompile Include="src\message.cc" />
     <ClCompile Include="src\method.cc" />
     <ClCompile Include="src\geomutil.cc" />
     <ClCompile Include="lib\zlib\inffast.c" />
@@ -951,6 +954,7 @@
     <ClCompile Include="src\primitive.cc" />
     <ClCompile Include="src\scene.cc" />
     <ClCompile Include="src\shading.cc" />
+    <ClCompile Include="src\shadows.cc" />
     <ClCompile Include="src\skelanim.cc" />
     <ClCompile Include="src\skeleton.cc" />
     <ClCompile Include="src\stream.cc" />

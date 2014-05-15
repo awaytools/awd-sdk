@@ -6,7 +6,6 @@
 
 #include "platform.h"
 
-
 AWDSkeletonJoint::AWDSkeletonJoint(const char *name, awd_uint16 name_len, awd_float64 *bind_mtx) :
     AWDNamedElement(name, name_len),
     AWDAttrElement()
@@ -19,7 +18,6 @@ AWDSkeletonJoint::AWDSkeletonJoint(const char *name, awd_uint16 name_len, awd_fl
 
     set_bind_mtx(bind_mtx);
 }
-
 
 AWDSkeletonJoint::~AWDSkeletonJoint()
 {
@@ -37,11 +35,10 @@ AWDSkeletonJoint::~AWDSkeletonJoint()
         free(this->bind_mtx);
         this->bind_mtx = NULL;
     }
-	this->num_children = 0;
+    this->num_children = 0;
     this->first_child = NULL;
     this->last_child = NULL;
 }
-
 
 awd_uint32
 AWDSkeletonJoint::get_id()
@@ -49,20 +46,17 @@ AWDSkeletonJoint::get_id()
     return this->id;
 }
 
-
 void
 AWDSkeletonJoint::set_parent(AWDSkeletonJoint *joint)
 {
     this->parent = joint;
 }
 
-
 AWDSkeletonJoint *
 AWDSkeletonJoint::get_parent()
 {
     return this->parent;
 }
-
 
 void
 AWDSkeletonJoint::set_bind_mtx(awd_float64 *bind_mtx)
@@ -78,14 +72,11 @@ AWDSkeletonJoint::set_bind_mtx(awd_float64 *bind_mtx)
     }
 }
 
-
 awd_float64 *
 AWDSkeletonJoint::get_bind_mtx()
 {
     return this->bind_mtx;
 }
-
-
 
 AWDSkeletonJoint *
 AWDSkeletonJoint::add_child_joint(AWDSkeletonJoint *joint)
@@ -112,17 +103,15 @@ AWDSkeletonJoint::add_child_joint(AWDSkeletonJoint *joint)
     return joint;
 }
 
-
-
 int
 AWDSkeletonJoint::calc_length(BlockSettings * blockSettings)
 {
     int len;
     AWDSkeletonJoint *child;
-    
+
     // id + parent + name varstr + matrix
-    len = sizeof(awd_uint16) + sizeof(awd_uint16) + 
-        sizeof(awd_uint16) + this->get_name_length() + 
+    len = sizeof(awd_uint16) + sizeof(awd_uint16) +
+        sizeof(awd_uint16) + this->get_name_length() +
         MTX43_SIZE(blockSettings->get_wide_matrix());
 
     len += this->calc_attr_length(true,true, blockSettings);
@@ -135,7 +124,6 @@ AWDSkeletonJoint::calc_length(BlockSettings * blockSettings)
 
     return len;
 }
-
 
 int
 AWDSkeletonJoint::calc_num_children()
@@ -153,7 +141,6 @@ AWDSkeletonJoint::calc_num_children()
     return num_children;
 }
 
-
 int
 AWDSkeletonJoint::write_joint(int fd, awd_uint32 id, BlockSettings * curBlockSettings)
 {
@@ -167,7 +154,7 @@ AWDSkeletonJoint::write_joint(int fd, awd_uint32 id, BlockSettings * curBlockSet
 
     // Convert numbers to big-endian
     id_be = UI16(this->id);
-    if (this->parent) 
+    if (this->parent)
         par_id_be = UI16(this->parent->id);
     else par_id_be = 0;
 
@@ -175,20 +162,23 @@ AWDSkeletonJoint::write_joint(int fd, awd_uint32 id, BlockSettings * curBlockSet
     write(fd, &id_be, sizeof(awd_uint16));
     write(fd, &par_id_be, sizeof(awd_uint16));
     awdutil_write_varstr(fd, this->get_name(), this->get_name_length());
-	awd_float32 offX=awd_float32(this->bind_mtx[9] * curBlockSettings->get_scale());
-	awd_float32 offY=awd_float32(this->bind_mtx[10] *curBlockSettings->get_scale());
-	awd_float32 offZ=awd_float32(this->bind_mtx[11]*curBlockSettings->get_scale());
-	awdutil_write_floats(fd, this->bind_mtx, 9, curBlockSettings->get_wide_matrix());
-	if (!curBlockSettings->get_wide_matrix()){
-		write(fd, &offX, sizeof(awd_float32));
-		write(fd, &offY, sizeof(awd_float32));
-		write(fd, &offZ, sizeof(awd_float32));
-	}
-	else{
-		write(fd, &offX, sizeof(awd_float64));
-		write(fd, &offY, sizeof(awd_float64));
-		write(fd, &offZ, sizeof(awd_float64));
-	}
+    awdutil_write_floats(fd, this->bind_mtx, 9, curBlockSettings->get_wide_matrix());
+    if (!curBlockSettings->get_wide_matrix()){
+        awd_float32 offX=awd_float32(this->bind_mtx[9] * curBlockSettings->get_scale());
+        awd_float32 offY=awd_float32(this->bind_mtx[10] *curBlockSettings->get_scale());
+        awd_float32 offZ=awd_float32(this->bind_mtx[11]*curBlockSettings->get_scale());
+        write(fd, &offX, sizeof(awd_float32));
+        write(fd, &offY, sizeof(awd_float32));
+        write(fd, &offZ, sizeof(awd_float32));
+    }
+    else{
+        awd_float64 offX=awd_float64(this->bind_mtx[9] * curBlockSettings->get_scale());
+        awd_float64 offY=awd_float64(this->bind_mtx[10] *curBlockSettings->get_scale());
+        awd_float64 offZ=awd_float64(this->bind_mtx[11]*curBlockSettings->get_scale());
+        write(fd, &offX, sizeof(awd_float64));
+        write(fd, &offY, sizeof(awd_float64));
+        write(fd, &offZ, sizeof(awd_float64));
+    }
 
     //  TODO: Write attributes
     this->properties->write_attributes(fd, curBlockSettings);
@@ -212,23 +202,18 @@ AWDSkeletonJoint::write_joint(int fd, awd_uint32 id, BlockSettings * curBlockSet
     return num_written;
 }
 
-
-
-
-
-
 AWDSkeleton::AWDSkeleton(const char *name, awd_uint16 name_len, int neutralTime) :
     AWDBlock(SKELETON),
-    AWDNamedElement(name, name_len), 
+    AWDNamedElement(name, name_len),
     AWDAttrElement()
 {
     this->root_joint = NULL;
-	this->clip_blocks = new AWDBlockList();
-	this->joints_per_vert = 0;
-	this->simpleMode=false;
-	this->neutralPose=neutralTime;
+    this->clip_blocks = new AWDBlockList();
+    this->joints_per_vert = 0;
+    this->simpleMode=false;
+    this->shareAutoAnimator=true;
+    this->neutralPose=neutralTime;
 }
-
 
 AWDSkeleton::~AWDSkeleton()
 {
@@ -236,44 +221,54 @@ AWDSkeleton::~AWDSkeleton()
         delete this->root_joint;
         this->root_joint = NULL;
     }
-	delete this->clip_blocks;
+    delete this->clip_blocks;
 }
 
 bool
 AWDSkeleton::get_simpleMode(){
-	return this->simpleMode;
+    return this->simpleMode;
 }
-void 
+void
 AWDSkeleton::set_simpleMode(bool newSimpleMode){
-	this->simpleMode=newSimpleMode;
+    this->simpleMode=newSimpleMode;
+}
+bool
+AWDSkeleton::get_shareAutoAnimator(){
+    return this->shareAutoAnimator;
+}
+void
+AWDSkeleton::set_shareAutoAnimator(bool shareAutoAnimator){
+    this->shareAutoAnimator=shareAutoAnimator;
 }
 AWDBlockList *
 AWDSkeleton::get_clip_blocks(){
-	return this->clip_blocks;
+    return this->clip_blocks;
 }
-void 
+void
 AWDSkeleton::set_clip_blocks(AWDBlockList * newBlocklist){
-	this->clip_blocks=newBlocklist;
+    this->clip_blocks=newBlocklist;
 }
 int
 AWDSkeleton::get_joints_per_vert(){
-	return this->joints_per_vert;
+    return this->joints_per_vert;
 }
-void 
+void
 AWDSkeleton::set_joints_per_vert(int jpv){
-	this->joints_per_vert=jpv;
+    this->joints_per_vert=jpv;
 }
 int
 AWDSkeleton::get_neutralPose(){
-	return this->neutralPose;
+    return this->neutralPose;
 }
-void 
+void
 AWDSkeleton::set_neutralPose(int newNeutralpose){
-	this->neutralPose=newNeutralpose;
+    this->neutralPose=newNeutralpose;
 }
 awd_uint32
 AWDSkeleton::calc_body_length(BlockSettings * curBlockSettings)
 {
+    if(!this->get_isValid())
+        return 0;
     awd_uint32 len;
 
     len = sizeof(awd_uint16) + this->get_name_length() + sizeof(awd_uint16);
@@ -284,7 +279,6 @@ AWDSkeleton::calc_body_length(BlockSettings * curBlockSettings)
 
     return len;
 }
-
 
 void
 AWDSkeleton::write_body(int fd, BlockSettings * curBlockSettings)
@@ -309,14 +303,11 @@ AWDSkeleton::write_body(int fd, BlockSettings * curBlockSettings)
     this->user_attributes->write_attributes(fd,  curBlockSettings);
 }
 
-
-
 AWDSkeletonJoint *
 AWDSkeleton::get_root_joint()
 {
     return this->root_joint;
 }
-
 
 AWDSkeletonJoint *
 AWDSkeleton::set_root_joint(AWDSkeletonJoint *joint)
@@ -327,4 +318,3 @@ AWDSkeleton::set_root_joint(AWDSkeletonJoint *joint)
 
     return joint;
 }
-

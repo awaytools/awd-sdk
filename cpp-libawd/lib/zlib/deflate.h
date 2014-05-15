@@ -57,7 +57,6 @@
 #define FINISH_STATE 666
 /* Stream status */
 
-
 /* Data structure describing a single value and its code string. */
 typedef struct ct_data_s {
     union {
@@ -266,14 +265,12 @@ typedef struct internal_state {
      * longest match routines access bytes past the input.  This is then
      * updated to the new high water mark.
      */
-
 } FAR deflate_state;
 
 /* Output a byte on the stream.
  * IN assertion: there is enough room in pending_buf.
  */
 #define put_byte(s, c) {s->pending_buf[s->pending++] = (c);}
-
 
 #define MIN_LOOKAHEAD (MAX_MATCH+MIN_MATCH+1)
 /* Minimum amount of lookahead, except at the end of the input file.

@@ -11,7 +11,7 @@ AWDDataStream::AWDDataStream(awd_uint8 type, AWD_field_type data_type, AWD_str_p
 {
     this->type = type;
     this->data = data;
-	this->data_type = data_type;
+    this->data_type = data_type;
     this->num_elements = num_elements;
     this->next = NULL;
 }
@@ -21,9 +21,6 @@ AWDDataStream::~AWDDataStream()
     free(this->data.v);
     this->num_elements = 0;
 }
-
-
-
 
 awd_uint32
 AWDDataStream::get_num_elements()
@@ -39,24 +36,22 @@ AWDDataStream::get_length()
     return (this->num_elements * elem_size);
 }
 
-
-
 void
 AWDDataStream::write_stream(int fd, double scale)
 {
     unsigned int e;
     awd_uint32 num;
     awd_uint32 str_len;
-    
+
     str_len = UI32(this->get_length());
-    
+
     write(fd, (awd_uint8*)&this->type, sizeof(awd_uint8));
     write(fd, (awd_uint8*)&this->data_type, sizeof(awd_uint8));
     write(fd, &str_len, sizeof(awd_uint32));
-    if (this->type!=VERTICES)
-		scale = 1;
+    if ((this->type!=VERTICES)&&(this->type!=ALLVERTDATA))
+        scale = 1;
     num = this->num_elements;
-	
+
     // Encode according to data type field
     if (this->data_type == AWD_FIELD_INT8) {
         for (e=0; e<num; e++) {
@@ -100,96 +95,110 @@ AWDDataStream::write_stream(int fd, double scale)
             write(fd, &elem, sizeof(awd_uint32));
         }
     }
-	else if (scale!=1.0){
-		if (this->data_type == AWD_FIELD_FLOAT32) {
-			for (e=0; e<num; e++) {
-				awd_float64 *p = (this->data.f64 + e);
-				awd_float32 elem = awd_float32((awd_float32)*p*scale);
-				write(fd, &elem, sizeof(awd_float32));
-			}
-		}
-		else if (this->data_type == AWD_FIELD_FLOAT64) {
-			for (e=0; e<num; e++) {
-				awd_float64 *p = (this->data.f64 + e);
-				awd_float64 elem = awd_float64((awd_float64)*p*scale);
-				write(fd, &elem, sizeof(awd_float64));
-			}
-		}
-	}
-	else if (scale==1.0){
-		if (this->data_type == AWD_FIELD_FLOAT32) {
-			for (e=0; e<num; e++) {
-				awd_float64 *p = (this->data.f64 + e);
-				awd_float32 elem = ((awd_float32)*p);
-				write(fd, &elem, sizeof(awd_float32));
-			}
-		}
-		else if (this->data_type == AWD_FIELD_FLOAT64) {
-			for (e=0; e<num; e++) {
-				awd_float64 *p = (this->data.f64 + e);
-				awd_float64 elem = ((awd_float64)*p);
-				write(fd, &elem, sizeof(awd_float64));
-			}
-		}
-	}
+    else if (this->type!=ALLVERTDATA){
+        if (scale!=1.0){
+            if (this->data_type == AWD_FIELD_FLOAT32) {
+                for (e=0; e<num; e++) {
+                    awd_float64 *p = (this->data.f64 + e);
+                    awd_float32 elem = awd_float32((awd_float32)*p*scale);
+                    write(fd, &elem, sizeof(awd_float32));
+                }
+            }
+            else if (this->data_type == AWD_FIELD_FLOAT64) {
+                for (e=0; e<num; e++) {
+                    awd_float64 *p = (this->data.f64 + e);
+                    awd_float64 elem = awd_float64((awd_float64)*p*scale);
+                    write(fd, &elem, sizeof(awd_float64));
+                }
+            }
+        }
+        else if (scale==1.0){
+            if (this->data_type == AWD_FIELD_FLOAT32) {
+                for (e=0; e<num; e++) {
+                    awd_float64 *p = (this->data.f64 + e);
+                    awd_float32 elem = ((awd_float32)*p);
+                    write(fd, &elem, sizeof(awd_float32));
+                }
+            }
+            else if (this->data_type == AWD_FIELD_FLOAT64) {
+                for (e=0; e<num; e++) {
+                    awd_float64 *p = (this->data.f64 + e);
+                    awd_float64 elem = ((awd_float64)*p);
+                    write(fd, &elem, sizeof(awd_float64));
+                }
+            }
+        }
+    }
+    else if (this->type==ALLVERTDATA){
+        if (scale!=1.0){
+            for (e=0; e<num; e++) {
+                awd_float64 *p = (this->data.f64 + e);
+                awd_float32 elem;
+                if (e<3)
+                    elem = awd_float32((awd_float32)*p*scale);
+                else
+                    elem = awd_float32((awd_float32)*p);
+                write(fd, &elem, sizeof(awd_float32));
+            }
+        }
+        else if (scale==1.0){
+            for (e=0; e<num; e++) {
+                awd_float64 *p = (this->data.f64 + e);
+                awd_float32 elem;
+                elem = awd_float32((awd_float32)*p);
+                write(fd, &elem, sizeof(awd_float32));
+            }
+        }
+    }
 }
-
-
 
 void
 AWDDataStream::write_anim_stream(int fd, double scale)
 {
     unsigned int e;
     awd_uint32 num;
-    
+
     if (this->type!=VERTICES)
-		scale = 1;
+        scale = 1;
     num = this->num_elements;
-	
-	if (scale!=1.0){
-		if (this->data_type == AWD_FIELD_FLOAT32) {
-			for (e=0; e<num; e++) {
-				awd_float64 *p = (this->data.f64 + e);
-				awd_float32 elem = awd_float32((awd_float32)*p*scale);
-				write(fd, &elem, sizeof(awd_float32));
-			}
-		}
-		else if (this->data_type == AWD_FIELD_FLOAT64) {
-			for (e=0; e<num; e++) {
-				awd_float64 *p = (this->data.f64 + e);
-				awd_float64 elem = awd_float64((awd_float64)*p*scale);
-				write(fd, &elem, sizeof(awd_float64));
-			}
-		}
-	}
-	else if (scale==1.0){
-		if (this->data_type == AWD_FIELD_FLOAT32) {
-			for (e=0; e<num; e++) {
-				awd_float64 *p = (this->data.f64 + e);
-				awd_float32 elem = awd_float32((awd_float32)*p);
-				write(fd, &elem, sizeof(awd_float32));
-			}
-		}
-		else if (this->data_type == AWD_FIELD_FLOAT64) {
-			for (e=0; e<num; e++) {
-				awd_float64 *p = (this->data.f64 + e);
-				awd_float64 elem = awd_float64((awd_float64)*p);
-				write(fd, &elem, sizeof(awd_float64));
-			}
-		}
-	}
+
+    if (scale!=1.0){
+        if (this->data_type == AWD_FIELD_FLOAT32) {
+            for (e=0; e<num; e++) {
+                awd_float64 *p = (this->data.f64 + e);
+                awd_float32 elem = awd_float32((awd_float32)*p*scale);
+                write(fd, &elem, sizeof(awd_float32));
+            }
+        }
+        else if (this->data_type == AWD_FIELD_FLOAT64) {
+            for (e=0; e<num; e++) {
+                awd_float64 *p = (this->data.f64 + e);
+                awd_float64 elem = awd_float64((awd_float64)*p*scale);
+                write(fd, &elem, sizeof(awd_float64));
+            }
+        }
+    }
+    else if (scale==1.0){
+        if (this->data_type == AWD_FIELD_FLOAT32) {
+            for (e=0; e<num; e++) {
+                awd_float64 *p = (this->data.f64 + e);
+                awd_float32 elem = awd_float32((awd_float32)*p);
+                write(fd, &elem, sizeof(awd_float32));
+            }
+        }
+        else if (this->data_type == AWD_FIELD_FLOAT64) {
+            for (e=0; e<num; e++) {
+                awd_float64 *p = (this->data.f64 + e);
+                awd_float64 elem = awd_float64((awd_float64)*p);
+                write(fd, &elem, sizeof(awd_float64));
+            }
+        }
+    }
 }
-
-
-
-
-
 
 AWDGeomDataStream::AWDGeomDataStream(awd_uint8 type, AWD_field_type data_type, AWD_str_ptr data, awd_uint32 num_elements)
     : AWDDataStream(type, data_type, data, num_elements)
 {}
-
-
 
 AWDPathDataStream::AWDPathDataStream(awd_uint8 type, AWD_field_type data_type, AWD_str_ptr data, awd_uint32 num_elements)
     : AWDDataStream(type, data_type, data, num_elements)

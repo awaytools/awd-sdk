@@ -11,15 +11,11 @@ BlockSettings::BlockSettings(bool wideMatrix, bool wideGeom, bool wideProps, boo
         this->wideProps=wideProps;
         this->wideAttributes=wideAttributes;
         this->scale=scale;
-
 }
-
 
 BlockSettings::~BlockSettings()
 {
 }
-
-
 
 bool
 BlockSettings::get_wide_matrix()
@@ -72,29 +68,33 @@ BlockSettings::set_scale(double scale)
     this->scale=scale;
 }
 
-
-AWDBlock::AWDBlock(AWD_block_type type) 
+AWDBlock::AWDBlock(AWD_block_type type)
 {
     this->type = type;
-    
+
     // TODO: Allow setting flags
     this->flags = 0;
-	this->addr = 0;
-	this->isValid =true; //true as long as the block is valdi and should get exported
-	this->isExported =false; //true if block was exported by the export process (for all files)
-	this->isExportedToFile =false; //true if block was exported for one file (gets reset befor exporting one file)
+    this->addr = 0;
+    this->isValid =true; //true as long as the block is valdi and should get exported
+    this->isExported =false; //true if block was exported by the export process (for all files)
+    this->isExportedToFile =false; //true if block was exported for one file (gets reset befor exporting one file)
+}
+
+AWDBlock::~AWDBlock()
+{
 }
 
 bool
 AWDBlock::get_isValid()
 {
-	return this->isValid;
+    return this->isValid;
 }
 void
-AWDBlock::set_isValid(bool isValid)
+AWDBlock::make_invalide()
 {
-	this->isValid = isValid;
+    this->isValid = false;
 }
+
 void
 AWDBlock::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
@@ -106,33 +106,32 @@ AWDBlock::prepare_and_add_dependencies(AWDBlockList *export_list)
 void
 AWDBlock::prepare_and_add_with_dependencies( AWDBlockList *target_list)
 {
-	if(isValid){
-		if (!this->isExportedToFile){
-			this->isExportedToFile=true;
-			this->isExported=true;
-			this->prepare_and_add_dependencies(target_list);	
-			this->addr = target_list->get_num_blocks();
-			target_list->append(this);
-		}
-	}
-	else{
-		this->addr = 0;
-	}
-
+    if(isValid){
+        if (!this->isExportedToFile){
+            this->isExportedToFile=true;
+            this->isExported=true;
+            this->prepare_and_add_dependencies(target_list);
+            this->addr = target_list->get_num_blocks();
+            target_list->append(this);
+        }
+    }
+    else{
+        this->addr = 0;
+    }
 }
 size_t
 AWDBlock::write_block(int fd, BlockSettings *curBlockSettings)
 {
+    if(!this->isValid)
+        return 0;
     awd_uint8 ns_addr;
     awd_uint32 length;
     awd_uint32 length_be;
     awd_baddr block_addr_be;
 
-	// TODO: Don't hard-code!
-	bool wide_mtx = false;
+    this->isExported=true;
 
-
-	length = this->calc_body_length(curBlockSettings);
+    length = this->calc_body_length(curBlockSettings);
 
     //TODO: Get addr of actual namespace
     ns_addr = 0;
@@ -157,7 +156,6 @@ AWDBlock::write_block(int fd, BlockSettings *curBlockSettings)
     // in block sub-classes
     this->write_body(fd, curBlockSettings);
 
-
     return (size_t)length + 11;
 }
 awd_baddr
@@ -177,138 +175,151 @@ AWDBlockList::AWDBlockList(bool weakReference)
     this->first_block = NULL;
     this->last_block = NULL;
     this->num_blocks = 0;
-	this->weakReference=weakReference;
+    this->weakReference=weakReference;
 }
 
 AWDBlockList::~AWDBlockList()
 {
     list_block *cur;
-	
     cur = this->first_block;
     while(cur) {
         list_block *next = cur->next;
         cur->next = NULL;
-		if(!weakReference){			
-			if(cur->block->get_type()==TRI_GEOM){
-				AWDTriGeom * thisTriGeom=(AWDTriGeom*)cur->block;
-				if (thisTriGeom!=NULL)
-					delete thisTriGeom;
-			}
-			else if(cur->block->get_type()==PRIM_GEOM){
-				AWDPrimitive * thisPrim=(AWDPrimitive*)cur->block;
-				if (thisPrim!=NULL)
-					delete thisPrim;
-			}
-			else if(cur->block->get_type()==SCENE){	// should not be used yet
-				AWDScene * thisScene=(AWDScene*)cur->block;
-				if (thisScene!=NULL)
-					delete thisScene;
-			}
-			else if(cur->block->get_type()==CONTAINER){
-				AWDContainer * thisContainer=(AWDContainer*)cur->block;
-				if (thisContainer!=NULL)
-					delete thisContainer;
-			}
-			else if(cur->block->get_type()==MESH_INSTANCE){	
-				AWDMeshInst * thisMesh=(AWDMeshInst*)cur->block;
-				if (thisMesh!=NULL)
-					delete thisMesh;
-			}
-			else if(cur->block->get_type()==SKYBOX){	
-				AWDSkyBox * thisSkyBox=(AWDSkyBox*)cur->block;
-				if (thisSkyBox!=NULL)
-					delete thisSkyBox;
-			}
-			else if(cur->block->get_type()==LIGHT){	
-				AWDLight * thisLight=(AWDLight*)cur->block;
-				if (thisLight!=NULL)
-					delete thisLight;
-			}
-			else if(cur->block->get_type()==CAMERA){	
-				AWDCamera * thisCam=(AWDCamera*)cur->block;
-				if (thisCam!=NULL)
-					delete thisCam;
-			}
-			else if(cur->block->get_type()==LIGHTPICKER){	
-				AWDLightPicker * thisLightPicker=(AWDLightPicker*)cur->block;
-				if (thisLightPicker!=NULL)
-					delete thisLightPicker;
-			}
-			else if(cur->block->get_type()==SIMPLE_MATERIAL){	
-				AWDMaterial * thisMat=(AWDMaterial*)cur->block;
-				if (thisMat!=NULL)
-					delete thisMat;
-			}
-			else if(cur->block->get_type()==BITMAP_TEXTURE){
-				AWDBitmapTexture * thisTex=(AWDBitmapTexture*)cur->block;
-				if (thisTex!=NULL)
-					delete thisTex;
-			}
-			else if(cur->block->get_type()==CUBE_TEXTURE){	
-				AWDCubeTexture * thisCubeTex=(AWDCubeTexture*)cur->block;
-				if (thisCubeTex!=NULL)
-					delete thisCubeTex;
-			}
-			else if(cur->block->get_type()==CUBE_TEXTURE_ATF){	// should not be used yet
-				AWDCubeTexture * thisCubeTex=(AWDCubeTexture*)cur->block;
-				if (thisCubeTex!=NULL)
-					delete thisCubeTex;
-			}
-			else if(cur->block->get_type()==EFFECT_METHOD){
-				AWDEffectMethod* thisFXMethod=(AWDEffectMethod*)cur->block;
-				if (thisFXMethod!=NULL)
-					delete thisFXMethod;
-			}			
-			//SHADOW_METHOD=92,
-			else if(cur->block->get_type()==SKELETON){
-				AWDSkeleton* thisSkel=(AWDSkeleton*)cur->block;
-				if (thisSkel!=NULL)
-					delete thisSkel;
-			}
-			else if(cur->block->get_type()==SKELETON_ANIM){
-				AWDSkeletonAnimation* thisSkelanim=(AWDSkeletonAnimation*)cur->block;
-				if (thisSkelanim!=NULL)
-					delete thisSkelanim;
-			}
-			else if(cur->block->get_type()==SKELETON_POSE){
-				AWDSkeletonPose* thisSkelpose=(AWDSkeletonPose*)cur->block;
-				if (thisSkelpose!=NULL)
-					delete thisSkelpose;
-			}
-			//VERTEX_POSE=111,
-			else if(cur->block->get_type()==VERTEX_ANIM){
-				AWDVertexAnimation* thisVertexAnim=(AWDVertexAnimation*)cur->block;
-				if (thisVertexAnim!=NULL)
-					delete thisVertexAnim;
-			}
-			else if(cur->block->get_type()==ANIMATION_SET){
-				AWDAnimationSet* thisAnimSet=(AWDAnimationSet*)cur->block;
-				if (thisAnimSet!=NULL)
-					delete thisAnimSet;
-			}
-			else if(cur->block->get_type()==ANIMATOR){
-				AWDAnimator* thisAnimator=(AWDAnimator*)cur->block;
-				if (thisAnimator!=NULL)
-					delete thisAnimator;
-			}
-			//UV_ANIM=121,
-			else if(cur->block->get_type()==COMMAND){
-				AWDCommandBlock * thisCommand=(AWDCommandBlock*)cur->block;
-				if (thisCommand!=NULL)
-					delete thisCommand;
-			}
-			else if(cur->block->get_type()==NAMESPACE){
-				AWDNamespace * thisNS=(AWDNamespace*)cur->block;
-				if (thisNS!=NULL)
-					delete thisNS;
-			}
-			// the Metadata-block never gets stored in a BlockList, so it doenst need to be deleted here
-		}
-		free(cur);
+        if(!weakReference){
+            if(cur->block->get_type()==TRI_GEOM){
+                AWDTriGeom * thisTriGeom=(AWDTriGeom*)cur->block;
+                if (thisTriGeom!=NULL)
+                    delete thisTriGeom;
+            }
+            else if(cur->block->get_type()==PRIM_GEOM){
+                AWDPrimitive * thisPrim=(AWDPrimitive*)cur->block;
+                if (thisPrim!=NULL)
+                    delete thisPrim;
+            }
+            else if(cur->block->get_type()==SCENE){    // should not be used yet
+                AWDScene * thisScene=(AWDScene*)cur->block;
+                if (thisScene!=NULL)
+                    delete thisScene;
+            }
+            else if(cur->block->get_type()==CONTAINER){
+                AWDContainer * thisContainer=(AWDContainer*)cur->block;
+                if (thisContainer!=NULL)
+                    delete thisContainer;
+            }
+            else if(cur->block->get_type()==MESH_INSTANCE){
+                AWDMeshInst * thisMesh=(AWDMeshInst*)cur->block;
+                if (thisMesh!=NULL)
+                    delete thisMesh;
+            }
+            else if(cur->block->get_type()==SKYBOX){
+                AWDSkyBox * thisSkyBox=(AWDSkyBox*)cur->block;
+                if (thisSkyBox!=NULL)
+                    delete thisSkyBox;
+            }
+            else if(cur->block->get_type()==LIGHT){
+                AWDLight * thisLight=(AWDLight*)cur->block;
+                if (thisLight!=NULL)
+                    delete thisLight;
+            }
+            else if(cur->block->get_type()==CAMERA){
+                AWDCamera * thisCam=(AWDCamera*)cur->block;
+                if (thisCam!=NULL)
+                    delete thisCam;
+            }
+            else if(cur->block->get_type()==TEXTURE_PROJECTOR){
+                AWDTextureProjector * thisTextProject=(AWDTextureProjector*)cur->block;
+                if (thisTextProject!=NULL)
+                    delete thisTextProject;
+            }
+            else if(cur->block->get_type()==LIGHTPICKER){
+                AWDLightPicker * thisLightPicker=(AWDLightPicker*)cur->block;
+                if (thisLightPicker!=NULL)
+                    delete thisLightPicker;
+            }
+            else if(cur->block->get_type()==SIMPLE_MATERIAL){
+                AWDMaterial * thisMat=(AWDMaterial*)cur->block;
+                if (thisMat!=NULL)
+                    delete thisMat;
+            }
+            else if(cur->block->get_type()==BITMAP_TEXTURE){
+                AWDBitmapTexture * thisTex=(AWDBitmapTexture*)cur->block;
+                if (thisTex!=NULL)
+                    delete thisTex;
+            }
+            else if(cur->block->get_type()==CUBE_TEXTURE){
+                AWDCubeTexture * thisCubeTex=(AWDCubeTexture*)cur->block;
+                if (thisCubeTex!=NULL)
+                    delete thisCubeTex;
+            }
+            else if(cur->block->get_type()==CUBE_TEXTURE_ATF){    // should not be used yet
+                AWDCubeTexture * thisCubeTex=(AWDCubeTexture*)cur->block;
+                if (thisCubeTex!=NULL)
+                    delete thisCubeTex;
+            }
+            else if(cur->block->get_type()==EFFECT_METHOD){
+                AWDEffectMethod* thisFXMethod=(AWDEffectMethod*)cur->block;
+                if (thisFXMethod!=NULL)
+                    delete thisFXMethod;
+            }
+            else if(cur->block->get_type()==SHADOW_METHOD){
+                AWDShadowMethod* thisShadowMethod=(AWDShadowMethod*)cur->block;
+                if (thisShadowMethod!=NULL)
+                    delete thisShadowMethod;
+            }
+            else if(cur->block->get_type()==SKELETON){
+                AWDSkeleton* thisSkel=(AWDSkeleton*)cur->block;
+                if (thisSkel!=NULL)
+                    delete thisSkel;
+            }
+            else if(cur->block->get_type()==SKELETON_ANIM){
+                AWDSkeletonAnimation* thisSkelanim=(AWDSkeletonAnimation*)cur->block;
+                if (thisSkelanim!=NULL)
+                    delete thisSkelanim;
+            }
+            else if(cur->block->get_type()==SKELETON_POSE){
+                AWDSkeletonPose* thisSkelpose=(AWDSkeletonPose*)cur->block;
+                if (thisSkelpose!=NULL)
+                    delete thisSkelpose;
+            }
+            //VERTEX_POSE=111,
+            else if(cur->block->get_type()==VERTEX_ANIM){
+                AWDVertexAnimation* thisVertexAnim=(AWDVertexAnimation*)cur->block;
+                if (thisVertexAnim!=NULL)
+                    delete thisVertexAnim;
+            }
+            else if(cur->block->get_type()==ANIMATION_SET){
+                AWDAnimationSet* thisAnimSet=(AWDAnimationSet*)cur->block;
+                if (thisAnimSet!=NULL)
+                    delete thisAnimSet;
+            }
+            else if(cur->block->get_type()==ANIMATOR){
+                AWDAnimator* thisAnimator=(AWDAnimator*)cur->block;
+                if (thisAnimator!=NULL)
+                    delete thisAnimator;
+            }
+            //UV_ANIM=121,
+            else if(cur->block->get_type()==COMMAND){
+                AWDCommandBlock * thisCommand=(AWDCommandBlock*)cur->block;
+                if (thisCommand!=NULL)
+                    delete thisCommand;
+            }
+            else if(cur->block->get_type()==NAMESPACE){
+                AWDNamespace * thisNS=(AWDNamespace*)cur->block;
+                if (thisNS!=NULL)
+                    delete thisNS;
+            }
+            else if(cur->block->get_type()==MESSAGE){
+                AWDMessageBlock * thisMessage=(AWDMessageBlock*)cur->block;
+                if (thisMessage!=NULL)
+                    delete thisMessage;
+            }
+            // the Metadata-block never gets stored in a BlockList, so it doenst need to be deleted here
+        }
+        free(cur);
         cur = next;
     }
 
-    // Already deleted as part 
+    // Already deleted as part
     // of above loop
     this->first_block = NULL;
     this->last_block = NULL;
@@ -346,9 +357,9 @@ AWDBlockList::replace(AWDBlock *block, AWDBlock *oldBlock)
     cur = this->first_block;
     while (cur) {
         if (cur->block == block){
-			cur->block=oldBlock;
+            cur->block=oldBlock;
             return true;
-		}
+        }
 
         cur = cur->next;
     }
@@ -361,33 +372,31 @@ AWDBlockList::force_append(AWDBlock *block)
 {
     list_block *ctr = (list_block *)malloc(sizeof(list_block));
     ctr->block = block;
-	ctr->blockIdx = this->num_blocks;
+    ctr->blockIdx = this->num_blocks;
     if (this->first_block == NULL) {
         this->first_block = ctr;
     }
     else {
-		this->last_block->next = ctr;		
+        this->last_block->next = ctr;
     }
-    
+
     this->last_block = ctr;
     this->last_block->next = NULL;
     this->num_blocks++;
 }
 
-
 AWDBlock *
 AWDBlockList::getByIndex(int idx)
 {
-	if (idx>=this->num_blocks)
-		return NULL;
+    if (idx>=this->num_blocks)
+        return NULL;
     list_block *cur;
     cur = this->first_block;
-	int i;
-	for (i=0;i<idx;i++){
+    int i;
+    for (i=0;i<idx;i++){
         cur = cur->next;
-	}
-	return cur->block;
-
+    }
+    return cur->block;
 }
 
 bool
@@ -406,16 +415,24 @@ AWDBlockList::contains(AWDBlock *block)
     return false;
 }
 
-
 int
 AWDBlockList::get_num_blocks()
 {
     return this->num_blocks;
 }
-
-
-
-
+int
+AWDBlockList::get_num_blocks_valid()
+{
+    int num_blocks_valid=0;
+    list_block *cur;
+    cur = this->first_block;
+    while (cur) {
+        if (cur->block->get_isValid())
+            num_blocks_valid++;
+        cur = cur->next;
+    }
+    return num_blocks_valid;
+}
 
 AWDBlockIterator::AWDBlockIterator(AWDBlockList *list)
 {
@@ -450,4 +467,88 @@ AWDBlockIterator::next()
     if (tmp)
         return tmp->block;
     else return NULL;
+}
+
+AWDAnimationClipNode::AWDAnimationClipNode(int start_frame, int end_frame, int skip_frame, bool stitch_final, const char * sourceID, bool loop, bool useTransforms)
+
+{
+    this->start_frame = start_frame;
+    this->end_frame = end_frame;
+    this->skip_frame = skip_frame;
+    this->stitch_final = stitch_final;
+    this->loop = loop;
+    this->useTransforms = useTransforms;
+
+    this->sourceID_len=0;
+    this->set_sourceID(sourceID, awd_uint16(strlen(sourceID)));
+    this->is_processed=false;
+}
+
+AWDAnimationClipNode::~AWDAnimationClipNode()
+{
+    if(this->sourceID_len>0){
+        free(this->sourceID);
+        this->sourceID_len=0;
+    }
+}
+
+char *
+AWDAnimationClipNode::get_sourceID()
+{
+    return this->sourceID;
+}
+
+void
+AWDAnimationClipNode::set_sourceID(const char *name, awd_uint16 name_len)
+{
+    if(this->sourceID_len>0)
+        free(this->sourceID);
+    if ((name != NULL)&&(name_len>0)) {
+        this->sourceID_len = name_len+1;
+        this->sourceID = (char*)malloc(this->sourceID_len);
+        strncpy_s(this->sourceID, this->sourceID_len, name, _TRUNCATE);
+    }
+}
+
+bool
+AWDAnimationClipNode::get_is_processed()
+{
+    return this->is_processed;
+}
+
+void
+AWDAnimationClipNode::set_is_processed(bool isProcessed)
+{
+    this->is_processed = isProcessed;
+}
+
+int
+AWDAnimationClipNode::get_start_frame()
+{
+    return this->start_frame;
+}
+int
+AWDAnimationClipNode::get_end_frame()
+{
+    return this->end_frame;
+}
+int
+AWDAnimationClipNode::get_skip_frame()
+{
+    return this->skip_frame;
+}
+bool
+AWDAnimationClipNode::get_stitch_final()
+{
+    return this->stitch_final;
+}
+bool
+AWDAnimationClipNode::get_loop()
+{
+    return this->loop;
+}
+bool
+AWDAnimationClipNode::get_use_transforms()
+{
+    return this->useTransforms;
 }

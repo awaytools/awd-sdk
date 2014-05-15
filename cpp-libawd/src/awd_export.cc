@@ -1,132 +1,8 @@
-#include <cstdio>
-#include <stdlib.h>
-#include <string.h>
-#include <zlib.h>
-
-#include "platform.h"
 
 #include "awd.h"
-#include "util.h"
-#include "awdlzma.h"
-#include "awdzlib.h"
-#include "message.h"
-#include "Types.h"
-#include "LzmaEnc.h"
 
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-#ifdef _DEBUG
-   #ifndef DBG_NEW
-      #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-      #define new DBG_NEW
-   #endif
-#endif  // _DEBUG
-
-const int AWD::VERSION_MAJOR = 2;
-const int AWD::VERSION_MINOR = 1;
-const int AWD::VERSION_BUILD = 0;
-const char AWD::VERSION_RELEASE = 'a';
-
-AWD::AWD(AWD_compression compression, awd_uint16 flags, char *outPathName, bool splitByRootObjs, BlockSettings * thisBlockSettings, bool exportEmtpyContainers)
-{
-    this->major_version = VERSION_MAJOR;
-    this->minor_version = VERSION_MINOR;
-    this->compression = compression;
-    this->flags = flags;
-    this->splitByRootObjs = splitByRootObjs;
-    this->outPath=outPathName;
-    this->exportEmtpyContainers=exportEmtpyContainers;
-    this->thisBlockSettings=thisBlockSettings;
-    // all this block-lists should have non-weak reference set, so they will delete the blocks
-    // this means, that every awdblock should only occur one time in only one of this lists:
-    this->texture_blocks = new AWDBlockList(false);
-    this->cubetex_blocks = new AWDBlockList(false);
-    this->material_blocks = new AWDBlockList(false);
-    this->mesh_data_blocks = new AWDBlockList(false);
-    this->skeleton_blocks = new AWDBlockList(false);
-    this->skelanim_blocks = new AWDBlockList(false);
-    this->skelpose_blocks = new AWDBlockList();//skel_pose-blocks are getting deleted within skelanim_blocks
-    this->uvanim_blocks = new AWDBlockList(false);
-    this->animator_blocks = new AWDBlockList(false);
-    this->scene_blocks = new AWDBlockList(false);
-    this->namespace_blocks = new AWDBlockList(false);
-    this->prim_blocks = new AWDBlockList(false);
-    this->amin_set_blocks = new AWDBlockList(false);
-    this->vertex_anim_blocks = new AWDBlockList(false);
-    this->effect_method_blocks = new AWDBlockList(false);
-    this->command_blocks = new AWDBlockList(false);
-    this->lightPicker_blocks = new AWDBlockList(false);
-    this->shadow_blocks = new AWDBlockList(false);
-    this->message_blocks = new AWDBlockList(false);
-    this->darkLightPicker=NULL;
-    this->metadata = NULL;
-    this->last_used_nsid = 0;
-    this->last_used_baddr = 0;
-    this->header_written = AWD_FALSE;
-}
-
-AWD::~AWD()
-{
-    delete this->texture_blocks;
-    delete this->cubetex_blocks;
-    delete this->material_blocks;
-    delete this->mesh_data_blocks;
-    delete this->skeleton_blocks;
-    delete this->skelanim_blocks;
-    delete this->skelpose_blocks;
-    delete this->uvanim_blocks;
-    delete this->animator_blocks;
-    delete this->scene_blocks;
-    delete this->namespace_blocks;
-    delete this->prim_blocks;
-    delete this->amin_set_blocks;
-    delete this->vertex_anim_blocks;
-    delete this->effect_method_blocks;
-    delete this->lightPicker_blocks;
-    delete this->command_blocks;
-    delete this->shadow_blocks;
-    delete this->message_blocks;
-    if (this->metadata){
-        delete this->metadata;}
-    this->metadata=NULL;
-
-    if (this->darkLightPicker!=NULL)
-        delete this->darkLightPicker;
-    this->darkLightPicker=NULL;
-    delete this->thisBlockSettings;
-}
-int
-AWD::count_all_valid_blocks()
-{
-    int blockCnt=0;
-    blockCnt+=this->texture_blocks->get_num_blocks_valid();
-    blockCnt+=this->cubetex_blocks->get_num_blocks_valid();
-    blockCnt+=this->material_blocks->get_num_blocks_valid();
-    blockCnt+=this->mesh_data_blocks->get_num_blocks_valid();
-    blockCnt+=this->skeleton_blocks->get_num_blocks_valid();
-    blockCnt+=this->skelanim_blocks->get_num_blocks_valid();
-    blockCnt+=this->skelpose_blocks->get_num_blocks_valid();
-    blockCnt+=this->uvanim_blocks->get_num_blocks_valid();
-    blockCnt+=this->animator_blocks->get_num_blocks_valid();
-    blockCnt+=this->scene_blocks->get_num_blocks_valid();
-    blockCnt+=this->namespace_blocks->get_num_blocks_valid();
-    blockCnt+=this->prim_blocks->get_num_blocks_valid();
-    blockCnt+=this->amin_set_blocks->get_num_blocks_valid();
-    blockCnt+=this->vertex_anim_blocks->get_num_blocks_valid();
-    blockCnt+=this->effect_method_blocks->get_num_blocks_valid();
-    blockCnt+=this->lightPicker_blocks->get_num_blocks_valid();
-    blockCnt+=this->command_blocks->get_num_blocks_valid();
-    blockCnt+=this->shadow_blocks->get_num_blocks_valid();
-    return blockCnt;
-}
-bool
-AWD::has_flag(int flag)
-{
-    return ((this->flags & flag) > 0);
-}
-
-AWDLightPicker * AWD::CreateDarkLightPicker()
+AWDLightPicker * 
+AWD::CreateDarkLightPicker()
 {
     if(this->darkLightPicker==NULL){
         if(this->lightPicker_blocks->get_num_blocks()>0){
@@ -149,120 +25,6 @@ AWDLightPicker * AWD::CreateDarkLightPicker()
     }
     else
         return this->darkLightPicker;
-}
-
-void
-AWD::add_light_picker_block(AWDLightPicker *block)
-{
-    this->lightPicker_blocks->append(block);
-}
-void
-AWD::set_metadata(AWDMetaData *block)
-{
-    this->metadata = block;
-}
-void
-AWD::add_shadow(AWDShadowMethod *block)
-{
-    this->shadow_blocks->append(block);
-}
-void
-AWD::add_effect_method_block(AWDEffectMethod *block)
-{
-    this->effect_method_blocks->append(block);
-}
-void
-AWD::add_material(AWDMaterial *block)
-{
-    this->material_blocks->append(block);
-}
-void
-AWD::add_texture(AWDBitmapTexture *block)
-{
-    this->texture_blocks->append(block);
-}
-void
-AWD::add_cube_texture(AWDCubeTexture *block)
-{
-    this->cubetex_blocks->append(block);
-}
-void
-AWD::add_mesh_data(AWDBlock *block)
-{
-    this->mesh_data_blocks->append(block);
-}
-void
-AWD::add_prim_block(AWDPrimitive *block)
-{
-    this->prim_blocks->append(block);
-}
-void
-AWD::add_amin_set_block(AWDAnimationSet *block)
-{
-    this->amin_set_blocks->append(block);
-}
-void
-AWD::add_vertex_anim_block(AWDVertexAnimation *block)
-{
-    this->vertex_anim_blocks->append(block);
-}
-void
-AWD::add_scene_block(AWDSceneBlock *block)
-{
-    this->scene_blocks->append(block);
-}
-void
-AWD::add_skeleton(AWDSkeleton *block)
-{
-    this->skeleton_blocks->append(block);
-}
-void
-AWD::add_skeleton_pose(AWDSkeletonPose *block)
-{
-    this->skelpose_blocks->append(block);
-}
-void
-AWD::add_skeleton_anim(AWDSkeletonAnimation *block)
-{
-    this->skelanim_blocks->append(block);
-}
-void
-AWD::add_uv_anim(AWDUVAnimation *block)
-{
-    this->uvanim_blocks->append(block);
-}
-void
-AWD::add_animator(AWDAnimator *block)
-{
-    this->animator_blocks->append(block);
-}
-void
-AWD::add_namespace(AWDNamespace *block)
-{
-    if (this->namespace_blocks->append(block)) {
-        this->last_used_nsid++;
-        block->set_handle(this->last_used_nsid);
-    }
-}
-
-AWDNamespace *
-AWD::get_namespace(const char *uri)
-{
-    AWDNamespace *ns;
-    AWDBlockIterator it(this->namespace_blocks);
-
-    while ((ns = (AWDNamespace *)it.next()) != NULL) {
-        const char *ns_uri;
-        int ns_uri_len;
-
-        ns_uri = ns->get_uri(&ns_uri_len);
-
-        if (strncmp(ns_uri, uri, ns_uri_len)==0) {
-            return ns;
-        }
-    }
-
-    return NULL;
 }
 
 void
@@ -488,7 +250,7 @@ AWD::flush(int out_fd)
     this->re_order_blocks(this->effect_method_blocks, blocks_mainAWD);
 
     // write the main file
-    if (blocks_mainAWD->get_num_blocks()>=1){
+    if (blocks_mainAWD->get_num_blocks()>1){
         cur_filename=this->outPath;
         this->write_blocks_to_file(out_fd, blocks_mainAWD);
     }
@@ -512,26 +274,6 @@ AWD::flush(int out_fd)
     return AWD_TRUE;
 }
 
-AWDBlockList *
-AWD::get_animator_blocks()
-{
-    return this->animator_blocks;
-}
-AWDBlockList *
-AWD::get_mesh_data_blocks()
-{
-    return this->mesh_data_blocks;
-}
-AWDBlockList *
-AWD::get_material_blocks()
-{
-    return this->material_blocks;
-}
-AWDBlockList *
-AWD::get_message_blocks()
-{
-    return this->message_blocks;
-}
 
 awd_uint32
 AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)

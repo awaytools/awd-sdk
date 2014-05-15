@@ -36,7 +36,6 @@
 /* #define HASH_ZIP_CALC hashValue = ((cur[0] | ((UInt32)cur[1] << 8)) ^ p->crc[cur[2]]) & 0xFFFF; */
 #define HASH_ZIP_CALC hashValue = ((cur[2] | ((UInt32)cur[0] << 8)) ^ p->crc[cur[1]]) & 0xFFFF;
 
-
 #define MT_HASH2_CALC \
   hash2Value = (p->crc[cur[0]] ^ cur[1]) & (kHash2Size - 1);
 

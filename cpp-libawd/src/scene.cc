@@ -1,9 +1,7 @@
-
 #include "scene.h"
 #include "util.h"
 
 #include "platform.h"
-
 
 AWDSceneBlock::AWDSceneBlock(AWD_block_type type, const char *name, awd_uint16 name_len, awd_float64 *mtx) :
     AWDBlock(type),
@@ -12,7 +10,7 @@ AWDSceneBlock::AWDSceneBlock(AWD_block_type type, const char *name, awd_uint16 n
 {
     this->parent = NULL;
     this->children = new AWDBlockList(false); // no weak reference (childs should be deleted when parent is deleted)
-    
+
     this->transform_mtx=NULL;
     if (mtx == NULL){
         mtx = awdutil_id_mtx4x4(NULL);
@@ -24,7 +22,6 @@ AWDSceneBlock::AWDSceneBlock(AWD_block_type type, const char *name, awd_uint16 n
     }
 }
 
-
 AWDSceneBlock::~AWDSceneBlock()
 {
     if (this->transform_mtx!=NULL) {
@@ -33,8 +30,6 @@ AWDSceneBlock::~AWDSceneBlock()
     }
     delete this->children;
 }
-
-
 
 void
 AWDSceneBlock::write_scene_common(int fd, BlockSettings *curBlockSettings)
@@ -69,13 +64,11 @@ AWDSceneBlock::write_scene_common(int fd, BlockSettings *curBlockSettings)
     awdutil_write_varstr(fd, this->get_name(), this->get_name_length());
 }
 
-
 awd_uint32
 AWDSceneBlock::calc_common_length(bool wide_mtx)
 {
     return 4 + MTX43_SIZE(wide_mtx) + sizeof(awd_uint16) + this->get_name_length();
 }
-
 
 void
 AWDSceneBlock::set_transform(awd_float64 *mtx)
@@ -120,8 +113,6 @@ AWDSceneBlock::set_parent(AWDSceneBlock *parent)
     }
 }
 
-
-
 void
 AWDSceneBlock::add_child(AWDSceneBlock *child)
 {
@@ -131,14 +122,13 @@ AWDSceneBlock::add_child(AWDSceneBlock *child)
     }
 }
 
-
 void
 AWDSceneBlock::remove_child(AWDSceneBlock *child)
 {
     // TODO: Implement remove() in BlockList
     //this->children->remove(child);
 }
-bool 
+bool
 AWDSceneBlock::isEmpty()
 {
     if (this->type!=CONTAINER)
@@ -156,17 +146,11 @@ AWDSceneBlock::isEmpty()
     //this->children->remove(child);
 }
 
-
-
 AWDBlockIterator *
 AWDSceneBlock::child_iter()
 {
     return new AWDBlockIterator(this->children);
 }
-
-
-
-
 
 AWDScene::AWDScene(const char *name, awd_uint16 name_len) :
     AWDSceneBlock(SCENE, name, name_len, NULL)
@@ -180,10 +164,11 @@ AWDScene::~AWDScene()
 awd_uint32
 AWDScene::calc_body_length(BlockSettings * curBlockSettings)
 {
-    return this->calc_common_length(curBlockSettings->get_wide_matrix()) + 
+    if(!this->get_isValid())
+        return 0;
+    return this->calc_common_length(curBlockSettings->get_wide_matrix()) +
         this->calc_attr_length(true,true, curBlockSettings);
 }
-
 
 void
 AWDScene::write_body(int fd, BlockSettings * curBlockSettings)
@@ -192,12 +177,6 @@ AWDScene::write_body(int fd, BlockSettings * curBlockSettings)
     this->properties->write_attributes(fd, curBlockSettings);
     this->user_attributes->write_attributes(fd, curBlockSettings);
 }
-
-
-
-
-
-
 
 AWDContainer::AWDContainer(const char *name, awd_uint16 name_len) :
     AWDSceneBlock(CONTAINER, name, name_len, NULL)
@@ -210,16 +189,15 @@ AWDContainer::AWDContainer(const char *name, awd_uint16 name_len, awd_float64 *m
 
 AWDContainer::~AWDContainer()
 {
-
 }
-
 
 awd_uint32
 AWDContainer::calc_body_length(BlockSettings * curBlockSettings)
 {
+    if(!this->get_isValid())
+        return 0;
     return this->calc_common_length(curBlockSettings->get_wide_matrix()) + this->calc_attr_length(true,true, curBlockSettings);
 }
-
 
 void
 AWDContainer::write_body(int fd, BlockSettings *curBlockSettings)
@@ -228,9 +206,6 @@ AWDContainer::write_body(int fd, BlockSettings *curBlockSettings)
     this->properties->write_attributes(fd, curBlockSettings);
     this->user_attributes->write_attributes(fd, curBlockSettings);
 }
-
-
-
 
 AWDCommandBlock::AWDCommandBlock(const char * name, awd_uint16 name_length) :
     AWDSceneBlock(COMMAND, name, name_length, NULL)
@@ -250,12 +225,13 @@ AWDCommandBlock::add_target_light(awd_baddr targetValue)
     *newVal.ui32 = targetValue;
     //property id for the target light is 1
     this->commandProperties->set(1, newVal, sizeof(awd_baddr), AWD_FIELD_BADDR);
-
 }
 
 awd_uint32
 AWDCommandBlock::calc_body_length(BlockSettings * curBlockSettings)
 {
+    if(!this->get_isValid())
+        return 0;
     int len;
     len = sizeof(awd_uint8);//hasSceneInfos
     len += this->calc_common_length(curBlockSettings->get_wide_matrix());
@@ -265,7 +241,6 @@ AWDCommandBlock::calc_body_length(BlockSettings * curBlockSettings)
     len += this->calc_attr_length(true,true, curBlockSettings);
     return len;
 }
-
 
 void
 AWDCommandBlock::write_body(int fd, BlockSettings *curBlockSettings)
@@ -282,8 +257,6 @@ AWDCommandBlock::write_body(int fd, BlockSettings *curBlockSettings)
     this->user_attributes->write_attributes(fd, curBlockSettings);
 }
 
-
-
 AWDSkyBox::AWDSkyBox(const char * name, awd_uint16 name_length) :
     AWDSceneBlock(SKYBOX, name, name_length, NULL)
 {
@@ -297,14 +270,18 @@ void
 AWDSkyBox::set_cube_tex(AWDBlock * newCubeTex)
 {
     this->cubeTex = newCubeTex;
-
+}
+AWDBlock *
+AWDSkyBox::get_cube_tex()
+{
+    return this->cubeTex;
 }
 
 void
 AWDSkyBox::prepare_and_add_dependencies(AWDBlockList *export_list)
 {
     if (this->cubeTex!=NULL) {
-        this->cubeTex->prepare_and_add_with_dependencies(export_list);		
+        this->cubeTex->prepare_and_add_with_dependencies(export_list);
     }
 }
 awd_uint32
@@ -312,11 +289,10 @@ AWDSkyBox::calc_body_length(BlockSettings * curBlockSettings)
 {
     int len;
     len = sizeof(awd_uint16)+this->get_name_length();//name
-    len += sizeof(awd_baddr);//cube Tex 
+    len += sizeof(awd_baddr);//cube Tex
     len += this->calc_attr_length(true,true, curBlockSettings);
     return len;
 }
-
 
 void
 AWDSkyBox::write_body(int fd, BlockSettings *curBlockSettings)

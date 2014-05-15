@@ -34,7 +34,6 @@ void LzmaEncProps_Init(CLzmaEncProps *p);
 void LzmaEncProps_Normalize(CLzmaEncProps *p);
 UInt32 LzmaEncProps_GetDictSize(const CLzmaEncProps *props2);
 
-
 /* ---------- CLzmaEncHandle Interface ---------- */
 
 /* LzmaEnc_* functions can return the following exit codes:

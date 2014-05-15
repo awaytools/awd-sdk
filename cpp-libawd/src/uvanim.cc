@@ -5,17 +5,16 @@
 // Get mkstemp replacement
 #include "platform.h"
 
-
-AWDUVAnimation::AWDUVAnimation(const char *name, awd_uint16 name_len) :
+AWDUVAnimation::AWDUVAnimation(const char *name, awd_uint16 name_len, int start_frame, int end_frame, int skip_frame, bool stitch_final, const char * sourceID, bool loop, bool useTransforms) :
     AWDNamedElement(name, name_len),
     AWDAttrElement(),
-    AWDBlock(UV_ANIM)
+    AWDBlock(UV_ANIM),
+    AWDAnimationClipNode(start_frame, end_frame, skip_frame, stitch_final, sourceID, loop, useTransforms)
 {
     this->num_frames = 0;
     this->first_frame = NULL;
     this->last_frame = NULL;
 }
-
 
 AWDUVAnimation::~AWDUVAnimation()
 {
@@ -39,15 +38,39 @@ AWDUVAnimation::~AWDUVAnimation()
     this->last_frame = NULL;
 }
 
+void
+AWDUVAnimation::append_duration_to_last_frame(awd_uint16 duration)
+{
+    AWD_uvanim_fr * frame = this->first_frame;
+    // at this time we have to be shure, that all the VertexGeometry have the same number of subGeos (num_subMeshes)
+    while (frame) {
+        AWD_uvanim_fr * nextFrame = frame->next;
+        if(nextFrame==NULL){
+            frame->duration=(frame->duration+duration);
+            return;
+        }
+        frame = frame->next;
+    }
+    return;
+}
 
+void
+AWDUVAnimation::prepare_and_add_dependencies(AWDBlockList *export_list)
+{
+    this->add_bool_property(1,this->get_loop(),true);
+    this->add_bool_property(2,this->get_stitch_final(),false);
+}
 awd_uint32
 AWDUVAnimation::calc_body_length(BlockSettings * curBlockSettings)
 {
-    return 2 + this->get_name_length() + 2 + 
-        (this->num_frames * (sizeof(awd_uint16) + MTX32_SIZE(curBlockSettings->get_wide_matrix()))) + 
-        this->calc_attr_length(true,true, curBlockSettings);
+    if(!this->get_isValid())
+        return 0;
+    int blockLength=2 + this->get_name_length(); //name
+    blockLength+=2; //numframes
+    blockLength+=(this->num_frames * (sizeof(awd_uint16) + MTX32_SIZE(curBlockSettings->get_wide_matrix())));
+    blockLength+=this->calc_attr_length(true,true, curBlockSettings);
+    return blockLength;
 }
-
 
 void
 AWDUVAnimation::write_body(int fd, BlockSettings * curBlockSettings)
@@ -66,7 +89,7 @@ AWDUVAnimation::write_body(int fd, BlockSettings * curBlockSettings)
     while (cur_fr) {
         awd_uint16 dur_be = UI16(cur_fr->duration);
 
-        awdutil_write_floats(fd, cur_fr->transform_mtx, 12, curBlockSettings->get_wide_matrix());
+        awdutil_write_floats(fd, cur_fr->transform_mtx, 6, curBlockSettings->get_wide_matrix());
         write(fd, &dur_be, sizeof(awd_uint16));
 
         cur_fr = cur_fr->next;
@@ -74,7 +97,6 @@ AWDUVAnimation::write_body(int fd, BlockSettings * curBlockSettings)
 
     this->user_attributes->write_attributes(fd, curBlockSettings);
 }
-
 
 void
 AWDUVAnimation::set_next_frame_tf(awd_float64 *mtx, awd_uint16 duration)
@@ -94,4 +116,16 @@ AWDUVAnimation::set_next_frame_tf(awd_float64 *mtx, awd_uint16 duration)
 
     this->last_frame = frame;
     this->last_frame->next = NULL;
+}
+awd_float64 *
+AWDUVAnimation::get_last_frame_tf()
+{
+    AWD_uvanim_fr * frame = this->first_frame;
+    while (frame) {
+        AWD_uvanim_fr * nextFrame = frame->next;
+        if(nextFrame==NULL)
+            return frame->transform_mtx;
+        frame = frame->next;
+    }
+    return NULL;
 }

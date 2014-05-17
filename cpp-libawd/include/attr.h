@@ -26,18 +26,17 @@ class AWDAttr
         awd_uint32 get_val_len(BlockSettings *);
 };
 
-
 /**
  * User attributes.
 */
-class AWDUserAttr : 
+class AWDUserAttr :
     public AWDAttr
 {
     private:
         char *key;
         awd_uint16 key_len;
         AWDNamespace *ns;
-        
+
     protected:
         void write_metadata(int);
 
@@ -51,7 +50,6 @@ class AWDUserAttr :
         const char *get_key();
         awd_uint16 get_key_len();
 };
-
 
 class AWDUserAttrList {
     private:
@@ -74,12 +72,10 @@ class AWDUserAttrList {
         //void add_namespaces(AWD *);
 };
 
-
-
 /**
  * Numeric attributes ("properties")
 */
-class AWDNumAttr : 
+class AWDNumAttr :
     public AWDAttr
 {
     protected:
@@ -93,7 +89,6 @@ class AWDNumAttr :
         AWDNumAttr();
         ~AWDNumAttr();
 };
-
 
 class AWDNumAttrList {
     private:
@@ -113,9 +108,6 @@ class AWDNumAttrList {
         void set(awd_propkey, AWD_field_ptr, awd_uint32, AWD_field_type, int=0);
 };
 
-
-
-
 /**
  * "Attribute element", any element (such as a block, or parts of block
  * like skeleton joints) which can have attributes.
@@ -134,6 +126,11 @@ class AWDAttrElement
     public:
         bool get_attr(AWDNamespace *, const char *, awd_uint16, AWD_field_ptr *, awd_uint32 *, AWD_field_type *);
         void set_attr(AWDNamespace *, const char *, awd_uint16, AWD_field_ptr, awd_uint32, AWD_field_type);
+        void add_color_property(int, awd_uint32, awd_uint32);
+        void add_number_property(int, float, float);
+        void add_int_property(int, int, int);
+        void add_int8_property(int, int, int);
+        void add_bool_property(int, bool, bool);
 };
 
 #endif

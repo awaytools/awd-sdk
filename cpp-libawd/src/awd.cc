@@ -513,6 +513,16 @@ AWD::flush(int out_fd)
 }
 
 AWDBlockList *
+AWD::get_skeleton_blocks()
+{
+    return this->skeleton_blocks;
+}
+AWDBlockList *
+AWD::get_amin_set_blocks()
+{
+    return this->amin_set_blocks;
+}
+AWDBlockList *
 AWD::get_animator_blocks()
 {
     return this->animator_blocks;

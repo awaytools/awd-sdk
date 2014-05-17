@@ -48,117 +48,114 @@ typedef struct _vdata {
 } vdata;
 
 typedef struct _vdata_list_item {
-	vdata *vd;
-	struct _vdata_list_item *next;
+    vdata *vd;
+    struct _vdata_list_item *next;
 } vdata_list_item;
 
 class VertexDataList
 {
 private:
-	int num_items;
-	vdata_list_item *cur;
-	vdata_list_item *first;
-	vdata_list_item *last;
-	bool weakReference;
+    int num_items;
+    vdata_list_item *cur;
+    vdata_list_item *first;
+    vdata_list_item *last;
+    bool weakReference;
 
 public:
-	VertexDataList(bool weakReference=true);
-	~VertexDataList();
+    VertexDataList(bool weakReference=true);
+    ~VertexDataList();
 
-	void append_vdata(vdata *);
-	void clear();
-	int get_num_items();
+    void append_vdata(vdata *);
+    void clear();
+    int get_num_items();
 
-	void iter_reset();
-	vdata *iter_next();
+    void iter_reset();
+    vdata *iter_next();
 };
 
-
 typedef struct GeomStringCacheItem_struct {
-	char *key;
-	int keyLen;
-	void *val;
-	GeomStringCacheItem_struct *next;
+    char *key;
+    int keyLen;
+    void *val;
+    GeomStringCacheItem_struct *next;
 } GeomStringCacheItem;
 
 class GeomStringCache
 {
 private:
-	GeomStringCacheItem *firstItem;
-	GeomStringCacheItem *lastItem;
+    GeomStringCacheItem *firstItem;
+    GeomStringCacheItem *lastItem;
 
 public:
-	GeomStringCache(void);
-	~GeomStringCache(void);
+    GeomStringCache(void);
+    ~GeomStringCache(void);
 
-	void Set(char *key, void *val);
-	void *Get(char *key);
-	char *GetKeyByVal(void *val);
+    void Set(char *key, void *val);
+    void *Get(char *key);
+    char *GetKeyByVal(void *val);
 };
 
 /**
  * BlockCache
- * Cache that is used generically to store any type of block or 
+ * Cache that is used generically to store any type of block or
  * sub-element in a look-up table by MAX object.
 */
 typedef struct SubGeoGroupCacheItem_struct {
-	char *key;
-	int val;
-	int keyLen;
-	int matIdx;
-	SubGeoGroupCacheItem_struct *next;
+    char *key;
+    int val;
+    int keyLen;
+    int matIdx;
+    SubGeoGroupCacheItem_struct *next;
 } SubGeoGroupCacheItem;
 
 class SubGeoGroupCache
 {
 private:
-	SubGeoGroupCacheItem *firstItem;
-	SubGeoGroupCacheItem *lastItem;
+    SubGeoGroupCacheItem *firstItem;
+    SubGeoGroupCacheItem *lastItem;
 
 public:
-	SubGeoGroupCache(void);
-	~SubGeoGroupCache(void);
+    SubGeoGroupCache(void);
+    ~SubGeoGroupCache(void);
 
-	void Set(char *key, int val, int matIdx);
-	int Get(char *key);
-	int GetIdxByMatIdx(int val);
+    void Set(char *key, int val, int matIdx);
+    int Get(char *key);
+    int GetIdxByMatIdx(int val);
 };
 
 class GUSubGeo
 {
-    private:	
-		int num_idx_lists;
-		bool deleteMaterialList;
+    private:
+        int num_idx_lists;
+        bool deleteMaterialList;
     public:
-		AWDBlockList * materials;
-		int vertCnt;
-		int triCnt;
-		int max_orig_idx;
-		int joints_per_vertex;
-		double normal_threshold;
-		bool include_uv;
-		bool include_suv;
-		bool include_normals;
-		bool split_by_mat;
-		bool explode;
-		VertexDataList **per_idx_lists;
-		VertexDataList *expanded;
-		VertexDataList *collapsed;
-		bool isExported;
+        AWDBlockList * materials;
+        int vertCnt;
+        int triCnt;
+        int max_orig_idx;
+        int joints_per_vertex;
+        double normal_threshold;
+        bool include_uv;
+        bool include_suv;
+        bool include_normals;
+        bool split_by_mat;
+        bool explode;
+        VertexDataList **per_idx_lists;
+        VertexDataList *expanded;
+        VertexDataList *collapsed;
+        bool isExported;
         GUSubGeo(AWDBlockList * ,bool, bool, bool, double, int, bool);
         ~GUSubGeo();
-		
-		
-		void updatematerials(AWDBlockList * newMaterials);
-		int has_vert(vdata *);
-		void prepare_build();
-		void checkLimits();
-		
+
+        void updatematerials(AWDBlockList * newMaterials);
+        int has_vert(vdata *);
+        void prepare_build();
+        void checkLimits();
 };
 
 typedef struct _gusubgeo_list_item {
-	GUSubGeo *subGeo;
-	struct _gusubgeo_list_item *next;
+    GUSubGeo *subGeo;
+    struct _gusubgeo_list_item *next;
 } gusubgeo_list_item;
 class AWDGeomUtil;//predefine, so we can use it inside GUSubGeoList / will be defined later in this file
 class GUSubGeoList
@@ -167,17 +164,17 @@ class GUSubGeoList
         int num_blocks;
 
     public:
-		int max_orig_idx;
+        int max_orig_idx;
         gusubgeo_list_item *first_block;
         gusubgeo_list_item *last_block;
 
         GUSubGeoList();
         ~GUSubGeoList();
-		
+
         bool append(GUSubGeo *);
         void force_append(GUSubGeo *);
         bool contains(GUSubGeo *);
-		GUSubGeo * get_subgeo_for_matID(int);
+        GUSubGeo * get_subgeo_for_matID(int);
         int get_num_blocks();
 };
 
@@ -193,36 +190,34 @@ class GUSubGeoIterator
         void reset();
 };
 
-
 class GUSubGeoGroup
 {
-    private:	
-		int num_sub_geos;
-		bool is_converted;
+    private:
+        int num_sub_geos;
+        bool is_converted;
     public:
-		GUSubGeo *curSubGeo;
-		AWDBlockList * materials;
+        GUSubGeo *curSubGeo;
+        AWDBlockList * materials;
         GUSubGeoList * subGeosList;
-		int joints_per_vertex;
-		double normal_threshold;
-		bool include_uv;
-		bool include_suv;
-		bool include_normals;
-		bool split_by_mat;
-		bool explode;
+        int joints_per_vertex;
+        double normal_threshold;
+        bool include_uv;
+        bool include_suv;
+        bool include_normals;
+        bool split_by_mat;
+        bool explode;
         GUSubGeoGroup(AWDBlockList *,bool, bool, bool, double, int, bool);
         ~GUSubGeoGroup();
-		int mtdIdx;
+        int mtdIdx;
         void append_vdata(vdata *);
         void check_limits();
         bool get_is_converted();
         void set_is_converted(bool);
-		
 };
 
 typedef struct _gusubgeogroup_list_item {
-	GUSubGeoGroup *subGeoGroup;
-	struct _gusubgeogroup_list_item *next;
+    GUSubGeoGroup *subGeoGroup;
+    struct _gusubgeogroup_list_item *next;
 } gusubgeogroup_list_item;
 class AWDGeomUtil;//predefine, so we can use it inside GUSubGeoList / will be defined later in this file
 class GUSubGeoGroupList
@@ -231,17 +226,17 @@ class GUSubGeoGroupList
         int num_blocks;
 
     public:
-		int max_orig_idx;
+        int max_orig_idx;
         gusubgeogroup_list_item *first_block;
         gusubgeogroup_list_item *last_block;
 
-		GUSubGeoGroupList();
+        GUSubGeoGroupList();
         ~GUSubGeoGroupList();
-		
+
         bool append(GUSubGeoGroup *);
         void force_append(GUSubGeoGroup *);
         bool contains(GUSubGeoGroup *);
-		GUSubGeoGroup * get_by_idx(int);
+        GUSubGeoGroup * get_by_idx(int);
         int get_num_blocks();
 };
 
@@ -259,9 +254,9 @@ class GUSubGeoGroupIterator
 
 class GUGeo
 {
-    private:	
-		GUSubGeoGroupList *subGeoGroupList;
-		AWDBlockList * meshBlocks;
+    private:
+        GUSubGeoGroupList *subGeoGroupList;
+        AWDBlockList * meshBlocks;
     public:
         GUGeo(AWDMeshInst *);
         ~GUGeo();
@@ -270,30 +265,29 @@ class GUGeo
         AWDBlockList * get_meshBlocks();
         void add_meshBlock(AWDMeshInst *);
         void set_meshBlocks(AWDBlockList *);
-
 };
 
 typedef struct _gugeo_list_item {
-	GUGeo *geo;
-	struct _gugeo_list_item *next;
+    GUGeo *geo;
+    struct _gugeo_list_item *next;
 } gugeo_list_item;
 class GUGeoList
 {
     private:
         int num_blocks;
-		bool weakReference;
+        bool weakReference;
     public:
-		int max_orig_idx;
+        int max_orig_idx;
         gugeo_list_item *first_geo;
         gugeo_list_item *last_geo;
 
-		GUGeoList(bool weakReference=true);
+        GUGeoList(bool weakReference=true);
         ~GUGeoList();
-		
+
         bool append(GUGeo *);
         void force_append(GUGeo *);
         bool contains(GUGeo *);
-		GUGeo * get_by_idx(int);
+        GUGeo * get_by_idx(int);
         int get_num_blocks();
 };
 

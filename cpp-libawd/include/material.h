@@ -7,6 +7,7 @@
 #include "attr.h"
 #include "shading.h"
 #include "light.h"
+//#include "anim.h"
 
 #define PROP_MAT_COLOR 1
 #define PROP_MAT_TEXTURE 2
@@ -24,13 +25,12 @@
 //#define PROP_MAT_CURRENTLY_NOT_USED 14
 #define PROP_MAT_AMBIENT_LEVEL 15
 #define PROP_MAT_AMBIENTCOLOR 16
-#define PROP_MAT_AMBIENTTEXTURE 17  
+#define PROP_MAT_AMBIENTTEXTURE 17
 #define PROP_MAT_SPECULARLEVEL 18
 #define PROP_MAT_GLOSS 19
 #define PROP_MAT_SPECULARCOLOR 20
 #define PROP_MAT_SPECULARTEXTURE 21
 #define PROP_MAT_LIGHTPICKER 22
-
 
 typedef enum {
     AWD_MATTYPE_UNDEFINED=0,
@@ -43,9 +43,9 @@ typedef struct _AWD_mat_method {
     struct _AWD_mat_method *next;
 } AWD_mat_method;
 
-class AWDMaterial : 
-    public AWDBlock, 
-    public AWDNamedElement, 
+class AWDMaterial :
+    public AWDBlock,
+    public AWDNamedElement,
     public AWDAttrElement
 {
     private:
@@ -54,14 +54,15 @@ class AWDMaterial :
         int secondMappingChannel;
         bool is_faceted;
         bool isCreated;//will be true, once the mtl is converted to awd
-        
+        bool isClone;
+
         AWD_mat_method *first_method;
         AWD_mat_method *last_method;
 
         awd_uint8 num_methods;
 
         AWDBlockList * effectMethods;
-        
+
         AWDBlockList * materialClones;
 
         // vars for material properties
@@ -86,11 +87,13 @@ class AWDMaterial :
         awd_color specularColor;
         AWDBitmapTexture *specTexture;
         AWDLightPicker *lightPicker;
+        AWDBlock *animator;
+        AWDBlock *shadowMethod;
         awd_float64 * uv_transform_mtx;
 
     protected:
         awd_uint32 calc_body_length(BlockSettings *);
-        void prepare_and_add_dependencies(AWDBlockList *);
+        void prepare_and_add_dependencies(AWDBlockList *export_list);
         void write_body(int, BlockSettings *);
 
     public:
@@ -99,6 +102,8 @@ class AWDMaterial :
 
         void set_type(AWD_mat_type);
         AWD_mat_type get_type();
+        void set_isClone(bool);
+        bool get_isClone();
 
         void set_mappingChannel(int);
         int get_mappingChannel();
@@ -108,7 +113,7 @@ class AWDMaterial :
         bool get_is_faceted();
         void set_isCreated(bool);
         bool get_isCreated();
-        
+
         void set_color(awd_color);
         awd_color get_color();
         void set_texture(AWDBitmapTexture *);
@@ -151,7 +156,11 @@ class AWDMaterial :
         AWDBitmapTexture *get_specTexture();
         void set_lightPicker(AWDLightPicker *);
         AWDLightPicker *get_lightPicker();
-        
+        void set_animator(AWDBlock *);
+        AWDBlock *get_animator();
+        void set_shadowMethod(AWDBlock *);
+        AWDBlock *get_shadowMethod();
+
         AWDBlockList *get_materialClones();
 
         void set_effectMethods(AWDBlockList *);
@@ -159,8 +168,8 @@ class AWDMaterial :
 
         void set_uv_transform_mtx(awd_float64 *);
         awd_float64 *get_uv_transform_mtx();
-        
-        AWDMaterial* get_material_for_lightPicker(AWDLightPicker *);
+
+        AWDMaterial* get_material_for_lightPicker(AWDLightPicker *, AWDBlock *);
         void add_method(AWDShadingMethod *);
         void resetShadingMethods();
 };

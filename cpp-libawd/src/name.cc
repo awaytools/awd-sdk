@@ -10,6 +10,8 @@ AWDNamedElement::AWDNamedElement(const char *name, awd_uint16 name_len)
     this->name_len = 0;
     this->awdID = NULL;
     this->awdID_len = 0;
+    this->targetAWD = NULL;
+    this->targetAWD_len = 0;
     this->set_name(name, name_len);
 }
 
@@ -31,6 +33,39 @@ char *
 AWDNamedElement::get_name()
 {
     return this->name;
+}
+void
+AWDNamedElement::set_name(const char *name, awd_uint16 name_len)
+{
+    if ((name != NULL)&&(name_len>0)) {
+        if (this->name_len>0){
+            free(this->name);
+            this->name=NULL;
+            this->name_len=0;
+        }
+        this->name_len = name_len+1;
+        this->name = (char*)malloc(this->name_len);
+        strncpy_s(this->name, this->name_len, name, _TRUNCATE);
+       }
+}
+char *
+AWDNamedElement::get_targetAWD()
+{
+    return this->targetAWD;
+}
+void
+AWDNamedElement::set_targetAWD(const char *targetAWD, awd_uint16 targetAWD_len)
+{
+    if ((targetAWD != NULL)&&(targetAWD_len>0)) {
+        if (this->targetAWD_len>0){
+            free(this->targetAWD);
+            this->targetAWD=NULL;
+            this->targetAWD_len=0;
+        }
+        this->targetAWD_len = targetAWD_len+1;
+        this->targetAWD = (char*)malloc(this->targetAWD_len);
+        strncpy_s(this->targetAWD, this->targetAWD_len, targetAWD, _TRUNCATE);
+       }
 }
 char *
 AWDNamedElement::get_awdID()
@@ -77,20 +112,6 @@ AWDNamedElement::set_awdID(const char *awdID, awd_uint16 awdID_len)
         //this->name[this->name_len] = 0;
    }
 }
-void
-AWDNamedElement::set_name(const char *name, awd_uint16 name_len)
-{
-    if ((name != NULL)&&(name_len>0)) {
-        if (this->name_len>0){
-            free(this->name);
-            this->name=NULL;
-            this->name_len=0;
-        }
-        this->name_len = name_len+1;
-        this->name = (char*)malloc(this->name_len);
-        strncpy_s(this->name, this->name_len, name, _TRUNCATE);
-       }
-}
 
 awd_uint16
 AWDNamedElement::get_name_length()
@@ -102,4 +123,9 @@ awd_uint16
 AWDNamedElement::get_awdID_length()
 {
     return this->awdID_len;
+}
+awd_uint16
+AWDNamedElement::get_targetAWD_length()
+{
+    return this->targetAWD_len;
 }

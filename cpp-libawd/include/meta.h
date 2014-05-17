@@ -11,13 +11,11 @@
 #define PROP_META_GENERATOR_NAME 4
 #define PROP_META_GENERATOR_VER 5
 
-
-
 class AWDMetaData :
     public AWDBlock,
     public AWDAttrElement
 {
-	private:		
+    private:
         char * encoder_name;
         int encoder_name_len;
         char *encoder_version;
@@ -27,17 +25,16 @@ class AWDMetaData :
         char * generator_version;
         int generator_version_len;
     protected:
-        void prepare_and_add_dependencies(AWDBlockList *);
+        void prepare_and_add_dependencies(AWDBlockList *export_list);
         awd_uint32 calc_body_length(BlockSettings *);
-		void write_body(int, BlockSettings *);
+        void write_body(int, BlockSettings *);
 
     public:
-        AWDMetaData();		
-        ~AWDMetaData(); 
+        AWDMetaData();
+        ~AWDMetaData();
 
         void override_encoder_metadata(const char *, const char *);
         void set_generator_metadata(const char *, const char *);
 };
-
 
 #endif

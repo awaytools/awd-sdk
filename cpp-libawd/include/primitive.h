@@ -3,7 +3,6 @@
 
 #include "scene.h"
 
-
 #define PROP_PRIM_NUMBER1 101
 #define PROP_PRIM_NUMBER2 102
 #define PROP_PRIM_NUMBER3 103
@@ -28,7 +27,6 @@
 #define PROP_PRIM_BOOL5 705
 #define PROP_PRIM_BOOL6 706
 
-
 typedef enum {
     AWD_PRIMITIVE_UNDEFINED=0,
     AWD_PRIMITIVE_PLANE=1,
@@ -40,7 +38,6 @@ typedef enum {
     AWD_PRIMITIVE_TORUS
 } AWD_primitive_type;
 
-
 class AWDPrimitive :
     public AWDBlock,
     public AWDNamedElement,
@@ -48,7 +45,7 @@ class AWDPrimitive :
 {
     private:
         AWD_primitive_type prim_type;
-		double yoffset;
+        double yoffset;
     protected:
         void add_dependencies(AWDBlockList *);
         awd_uint32 calc_body_length(BlockSettings *);
@@ -57,14 +54,12 @@ class AWDPrimitive :
     public:
         AWDPrimitive(const char *, awd_uint16, AWD_primitive_type);
         ~AWDPrimitive();
-		
+
         double get_Yoffset();
         void set_Yoffset(double);
-        void add_int_property(int, int);
-        void add_number_property(int, float);
-        void add_bool_property(int, bool);
-		
+        void add_int_property(int, int, int);
+        void add_number_property(int, float, float);
+        void add_bool_property(int, bool, bool);
 };
-
 
 #endif

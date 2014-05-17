@@ -3,7 +3,6 @@
 
 #include "scene.h"
 
-
 #define PROPS_BADDR1 1
 #define PROPS_BADDR2 2
 #define PROPS_BADDR3 3
@@ -39,7 +38,6 @@
 #define PROPS_BOOL5 705
 #define PROPS_BOOL6 706
 
-
 typedef enum {
     AWD_FXMETHOD_COLORMATRIX=401,
     AWD_FXMETHOD_COLORTRANSFORM=402,
@@ -51,9 +49,8 @@ typedef enum {
     AWD_FXMETHOD_REFRACTION_ENVMAP=408,
     AWD_FXMETHOD_OUTLINE=409,
     AWD_FXMETHOD_FRESNEL_ENVMAP=410,
-    AWD_FXMETHOD_FOG=411,	
+    AWD_FXMETHOD_FOG=411,
 } AWD_effect_method_type;
-
 
 class AWDEffectMethod :
     public AWDBlock,
@@ -69,24 +66,22 @@ class AWDEffectMethod :
         AWDBlock * awdBlock4;
 
     protected:
-        void prepare_and_add_dependencies(AWDBlockList *);
+        void prepare_and_add_dependencies(AWDBlockList *export_list);
         awd_uint32 calc_body_length(BlockSettings *);
         void write_body(int, BlockSettings *curBlockSettings);
 
     public:
         AWDEffectMethod(const char *, awd_uint16, AWD_effect_method_type);
         ~AWDEffectMethod();
-		void set_awdBlock1(AWDBlock *);
-		void set_awdBlock2(AWDBlock *);
-		void set_awdBlock3(AWDBlock *);
-		void set_awdBlock4(AWDBlock *);
-		AWDNumAttrList * get_effect_props();
-        void add_color_property(int, awd_uint32, awd_uint32);
-        void add_number_property(int, float, float);
-        void add_int_property(int, int, int);
-        void add_bool_property(int, bool, bool);
-		
+        void set_awdBlock1(AWDBlock *);
+        void set_awdBlock2(AWDBlock *);
+        void set_awdBlock3(AWDBlock *);
+        void set_awdBlock4(AWDBlock *);
+        AWDNumAttrList * get_effect_props();
+        void add_color_method_prop(int, awd_uint32, awd_uint32);
+        void add_number_method_prop(int, float, float);
+        void add_int_method_prop(int, int, int);
+        void add_bool_method_prop(int, bool, bool);
 };
-
 
 #endif

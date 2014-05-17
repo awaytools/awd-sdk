@@ -8,8 +8,7 @@
 #include "block.h"
 #include "name.h"
 #include "attr.h"
-
-
+//#include "anim.h"
 
 /**
  * Data stream type
@@ -23,10 +22,9 @@ typedef enum {
     JOINT_INDICES,
     VERTEX_WEIGHTS,
     SUVS,
-    ORIGINALIDX,
+    ALLVERTDATA,
+    ORIGINALIDX//usedIntern
 } AWD_mesh_str_type;
-
-
 
 class AWDSubGeom :
     public AWDAttrElement
@@ -45,11 +43,11 @@ class AWDSubGeom :
         ~AWDSubGeom();
 
         AWDSubGeom * next;
-        
+
         unsigned int get_num_streams();
         AWDDataStream *get_stream_at(unsigned int);
         void add_stream(AWD_mesh_str_type, AWD_field_type, AWD_str_ptr, awd_uint32);
-        
+
         void add_original_idx_data(AWD_str_ptr, awd_uint32);
         AWD_str_ptr get_original_idx_data();
         awd_uint32 get_original_idx_data_len();
@@ -61,9 +59,8 @@ class AWDSubGeom :
         void set_materials(AWDBlockList *);
 };
 
-
-class AWDTriGeom : 
-    public AWDBlock, 
+class AWDTriGeom :
+    public AWDBlock,
     public AWDNamedElement,
     public AWDAttrElement
 {
@@ -103,8 +100,6 @@ class AWDTriGeom :
         AWDSubGeom *  get_first_sub();
 };
 
-
-
 class AWDMeshInst:
     public AWDSceneBlock
 {
@@ -113,29 +108,32 @@ class AWDMeshInst:
         AWDBlockList * materials;
         AWDBlockList * pre_materials;
         AWDBlock * lightPicker;
+        AWDBlock * animator;
         AWDBlock * defaultMat;
         void init();
 
     protected:
         awd_uint32 calc_body_length(BlockSettings *);
         void write_body(int, BlockSettings *curBlockSettings);
-        void prepare_and_add_dependencies(AWDBlockList *);
+        void prepare_and_add_dependencies(AWDBlockList *export_list);
 
     public:
         AWDMeshInst(const char *name, awd_uint16, AWDBlock *);
         AWDMeshInst(const char *name, awd_uint16, AWDBlock *, awd_float64 *);
         ~AWDMeshInst();
-        
+
         void add_material(AWDMaterial *);
         AWDBlockList * get_pre_materials();
         void set_pre_materials(AWDBlockList *);
-        
+
         AWDBlock * get_defaultMat();
         void set_defaultMat(AWDBlock *);
         AWDBlock * get_geom();
         void set_geom(AWDBlock *);
         AWDBlock* get_lightPicker();
         void set_lightPicker(AWDBlock *);
+        void set_animator(AWDBlock *);
+        AWDBlock *get_animator();
 };
 
 #endif

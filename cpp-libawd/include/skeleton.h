@@ -4,9 +4,7 @@
 #include "block.h"
 #include "attr.h"
 
-
-
-class AWDSkeletonJoint : 
+class AWDSkeletonJoint :
     public AWDNamedElement,
     public AWDAttrElement
 {
@@ -18,7 +16,7 @@ class AWDSkeletonJoint :
         AWDSkeletonJoint *parent;
         AWDSkeletonJoint *first_child;
         AWDSkeletonJoint *last_child;
-        
+
     public:
         AWDSkeletonJoint *next;
 
@@ -38,19 +36,19 @@ class AWDSkeletonJoint :
         AWDSkeletonJoint *add_child_joint(AWDSkeletonJoint *);
 };
 
-
-class AWDSkeleton : 
-    public AWDBlock, 
+class AWDSkeleton :
+    public AWDBlock,
     public AWDNamedElement,
     public AWDAttrElement
 {
     private:
         AWDSkeletonJoint *root_joint;
-		AWDBlockList *clip_blocks;
-		int joints_per_vert;
-		int neutralPose;
+        AWDBlockList *clip_blocks;
+        int joints_per_vert;
+        int neutralPose;
         bool simpleMode;
-		
+        bool shareAutoAnimator;
+
     protected:
         awd_uint32 calc_body_length(BlockSettings *);
         void write_body(int, BlockSettings *);
@@ -58,11 +56,13 @@ class AWDSkeleton :
     public:
         AWDSkeleton(const char *, awd_uint16, int);
         ~AWDSkeleton();
-		
-		AWDBlockList * get_clip_blocks();
-		void set_clip_blocks(AWDBlockList *);
-		bool get_simpleMode();
-		void set_simpleMode(bool);
+
+        AWDBlockList * get_clip_blocks();
+        void set_clip_blocks(AWDBlockList *);
+        bool get_simpleMode();
+        void set_simpleMode(bool);
+        bool get_shareAutoAnimator();
+        void set_shareAutoAnimator(bool);
         AWDSkeletonJoint *set_root_joint(AWDSkeletonJoint *);
         AWDSkeletonJoint *get_root_joint();
         int get_joints_per_vert();

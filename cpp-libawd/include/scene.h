@@ -6,8 +6,7 @@
 #include "awd_types.h"
 #include "attr.h"
 
-
-class AWDSceneBlock : 
+class AWDSceneBlock :
     public AWDBlock,
     public AWDNamedElement,
     public AWDAttrElement
@@ -27,7 +26,7 @@ class AWDSceneBlock :
 
         void set_transform(awd_float64 *);
         awd_float64 * get_transform();
-		
+
         AWDBlock *get_parent();
         void set_parent(AWDSceneBlock *);
         bool isEmpty();
@@ -37,7 +36,6 @@ class AWDSceneBlock :
 
         AWDBlockIterator *child_iter();
 };
-
 
 class AWDScene :
     public AWDSceneBlock
@@ -50,7 +48,6 @@ class AWDScene :
         AWDScene(const char *, awd_uint16);
         ~AWDScene();
 };
-
 
 class AWDContainer :
     public AWDSceneBlock
@@ -65,12 +62,11 @@ class AWDContainer :
         ~AWDContainer();
 };
 
-
 class AWDCommandBlock :
     public AWDSceneBlock
 {
-	private:
-		awd_uint8 hasSceneInfos;
+    private:
+        awd_uint8 hasSceneInfos;
         AWDNumAttrList *commandProperties;
 
     protected:
@@ -79,8 +75,8 @@ class AWDCommandBlock :
 
     public:
         AWDCommandBlock(const char *, awd_uint16);
-		~AWDCommandBlock();
-		void add_target_light(awd_baddr);
+        ~AWDCommandBlock();
+        void add_target_light(awd_baddr);
 };
 
 class AWDSkyBox :
@@ -90,7 +86,7 @@ class AWDSkyBox :
         AWDBlock * cubeTex;
 
     protected:
-        void prepare_and_add_dependencies(AWDBlockList *);
+        void prepare_and_add_dependencies(AWDBlockList *export_list);
         awd_uint32 calc_body_length(BlockSettings *);
         void write_body(int, BlockSettings *);
 
@@ -99,6 +95,6 @@ class AWDSkyBox :
         ~AWDSkyBox();
 
         void set_cube_tex(AWDBlock *);
+        AWDBlock* get_cube_tex();
 };
 #endif
-

@@ -5,9 +5,6 @@
 #include "block.h"
 #include "attr.h"
 
-
-
-
 typedef enum {
     AWD_SHADEMETHOD_ENV_AMBIENT=1,
     AWD_SHADEMETHOD_DIFFUSE_DEPTH=51,
@@ -39,21 +36,20 @@ class AWDShadingMethod :
     public:
         AWDShadingMethod(AWD_shade_type);
         ~AWDShadingMethod();
-        void prepare_and_add_dependencies(AWDBlockList *);
-		void set_awdBlock1(AWDBlock *);
-		void set_awdBlock2(AWDBlock *);
-		void set_awdBlock3(AWDBlock *);
-		void set_awdBlock4(AWDBlock *);
-		AWD_shade_type get_shading_type();
-		AWDNumAttrList * get_shading_props();
+        void prepare_and_add_dependencies(AWDBlockList *export_list);
+        void set_awdBlock1(AWDBlock *);
+        void set_awdBlock2(AWDBlock *);
+        void set_awdBlock3(AWDBlock *);
+        void set_awdBlock4(AWDBlock *);
+        AWD_shade_type get_shading_type();
+        AWDNumAttrList * get_shading_props();
         awd_uint32 calc_method_length(BlockSettings *);
         void write_method(int, BlockSettings *);
         void add_color_property(int, awd_uint32, awd_uint32);
         void add_number_property(int, float, float);
         void add_int_property(int, int, int);
-        void add_int8_property(int, bool, bool);
+        void add_int8_property(int, int, int);
         void add_bool_property(int, bool, bool);
 };
-
 
 #endif

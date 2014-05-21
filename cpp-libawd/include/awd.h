@@ -121,6 +121,8 @@ class AWD
         AWDBlockList * get_mesh_data_blocks();
         AWDBlockList * get_material_blocks();
         AWDBlockList * get_message_blocks();
+        AWDBlockList * get_scene_blocks();
+        
 };
 
 #endif

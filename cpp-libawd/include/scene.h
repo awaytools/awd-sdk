@@ -33,6 +33,7 @@ class AWDSceneBlock :
 
         void add_child(AWDSceneBlock *);
         void remove_child(AWDSceneBlock *);
+        void make_children_invalide();
 
         AWDBlockIterator *child_iter();
 };

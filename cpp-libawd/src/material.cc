@@ -581,11 +581,12 @@ AWDMaterial::prepare_and_add_dependencies(AWDBlockList *export_list)
 }
 
 AWDMaterial*
-AWDMaterial::get_material_for_lightPicker(AWDLightPicker * lightPicker, AWDBlock * animator)
+AWDMaterial::get_unique_material(AWDLightPicker * lightPicker, AWDBlock * animator, AWDBlockList*  fx_blocks=NULL)
 {
-    if ((this->lightPicker==NULL)&&(this->animator==NULL)){
+    if ((this->lightPicker==NULL)&&(this->animator==NULL)){//&&(this->effectMethods==NULL)){
         this->lightPicker=lightPicker;
         this->animator=animator;
+        //this->effectMethods=fx_blocks;
         return this;
     }
     if ((this->lightPicker==lightPicker)&&(this->animator==animator)){

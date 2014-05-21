@@ -169,7 +169,7 @@ class AWDMaterial :
         void set_uv_transform_mtx(awd_float64 *);
         awd_float64 *get_uv_transform_mtx();
 
-        AWDMaterial* get_material_for_lightPicker(AWDLightPicker *, AWDBlock *);
+        AWDMaterial* get_unique_material(AWDLightPicker *, AWDBlock *, AWDBlockList*);
         void add_method(AWDShadingMethod *);
         void resetShadingMethods();
 };

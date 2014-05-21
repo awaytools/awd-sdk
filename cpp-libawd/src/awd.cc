@@ -542,6 +542,11 @@ AWD::get_message_blocks()
 {
     return this->message_blocks;
 }
+AWDBlockList *
+AWD::get_scene_blocks()
+{
+    return this->scene_blocks;
+}
 
 awd_uint32
 AWD::write_blocks_to_file(int out_fd, AWDBlockList *blocks)

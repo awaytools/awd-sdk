@@ -128,6 +128,19 @@ AWDSceneBlock::remove_child(AWDSceneBlock *child)
     // TODO: Implement remove() in BlockList
     //this->children->remove(child);
 }
+void
+AWDSceneBlock::make_children_invalide()
+{
+    // TODO: Implement remove() in BlockList
+    //this->children->remove(child);    
+    AWDSceneBlock * block;
+    AWDBlockIterator * it = new AWDBlockIterator(this->children);
+    while ((block = (AWDSceneBlock *)it->next()) != NULL) {
+        block->make_invalide();
+        block->make_children_invalide();
+    }
+}
+
 bool
 AWDSceneBlock::isEmpty()
 {

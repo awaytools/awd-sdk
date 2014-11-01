@@ -19,8 +19,10 @@ AWDMetaData::AWDMetaData() :
 
     this->encoder_version = (char *)malloc(255);
     this->encoder_version_len = 255;
-    _snprintf_s(this->encoder_version, 255, _TRUNCATE, "%d.%d.%d%c",
-        AWD::VERSION_MAJOR, AWD::VERSION_MINOR, AWD::VERSION_BUILD, AWD::VERSION_RELEASE);
+//    _snprintf_s(this->encoder_version, 255, _TRUNCATE, "%d.%d.%d%c",
+//        AWD::VERSION_MAJOR, AWD::VERSION_MINOR, AWD::VERSION_BUILD, AWD::VERSION_RELEASE);
+    snprintf(this->encoder_version, 255, "%d.%d.%d%c",
+             AWD::VERSION_MAJOR, AWD::VERSION_MINOR, AWD::VERSION_BUILD, AWD::VERSION_RELEASE);
 }
 
 AWDMetaData::~AWDMetaData() {

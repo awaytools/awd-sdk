@@ -348,6 +348,12 @@ GUSubGeo::has_vert(vdata *vd)
                     goto next;
             }
 
+            // If secondary UV coordinates do not match, move on to next vertex
+            if (this->include_suv) {
+                if (cur->su != vd->su || cur->sv != vd->sv)
+                    goto next;
+            }
+
             // Check if normals match (possibly with fuzzy matching using a
             // threshold) and if they don't, move on to the next vertex.
             if (this->include_normals) {

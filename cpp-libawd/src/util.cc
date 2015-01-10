@@ -177,7 +177,7 @@ awdutil_mktmp(char **path)
     else fd = -1;
 
 #else
-    tpl_len = strlen(TMPFILE_TEMPLATE);
+    tpl_len = strlen(TMPFILE_TEMPLATE) + 1;
     tmp_path = (char *)malloc(tpl_len);
     strncpy_s(tmp_path, tpl_len, TMPFILE_TEMPLATE, tpl_len);
 

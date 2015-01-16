@@ -20,8 +20,22 @@
 
 #else // UNIX
 
+#include <string.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/uio.h>
 #include <unistd.h>
 
-#endif 
+
+
+#define _TRUNCATE 0
+
+#define strncpy_s( dst, dstSize, src, count )   strncpy( dst, src, dstSize )
+#define strcat_s(dest, num, src)                strcat( dest, src )
+#define itoa( val, str, radix )                 sprintf( str, "%d", val )
+
+
+
+#endif
 
 #endif

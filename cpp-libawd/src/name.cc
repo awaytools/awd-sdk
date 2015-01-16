@@ -1,8 +1,8 @@
 #include <cstring>
-#include <stdlib.h>
 #include <ctime>
 #include <iostream>
 #include "name.h"
+#include "platform.h"
 
 AWDNamedElement::AWDNamedElement(const char *name, awd_uint16 name_len)
 {
@@ -80,10 +80,10 @@ AWDNamedElement::generate_awdID()
 {
     time_t timev=time(0);
     char buffer [1024];
-    char * timeStr=itoa ((int)timev,buffer,10);
+    char * timeStr=(char *)itoa ((int)timev,buffer,10);
     int r = int((rand() % 89999 + 10000));
     char buffer2 [20];
-    char * valueStr=itoa (int(r),buffer2,10);
+    char * valueStr=(char *)itoa (int(r),buffer2,10);
 
     if (this->awdID_len>0){
         free(this->awdID);

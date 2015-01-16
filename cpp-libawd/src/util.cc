@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cstdio>
-#include "Share.h."
 #include "util.h"
 #include "awd_types.h"
 

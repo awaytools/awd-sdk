@@ -1,0 +1,294 @@
+Ttess2
+v6
+r1
+cCheck dependencies
+cCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/sweep.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/priorityq.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/mesh.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/bucketalloc.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/dict.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/geom.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+cLibtool /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/libtess2.a normal x86_64
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+c00000000530295C100000000000000AA
+t1392678337
+s170
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/SDKSettings.plist
+c0000000053E8C329000000000000044C
+t1407763241
+s1100
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/System/Library/CoreServices/SystemVersion.plist
+c0000000053E8C32900000000000001DE
+t1407763241
+s478
+
+N/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/5.1/include/module.map
+c0000000053E8C3470000000000000ADC
+t1407763271
+s2780
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c
+c00000000545813F00000000000001440
+t1415058416
+s5184
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c
+c00000000545813F00000000000000DE6
+t1415058416
+s3558
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c
+c00000000545813F000000000000022C8
+t1415058416
+s8904
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c
+c00000000545813F00000000000006128
+t1415058416
+s24872
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c
+c00000000545813F0000000000000360B
+t1415058416
+s13835
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c
+c00000000545813F0000000000000BA85
+t1415058416
+s47749
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c
+c00000000545813F000000000000066FC
+t1415058416
+s26364
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/libtess2.a
+t2
+s0
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/bucketalloc.o
+t1415059104
+s7444
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/dict.o
+t1415059104
+s6968
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/geom.o
+t1415059104
+s12516
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/mesh.o
+t1415059104
+s30468
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/priorityq.o
+t1415059104
+s22036
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/sweep.o
+t1415059104
+s48212
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess.o
+t1415059104
+s31880
+
+N/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess2.LinkFileList
+c000000005458169F0000000000000507
+t1415059103
+s1287
+
+CBuild AST from /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c
+r0
+
+CBuild AST from /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c
+r0
+
+CBuild AST from /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c
+r0
+
+CBuild AST from /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c
+r0
+
+CBuild AST from /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c
+r0
+
+CBuild AST from /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c
+r0
+
+CBuild AST from /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c
+r0
+
+CCheck dependencies
+r0
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies18"Check dependenciesf486ef1e4e08ba41^7cd60d1f4e08ba41^---0#1#1#--18"Check dependencies36"7BC5515B-8789-4606-8765-FDBA3781F828-
+
+CCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/bucketalloc.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s436751904.113152
+e436751904.170772
+r1
+xCompileC
+xbuild/tess2.build/Release/tess2.build/Objects-normal/x86_64/bucketalloc.o
+x/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Include/tesselator.h
+o/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c:66:62: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]
+o        bucket = (Bucket*)ba->alloc->memalloc( ba->alloc->userData, size );
+o                          ~~                                        ^~~~
+o1 warning generated.
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection133"Compile /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c268"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/bucketalloc.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler361d1d204e08ba41^74b72b204e08ba41^-427"/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c:66:62: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]        bucket = (Bucket*)ba->alloc->memalloc( ba->alloc->userData, size );                          ~~                                        ^~~~1 warning generated.1(36%IDEClangDiagnosticActivityLogMessage2@93"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int'-436751904#18446744073709551615#0#-1#27"com.apple.dt.IDE.diagnostic23%DVTTextDocumentLocation3@132"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c0000000000000000^65#61#65#61#2340#0#22"Value Conversion Issue2(3@132"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c0000000000000000^65#61#65#65#2340#0#3@132"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c0000000000000000^65#19#65#21#2298#0#-0#0#1#-19%DVTDocumentLocation4@132"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c0000000000000000^3692"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/bucketalloc.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=gnu99 -fmodules -fmodules-cache-path=/Users/u-turm/Library/Developer/Xcode/DerivedData/ModuleCache -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-generated-files.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-own-target-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-all-target-headers.hmap -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-project-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources/x86_64 -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources -F/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release -MMD -MT dependencies -MF /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/bucketalloc.d --serialize-diagnostics /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/bucketalloc.dia -c /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.c -o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/bucketalloc.o36"6859EEBF-E6A7-44A4-B550-C2E3654E35D8-
+b08B5E1D2-F2FC-4AE9-8721-D2282B816CF3
+
+CCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/dict.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s436751904.171352
+e436751904.255782
+r1
+xCompileC
+xbuild/tess2.build/Release/tess2.build/Objects-normal/x86_64/dict.o
+x/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Include/tesselator.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection126"Compile /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c254"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/dict.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilera1f62b204e08ba41^abcb41204e08ba41^---0#0#1#-19%DVTDocumentLocation2@125"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c0000000000000000^3650"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/dict.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=gnu99 -fmodules -fmodules-cache-path=/Users/u-turm/Library/Developer/Xcode/DerivedData/ModuleCache -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-generated-files.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-own-target-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-all-target-headers.hmap -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-project-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources/x86_64 -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources -F/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release -MMD -MT dependencies -MF /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/dict.d --serialize-diagnostics /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/dict.dia -c /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.c -o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/dict.o36"D05DF87A-2770-4B75-ACF5-50B41F1D6FA5-
+b08B5E1D2-F2FC-4AE9-8721-D2282B816CF3
+
+CCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/geom.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s436751904.257550
+e436751904.440826
+r1
+xCompileC
+xbuild/tess2.build/Release/tess2.build/Objects-normal/x86_64/geom.o
+x/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Include/tesselator.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection126"Compile /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c254"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/geom.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compilerc71242204e08ba41^a72285204e08ba41^---0#0#1#-19%DVTDocumentLocation2@125"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c0000000000000000^3650"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/geom.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=gnu99 -fmodules -fmodules-cache-path=/Users/u-turm/Library/Developer/Xcode/DerivedData/ModuleCache -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-generated-files.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-own-target-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-all-target-headers.hmap -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-project-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources/x86_64 -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources -F/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release -MMD -MT dependencies -MF /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/geom.d --serialize-diagnostics /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/geom.dia -c /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.c -o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/geom.o36"6BDB0592-A599-425F-9CB0-C07B6AD0B373-
+b08B5E1D2-F2FC-4AE9-8721-D2282B816CF3
+
+CCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/mesh.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s436751903.057680
+e436751904.112424
+r1
+xCompileC
+xbuild/tess2.build/Release/tess2.build/Objects-normal/x86_64/mesh.o
+x/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Include/tesselator.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection126"Compile /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c254"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/mesh.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler2a1e0f1f4e08ba41^36cc1c204e08ba41^---0#0#1#-19%DVTDocumentLocation2@125"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c0000000000000000^3650"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/mesh.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=gnu99 -fmodules -fmodules-cache-path=/Users/u-turm/Library/Developer/Xcode/DerivedData/ModuleCache -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-generated-files.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-own-target-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-all-target-headers.hmap -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-project-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources/x86_64 -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources -F/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release -MMD -MT dependencies -MF /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/mesh.d --serialize-diagnostics /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/mesh.dia -c /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.c -o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/mesh.o36"B86507A8-2036-452A-B201-BD9B9D9DF75D-
+b08B5E1D2-F2FC-4AE9-8721-D2282B816CF3
+
+CCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/priorityq.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s436751903.057365
+e436751904.533497
+r1
+xCompileC
+xbuild/tess2.build/Release/tess2.build/Objects-normal/x86_64/priorityq.o
+x/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Include/tesselator.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.h
+o/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c:212:5: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]
+o                                (size_t)((pq->max + 1) * sizeof( pq->nodes[0] )));
+o                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+o/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c:218:5: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]
+o                                (size_t) ((pq->max + 1) * sizeof( pq->handles[0] )));
+o                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+o/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c:354:13: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]
+o                                                                                  (size_t)((pq->size+1) * sizeof(pq->order[0])) );
+o                                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+o/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c:441:5: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]
+o                                (size_t)(pq->max * sizeof( pq->keys[0] )));
+o                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+o4 warnings generated.
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection131"Compile /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c264"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/priorityq.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler280b0f1f4e08ba41^8c6a91204e08ba41^-1786"/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c:212:5: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]                                (size_t)((pq->max + 1) * sizeof( pq->nodes[0] )));                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c:218:5: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]                                (size_t) ((pq->max + 1) * sizeof( pq->handles[0] )));                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c:354:13: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]                                                                                  (size_t)((pq->size+1) * sizeof(pq->order[0])) );                                                                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c:441:5: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int' [-Wshorten-64-to-32]                                (size_t)(pq->max * sizeof( pq->keys[0] )));                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~4 warnings generated.4(36%IDEClangDiagnosticActivityLogMessage2@93"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int'-436751904#18446744073709551615#0#-1#27"com.apple.dt.IDE.diagnostic23%DVTTextDocumentLocation3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^211#4#211#4#6377#0#22"Value Conversion Issue2(3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^211#4#211#52#6377#47#3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^210#25#210#30#6324#0#-2@93"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int'-436751904#18446744073709551615#0#-1#27"com.apple.dt.IDE.diagnostic3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^217#4#217#4#6639#0#22"Value Conversion Issue2(3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^217#4#217#55#6639#50#3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^216#33#216#38#6585#0#-2@93"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int'-436751904#18446744073709551615#0#-1#27"com.apple.dt.IDE.diagnostic3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^353#12#353#12#10088#0#22"Value Conversion Issue2(3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^353#12#353#57#10088#44#3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^352#23#352#28#10041#0#-2@93"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'unsigned int'-436751904#18446744073709551615#0#-1#27"com.apple.dt.IDE.diagnostic3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^440#4#440#4#12220#0#22"Value Conversion Issue2(3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^440#4#440#45#12220#40#3@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^439#23#439#28#12168#0#-0#0#1#-19%DVTDocumentLocation4@130"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c0000000000000000^3680"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/priorityq.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=gnu99 -fmodules -fmodules-cache-path=/Users/u-turm/Library/Developer/Xcode/DerivedData/ModuleCache -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-generated-files.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-own-target-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-all-target-headers.hmap -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-project-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources/x86_64 -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources -F/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release -MMD -MT dependencies -MF /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/priorityq.d --serialize-diagnostics /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/priorityq.dia -c /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.c -o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/priorityq.o36"6A7AD753-DEFB-45C1-A5F1-4E0233962C8F-
+b08B5E1D2-F2FC-4AE9-8721-D2282B816CF3
+
+CCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/sweep.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s436751903.054994
+e436751904.699910
+r1
+xCompileC
+xbuild/tess2.build/Release/tess2.build/Objects-normal/x86_64/sweep.o
+x/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Include/tesselator.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection127"Compile /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c256"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/sweep.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler01300e1f4e08ba41^3c2db3204e08ba41^---0#0#1#-19%DVTDocumentLocation2@126"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c0000000000000000^3656"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/sweep.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=gnu99 -fmodules -fmodules-cache-path=/Users/u-turm/Library/Developer/Xcode/DerivedData/ModuleCache -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-generated-files.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-own-target-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-all-target-headers.hmap -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-project-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources/x86_64 -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources -F/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release -MMD -MT dependencies -MF /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/sweep.d --serialize-diagnostics /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/sweep.dia -c /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.c -o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/sweep.o36"21AB77FC-2527-4E38-97D5-091E9C596CF6-
+b08B5E1D2-F2FC-4AE9-8721-D2282B816CF3
+
+CCompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
+s436751903.054001
+e436751904.629236
+r1
+xCompileC
+xbuild/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess.o
+x/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c
+xnormal
+xx86_64
+xc
+xcom.apple.compilers.llvm.clang.1_0.compiler
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/bucketalloc.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Include/tesselator.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/mesh.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/dict.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/priorityq.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/sweep.h
+d/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/geom.h
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection126"Compile /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c254"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler53250e1f4e08ba41^3815a1204e08ba41^---0#0#1#-19%DVTDocumentLocation2@125"file:///Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c0000000000000000^3650"CompileC build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess.o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2    export LANG=en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-show-note-include-stack -fmacro-backtrace-limit=0 -std=gnu99 -fmodules -fmodules-cache-path=/Users/u-turm/Library/Developer/Xcode/DerivedData/ModuleCache -Wno-trigraphs -fpascal-strings -Os -Wno-missing-field-initializers -Wno-missing-prototypes -Werror=return-type -Werror=deprecated-objc-isa-usage -Werror=objc-root-class -Wno-missing-braces -Wparentheses -Wswitch -Wunused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wconditional-uninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wbool-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -fasm-blocks -fstrict-aliasing -Wdeprecated-declarations -mmacosx-version-min=10.9 -g -Wno-sign-conversion -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-generated-files.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-own-target-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-all-target-headers.hmap -iquote /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/tess2-project-headers.hmap -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources/x86_64 -I/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/DerivedSources -F/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release -MMD -MT dependencies -MF /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess.d --serialize-diagnostics /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess.dia -c /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/Source/tess.c -o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess.o36"22912F1A-AB4A-432A-BB5A-820D38A0F611-
+b08B5E1D2-F2FC-4AE9-8721-D2282B816CF3
+
+CLibtool /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/libtess2.a normal x86_64
+s436751904.702044
+e436751904.725034
+r1
+xLibtool
+x/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/libtess2.a
+xnormal
+xx86_64
+lSLF06#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection46"Libtool build/Release/libtess2.a normal x86_6446"Libtool build/Release/libtess2.a normal x86_646fd3b3204e08ba41^569db9204e08ba41^---0#0#1#--924"Libtool build/Release/libtess2.a normal x86_64    cd /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2    export MACOSX_DEPLOYMENT_TARGET=10.9    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool -static -arch_only x86_64 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk -L/Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release -filelist /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/tess2.build/Release/tess2.build/Objects-normal/x86_64/tess2.LinkFileList -o /Users/u-turm/Desktop/_flashnew/AWD_flash_pro_new/AwayExtensions-FlashPro/cpp/ThirdParty/libtess2-master/mac/tess2/build/Release/libtess2.a36"EB6DD257-7EF2-4B54-A29B-E05296D761BD-
+b08B5E1D2-F2FC-4AE9-8721-D2282B816CF3
+

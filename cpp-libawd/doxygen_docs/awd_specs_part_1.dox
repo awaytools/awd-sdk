@@ -1,0 +1,141 @@
+﻿
+/*! \page awd_specs_1 Part I: Introduction
+\brief %AWD 3.0 Specification in markdown format.
+
+This document defines the Away3D data format (AWD) created by the Away3D team for use as an exchange format between any conforming exporter on one end and mainly the Away3D engine (but also any other conforming parser) on the other.
+
+An AWD file generated according to the rules and structure defined in this document is guaranteed to be successfully parsed by the Away3D runtime AWD importer and any other conforming parser.
+
+\section awd_pt1_1 What is AWD?
+AWD is a binary file format for 3D scenes, objects and related data. It's main use is with the Away3D engine.
+
+The file format specification (this document) and a set of tools for working with AWD files are maintained by the Away3D development team.
+
+\section awd_pt1_2 What is Away3D?
+
+
+Away3D is a real-time 3D engine designed for ActionScript 3 and the Adobe Flash Platform. 
+
+It is free and open-source and can be downloaded from [www.away3d.com](http://www.away3d.com). See the website for more information.\n
+
+The latest release of the Away3D as3 library can be found at [github](https://github.com/away3d)
+
+Besides the as3 version of Away3D, there exists an port to javascipt called [AwayJS](https://github.com/awayjs).
+
+\section awd_pt1_3 AWD Design intentions 
+
+AWD was created as a transfer format with the goal of having a one-to-one relationship between file format features and the engine features of Away3D. 
+This is to be compared with some file formats that do not support all the features that Away3D supplies, and other formats which are much too verbose for the purpose of using them with Away3D.
+
+In addition to this goal, AWD has been designed to be web and Flash friendly, meaning it needs to meet tough file size requirements, while not being too expensive to parse. 
+
+Focus is on parsing performance over generation performance.
+
+The main goals of AWD and reasons for creating it are:
+
+● Support all the features of Away3D so that an entire Away3D scene can be transferred using AWD, but don't jump through hoops trying to be more than that.
+
+● Provide a web-friendly format keeping in mind that AWD files will need to be transferred over the Internet as part of a user experience, 
+meaning they should be as small as possible while at the same time minimizing the impact on parsing performance and time.
+
+● Be extendable. Away3D is a constantly evolving engine, and the supporting file format needs to be able to keep up the pace. 
+Furthermore, it should be possible for AWD users to extend the format without breaking conformity with the format specification.
+
+● Be backwards (and forwards) compatible by defining a solid base format, and allowing for extension by well defined rules.
+A parser that does not understand a particular file format feature should be able to ignore it and an evolution of the file format should not have to change the base format in such a way that older parsers can no longer follow the rules they know.
+
+\section awd_pt1_4 What about old-school AWD?
+
+The previous incarnation of AWD, which was a plaintext format, is being deprecated with the introduction of this binary revision. 
+
+The requirements of file formats used in Flash 3D going forward promote the use of compressed binary formats over ASCII-based files, which was a big factor in the decision to create this binary format.
+
+What's described in this specification should be regarded as the current-generation AWD format, and used whenever possible.
+
+
+\section awd_pt1_5 How to read this document
+
+This document has been divided into three sections, with the first section being an introduction to the file format, the Away3D engine and this document. 
+
+The second section contains a detailed specification of all elements in the AWD file format. 
+The third section describes how to use the AWD format, e.g. to create an encoder or a decoder or extend the file format for a particular use-case.
+
+\subsection awd_pt1_5_1 For encoder implementers 
+
+Encoder implementers should read the entire document paying extra attention to the structure tables for all blocks and primitive data types in Part II. 
+The section called "Official AWD tools" might also contain information that is relevant to encoder implementers, including information about the official AWD SDK which
+can ideally be used to create exporters.
+
+Whenever the expressions SHOULD or SHOULD NOT are used in a context that describes the structure of
+an AWD file or the behavior of an encoder, the encoder is encouraged to comply but not required to do so.
+Whenever the expressions MUST or MUST NOT are used in a context that describes the structure of an
+AWD file or the behavior of an encoder, the encoder is required to comply or it can not be regarded as
+conforming to the AWD specification.
+
+\subsection awd_pt1_5_2 For parser implementers
+
+Parser implementers should read the entire document paying extra attention to the structure tables for all
+blocks and primitive data types in Part II, as well as the section "Parsing an AWD document" in Part III. The
+section called "Official AWD tools" might also contain information that is relevant to parser implementers,
+including information about the official AWD SDK which can ideally be used to aid parsing of AWD files.
+Whenever the expressions SHOULD or SHOULD NOT are used in a context that describes the structure of
+an AWD file or the behavior of a parser, the parser is encouraged to comply but not required to do so.
+Whenever the expressions MUST or MUST NOT are used in a context that describes the structure of an
+AWD file or the behavior of a parser, the parser is required to comply or it cannot be regarded as conforming
+to the AWD specification.
+
+\subsection awd_pt1_5_3 For those looking to extend the format
+
+A general understanding of AWD is necessary and can be obtained by reading Part I of this document and
+skim through Part II, paying extra attention to the sections called "The Top-level structure of an AWD
+document" and "The data block concept".
+After that, the main focus should be reading the Part III section called "Extending AWD" and sections
+referenced therein.
+\section awd_pt1_6 Terminology
+
+\subsection awd_pt1_6_1 AWD Project
+Used as an ambiguous term to refer to either an %AWD stream (e.g. over a network) or a logical AWD-File (e.g.
+on a hard drive.)\n
+Essentially any data beginning with an %AWD \ref awd_pt2_file_header is considered an %AWD document.\n
+
+>	libawd does not support any network functionallity.\n
+>	A \ref AWD::FILES::AWDFile "AWDFile" in libawd is a class thats holds a list of references to \ref AWD::BASE::AWDBlock "AWDBlock".\n
+>	This \ref AWD::BASE::AWDBlock "AWDBlock" can either be loaded from a file on hard-disc, or can be assigned to the \ref AWD::FILES::AWDFile "AWDFile", in order to be written to hard-disc. 
+
+
+\subsection awd_pt1_6_1 AWD Document
+Used as an ambiguous term to refer to either an %AWD stream (e.g. over a network) or a logical AWD-File (e.g.
+on a hard drive.)\n
+Essentially any data beginning with an %AWD \ref awd_pt2_file_header is considered an %AWD document.\n
+
+>	libawd does not support ay network functionallity.\n
+>	A \ref AWD::FILES::AWDFile "AWDFile" in libawd is a class thats holds a list of references to \ref AWD::BASE::AWDBlock "AWDBlock".\n
+>	This \ref AWD::BASE::AWDBlock "AWDBlock" can either be loaded from a file on hard-disc, or can be assigned to the \ref AWD::FILES::AWDFile "AWDFile", in order to be written to hard-disc. 
+
+\subsection awd_pt1_6_2 Block / AWDBlock
+Blocks are the top-level containers of data. They occur in a sequential list in the file data body.\n
+See the section \ref awd_pt2_data_block_concept for more information.\n
+>	In libawd,  \ref AWD::BASE::AWDBlock "AWDBlock" is a abstract class that is overwritten by concrete implementations of the different \ref AWD::BLOCK::block_type "block-types".\n
+>	All class that derive from \ref AWD::BASE::AWDBlock "AWDBlock" are grouped in the namepace AWD::BLOCKS.\n
+>	Classes that are considered ustilitis for AWDBlocks, are grouped in the namespace AWD::BLOCK.\n
+
+\subsection awd_pt1_6_3 Field
+Fields are the smallest data elements defined by the AWD specification. They are a single logical chunk of
+data, such as an integer, float or a non-POD element such as a matrix or string as defined by this document.
+
+>	libawd defines a dedicated type for each of the possible Field types.
+>	All this types are collected in the namespace AWD::TYPES.
+
+\subsection awd_pt1_6_4 Element
+The term ***element*** is used to refer to any logical part of the file, be it a block or a field or a structured (and
+often recurring) sequence of fields.
+
+>	in libAWD all classes that do not derive from \ref AWD::BASE::AWDBlock "AWDBlock" but have functionallity to store prepare data for a \ref AWD::BASE::AWDBlock "AWDBlock", are considered elements.
+>	Elements are not collected ina sepperate namespace, but are assigned to the namespace that best descripes the purpose of the element.
+
+
+\subsection awd_pt1_6_5 Vector
+The term "vector" when used in an AWD context refers to a vector according to the mathematical definition, e.g. a position in N-dimensional space (where N is the length of the vector.) 
+Arrays (which are sometimes called "vectors" in other contexts) are called lists in the &AWD context.
+
+ */

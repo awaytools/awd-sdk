@@ -1,0 +1,74 @@
+﻿/*! \page libawd_general_usage Genral usage
+
+
+ \section usage_sec Usage
+ 
+ The following provides the basic information, on how to use the awd-lib to export a AWD-file.
+ 
+ \subsection usage_sec_1 Step1: Create a AWDProject
+ First think you want to do is to create a AWDProject. This is the main-interface to the AWD-library.
+ \code
+ std::string project_path = "path/to/the.awd";
+ std::string project_name_space = "namespace_for_your_project";
+ std::string project_name_space_handle = "0";
+ AWD::AWDProject* myAWDObj = new AWD::AWDProject(path_to_awd_file, project_name_space, project_name_space_handle);
+ \endcode
+ 
+ \subsection usage_sec_2 Step2: Creating a AWDBlock
+ Next we want to do, is to create some AWDBlock that will hold the data for the assets.
+  
+ 
+ No matter if we are going to export or to import a File, the process always starts with creating a new File by using the getAWDFile() function of the AWD-Object.
+ \code
+ std::string awdFileUrl = "/Path/To/AWD.awd"
+ File* newAWDFile = myAWDObj->getAWDFile(awdFileUrl);
+ \endcode
+  
+  
+ \subsection usage_sec_3 Step3: Importing / Exporting
+ 
+\subsubsection usage_sec_sec_1 Importing a AWD file
+Importing a File into the AWD-object is as easy as calling the load function of the File, and get a vector of AWDBlock-pointers in return.
+If the returned list of AWDBlock-pointers is empty, we can ask the File what went wrong.
+\code
+vector<AWDBlock*> importedBlocks = newAWDFile.load();
+if (importedBlocks.size()==0){
+	std::string fileMessage = newAWDFile.getAllMessages();
+	// std::string fileMessage = newAWDFile.getWarningMessages();
+	// std::string fileMessage = newAWDFile.getErrorMessages();
+}
+\endcode
+Once we have a list of imported AWDBlocks, we can iterate over them, and for dependent on the type of AWDBlock, we can convert them into objects of another api/sdk.
+\code
+for(AWDBlock* oneBlock : importedBlocks){
+if(oneBlock.GetType()==GEOMETRY){
+	Geometry* myGeometry=(Geometry*)oneBlock;
+	myGeometry->GetSubGeometries();
+     void* otherAPIGeometry;
+	// create a Geometry of your api and set it as external-object of the AWDBlock.
+	// This way we can reference it in oncoming AWDBlocks (Meshes).
+	oneBlock->setExternalObject(otherAPIGeometry);
+}
+else if(oneBlock.GetType()==MESH){
+	Mesh* myMesh=(Mesh*)oneBlock;
+	void* otherAPIGeometry = myMesh->GetGeometryBlock()->GetExternalObject(); // we set this ealier(GeometryBlock will always be in list ealier than Mesh)
+    void* otherAPIMesh;
+	// create a Mesh of your api and using the previous created Geometry.
+	// Again set it as external-object of the AWDBlock for later usage.
+	oneBlock->setExternalObject(otherAPIMesh);
+	// add this to the scenegraph of your application
+}
+}
+\endcode
+\subsubsection usage_sec_sec_2 Exporting a AWD file
+
+
+\subsection usage_sec_4 Step4: Getting Status for AWD
+No matter if imported or exported, after we did the process, we want to have a status-report from the awd-lib.
+\code
+AWDStatus* newAWDStatus = 
+File* newAWDFile = myAWDObj->createAWDFile(awdFileUrl);
+\endcode
+etc...
+
+ */

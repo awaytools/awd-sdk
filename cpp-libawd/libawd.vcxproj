@@ -114,19 +114,19 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -134,7 +134,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -162,27 +162,27 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -213,40 +213,47 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 debug|x64'" Label="Configuration">
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|x64'" Label="Configuration">
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|x64'" Label="Configuration">
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|x64'" Label="Configuration">
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Debug|x64'" Label="Configuration">
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|x64'" Label="Configuration">
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|x64'" Label="Configuration">
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|x64'" Label="Configuration">
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|x64'" Label="Configuration">
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|x64'" Label="Configuration">
-    <PlatformToolset>v100</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='2010 Debug|Win32'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='2010 Debug|x64'">
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -422,7 +429,7 @@
     </PreBuildEvent>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>lib\libtess2_master\Source;lib\libtess2_master\Include;include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -431,6 +438,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <PostBuildEvent>
       <Command>xcopy /Y /I include build\awd</Command>
@@ -871,102 +879,157 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\anim.h" />
-    <ClInclude Include="include\geomutil.h" />
-    <ClInclude Include="include\geomutilhelper.h" />
-    <ClInclude Include="include\light.h" />
-    <ClInclude Include="include\message.h" />
-    <ClInclude Include="include\method.h" />
-    <ClInclude Include="include\primitive.h" />
-    <ClInclude Include="include\shadows.h" />
-    <ClInclude Include="include\vertexanim.h" />
-    <ClInclude Include="lib\lzma\Alloc.h" />
-    <ClInclude Include="include\attr.h" />
     <ClInclude Include="include\awd.h" />
-    <ClInclude Include="include\awd_types.h" />
-    <ClInclude Include="include\awdlzma.h" />
-    <ClInclude Include="include\awdzlib.h" />
-    <ClInclude Include="include\block.h" />
-    <ClInclude Include="lib\lzma\Bra.h" />
-    <ClInclude Include="include\camera.h" />
-    <ClInclude Include="lib\zlib\crc32.h" />
-    <ClInclude Include="lib\zlib\deflate.h" />
-    <ClInclude Include="lib\zlib\inffast.h" />
-    <ClInclude Include="lib\zlib\inffixed.h" />
-    <ClInclude Include="lib\zlib\inflate.h" />
-    <ClInclude Include="lib\zlib\inftrees.h" />
-    <ClInclude Include="include\libawd.h" />
-    <ClInclude Include="lib\lzma\LzFind.h" />
-    <ClInclude Include="lib\lzma\LzFindMt.h" />
-    <ClInclude Include="lib\lzma\LzHash.h" />
-    <ClInclude Include="lib\lzma\LzmaDec.h" />
-    <ClInclude Include="lib\lzma\LzmaEnc.h" />
-    <ClInclude Include="lib\lzma\LzmaLib.h" />
-    <ClInclude Include="include\material.h" />
-    <ClInclude Include="include\mesh.h" />
-    <ClInclude Include="include\meta.h" />
-    <ClInclude Include="include\name.h" />
-    <ClInclude Include="include\ns.h" />
-    <ClInclude Include="include\platform.h" />
-    <ClInclude Include="include\scene.h" />
-    <ClInclude Include="include\shading.h" />
-    <ClInclude Include="include\skelanim.h" />
-    <ClInclude Include="include\skeleton.h" />
-    <ClInclude Include="include\stream.h" />
-    <ClInclude Include="include\texture.h" />
-    <ClInclude Include="lib\zlib\trees.h" />
-    <ClInclude Include="lib\lzma\Types.h" />
-    <ClInclude Include="include\util.h" />
-    <ClInclude Include="include\uvanim.h" />
-    <ClInclude Include="lib\zlib\zconf.h" />
-    <ClInclude Include="lib\zlib\zlib.h" />
-    <ClInclude Include="lib\zlib\zutil.h" />
+    <ClInclude Include="include\base\anim_clip.h" />
+    <ClInclude Include="include\base\anim_frame.h" />
+    <ClInclude Include="include\base\attr.h" />
+    <ClInclude Include="include\base\block.h" />
+    <ClInclude Include="include\base\datablock.h" />
+    <ClInclude Include="include\base\scene_base.h" />
+    <ClInclude Include="include\base\state_element_base.h" />
+    <ClInclude Include="include\blocks\animator.h" />
+    <ClInclude Include="include\blocks\anim_set.h" />
+    <ClInclude Include="include\blocks\audio.h" />
+    <ClInclude Include="include\blocks\bitmap_texture.h" />
+    <ClInclude Include="include\blocks\camera.h" />
+    <ClInclude Include="include\blocks\command.h" />
+    <ClInclude Include="include\blocks\cube_texture.h" />
+    <ClInclude Include="include\blocks\effect_method.h" />
+    <ClInclude Include="include\blocks\font.h" />
+    <ClInclude Include="include\blocks\geometry.h" />
+    <ClInclude Include="include\blocks\light.h" />
+    <ClInclude Include="include\blocks\light_picker.h" />
+    <ClInclude Include="include\blocks\material.h" />
+    <ClInclude Include="include\blocks\mesh.h" />
+    <ClInclude Include="include\blocks\meta.h" />
+    <ClInclude Include="include\blocks\namespace.h" />
+    <ClInclude Include="include\blocks\objectcontainer.h" />
+    <ClInclude Include="include\blocks\primitive.h" />
+    <ClInclude Include="include\blocks\scene.h" />
+    <ClInclude Include="include\blocks\shadows.h" />
+    <ClInclude Include="include\blocks\skeleton_anim_clip.h" />
+    <ClInclude Include="include\blocks\skeleton_pose.h" />
+    <ClInclude Include="include\blocks\skeleton.h" />
+    <ClInclude Include="include\blocks\skybox.h" />
+    <ClInclude Include="include\blocks\texture_projector.h" />
+    <ClInclude Include="include\blocks\text_element.h" />
+    <ClInclude Include="include\blocks\text_format.h" />
+    <ClInclude Include="include\blocks\timeline.h" />
+    <ClInclude Include="include\blocks\uv_pose.h" />
+    <ClInclude Include="include\blocks\uv_anim_clip.h" />
+    <ClInclude Include="include\blocks\vertex_anim_clip.h" />
+    <ClInclude Include="include\blocks\vertex_pose.h" />
+    <ClInclude Include="include\awd_project.h" />
+    <ClInclude Include="include\elements\block_instance.h" />
+    <ClInclude Include="include\elements\fonts.h" />
+    <ClInclude Include="include\elements\frame_commands.h" />
+    <ClInclude Include="include\elements\geom_elements.h" />
+    <ClInclude Include="include\elements\shading.h" />
+    <ClInclude Include="include\elements\skeleton_joint.h" />
+    <ClInclude Include="include\elements\stream.h" />
+    <ClInclude Include="include\elements\subgeometry.h" />
+    <ClInclude Include="include\elements\timeline_frame.h" />
+    <ClInclude Include="include\files\awd_file.h" />
+    <ClInclude Include="include\files\awd_lzma.h" />
+    <ClInclude Include="include\files\awd_zlib.h" />
+    <ClInclude Include="include\files\file_reader.h" />
+    <ClInclude Include="include\files\file_writer.h" />
+    <ClInclude Include="include\utils\awd_globals.h" />
+    <ClInclude Include="include\utils\awd_properties.h" />
+    <ClInclude Include="include\utils\awd_types.h" />
+    <ClInclude Include="include\utils\dirent.h" />
+    <ClInclude Include="include\utils\lists.h" />
+    <ClInclude Include="include\utils\platform.h" />
+    <ClInclude Include="include\utils\settings.h" />
+    <ClInclude Include="include\utils\util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lib\zlib\adler32.c" />
-    <ClCompile Include="lib\lzma\Alloc.c" />
-    <ClCompile Include="src\anim.cc" />
-    <ClCompile Include="src\attr.cc" />
-    <ClCompile Include="src\awd.cc" />
-    <ClCompile Include="src\awdlzma.cc" />
-    <ClCompile Include="src\awdzlib.cc" />
-    <ClCompile Include="src\block.cc" />
-    <ClCompile Include="lib\lzma\Bra.c" />
-    <ClCompile Include="src\camera.cc" />
-    <ClCompile Include="lib\zlib\crc32.c" />
-    <ClCompile Include="lib\zlib\deflate.c" />
-    <ClCompile Include="src\message.cc" />
-    <ClCompile Include="src\method.cc" />
-    <ClCompile Include="src\geomutil.cc" />
-    <ClCompile Include="lib\zlib\inffast.c" />
-    <ClCompile Include="lib\zlib\inflate.c" />
-    <ClCompile Include="src\geomutilhelper.cc" />
-    <ClCompile Include="src\light.cc" />
-    <ClCompile Include="lib\lzma\LzFind.c" />
-    <ClCompile Include="lib\lzma\LzmaDec.c" />
-    <ClCompile Include="lib\lzma\LzmaEnc.c" />
-    <ClCompile Include="lib\lzma\LzmaLib.c" />
-    <ClCompile Include="src\material.cc" />
-    <ClCompile Include="src\mesh.cc" />
-    <ClCompile Include="src\meta.cc" />
-    <ClCompile Include="src\name.cc" />
-    <ClCompile Include="src\ns.cc" />
-    <ClCompile Include="src\primitive.cc" />
-    <ClCompile Include="src\scene.cc" />
-    <ClCompile Include="src\shading.cc" />
-    <ClCompile Include="src\shadows.cc" />
-    <ClCompile Include="src\skelanim.cc" />
-    <ClCompile Include="src\skeleton.cc" />
-    <ClCompile Include="src\stream.cc" />
-    <ClCompile Include="src\texture.cc" />
-    <ClCompile Include="lib\zlib\trees.c" />
-    <ClCompile Include="src\util.cc" />
-    <ClCompile Include="src\uvanim.cc" />
-    <ClCompile Include="lib\zlib\zutil.c" />
-    <ClCompile Include="src\vertexanim.cc" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="doxygen_docs\awd_specs.dox" />
+    <None Include="doxygen_docs\awd_specs_part_1.dox" />
+    <None Include="doxygen_docs\awd_specs_part_2.dox" />
+    <None Include="doxygen_docs\awd_specs_part_3.dox" />
+    <None Include="doxygen_docs\libawd_coding_conventions.dox" />
+    <None Include="doxygen_docs\libawd_exporter_example.dox" />
+    <None Include="doxygen_docs\libawd_features.dox" />
+    <None Include="doxygen_docs\libawd_general_usage.dox" />
+    <None Include="doxygen_docs\libawd_importer_example.dox" />
+    <None Include="doxygen_docs\libawd_introduction.dox" />
+    <None Include="doxygen_docs\libawd_main.dox" />
+    <None Include="doxygen_docs\libawd_usage.dox" />
     <None Include="lib\lzma\README" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\awd_project.cc" />
+    <ClCompile Include="src\base\AnimationClipBase.cc" />
+    <ClCompile Include="src\base\AnimationFrameBase.cc" />
+    <ClCompile Include="src\base\AttrElementBase.cc" />
+    <ClCompile Include="src\base\BlockBase.cc" />
+    <ClCompile Include="src\base\DataBlockBase.cc" />
+    <ClCompile Include="src\base\SceneBlockBase.cc" />
+    <ClCompile Include="src\base\StateElementbase.cc" />
+    <ClCompile Include="src\blocks\AnimationSet.cc" />
+    <ClCompile Include="src\blocks\Animator.cc" />
+    <ClCompile Include="src\blocks\Audio.cc" />
+    <ClCompile Include="src\blocks\BitmapTexture.cc" />
+    <ClCompile Include="src\blocks\Camera.cc" />
+    <ClCompile Include="src\blocks\Command.cc" />
+    <ClCompile Include="src\blocks\CubeTexture.cc" />
+    <ClCompile Include="src\blocks\EffectMethod.cc" />
+    <ClCompile Include="src\blocks\Font.cc" />
+    <ClCompile Include="src\blocks\Geometry.cc" />
+    <ClCompile Include="src\blocks\Light.cc" />
+    <ClCompile Include="src\blocks\LightPicker.cc" />
+    <ClCompile Include="src\blocks\Material.cc" />
+    <ClCompile Include="src\blocks\MeshInst.cc" />
+    <ClCompile Include="src\blocks\MetaData.cc" />
+    <ClCompile Include="src\blocks\Namespace.cc" />
+    <ClCompile Include="src\blocks\ObjectContainer3D.cc" />
+    <ClCompile Include="src\blocks\Primitive.cc" />
+    <ClCompile Include="src\blocks\Scene.cc" />
+    <ClCompile Include="src\blocks\ShadowMethod.cc" />
+    <ClCompile Include="src\blocks\Skeleton.cc" />
+    <ClCompile Include="src\blocks\SkeletonAnimationClip.cc" />
+    <ClCompile Include="src\blocks\SkeletonPose.cc" />
+    <ClCompile Include="src\blocks\SkyBox.cc" />
+    <ClCompile Include="src\blocks\TextElement.cc" />
+    <ClCompile Include="src\blocks\TextFormat.cc" />
+    <ClCompile Include="src\blocks\TextureProjector.cc" />
+    <ClCompile Include="src\blocks\Timeline.cc" />
+    <ClCompile Include="src\blocks\UVAnimationClip.cc" />
+    <ClCompile Include="src\blocks\UVPose.cc" />
+    <ClCompile Include="src\blocks\VertexAnimationClip.cc" />
+    <ClCompile Include="src\blocks\VertexPose.cc" />
+    <ClCompile Include="src\elements\attributes\AttrBase.cc" />
+    <ClCompile Include="src\elements\attributes\NumAttr.cc" />
+    <ClCompile Include="src\elements\attributes\NumAttrList.cc" />
+    <ClCompile Include="src\elements\attributes\UserAttr.cc" />
+    <ClCompile Include="src\elements\attributes\UserAttrList.cc" />
+    <ClCompile Include="src\elements\BlockInstance.cc" />
+    <ClCompile Include="src\elements\FontElements.cc" />
+    <ClCompile Include="src\elements\FrameCommands.cc" />
+    <ClCompile Include="src\elements\geom\DataStream.cc" />
+    <ClCompile Include="src\elements\geom\DataStreamAttrBase.cc" />
+    <ClCompile Include="src\elements\geom\geom_types.cc" />
+    <ClCompile Include="src\elements\geom\PathSegment.cc" />
+    <ClCompile Include="src\elements\geom\PathShape.cc" />
+    <ClCompile Include="src\elements\geom\SharedVertex.cc" />
+    <ClCompile Include="src\elements\geom\SubGeom.cc" />
+    <ClCompile Include="src\elements\geom\SubGeomInternal.cc" />
+    <ClCompile Include="src\elements\geom\Triangle.cc" />
+    <ClCompile Include="src\elements\geom\Vertex.cc" />
+    <ClCompile Include="src\elements\ShadingMethod.cc" />
+    <ClCompile Include="src\elements\SkeletonJoint.cc" />
+    <ClCompile Include="src\elements\TimeLineFrame.cc" />
+    <ClCompile Include="src\files\AWDFile.cc" />
+    <ClCompile Include="src\files\awdlzma.cc" />
+    <ClCompile Include="src\files\awdzlib.cc" />
+    <ClCompile Include="src\files\FileReader.cc" />
+    <ClCompile Include="src\files\FileWriter.cc" />
+    <ClCompile Include="src\utils\Dirent.cpp" />
+    <ClCompile Include="src\utils\geomutil\geomutil.cc" />
+    <ClCompile Include="src\utils\geomutil\geomutil_helper.cc" />
+    <ClCompile Include="src\utils\Settings.cc" />
+    <ClCompile Include="src\utils\util.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

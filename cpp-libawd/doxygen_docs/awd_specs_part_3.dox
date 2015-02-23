@@ -1,0 +1,183 @@
+﻿
+/*! \page awd_specs_3 Part III: Using AWD
+\brief %AWD 3.0 Specification in markdown format.
+
+\section awd_pt3_1 Official AWD tools
+
+The official %AWD tool-chain is a constantly growing set of tools, importers/exporters and programming
+language libraries and extensions. This section details the tools available at the time of writing. Visit the %AWD
+project page on GitHub (https://github.com/awayTools) for the latest information about available %AWD
+tooling.
+
+\subsection awd_pt3_1_1 AWD SDK
+The %AWD SDK has been created to aid and greatly simplify the creation of %AWD importers and exporters.
+Furthermore, it exists to help prevent discrepancies between encoders and decoders. An %AWD file that was
+encoded using the %AWD SDK should be expected to structurally conform to the %AWD specification, and the
+%AWD SDK can be used to reliably decode a conforming %AWD file.
+Whether the content is logically conforming (e.g. whether the contents of a data stream has been
+sequentially ordered in accordance with what the specification dictates) is still up to the encoder
+programmer. Below are the modules of the %AWD SDK.
+For more information on the %AWD SDK, how to build it and use it, see the %AWD GitHub Project page. Below
+is a list of the programming languages supported in the %AWD SDK.
+The libawd library for C++
+The main reference implementation of %AWD is the libawd C++ library.
+
+\subsection awd_pt3_2 PyAWD - AWD for Python
+PyAWD is a Python module for working with %AWD files. It's available as a Python binding and object-oriented
+wrapper for the C libawd library, or as a standalone python library that does not require libawd to run (but
+does not perform as well as the libawd wrapper.)
+
+\subsection awd_pt3_1_3 Official importer/exporter implementations
+
+These are importers and exporters that are being officially developed and maintained as a part of the %AWD
+project, and that are either in a usable state or planned at the time of releasing this document. Please visit
+the %AWD project page on Google Code for the latest set of importers/exporters, and for links to any known
+community implementations.
+Vendor/Application Export Import Real-time
+Prefab3D Yes Yes No
+Blender Yes No No
+Autodesk Maya Yes No No
+Autodesk 3dsMax Yes No No
+AwayBuilder Yes Yes Yes
+Maxon Cinema4D Yes Yes No
+
+\section awd_pt3_2  Extending the AWD format
+
+%AWD is user-extendable by the means of user attributes and user blocks. Attributes are a versatile way to
+augment an already existing block type, such as a mesh instance or a material, with custom properties. User
+blocks on the other hand can be used to add top-level data types to the format, like player spawn points in a
+game, force fields in a physics simulator, or a list of configuration settings in an editor.
+User attributes
+User attributes are key/value pairs with plaintext keys that can be appended to most %AWD block types.
+These can be utilized by user applications to augment %AWD blocks with application-specific properties, such
+as physics properties or game settings.
+See the Part II section called "Attributes" for more information on how to add user attributes to a block.
+User blocks
+The term "user block" refers to a block type that is not defined by the %AWD file format specification, but rather
+by an extending entity (i.e. a file format user.) User blocks share the same block header as any other block,
+but must be defined in a non-null namespace to distinguish them from %AWD blocks.
+Namespaces in %AWD
+When extending %AWD, there is a need to mark those blocks that do not belong to standard %AWD as
+belonging to some other context, a "namespace". That way the same numeric block type identifier can be
+used for both a standard %AWD block and a block defined by the user application.
+There is also the rare case where a single %AWD file has been influenced by several separate encoders in
+which two different user attributes have the same key/name. To prevent files like these from being incorrectly
+parsed by user-extended parsers, any encoder that extends %AWD must use namespaces with user
+attributes.
+Namespaces serve the purpose of coupling a user attribute or user block with an identifier that is guaranteed
+to be unique, such as a URI. The %AWD namespaces are inspired by those in XML, where a namespace URI
+is defined once in a document and any element belonging to that namespace subsequently identifies the
+namespace using a shortened ID.
+In %AWD, the shortened ID is an 8-bit unsigned integer that is defined in a namespace block, and then
+referenced in every user attribute and user block.
+Using the namespace block
+An encoder that extends %AWD must insert a namespace block before any user block or block with user
+attributes appears in the document. It's good practice to put the namespace block first in the file. See the
+section "Namespace block" for the exact structure of this block.
+Picking a namespace identifier
+A namespace identifier can be any string that fits in a VarString. The main requirement is that it is unique
+within the file where it's used, but it lies in the interest of the user application that it is also consistent and
+globally unique, so that a user parser can identify blocks belonging to it's namespace. A user application
+hosted at example.com could use "http://example.com/awdns" as it's %AWD namespace identifier, which can
+be assumed to be unique not only in a particular file, but also consistent and universal so that it can be hardcoded into the custom parser.
+If an encoder intends to create a namespace in a file, any existing namespace definitions must be inspected
+by the encoder so that an ambiguous identifier is not added (e.g. if the original file was encoded by the same
+encoder and already contains user blocks or attributes in the relevant namespace.) Two namespaces within
+a document must not have the same numeric handle or string identifier.
+Parsing an %AWD document
+%AWD is designed for linear parsing, or even streaming and “block-wise” parsing of such a stream. It should
+never be necessary to seek backwards in a file, and unless a particular type of content has not been
+implemented in the parser and thus is skipped, even forward seeking is rare.
+Handling block references
+Because internal block references are always made backwards, node B can only refer to node A if B occurs
+after A in the document.
+As a block is read, the parser must determine whether to store a reference to it's internal representation of
+that block depending on it's ID. If the block ID is zero, this is a promise from the encoder that there will be no
+references to this block in the document, so it is not necessary for the parser to hold on to it. However, if the
+block ID is greater than zero, the parser should store a reference to it's internal representation of that block in
+a lookup table by ID. When any reference is encountered, this lookup table can be used for random access
+to the correct block representation by ID.
+Using Away3D as an example, when the parser encounters a TriangleGeometry block, it will create a
+Geometry instance and store it in a vector with numeric indices. When a MeshInstance occurs with a
+reference to this geometry block, an instance of the Away3D Mesh class will be created and it's geometry
+property assigned to the previously created Geometry instance. The latter can easily be retrieved from the
+lookup vector using the reference ID in the MeshInstance block.
+Handling unrecognized elements
+Because %AWD can be extended both by users and future versions of the format, a conforming parser needs
+to be able to deal with blocks that it does not recognize.
+55
+If a block is encountered that uses an unknown block ID or namespace, the entire block should be skipped
+using the size field that is always defined in the common block header. Blocks in unknown namespaces can
+always be skipped unless a parser is expecting some kind of user-defined block. A parser library should
+delegate user blocks (blocks in unknown namespaces) to the application code so that it's up to the
+application logic to decide whether they need to be parsed.
+Parsing extended %AWD documents
+User-defined blocks will always contain a reference to a namespace other than the default Null namespace
+(see section on User-defined blocks and Extending %AWD). That way a particular user block can be analyzed
+and a decision can be made whether it's in a namespace that the parser is expecting, or whether it should be
+skipped.
+Namespaces must be defined early (usually first) in the file through the use of namespace blocks. From the
+content of such blocks, a parser can create a look-up table for namespace identifier strings, and when a
+namespace reference occurs determine from the look-up table whether the user block or attribute is in a
+namespace which it expects and understands.
+Another common way for extension are the user attributes that can be attached to almost any block. As with
+user blocks, attributes have a length field, allowing them to be skipped if the attribute key, value type, or the
+namespace in which the attribute is defined, is unrecognized. Optionally, if user attributes are concluded to
+never be relevant, a parser can skip all attributes belonging to a block using the length field of the attribute
+list.
+See the section Attributes fore more information about attributes.
+
+\section awd_pt3_3  AWD Limitations
+
+There are some limitations inherent with the way %AWD is designed. The following is a list of such limitations
+(per file unless otherwise stated.)
+General limitations
+Feature Limit Reason
+%AWD file size (min) 11 bytes Size of header.
+%AWD file size (max) 4 GB Limited to max value of the body length header field (32
+bit unsigned integer.)
+Not applicable to streams.
+Number of blocks >4 billion 32-bit block address.
+Number of namespaces 256 (incl. Null) 8-bit namespace handles.
+Block types (per namespace) 256 8-bit block type fields.
+Block types (total) 65535 16 bits total for namespace and block types.
+Block data length 4GB 32-bit block length field.
+56
+%AWD data type limitations
+Feature Limit Reason
+Length of VarStrings 65535 single-byte characters, less
+multi-byte characters.
+16-bit length field.
+Number of numeric attributes (per
+list)
+65535 16-bit ID field
+Number of text attributes (per list) >400 million Assuming attribute names with
+three bytes/characters and a
+single-byte value (e.g. Boolean).
+Limited by attribute element length
+and 32-bit list length identifier.
+Geometry limitations
+Feature Limit Reason
+Materials/sub-meshes per mesh
+or sub-paths per path.
+65535 16 bit length field
+Mesh vertices >350 million 32 bit stream length field,
+12 bytes per vertex (optimized for size.)
+Mesh triangles >350 million 32 bit stream length field,
+12 bytes per triangle (optimized for size.)
+Path quadratic segments >119 million 32 bit stream length field,
+12 bytes per point (optimized for size),
+3 points per segment.
+Path cubic segments >89 million 32 bit stream length field,
+12 bytes per point (optimized for size),
+4 points per segment.
+
+\section awd_pt3_4 AWD Structure examples
+
+Below are some examples of simple %AWD files to illustrate the structure of an uncompressed file.
+The [N] symbol illustrates a link (numeric reference) to another block with the ID N. Even though the
+indentation of the lists in these examples might imply a tree structure, such structure only exists logically,
+whereas the actual “physical” representation of data in the file is linear, as is the parsing.
+Removed temporarily while the format is still in motion.
+57
+ */

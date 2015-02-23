@@ -51,7 +51,7 @@ typedef struct _CMatchFinder
 } CMatchFinder;
 
 #define Inline_MatchFinder_GetPointerToCurrentPos(p) ((p)->buffer)
-#define Inline_MatchFinder_GetIndexByte(p, index) ((p)->buffer[(Int32)(index)])
+#define Inline_MatchFinder_GetIndexByte(p, index) ((p)->buffer[(INT32)(index)])
 
 #define Inline_MatchFinder_GetNumAvailableBytes(p) ((p)->streamPos - (p)->pos)
 
@@ -84,7 +84,7 @@ Conditions:
 */
 
 typedef void (*Mf_Init_Func)(void *object);
-typedef Byte (*Mf_GetIndexByte_Func)(void *object, Int32 index);
+typedef Byte (*Mf_GetIndexByte_Func)(void *object, INT32 index);
 typedef UInt32 (*Mf_GetNumAvailableBytes_Func)(void *object);
 typedef const Byte * (*Mf_GetPointerToCurrentPos_Func)(void *object);
 typedef UInt32 (*Mf_GetMatches_Func)(void *object, UInt32 *distances);

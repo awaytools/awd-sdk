@@ -1189,7 +1189,7 @@ ZEXTERN gzFile ZEXPORT gzopen OF((const char *path, const char *mode));
 
 ZEXTERN gzFile ZEXPORT gzdopen OF((int fd, const char *mode));
 /*
-     gzdopen associates a gzFile with the file descriptor fd.  File descriptors
+     gzdopen associates a gzFile with the file descriptor fd.  AWDFile descriptors
    are obtained from calls like open, dup, creat, pipe or fileno (if the file
    has been previously opened with fopen).  The mode parameter is as in gzopen.
 

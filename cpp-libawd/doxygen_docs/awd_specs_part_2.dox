@@ -1,0 +1,2210 @@
+﻿/*! \page  awd_specs_2 Part II: File format specification
+\brief %AWD 3.0 Specification in markdown format.
+
+\section awd_pt2_1 Top-level structure of an AWD document
+
+Top-level structure of an AWD document
+
+The AWD document always begins with an uncompressed file header with meta-data, which is followed by
+an optionally compressed file body, containing the actual data.
+
+Offset | Size	| Type              | Description
+-------|------	|-------------------|-----------------
+0	   | 11		| File header		|See section File header
+11	   |Variable| List of blocks	|See section File body
+
+Table 1: AWD top-level structure
+
+\subsection awd_pt2_file_header File header
+
+The header defines which version of the AWD format specification a file conforms to.
+
+It also defines the algorithm used to compress the data body, if any, and other configuration flags. 
+
+Using a “Magic string”, it identifies itself as an AWD file.
+
+In cpp-libAWD, the file-header is encoded inside the function AWD::FILES::AWDFile::write_to_disc() and parsed inside the function AWD::FILES::AWDFile::read_from_disc()
+
+Offset	| Size	| Type              | Description
+-------	|------	|-------------------|-----------------
+0		|3		|\ref awd_pt2_6_4_1	|Magic string, “AWD”
+3		|1		|AWD::TYPES::UINT8	|Version number (major version.)
+4		|1		|AWD::TYPES::UINT8	|Revision number (minor version.)
+5		|2		|AWD::TYPES::UINT16	|Flags (two-byte bitflag, see separate table.)
+7		|1		|AWD::TYPES::UINT8	|AWD::SETTINGS::compression
+8		|4		|AWD::TYPES::UINT32	|Compressed body length in bytes. Used for integrity check. Ignored if streaming.
+
+Table 2: AWD header structure
+
+\subsubsection awd_pt2_file_header_1 Flags
+
+The flags field is a two-byte bitflag field where each bit is a boolean (0=false, 1=true) that defines a
+configuration parameter for the entire file. The meaning of each bit is defined and described in the table
+below.
+
+In cpp-libAWD, the bitflag is converted to or from settings inside the functions AWD::SETTINGS::Settings::get_path_2() and AWD::SETTINGS::Settings::set_path_2()
+
+
+Bit		| Value	| Name								| Description
+-------	|------	|-------------------				|-----------------
+00		|0x0001 |Streaming							|Defines whether this file should be treated as a streaming file. If this bit is set, it means that the file is streaming and that more blocks can be expected even after the file appears to end.
+01		|		|Global-Matrix-Storage-Precision	| Only used if Bit 04 is not set (is false)
+02		|		|Global-Geometry-StoragePrecision	|Only used if Bit 04 is not set (is false)
+03		|		|Global-Properties-StoragePrecision	|Only used if Bit 04 is not set (is false)
+04		|		|Use Storage-Precision per Block	| Decides if Storage-Precision is defined per file,or per block
+05-15	|		|Unused								|Unused in this version of the format.
+
+Table 3: AWD header flag bits
+
+\subsection awd_pt2_1_2 File body
+
+The file body data is a sequence of any number of data blocks, where each data block has the same toplevel format, with fields defining block type and size (See the section called "The data block concept" for details).
+The file body in it's entirety can optionally be compressed using one of the supported compression algorithms. 
+Body blocks can also be added to an existing AWD document over time, via a mutable media like a network socket. This is referred to as streaming.
+
+\section awd_pt2_2 Streaming AWD
+
+The AWD file format has been designed with the possibility of streaming and progressive loading in mind.
+Block references are required to always point backwards (to a previously declared block) which means that a parser can be certain when encountering a reference that it is not being made to a currently unknown block even though the entire file has not yet been downloaded.
+
+To alert a parser that a document is streaming (and hence that the parser should continue reading data
+when available until the stream is closed by the environment) the “streaming” flag bit must be set in the flags
+field in the header.
+
+Streaming AWD files do not support compression since parsing needs to be possible even before the entire document has finished loading (if it ever does.). Future versions of the format may support per-block compression.
+
+\section awd_pt2_3 Compression 
+
+The body part of an AWD file can optionally be compressed using one of the two supported compression algorithms, ZLIB (deflate) and LZMA. Which algorithm is used is defined by the compression type field in the document header.
+If a parser does not recognize the algorithm defined in the compression type header field, the file can not be read by that parser, which should exit with an error status.
+
+\subsection awd_pt2_3_1 ZLIB/Deflate compression
+
+The ZLIB/Deflate compression algorithm is used by the very popular ZIP and GZIP compression file formats
+and provides a fairly efficient compression at low decompression performance costs. Deflate compression is
+natively supported by many environments, including Flash Player. This means that in many cases (one of
+which is indeed the Flash Player) ZLIB compression is an excellent trade-off between file size and
+decompression speed. In Flash Player particularly, native decompression of ZLIB/Deflate can be several
+orders of magnitude faster than decoding other formats using implementations in ActionScript 3.
+In a ZLIB compressed AWD file, the body is the exact output from ZLIB including heading and trailing metadata (checksum), which means it can be handed straight to a ZLIB decoding (inflation) machine.
+
+there has been some confusion about this compression-type, because in previous drafts for AWD-specs it was named ZLIB/Deflate.
+There has been no offizial encoder that was comporessing using the Deflate-algorithm. Compression-type 1 is ZLIB.
+A new compression-type (Deflate = 3) has been added to AWD3.0
+
+
+\subsection awd_pt2_3_2 LZMA compression
+
+LZMA is an extremely efficient compression algorithm and is part of the popular Windows 7zip compression utility. 
+However, because native implementations are rare, and none exists for Flash Player, decompression often means more work and is often slower than when using ZLIB.
+The LZMA compression is very configurable, and hence requires some meta-data to be stored for the compressed body data to be correctly decompressed. 
+The first nine bytes of the body data in an LZMAcompressed AWD file define the size of the decompressed body as an unsigned 32-bit integer, followed by the LZMA properties encoded as per the LZMA standard. 
+The below table describes the body structure of an LZMA-compressed AWD file.
+
+Offset		| Size		| Type				| Description
+-------		|------		|-------------------|-----------------
+0			|4			|AWD::TYPES::UINT32	|Length of decompressed body.
+4			|5			|ByteArray			|LZMA properties encoded as defined in the LZMA SDK.
+9			|Variable	|ByteArray			|Compressed body data.
+
+Table 4: Structure of an LZMA-compressed AWD body
+
+This structure allows for easy decompression using the LZMA SDK LzmaDecode() function, without the need of dynamic buffer allocation and chunk-for-chunk decompression of the stream.
+
+
+\section awd_pt2_4 Field types and special values
+
+In this specification are recurring references to a number of both POD and complex (aggregate) data types.
+
+This section details the format of these data types and how they are parsed.
+
+\subsection awd_pt2_4_1 Storage-Precision
+
+Storage precision is defined in the FileHeader-BitFlags (flag01,flag02, flag03, flag04) and in the BlockHeader-BitFlags (flag00, flag01, flag02)
+
+Flag04 of the FileHeader-BitFlags defines if the 3 Storage-Precision-Parameter should be used global for a file or if they should be overwritten by the BlockHeader-BitFlags.
+The Storage-Preciosion per File is not really needed anymore, since the BlockHeader-BitFlag containing the Storage-Precision per Block is is stored, parsed and reserved for this values anyway. 
+It only exists for legacy reasons (It was allready defined in AWD2.0). But since the StoragePrecision has never been actually implemented in the Parsers/Encoder before, we really dont need it anymore.
+
+Storage-Precision is defined for 4 different typ of AWD-Data 
+
+\subsubsection awd_pt2_4_1_1 MatrixSP
+
+The storage-prevision used to define if Numbers that are used for scene-tranforms, should be written to file with AWD::TYPES::FLOAT32 or AWD::TYPES::FLOAT32
+
+\subsubsection awd_pt2_4_1_2 GeomSP
+
+The storage-prevision used to define if Numbers that are used for geometry-streams, should be written to file with AWD::TYPES::FLOAT32 or AWD::TYPES::FLOAT32
+
+\subsubsection awd_pt2_4_1_3 PropsSP
+
+The storage-prevision used to define if Numbers that are used for block-properties, should be written to file with AWD::TYPES::FLOAT32 or AWD::TYPES::FLOAT32
+
+\subsubsection awd_pt2_4_1_4 AttrSP
+
+The storage-prevision used to define if Numbers that are used for user-attributes, should be written to file with AWD::TYPES::FLOAT32 or AWD::TYPES::FLOAT32
+
+FileHeader		| BlockHeader		|  used for									| Name in this doc	|	value if true	|	value if false
+--------------	|------				|-------------------						|-------------------|------------		|-----------		
+01				|0					|used for all Scene-tranforms				|\ref awd_pt2_5_1			|float64			|float32
+02 				|1					|used for all Numbers stored in streams		|\ref awd_pt2_5_2				|float64			|float32
+03				|2					|used for Properties						|\ref awd_pt2_5_3			|float64			|float32
+--				|--					|Storage-Precision for UserAttributes (Numbers) stored with each Attribute	|\ref awd_pt2_5_4		|float64	|float32
+
+
+\subsection awd_pt2_4_2  Field type identification
+
+In contexts where types can vary (e.g. user attributes, see below) the data type is identified by an 8bit integer ID. This 8bit field, when referred to in structure tables, is simply called type.
+
+
+ID		|	Type		| Category
+-------	|-------------	|--------
+1		|int8			|Numeric
+2 		|int16			|Numeric
+3 		|int32			|Numeric
+4 		|uint8			|Numeric
+5 		|uint16			|Numeric
+6 		|AWD::TYPES::UINT32			|Numeric
+11 		|float32		|Numeric
+12 		|float64		|Numeric
+21 		|bool			|Derived numeric
+22 		|color			|Derived numeric
+23 		|AWD::TYPES::BADDR		|Derived numeric
+31 		|ConstString	|Array types
+32 		|ByteArray		|Array types
+41 		|Vector2x1		|Math types
+42 		|Vector3x1		|Math types
+43 		|Vector4x1		|Math types
+51 		|Matrix3x2		|Math types
+52 		|Matrix3x3		|Math types
+53 		|Matrix4x3		|Math types
+54 		|Matrix4x4		|Math types
+
+Table 5: Field data type identifiers.
+
+\subsection awd_pt2_4_3 Numbers
+
+\subsubsection awd_pt2_4_3_1 Endianness
+All numeric values in AWD are little-endian. Numeric values should never be encoded as big-endian in AWD. This means that to read a multi-byte numeric field the parser has to wait until the entire field has been loaded
+(since the MSB is the last one.) However, it also has performance gains on most modern platforms which are natively little-endian, and thus able to read entire streams of little-endian numeric data in a single operation.
+On these systems the same streams can then be sent of to the GPU without any marshaling, which constitutes a big optimizations particularly in high-level languages like ActionScript (Flash) and JavaScript (WebGL).
+
+\subsubsection awd_pt2_4_3_2 Integers
+
+All fields that contain integers are defined as either int or uint (for unsigned integers) regardless of the size of their C representation. 
+They are never referred to as "long", "short", "word" or any of the typical platform names. Instead, to remain platform-agnostic, a numeric suffix defines the width in bits.
+The following integer
+types can be used in AWD:
+
+● int8 and uint8
+
+● int16 and uint16
+
+● int32 and AWD::TYPES::UINT32
+
+
+\subsubsection awd_pt2_4_3_3 Floating-point numbers
+
+Non-integer numeric fields are referred to as floats, floating point numbers. Like with integers, a numeric suffix explicitly defines the precision. 
+What in C are usually referred to as doubles are simply referred to as floats with a greater bit-width:
+
+● float32
+
+● float64
+
+Float values must always be encoded as IEEE-754 compliant floating point numbers.
+
+\subsection awd_pt2_4_4 Booleans and true/false values 
+
+Booleans are encoded as a single byte where any non-zero value indicates a true state. False must hence be encoded as 0 (all eight bits equal zero) and any other value will be interpreted as true.
+
+Offset	| Size	| Type		|Description
+-------	|-------|------		|--------
+0		|1		|uint8		|Boolean encoded as an 8 bit integer. Any non-zero value indicates true.
+
+\subsection awd_pt2_4_5 Byte arrays
+Whenever a byte array is mentioned, this is a reference to a sequence of arbitrarily formatted bytes. 
+The context defines what the exact format of the content is and it's length, but usually the exact structure is not relevant to AWD as a format (e.g. with embedded images) and should be treated by a separate module (e.g.a JPEG decoder.)
+
+\subsection awd_pt2_4_5 Strings
+Two types of character strings are used in AWD, ConstString and VarString. 
+Both comprise an array of UTF-8 characters without BOM, the only difference being that whereas the length of a ConstString is always defined by the context, a VarString can have variable length in any given context.
+
+\subsubsection awd_pt2_4_5_1 ConstString
+
+Offset		| Size				| Type              | Description
+------------|-------------------|-------------------|-------------------------------------
+0			|Context-sensitive	|Byte array			|String content as UTF-8 without BOM.
+
+\subsubsection awd_pt2_4_5_2 VarString
+A VarString can have any length between 0 and 65536 bytes. The length is defined by the first two bytes in
+the VarString field, which are to be interpreted as a 16 bit unsigned integer.
+
+Offset		| Size				| Type              | Description
+------------|-------------------|-------------------|-------------------------------------
+0			|2					|uint16				|String length.
+2			|Variable			|Byte array			|String content as UTF-8 without BOM.
+
+\subsection awd_pt2_4_6 Lists
+\subsubsection awd_pt2_4_6_1 ConstList
+TBD
+\subsubsection awd_pt2_4_6_1 VarList
+TBD
+\subsection awd_pt2_4_7 Vectors and matrices
+
+\subsubsection awd_pt2_4_7_1 Vectors and matrices are serialized as a one-dimensional list of floating point numbers. The context defines the size of the vector or matrix. 
+The precision (32 or 64 bits per float) for vectors and matrices is defined perblock in the block header flag field.
+N-dimensional vector
+N-dimensional vectors are encoded as a 1xN matrix.
+
+\subsubsection awd_pt2_4_7_2 MxN matrix
+
+Matrices are encoded as a column-major (col0, col1, ... colN) serial list of 64-bit floating point numbers. For a matrix with N columns and M rows, the total size of resulting byte array is MxNxP bytes, where P is either 4 or 8 depending on the precision used.
+
+\subsection awd_pt2_4_8 Addresses
+
+Fields referred to as AWD::TYPES::BADDR fields are numeric block addresses, usually to a previous block in the file
+(and sometimes to the block itself, but never to a later occurring block). These are always 32-bit unsigned
+integers, where a null value is allowed (and means no block is referenced.)
+
+\subsection awd_pt2_4_9 Colors
+
+Whenever a color is stored in an AWD file, it is represented by four 8-bit values, defining the red, green, blue
+and alpha channels respectively. This means that a color is always 32 bits long in total, and that every
+channel can have 256 possible values.
+
+\subsection awd_pt2_4_10 Attributes and properties
+
+The AWD format is designed to be extendable, both by future versions of AWD and by user applications.
+Blocks in an AWD file can have attributes that can either be user-defined (e.g. for use in a game or physics
+engine) or defined by the AWD format specification.
+
+There are two types of attributes, differentiated and referenced by their key/name types:
+
+● Numeric attributes (sometimes called "properties") are used mainly by the file format itself to
+maintain forward compatibility. The key is a 16-bit unsigned integer IDs, which makes it very
+compact while allowing for 65535 values. It's however not human-readable so the meaning of a key
+ID needs to be established in a contract between encoder and parser, e.g. this document.
+
+● Text attributes (sometimes called "user attributes") are suitable for generator transparency (e.g.letting the end-user define them straight into the file.) Keys are VarStrings which means that these
+attributes are human-readable and more easily human-writable
+
+\subsubsection awd_pt2_4_10_1 Attribute lists 
+
+Attributes are organized in a flat list, so that parsers that ignore attributes can skip the entire list in one seek
+operation. The list is a very simple structure consisting of a 32 bit integer defining it's length, followed by the
+serialized list of attributes.
+
+Offset		| Size				| Type              | Description
+------------|-------------------|-------------------|-------------------------------------
+0			|4					|uint				|Attribute list length in bytes.
+4			|Variable			|Attribute stream	|List of attributes
+
+\subsubsection awd_pt2_4_10_2 Numeric attributes (“properties”)
+
+Numeric attributes are key/value pairs where the semantics of the key needs to be derived from a mutual understanding between encoder and parser. 
+Attributes like these are used throughout the AWD format as a way of defining peripheral values for an element, like the number of segments or dimensions of a cube or material properties.
+
+Offset		| Size				| Type              | Description
+------------|-------------------|-------------------|-------------------------------------
+0			| 2					|uint16				|Attribute ID (key)
+2			| 4					|AWD::TYPES::UINT32				|Value length
+6			|Variable			|Variable			|Attribute value
+
+The value length field defines the length of the value data portion of the attribute. 
+The type of the value is defined by the context and attribute ID. 
+
+
+\subsubsection awd_pt2_4_10_3 Text attributes (“user attributes”)
+
+Attributes themselves are key/value pairs with a type field defining the data type of the value. The key (name) of the attribute is a VarString, as defined above in the section called Strings.
+
+Offset		| Size				| Type              | Description
+------------|-------------------|-------------------|-------------------------------------
+0			|1					|uint8				|Namespace ID.
+1			|Variable			|VarString			|Attribute name (key) as string.
+Variable	|1					|type				|Attribute type (data type of value). See section "Field type identification".
+Variable	|4					|AWD::TYPES::UINT32				|Value length
+Variable	| Variable			|Variable			|Attribute value
+
+At first glance the value length field can seem redundant since the attribute type field implicitly defines the size of the value. 
+However, the length field allows attributes to store arrays of values (though always expressed in bytes, not number of elements.) An attribute value of type int32 with length 12 bytes contains three integer elements.
+Furthermore, for a parser that does not recognize a particular attribute type, the length field allows the entire value to be skipped.
+
+Because of the length field, string values do not need to be defined as VarStrings with their own length field, but can instead be encoded as ConstStrings, the length of which is defined by the attribute value length field.
+
+\subsection awd_pt2_4_11 TypedPropertiesLists
+
+A TypedPropertiesList is used for example to store Shading- /ShadowMap- /and EffectMethods.
+
+It stores a type-ID and a list of properties.
+
+Offset		| Size				| Type              | Description
+------------|-------------------|-------------------|-------------------------------------
+0			|2					|uint16				|TypedPropertiesList-TypeID
+2			|Variable			|NumAttrList		|property-list
+Variable	|Variable			|UserAttrList		|User properties for method
+
+The TypePropertiesList-TypeID is defined by the context the TypePropertiesList is used in. Please look into the specification of Shading- / ShadowMap- /and EffectMethods for more information.
+All TypedProperetiesLists are using the same set of Properties-IDs. As shown in the next Table, for every Value-Type, 100 IDs are reserved. If there will be a need for more IDs per Value-Type, this table can easy be extended.
+
+\subsubsection awd_pt2_4_11_1 TypedProperties-IDs
+
+ID			| Type
+---------	|------
+1-100		|AWD::TYPES::BADDR
+101-200		|B\ref awd_pt2_5_3
+201-300		|BAWD::TYPES::UINT32
+301-400		|Buint16
+401-500		|Buint8
+501-600		|BString
+601-700		|BColor
+701-800		|BBool
+801-900		|BMatrix(list of \ref awd_pt2_5_1)
+
+\subsection awd_pt2_4_12 References and null values
+
+In cases where null values can exist (such as references to other blocks) Null is represented by zero, which also means it can be interpreted as false if evaluated as a boolean. 
+This also means that in cases where Null needs to be treated as a special case (i.e. block references, namespace handles) zero is not a valid value but will be interpreted as Null.
+
+
+\section awd_pt2_data_block_concept  The Data Block concept
+
+The uncompressed file body is a flat sequence of "data blocks" that adhere to a pre-defined structure. The first fields in a block are required to be the same for any type of block, and are referred to as the block's header. 
+The type and length of a block is defined by these fields, allowing full forward-compatibility between an extended AWD file and an unaware parser, which can determine whether a block type is known and if not skip that block.
+
+Blocks can reference other blocks using their numeric 32-bit IDs. References are required to always be made backwards, meaning that a block can not reference a target block that is defined later in the document than the referring block.
+This is to speed up parsing and prevent problems with streaming AWD documents and should not cause any troubles in most realistic use-cases.
+
+\subsection awd_pt2_9 Anatomy of a block
+
+All data blocks share a couple of characteristics. 
+
+\subsubsection awd_pt2_9_1 Block Header
+
+First, they all begin with a block header which specifies the block ID, type, and length. 
+This must be read by all parsers to decide whether a block can be parsed or should be skipped (by seeking forward the number of bytes specified in the length field.)
+
+Offset		| Size				| Type              | Description
+------------|-------------------|-------------------|-------------------------------------
+0			|4					|AWD::TYPES::BADDR			|Block ID
+4			|1					|uint8				|Block namespace handle.
+5			|1					|uint8				|Block data type ID.
+6			|1					|uint8				|Flags (see separate table.)
+7			|4					|AWD::TYPES::UINT32				|Block data size in bytes.
+
+\subsubsection awd_pt2_9_1_1 Block flags
+
+Bit| Name							| Description
+---|-------------------				|------
+01 |Matrix-Storage-Precision		|Only used if Header-Flag-Bit 04 is set to true
+02 |Geometry-Storage-Precision		|Only used if Header-Flag-Bit 04 is set to true
+03 |Properties-Storage-Precision	|Only used if Header-Flag-Bit 04 is set to true
+04 |Compression						|Defines if Block is compressed
+05 |LZMA-Compression				|Only used if bit 04 is set
+
+
+
+The body of a block varies and can theoretically be anything. Generally, the top-level structure of a block usually resembles the following, including the already mentioned header:
+
+Block header: 11 bytes structured according to the table above, defining block ID, namespace, type and length.
+
+● Basic required values: a static condensed list of value-only fields where the order and semantics are defined explicitly by the AWD file format specification and where every value is required.
+
+● Optional properties: a dynamic list of key/value pairs defined by the AWD file format specification. See the section “Numeric Attributes” for more info.
+
+● Sub-structure: Lists of logical elements that are hierarchically ordered below this block, but do not have their own blocks, like lists of joints in a skeleton or sub-meshes in a geometry block.
+
+● User attributes: A dynamic list of arbitrary key/value pairs. These can be used for app-specific data or meta-data stored by an encoder user directly.
+
+
+\subsection awd_pt2_9_2 Block IDs and addressing 
+
+All blocks have a unique numeric ID, which is used to reference that block from other blocks. 
+The zero block ID indicates that a block will never be referenced and that a parser hence is not required to keep it in memory after it is done with it. 
+These blocks are said to be temporary. Blocks with ID greater than zero are said to be persistent.
+
+Block IDs must be incremented a single step for each block that has an ID. The first persistent block must have ID 1, and the next persistent block have ID 2. 
+Any temporary blocks (that do not have IDs) do not affect this sequence of IDs.
+Block references must always be made backwards, meaning that the block with ID N can only reference blocks for which the ID is less than N.
+
+\subsection awd_pt2_9_3 Block namespaces
+
+A block needs to exist within a namespace, which defines whether it's a standard AWD block (the Null namespace) or part of an AWD extension. 
+Namespace handles in block headers and elsewhere are 8-bit numeric IDs which allows an AWD file to have 255 namespaces on top of the default Null namespace.
+
+All blocks defined in this document belong in the Null namespace, as they are part of the AWD standard blocks. See the Part III section "Extending AWD" for information about how to use other namespaces when extending the file format.\
+
+\section awd_pt2_10 Block types
+
+The following list documents the native AWD block types and the type IDs. All native AWD blocks are required to be defined in the Null namespace.
+
+>   __cpp-libawd__\n
+>	In libawd this is defined by the \ref AWD::BLOCK::block_type "block_type" property of \ref AWD::BASE::AWDBlock "AWDBlock".
+
+>	__Away3d__\n
+>	To access the Assets in Away3d directly after they are parsed, you can listen for the AssetEvent.ASSET_COMPLETE and check which kind of Asset was received by using the AssetType.\n
+>	You also can listen for spezial kinds of Assets, using the AssetEvent associated with the AssetType (e.g. Event for AssetType.GEOMETRY is AssetEvent.GEOMETRY_COMPLETE).\n
+
+ID  |Block type			|Category			|AssetType						|Added in Version		|updates 			
+----|-------------		|-------------------|-------------------------------|-----------------------|-------------------
+1 	|TriangleGeometry	|Geometry/data		|AssetType.GEOMETRY				|2.0					|2.1 / 3.0					
+11	|PrimitiveGeometry	|Geometry/data		|AssetType.GEOMETRY				|2.1					|--					
+21	|Scene				|Scene-objects		|	----						|---					|--					
+22 	|Container			|Scene-objects		|AssetType.CONTAINER			|2.0					|2.1				
+23 	|MeshInstance		|Scene-objects		|AssetType.MESH					|2.0					|2.1				
+31 	|SkyBox				|Scene-objects		|AssetType.SKYBOX				|2.1					|--						
+41 	|Light				|Scene-objects		|AssetType.LIGHT				|2.1					|--						
+42	|Camera				|Scene-objects		|AssetType.CAMERA				|2.1					|--						
+43	|TextureProjector	|Scene-objects		|AssetType.TEXTURE_PROJECTOR	|2.1					|--						
+51	|LightPicker		|Light				|AssetType.LIGHT_PICKER			|2.1					|--						
+81	|StandardMaterial	|Materials			|AssetType.MATERIAL				|2.0					|2.1 / 3.0			
+82	|Texture			|Materials			|AssetType.TEXTURE				|2.0					|--					
+83	|CubeTexture		|Materials			|AssetType.TEXTURE:				|2.1					|--					
+91	|SharedMethod		|Method				|AssetType.EFFECTS_METHOD		|2.1					|--					
+92	|ShadowMethod		|Method				|AssetType.SHADOW_MAP_METHOD	|2.1					|--					
+101	|Skeleton			|Animation			|AssetType.SKELETON				|2.0					|--					
+102 |SkeletonPose		|Animation			|AssetType.SKELETON_POSE		|2.0					|--					
+103 |SkeletonAnimation	|Animation			|AssetType.ANIMATION_NODE		|2.0					|--					
+111 |MeshPose			|Animation			|AssetType.ANIMATION_NODE		|2.1					|--					
+112 |MeshPoseAnimation	|Animation			|AssetType.ANIMATION_NODE		|2.1					|--					
+113	|AnimationSet		|Animation			|AssetType.ANIMATION_SET		|2.1					|--					
+121	|UVAnimation		|Animation			|AssetType.ANIMATION_NODE		|3.0					|--					
+122 |Animator			|Animation			|AssetType.ANIMATOR				|2.1					|--					
+133 |TimeLine			|Animation			|								|3.0					|--					
+141 |Sound				|SOUND				|								|3.0					|--					
+134 |Textelement		|TEXT				|								|3.0					|--					
+135 |FontTable			|TEXT				|								|3.0					|--					
+253 |Command			|Misc				|? Create a new CommandEvent ?	|2.1					|3.0				
+254 |Namespace			|Misc				|No Asset created				|2.0					|--					
+255 |Meta-data			|Misc				|No Asset created				|2.0					|3.0		
+		
+
+\section awd_pt2_11 Geometry blocks
+
+
+\subsection awd_pt2_11_1 TriangleGeometry (ID 1)
+
+TriangleGeometry blocks contains geometry data for common triangle meshes.\n
+This might be 3D Triangle Geometries, or 2D Triangle Geometries.\n
+The type of geometry is only indirectly defined, by the SubGeometry-Streams found in the Geometry.\n
+
+A geometry is split into subgeometries which in turn contain a number of data streams that define the geometry.\n
+
+A triangle geometry block can be referenced by several mesh instances in a scene, so that the same geometry data is used to render several objects saving storage space on disk and memory.
+
+>	__libawd:__\n
+>	\ref AWD::GEOM::ProcessMeshGeometry "Documentation for ProcessMeshGeometry"\n
+>	\ref AWD::GEOM::ProcessShapeGeometry "Documentation for ProcessShapeGeometry"\n
+>	\ref AWD::BLOCKS::Geometry "Geometry (AWDBlock)"\n
+>	\ref AWD::GEOM::SubGeom "SubGeom (Element)"\n
+
+The top-level structure of a mesh data block is defined by this table:
+
+Offset		| Size				| Type              | Description
+------------|-------------------|-------------------|-------------------------------------
+0			|11					|BlockHeader		|\ref awd_pt2_9_1
+11			|Variable			|VarString			|Look-up name.
+Variable	|2					|uint16				|Number of \ref awd_pt2_11_1_1.
+Variable	|Variable			|NumAttrList		|\ref specs_geometry_properties
+Variable	|Variable			|List of SubMesh	|list of \ref awd_pt2_11_1_1
+Variable	|Variable			|UserAttrList		|User attributes.
+
+
+\subsubsection specs_geometry_properties TriangleGeometry Properties
+
+
+Property ID		| Name			| Type              | Description				| Default
+-----------	-|------------------|-------------------|---------------------------|---------
+1			|UVScaleU			|AWD::TYPES::F64	|UV-scale u value			|1.0
+2			|UVScaleV			|AWD::TYPES::F64	|UV-scale v value			|1.0
+\todo Might be cleaner to set UVScale as Vertex2x1 in 1 property.\n
+
+\subsubsection awd_pt2_11_1_1 Sub-geometry
+
+A sub-geometry is a per-material division of a triangle geometry.\n
+
+Sub-geometries are also used by Away3D to split meshes into buffers that do not exceed platform buffer size limits.\n
+
+A AWD exporter, should take care that no subgeometry exceeds the ressource limits. \n 
+This follows, that even if subgeometry is a per-material division, we might have multiple subgeometries in one geometry that share the same material.
+
+ 
+Sub-geometries define their geometry as data streams, condensed lists of numeric values distinguished by type, e.g. vertex positions, face indices and UV coordinates.
+
+\subsubsection specs_subgeometry Structure of a subgeometry in &AWD
+
+Offset		| Size				| Type              | Description
+------------|-------------------|-------------------|-------------------------------------
+0			|4					|AWD::TYPES::UINT32	|Length of subgeometry \n (total length of data streams in bytes)
+4			|Variable			| NumAttrList		|Sub-mesh properties
+Variable	|Variable			|List of DataStream	|Geometry data streams
+Variable	|Variable			|UserAttrList		|User attributes.
+
+\subsubsection specs_subgeometry_properties SubGeometry Properties
+
+
+Property ID		| Name			| Type              | Description				| Default
+-----------	-|------------------|-------------------|----------------------------|---------
+1			|UVScaleU			|AWD::TYPES::F64	|UV-scale x value			| 1.0
+2			|UVScaleV			| AWD::TYPES::F64	|Sub-mesh properties			|1.0
+3			|UVTransform		|Matrix3x2			|UV Tranformation for SubGeometry|Identity Matrix
+
+A normal 3D SubGeometry does not use the UVTranform property, but a 2D SubGeometry might need it.
+
+\todo Might be cleaner to set UVScale as Vertex2x1 in 1 property.\n
+Not sure we need the UVTranform for the 2D Geometry
+
+A subgeometry can contain any number of data streams (as long as it does not exceed the size limit inherited by the 32-bit length field).
+
+\subsubsection specs_datastreams Data streams
+
+A data stream is a condensed sequence of geometry data, such as vertex positions, UV coordinates or face indices. 
+
+The below table defines the structure of a data stream.
+
+Offset		| Size				| Type						| Description
+------------|-------------------|------------------			|-------------------------------------
+0			|1					|uint8						|\ref specs_datastream_types
+1			|1					|uint8						|Content data type.\n __ATTENTION:__ \n This was never used by the official parser, and some exporters do not even set it.
+2			|4					|AWD::TYPES::UINT32			|Length of data stream in bytes
+5			|Variable			|List of GeometrySP/int16	|Data stream contents
+
+
+
+>	__libawd:__\n
+>	In libawd a DataStream only exists while writing to file. \n
+>	For each DataStream a \ref AWD::GEOM::DataStreamRecipe "DataStreamRecipe" is available to help defining the resulting DataStream.
+
+
+\subsubsection specs_datastream_types Data stream types
+
+The following data-stream-types are defined by %AWD. \n
+For custom stream-types, best use the reserved ids as long as possible.
+
+ID		|Stream type
+----	|-----
+1		|	3D Vertex positions
+2		|	Face indices
+3		|	UV coordinates
+4		|	Vertex normals
+5		|	Vertex tangents (not written by any exporter yet)
+6		|	Joint index
+7		|	Joint weight
+8		|	2D Vertex positions
+9		|	Combined 3D vertex-stream length 13 (work in progress)
+10		|	Combined 2D vertex-stream length 9 (work in progress)
+11		|	Combined 2D vertex-stream length 5 (work in progress)
+200-255	|	Reserved for custom-streams
+
+\todo The IDs 9, 10 and 11 are work in progress for the AWD3.0 the specs should be finalized soon.
+
+The internal structure of the values in a data stream varies between stream types, and are described in the next sections.
+
+
+
+\subsubsection awd_pt2_11_1_3 Content structure of 3D vertex positions, vertex normals, and vertex tangents data streams
+
+All these streams consist of a flattened serialized list of number triplets, with the general form:\n
+X1,Y1,Z1,  X2,Y2,Z2,  X2,Y2,Z2 ... XN,YN,ZN.\n 
+This means that the total number of value items in a stream of one of these types is always a multiple of three.
+
+\subsubsection awd_pt2_11_1_4 Content structure of face index data streams
+Face index data streams define triangles as triplets of index integers. \n
+The indices refer to vertices defined in the vertex stream, where index zero refers to the vertex defined by the first triplet in the vertex stream. \n
+An index i in the face index data stream refers to the vertex defined by the three subsequent floating point numbers starting at index 3i in the vertex stream.\n
+
+\subsubsection awd_pt2_11_1_5 Content structure of UV coordinate and 2D vertex positions data streams 
+The UV coordinate stream is very similar to the vertex position stream except each item is a two-dimensional vector which defines a UV pair. \n
+This means that the total number of values in a UV coordinate data stream is always a multiple of two. \n
+The UV pair with index i comprises the two subsequent floating point numbers starting at 2i in the UV stream, and defines the UV coordinate for the vertex defined by the three subsequent floating point numbers starting at index 3i in the vertex stream.\n
+In some applications, it makes sense to have more than one set of UV coordinates. This can be achieved simply by including several streams of the UV type in a sub-geometry.\n
+
+The stream-type __2D Vertex position__ is not used yet, but might be in future
+
+
+\subsubsection awd_pt2_11_1_6 Content structure of Joint index and weight streams
+The joint index and joint weight streams are used to bind the vertices of a mesh to a joint in a skeleton. They must have the same number of elements.
+The number of joints that affect a vertex needs to be constant throughout the mesh, which means that the number of values in these streams are even multiples of the number of vertices in the mesh. 
+For the sake of example, lets define N as the number of joints per vertex. If N=2, that means that each vertex can be bound to two joints.
+For each vertex in the vertex data stream, N joint weights are stored in the joint weight stream. At the corresponding index in the joint index stream is a reference to which joint this weight concerns, stored as an index into the list of joints in the skeleton.
+
+Continuing the example of N=2, consider the following two streams:
+
+Joint indices: 0, 1, 3, 0
+
+Joint weights: 0.6, 0.4, 1.0, 0
+
+The joint weights for the first vertex in the vertex stream are defined by the first two numbers in these streams (since N=2). The first joint to which this vertex is bound is the one with index 0, and the bind is weighted at 0.6. 
+The same vertex is also bound to joint 1, for which the weight is 0.4. The second pair in each stream defines the two bindings for the second vertex of this sub-mesh. 
+In this example, this vertex is bound to joint 3 which is weighted at 1.0, and also to joint 0. 
+Note however that this last binding has zero weight, which in practice means that it will be ignored. The sum of all weights on a vertex must always be 1.0. 
+In this example the first pair has a sum of 1.0 (0.6 and 0.4) and so does the second pair (1.0 and 0.0), and they are thus both correctly formatted.
+
+Weights should also be ordered from largest to smallest, so that any zero weights are always at the end. 
+This is because the rendering engine might discard any weights after the first zero weight as a performance optimization. Away3D does this.
+Since AWD enforces a constant number of joints per vertex, there can often be cases where it is possible to bind more joints to a vertex than what is necessary for that vertex. 
+In those cases the index can be set to any number, and the weight to zero as in the example above.
+
+
+\subsubsection awd_pt2_11_1_8 Content structure of Combined 3D vertex position data streams with length 13
+
+In contrast to the other stream-types, the combined data-streams always store numbers as float32.\n
+This is because they are supposed to be uploaded to GPU directly, what expects numbers as float32.\n
+
+The combined Vertex stream type defines this data for each 3D vertex:
+
+name		| type
+---			|------------------------------------
+position	|3 x float32
+normal		|3 x float32
+tangent		|3 x float32
+uv1			|2 x float32
+uv2			|2 x float32
+
+\subsubsection awd_pt2_11_1_7 Content structure of Combined 2D vertex position data streams with length 9
+
+In contrast to the other stream-types, the combined data-streams always store numbers as float32.\n
+This is because they are supposed to be uploaded to GPU directly, what expects numbers as float32.\n
+
+At the moment, the AwayExtensions FlashPro export this data for each 2D vertex:
+
+name		| type
+--------	|------------------------------------
+position	|2 x float32
+curve-type	|float32
+curve.u		|float32
+curve.v		|float32
+red 		|float32
+green 		|float32
+blue 		|float32
+alpha		|float32
+
+\subsubsection awd_pt2_11_1_7 Content structure of Combined 2D vertex position data streams with length 5
+
+In contrast to the other stream-types, the combined data-streams always store numbers as float32.\n
+This is because they are supposed to be uploaded to GPU directly, what expects numbers as float32.\n
+
+In the final version of the shape-rendering in AwayJS, we will not need the vertex-colors.\n
+So the final final specs for 2D output might look like this:
+
+name		| type
+---			|------------------------------------
+position	|2 x float32
+curve-type	|float32
+curve.u		|float32
+curve.v		|float32
+
+
+\n
+\n
+\subsection awd_pt2_11_2 PrimitiveGeometry (ID 11)
+
+Primitive blocks are a type of geometry meta-data block in that it doesn't actually contain any geometry data.\n
+Rather, the meta-data in the block defines the type of primitive and it's properties, and the actual geometry is re-constructed by the receiving end using these properties.\n
+
+The primitive block defines a field for the primitive type followed by a numeric attribute list defining properties such as dimensions, geometric density etc. \n
+
+Like most other blocks, user attributes can be appended to this block through it's user attribute list.\n
+
+>	__libawd__:\n
+>	The PrimitiveGeometry in libawd: \ref AWD::BLOCKS::Primitive "Primitve (AWDBlock)"
+>
+
+
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|variable				|VarString					|Look up name
+variable	|1						|uint8						|\ref primitive_types
+variable	|Variable				|NumAttrList				|Primitive properties.
+Variable	|Variable				|UserAttrList				|User attributes.
+
+\subsubsection primitive_types Primitive Types
+
+The type field defines the primitive type according to the following table:
+
+Type ID		| Primitive type
+---			|-----
+1			|Plane
+2			|Cube
+3			|Sphere
+4			|Cylinder
+5			|Cone
+6			|Capsule
+7			|Torus
+
+
+Primitives are making use of the same IDs as a Typed-Properties-List.
+
+\subsubsection awd_pt2_11_2_1 PlaneGeometry (Primitve-Type = 1)
+
+ID	|	Name	|Type			|Default
+----|-----------|----------		|--------------------
+101 |width		|geometrySP		|100
+102 |height		|geometrySP		|100
+301 |segmentsW	|uint16			|1
+302 |segmentsH	|uint16			|1
+701	|yup		|bool			|true
+702 |doubleSided|bool			|false
+
+\subsubsection awd_pt2_11_2_2 CubeGeometry (Primitve-Type = 2)
+
+ID	|	Name	|Type			|Default
+----|-----------|----------		|--------------------
+101 |width		|geometrySP		|100
+102 |height		|geometrySP		|100
+103 |depth		|geometrySP		|100
+301 |segmentsW	|uint16			|1
+302 |segmentsH	|uint16			|1
+303 |segmentsD	|uint16			|1
+701 |tile6		|bool			|true
+
+\subsubsection awd_pt2_11_2_3 SphereGeometry (Primitve-Type = 3)
+
+ID	|	Name	|Type			|Default
+----|-----------|----------		|--------------------
+101 |radius		|geometrySP		|50
+301 |segmentsW	|uint16			|16
+302 |segmentsH	|uint16			|12
+701 |yup		|bool			|true
+
+\subsubsection awd_pt2_11_2_4 CylinderGeometry (Primitve-Type = 4)
+
+ID	|	Name		|Type			|Default
+----|-----------	|----------		|--------------------
+101 |topRadius		|geometrySP		|50
+102 |bottomRadius	|geometrySP		|50
+103 |height			|geometrySP		|100
+301 |segmentsW		|uint16			|16
+302 |segmentsH		|uint16			|1
+701 |topClosed		|bool			|true
+702 |bottomClosed	|bool			|true
+703 |yup			|bool			|true
+704 |surfaceClosed	|bool			|true
+
+\subsubsection awd_pt2_11_2_5 ConeGeometry (Primitve-Type = 5)
+
+ID	|	Name	|Type			|Default
+----|-----------|----------		|--------------------
+101 |radius		|geometrySP		|50
+102 |height		|geometrySP		|100
+301 |segmentsW	|uint16			|16
+302 |segmentsH	|uint16			|1
+701 |closed		|bool			|true
+702 |yup		|bool			|true
+
+\subsubsection awd_pt2_11_2_6 CapsuleGeometry (Primitve-Type = 6)
+
+ID	|	Name	|Type			|Default
+----|-----------|----------		|--------------------
+101	|radius		|geometrySP		|50
+102 |height		|geometrySP		|100
+301 |segmentsW	|uint16			|16
+302 |segmentsH	|uint16			|15
+701 |yup		|bool			|true
+
+\subsubsection awd_pt2_11_2_7 TorusGeometry (Primitve-Type = 7)
+
+ID	|	Name	|Type			|Default
+----|-----------|----------		|--------------------
+101	|radius		|geometrySP		|50
+102	|tubeRadius	|geometrySP		|50
+301 |segmentsR	|uint16			|16
+302 |segmentsT	|uint16			|8
+701 |yup		|bool			|true
+
+\n\n
+
+\section awd_pt2_12 Scene object blocks
+
+Scene graph blocks are spatial objects that can be added to a scene graph. 
+
+\subsection awd_pt2_12_1 Scene Header
+
+They share the same first three fields, defined below.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|4						|AWD::TYPES::BADDR			|Parent ID (Numeric). Reference to a previously defined scene graph object.
+4			|Variable				|Matrix4x3					|matrix Transform
+Variable	|Variable				|VarString					|Look-up name.
+
+
+The subsequent sections of a scene graph block differ between the various block types.
+
+\subsection awd_pt2_12_2 Scene (ID 21)
+
+The scene is a special case of the scene graph blocks. It's the top-level element in the scene graph, and can not have a parent. 
+Hence, the parent field must always be null (zero) and should be ignored by parsers. 
+In addition to the common fields that all scene object blocks share, scene blocks only have an empty numeric attribute list, and any number of user attributes.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|	11					|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|SceneHeader				| \ref awd_pt2_12_1
+Variable	|Variable				|NumAttrList				|Scene properties(unused in this version.)
+Variable	|Variable				|UserAttrList				|User attributes.
+
+
+\subsection awd_pt2_12_3 Container (ID 22)
+
+Containers are objects to which other scene-graph objects can be parented, but that don't have any volume
+or visual appearance on their own. Containers like scenes only have an empty numeric attribute list and a
+user attribute list with optional content.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|SceneHeader				|\ref awd_pt2_12_1
+0			|Variable				|NumAttrList 				|\ref container_properties
+Variable	|Variable				|UserAttrList				|User attributes.
+
+Container block include the common scene object fields
+
+\subsubsection container_properties Container Properties.
+
+ID	|Name		|	 Type		|		 Description	| Default
+----|-----------|---------------|--------------------	|----
+1	|pivotX		|\ref awd_pt2_5_1		|-						|0
+2	|pivotY		|\ref awd_pt2_5_1		|-						|0
+3	|pivotZ		|\ref awd_pt2_5_1		|-						|0
+4	|visibility	|uint8			|Not really used yet	| true
+
+
+
+\subsection awd_pt2_12_4 MeshInstance (ID 23)
+
+MeshInstance blocks define what is probably the most common item in a scene, mesh objects. 
+The geometry is defined by a geometry block elsewhere in the file, and can hence be re-used by several mesh instances.
+
+In addition to the common scene block fields, mesh instances define a reference to the mesh data block, as well as a numeric property list and user attributes.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|SceneHeader				| \ref awd_pt2_12_1
+Variable	|4						|AWD::TYPES::BADDR			|ID of mesh data block.
+Variable	|2						|uint16						|Number of materials
+Variable	|Variable				|List of AWD::TYPES::BADDR	|Material IDs
+Variable	|Variable				|NumAttrList				|Mesh instance properties
+Variable	|Variable				|UserAttrList				|Mesh instance userattributes.
+
+
+
+The MeshInstance-Properties includes the Container-properties.
+
+ID			|Name					|	 Type		|		 Description					| Default
+------------|-----------------------|---------------|--------------------------------------	|----
+5			|CastShadows			|bool			|If the mesh Instance cast a shadow		|true
+
+
+
+\subsection awd_pt2_12_5 Skybox (ID 31)
+
+A SkyBox renders a 360° panorama around your scene. The origin of this panorama will always appear to be the viewers position.
+The SkyBox makes use of a CubeTextureBlock, to access the 6 bitmaps it needs.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|VarString					|Look-up name.
+Variable	|4						|AWD::TYPES::BADDR					|Block-ID of CubeTextureBlock
+Variable	|Variable				|NumAttrList				|SkyBox properties (none in this version.)
+Variable	|Variable				|UserAttrList				|SkyBox user attributes.
+
+
+
+\subsection awd_pt2_12_6 Light (ID 41)
+
+Light blocks represent light-sources in the scene that are used for lighting/shading of objects with compatible materials.
+Light blocks have a type field that defines what kind of light source the block represents, and a numeric attribute list with lamp properties.
+The following is not relevant for AwayBuilder atm, but could be in future versions, and will be relevant for AWDToolsC4D.
+Lights are used by LightPicker-Blocks, so they have to be parsed before this LightPicker.
+This restriction excludes the LightPicker-Block of beeing a valid Block for the Scene.graph.
+Instead of the local-tranformation matrix, the AWD-exporter should write the global-tranformation-matrix into the Sceneheader of a light-object.
+This provides a way to get the light-object-position for a light thats not part of the (AWD) scene-graph.
+The CommandBlock (with action = “PutIntoSceneGraph”) provides a way to put the Light at its correct place in the SceneGraph.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|SceneHeader				| \ref awd_pt2_12_1
+Variable	|1						|uint8						|Light source type.
+Variable	|Variable				|NumAttrList				|Light source properties´(see separate table.) the shadowMapper is includet as properties.
+Variable	|Variable				|UserAttrList				|User attributes.
+
+Table 20: Lamp block fields (in addition to common scene block fields).
+
+Light source types
+
+Type ID		|	Light type
+------------|-----------------
+1			|Point Light
+2			|Directional Light
+
+The light source properties are defined as a list of numeric attributes, and can contain any of the attributes
+defined in this table. Some properties are only used for certain types of light sources.
+The ShadowMapper is defined within the Properties.
+
+Light Properties
+P = PointLight, D = DirectionalLight
+
+ID			|	 Name		|Type		| P	| D	|Description	| Default
+------------|---------------|-------	|---|---|-----------	|--------------------
+1			|radius			| \ref awd_pt2_5_3	|+	|-	|A radius at which the light intensity starts to decay.		|90000
+2			|falloff		| \ref awd_pt2_5_3	|+	|-	|The radius at which the light intensity reaches zero (objects further from the light-source won't be affected.)	|100000
+3			|Color			|color		|+	|+	|Color of the light.				|0xffffff
+4			|Specular		|\ref awd_pt2_5_3	|+	|+	|Intensity of specular light.		|1.0
+5			|Diffuse		|\ref awd_pt2_5_3	|+	|+	|Intensity of diffuse light.		|1.0
+7			|Ambient-Color	|color		|+	|+	|-									|0xffffff
+8			|Ambient-Level	|\ref awd_pt2_5_3	|+	|+	|- |1.0
+9			|ShadowMapperType |uint8	|+	|+	|defines the type of shadowmapper to use. if this is !=0, castShadows=false; |0
+10			|DepthMapSize	|uint8		|+	|+	|shadowMapper-property Options are [256, 512, 2048]	|2048
+11			|CoverageRatio	|\ref awd_pt2_5_3	|+	|+	|shadowMapper-property				|0.5
+12			|CascadesNum	|uint16		|+	|+	|shadowMapper-property				|3
+21			|directionX		|\ref awd_pt2_5_1	|-	|+	|The direction of the light (x)		|0
+22			|directionY		|\ref awd_pt2_5_1	|-	|+	|The direction of the light (y)		|-1
+23			|directionZ		|\ref awd_pt2_5_1	|-	|+	|The direction of the light (z)		|1
+24			|pivotX			|\ref awd_pt2_5_1	|+	|-	|-									|0
+25			|pivotY			|\ref awd_pt2_5_1	|+	|-	|-									|0
+26			|pivotZ			|\ref awd_pt2_5_1	|+	|-	|-									|0
+
+Table 21: Light block properties.
+
+Shadow Mapper
+
+The TypeID of the Shadowmapper is stored as Light-Property 9.
+
+The default TypeID is 0 = no ShadowMapper.
+If a ShadowMapper is set, (TypeID!=0), light.castShadows is set to true.
+Type ID		|	 Shadow Mapper				|type Category	
+------------|---------------------			|--------------------
+1			|DirectionalShadowMapper		|Mapper for DirectionalLights
+2			| NearDirectionalShadowMapper	|Mapper for DirectionalLights
+3			|CascadeShadowMapper			|Mapper for DirectionalLights
+4			|CubeMapShadowMapper			|Mapper for PointLights
+
+All ShadowMapper-Properties are stored as Light-Properties.
+
+DirectionalShadowMapper (ShadowMapperID = 1)
+
+ID		|		 Name		|	Type	|Default
+--------|-------------------|------	----|----------
+10		|DepthMapSize		|uint8		|Defaults to 2048. Options are [256, 512, 2048]
+
+NearDirectionalShadowMapper (ShadowMapperID = 2)
+
+ID		|		 Name		|	Type	|Default
+--------|-------------------|------	----|----------
+10		|DepthMapSize		|uint8		|Defaults to 2048. Options are [256, 512, 2048]
+11		|CoverageRatio		|\ref awd_pt2_5_3	|default = 0.5
+
+CascadeShadowMapper (ShadowMapperID = 3)
+
+ID		|		 Name		|	Type	|Default
+--------|-------------------|------	----|----------
+10		|DepthMapSize		|uint8		|Defaults to 2048. Options are [256, 512, 2048]
+12		|Number of Cascades	|uint16		|Defaults to 3. Options are [1, 2, 3, 4]
+
+CubeMapShadowMapper (ShadowMapperID = 4)
+
+ID		|		 Name		|	Type	|Default
+--------|-------------------|------	----|----------
+10		|DepthMapSize		|uint8		|Defaults to 512. Options are [256, 512, 1024]
+
+\subsection awd_pt2_12_7 Camera (ID 42)
+
+Camera blocks in AWD documents represent any type of camera supported by the format specification. 
+The type of lens is the only required field in the block, and other properties (e.g. type-specific properties) are defined in a numeric attribute list.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|SceneHeader				| \ref awd_pt2_12_1
+Variable	|1						|bool						|make active(not used for now)
+Variable	|Variable				|uint16						|Num of Lists (1 for now)
+Variable	|Variable				|TypedpropertiesList		|List of properties (used to describe lens)(can be more lists later (cameraController))
+Variable	|Variable				|NumAttrList				|Camera-Properties
+Variable	|Variable				|UserAttrList				|User attributes.
+
+Table 23: Camera block fields (in addition to common scene object fields.)
+
+Camera-Properties include the Container-Properties.
+
+Lens
+
+A Lens is a typed-property-list.
+
+ID		|		 Type		
+--------|--------------------
+5001	|PerspectiveLensMethod
+5002	|OrthographicLensMethod
+5003	|OrthographicOffCenterLensMethod
+
+Table 24: Types of Lenses
+
+PerspectiveLensMethod (methodID = 5001)
+
+ID Name Type Default
+ID		|		 Name		|	Type	|Default
+--------|-------------------|------	----|----------
+101		|	FOV				|\ref awd_pt2_5_3	|60
+
+OrthographicLensMethod (methodID = 5002)
+
+ID		|		 Name		|	Type	|Default
+--------|-------------------|------	----|----------
+101		|Projection Height	|\ref awd_pt2_5_3	|500
+
+OrthographicOffCenterLensMethod (methodID = 5003)
+
+ID		|		 Name		|	Type	|Default
+--------|-------------------|------	----|----------
+101		|minX				|\ref awd_pt2_5_3	|-400
+102		|maxX				|\ref awd_pt2_5_3	|400
+103		|minY				|\ref awd_pt2_5_3	|-300
+104		|maxY				|\ref awd_pt2_5_3	|300
+
+\subsection awd_pt2_12_8 TextureProjector (ID 43)
+
+Textureprojector is used together with the ProjectiveTextureMethod.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|SceneHeader				| \ref awd_pt2_12_1
+Variable	|4						|AWD::TYPES::BADDR					|The Texture used.
+Variable	|Variable				|\ref awd_pt2_5_3					|aspect-ratio
+Variable	|Variable				|\ref awd_pt2_5_3					|fov
+Variable	|Variable				|NumAttrList				|TextureProjectorProperties
+Variable	|Variable				|UserAttrList				|User attributes.
+
+Table: TextureProjector block fields (in addition to common scene object fields.)
+
+\subsection awd_pt2_12_9 LightPicker (ID 51)
+
+In Away3d a LightPicker tells a material, by which scene-lights it should be lit.
+A LightPicker-Block in AWD is made of a name, and a list of AWD-Block-IDs, pointing to Light-Blocks.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|VarString					|Look-up name.
+Variable	|2						|uint16						|Number lights
+Variable	|Variable				|List of AWD::TYPES::BADDR			|LightIDs
+Variable	|Variable				|UserAttrList				|User attributes.
+
+Table 19: MeshInstance fields (in addition to common scene object fields.)
+
+
+
+
+\section awd_pt2_13 Material blocks
+
+
+
+\subsection awd_pt2_13_1 Material block (ID 81)
+
+
+Material blocks represent a Away3D Material.\n
+
+The material does not not store any shader code into the AWD file. \n
+The parser is supposed to create the correct Material based on the material-type.\n
+
+In AWD3.0 we use the same material-block to store both materials used for 3D-Geometries and materials used by 2D-Geometries.\n
+
+To differ bewteeen this types of materials on import, 3 new material types are added.\n
+
+For the usage with by 3d-geometry a AWD-material can have a lot of Material-properties, including Shading-Methods and Effect-Methods.\n
+
+For the usage with by 2d-geometry a AWD-material only need to provides the basic information on what texture-atlas area should be used by this material (uv-values).\n
+All other information (color-tranform, filters, depth, mask-depth) will be provided by the Frame-commands on a TimelineFrame.\n
+
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|VarString					|Look-up name
+Variable	|1						|uint8						|\ref awd_pt2_material_types
+Variable	|1						|uint8						|Number of \ref awd_pt2_material_shading_methods. Will always be 0 for materials used by 2D-Geometry
+Variable	|Variable				|NumAttrList				|\ref awd_pt2_material_properties
+Variable	|Variable				|List of ShaderMethod		|List of \ref awd_pt2_material_shading_methods elements, the length of which is defined by the preceding integer field.
+Variable	|Variable				|UserAttrList				|Material user attributes.
+
+
+
+\subsubsection awd_pt2_material_types Material types
+
+Type ID		|	Material type
+------------|-------------------
+1			|Color material
+2			|Texture material
+3			|Fill Color Material		(new for AWD3.0 - used for 2D Geometry) - instead of storing the color as uint32, it stores the color as uv-position in texture-atlas
+4			|Linear Gradient Material	(new for AWD3.0 - used for 2D Geometry) - like Fill Color Material, but two uv-positions are stored.
+5			|Radial Gradient Material	(new for AWD3.0 - used for 2D Geometry)	- like Linear Gradient Material.
+
+
+A material can have a addional type-property set in the Material-properties called “spezialID”.\n
+For Materials used by 2D-geometry, this is not used.\n
+
+spezialID	|	Material type
+------------|-------------------
+0 (=Default)| SinglePassMaterial
+1			| MultiPassMaterial
+
+
+
+
+
+
+\subsubsection awd_pt2_material_properties Material properties
+ 
+ This are the properties available for Materials used by 3D-geometry:
+
+ID		|	Name				|	Type	|ColorMaterial	| MP	| TextureMaterial	| MP	| Description												|Default
+--------|-----------			|-----------|---------------|-----	|------------------	|----	|------------												|-----
+1		|	Color				|	color	|+|+|-|-|Color (used only by colormaterials)						|0xffffff
+2		|Texture				|AWD::TYPES::BADDR	|-|-|+|+|Reference to texture block (used only by bitmap materials)	|null
+3		|NormalTexture			|AWD::TYPES::BADDR	|+|+|+|+|NormalTexture	|null
+4		|spezialID				|uint8		|-|-|-|-|0: SinglePass 1:MultiPass 2:SkyBox	|0
+5		|smooth					|bool		|+|+|+|+|Default to true	|true
+6		| mipmap				|bool		|+|+|+|+| Default to true	|true
+7		|bothSides				|bool		|+|+|+|+| Default to false	|false
+8		|Pre-multiplied			|bool		|+|+|+|+| Default to false	|false
+9		|BlendMode				|uint8		|+|+|+|+| [0:NORMAL,1:ADD,2:	ALPHA,8: LAYER,10: MULTIPLY] | 0
+10		|Alpha					|\ref awd_pt2_5_3	|+|-|+|-| Overall alpha of material.	|1.0
+11		|Alpha blending			|bool		|+|-|+|-| Defines whether alpha blending (semi-transparency) should be enabled for this material. |false
+12		|Binary alpha threshold |\ref awd_pt2_5_3	|+|+|+|+| Defines a cut-off threshold for the alpha channel when not using alpha blending. Pixels with alpha over this value will be fully opaque, and all other pixels will be completely transparent. | 0.0
+13		|Repeat					|bool		|+|+|+|+| Defines whether to repeat this material over the surface of meshes for which the UV coordinates are outside the 0-1 span. | True
+14		|Diffuse Level			|\ref awd_pt2_5_3	|-|-|-|-| may be needed in later versions	|1.0
+15		|Ambient level			|\ref awd_pt2_5_3	|+|+|+|+|-	| 1.0
+16		|Ambient Color			|color		|+|+|+|+|-	| 0xffffff
+17		|Ambient texture		|AWD::TYPES::BADDR	|-|-|+|+|-	| null
+18		|Specular Level			|\ref awd_pt2_5_3	|+|+|+|+|-	| 1.0
+19		|Specular Gloss			|\ref awd_pt2_5_3	|+|+|+|+|-	| 50
+20		|Specular Color			|color		|+|+|+|+|-	|0xffffff
+21		|Specular Texture		|AWD::TYPES::BADDR	|+|+|+|+|-	|null
+22		|LightPicker			|AWD::TYPES::BADDR	|+|+|+|+|-	|null
+
+
+ This are the properties available for Materials used by 2D-geometry:
+
+ID		|	Name				|	Type			| Description												|Default
+--------|-----------			|-----------		|-------------												|-----
+1		|Texture				|AWD::TYPES::BADDR	|Reference to texture block	(texture-atlas)					|0
+2		|UV-position 1			|AWD::TYPES::F64	|The uv-position for the first color						|0.0
+3		|UV-position 2			|AWD::TYPES::F64	|The second uv-position used by gradients					|0.0
+4		|color					|color				|Fallback as long as texture-atlas is not working			|0xffffff
+
+
+\subsubsection awd_pt2_material_shading_methods Shading Methods
+
+A shading method defines a way that a material's surface is rendered, e.g. with regards to light. Some
+methods require special treatment, e.g. diffuse and specular shading methods, and for this reason shading
+methods are sorted into different categories.
+The Base-Method of a Composite-Method must always be parsed before the Composite-Method.
+
+Type ID	| Shading method							|type Category
+--------|--------------------------------------		|--------------------
+1		|EnvMapAmbientMethod						|Ambient
+51		|DepthDiffuseMethod (no properties)			|Diffuse
+52		|GradientDiffuseMethod						|Diffuse
+53		|WrapDiffuseMethod							|Diffuse
+54		|LightMapDiffuseMethod						|DiffuseComp
+55		|CellDiffuseMethod							|DiffuseComp
+56		|SubSurfaceScatteringMethod					|DiffuseComp
+101		|AnisotropicSpecularMethod (no properties)	|Specular
+102		|PhongSpecularMethod (no properties)		|Specular
+103		|CellSpecularMethod							|SpecularComp
+104		|FresnelSpecularMethod						|SpecularComp
+151		|HeightMapNormalMethod						|Normal
+152		|SimpleWaterNormalMethod					|Normal
+401		|ColorMatrix								|EffektShader
+402		|ColorTransform								|EffektShader
+403		|EnvMap										|EffektShader
+404		|LightMapMethod								|EffektShader
+405		|ProjectiveTextureMethod					|EffektShader
+406		|RimLightMethod								|EffektShader
+407		|AlphaMaskMethod							|EffektShader
+408		|RefractionEnvMapMethod						|EffektShader
+409		|OutlineMethod								|EffektShader
+410		|FresnelEnvMapMethod						|EffektShader
+411		|FogMethod									|EffektShader
+998		|ShadowMapMethodBlockMethod					|ShadowMapMethodBlock
+999		|EffectMethodBlockMethod					|EffectMethodBlock
+
+AmbientMethods
+
+EnvMapAmbientMethod (methodID = 1)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|cubeTexture			|AWD::TYPES::BADDR				|defaultTexture
+
+DiffuseMethods
+
+GradientDiffuseMethod (methodID = 52)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|gradient-texture		|AWD::TYPES::BADDR				|defaultTexture
+
+WrapDiffuseMethod (methodID = 53)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|warp factor			|\ref awd_pt2_5_3				|0.5
+
+LightMapDiffuseMethod (methodID = 54)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+401			|blendMode				|uint8					|MULTIPLY options: add / multiply
+1			|lightMap-texture		|AWD::TYPES::BADDR				|defaultTexture
+
+CellDiffuseMethod (methodID = 55)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+401			|levels					|uint8					|3
+101			|smoothness				|\ref awd_pt2_5_3				|0.1
+
+SubsurfaceScatteringDiffuseMethod (methodID = 56) - not implemented in AwayBuilder atm
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|Scattering				|\ref awd_pt2_5_3				|0.2
+102			|Translucency			|\ref awd_pt2_5_3				|1
+601			|Scatter Color			|Color					|0xFFFFFF
+
+
+SpecularMethods
+
+CellSpecularMethod (methodID = 103)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|cut-off				|\ref awd_pt2_5_3				|0.5
+102			|smoothness				|\ref awd_pt2_5_3				|0.1
+
+FresnelSpecularMethod (methodID = 104)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+701			|BasedOnSurface			|bool					|true
+101			|power					|\ref awd_pt2_5_3				|5
+102			|Reflectance			|\ref awd_pt2_5_3				|0.1
+
+NormalMethods
+
+HeightMapNormalMethod (methodID = 151) - not available in AwayBuilder atm
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|World width			|\ref awd_pt2_5_3				|5
+102			|World height			|\ref awd_pt2_5_3				|5
+103			|World depth			|\ref awd_pt2_5_3				|5
+
+SimpleWaterNormalMethod (methodID = 152)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|Second Normal map		|AWD::TYPES::BADDR				|defaultTexture
+
+
+### ShadowMapMethods / EffectMethods
+
+ShadowMapMethodBlockMethod (methodID = 52) /
+EffectMethodBlockMethod (methodID = 52)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|TargetBlock			|AWD::TYPES::BADDR				|defaultTexture The id of the MethodBlock
+
+\subsection awd_pt2_13_2 BitmapTexture block (ID 82)
+
+The bitmap texture block defines a bitmap, either as an external file or as embedded image data, that can be referenced and used by other blocks.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|Variable				|VarString					|Look-up name
+Variable	|1						|uint8						|Image type 0: External 1: Embedded
+Variable	|4						|AWD::TYPES::UINT32						|Data length
+Variable	|Variable				|ByteArray or ConstString	|Image data (JPEG/PNG/ATF-file stream) or URL to external file.
+Variable	|Variable				|NumAttrList				|Texture properties (none in this version.)
+Variable	|Variable				|UserAttrList				|Texture user attributes.
+
+Table 27: Texture block fields
+
+\subsection awd_pt2_13_3 CubeTexture block (ID 83)
+
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|11						|BlockHeader				|\ref awd_pt2_9_1
+11			|1						|unit8						|0: external 1: embed
+12			|Variable				|VarString					|Look-up name
+Variable	|Variable				|ByteArray or ConstString	|Image data (JPEG/PNG/ATF-file stream) or URL to external file.
+Variable	|Variable				|ByteArray or ConstString	|Image data (JPEG/PNG/ATF-file stream) or URL to external file.
+Variable	|Variable				|ByteArray or ConstString	|Image data (JPEG/PNG/ATF-file stream) or URL to external file.
+Variable	|Variable				|ByteArray or ConstString	|Image data (JPEG/PNG/ATF-file stream) or URL to external file.
+Variable	|Variable				|ByteArray or ConstString	|Image data (JPEG/PNG/ATF-file stream) or URL to external file.
+Variable	|Variable				|ByteArray or ConstString	|Image data (JPEG/PNG/ATF-file stream) or URL to external file.
+Variable	|Variable				|NumAttrList				|CubeTexture properties (none)
+Variable	|Variable				|UserAttrList				|CubeTexture user attributes.
+
+Table 28: CubeTexture block fields
+
+\subsection awd_pt2_13_4 SharedMethod-Block(ID 91)
+
+A Shared Method is a Block that contains a Method that can be shared between multiple materials.
+In the AWD-Block-Structure it must appear before any materials that is using it.
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|11						|BlockHeader			|\ref awd_pt2_9_1
+11			|Variable				|VarString				|Look-up name.
+Variable	|Variable				|NumAttrList			|Method
+Variable	|Variable				|UserAttrList			|User attributes.
+
+Table 18: Container block fields (in addition to common scene object fields).
+
+\subsection awd_pt2_13_5 EffectMethods
+
+EffectMethods are stored in SharedMethod-Blocks, so they can be accessed by multiple Materials.
+
+ColorMatrixMethod (methodID = 401)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+801			|matrix					|ConstList of \ref awd_pt2_5_3	|default = identity matrix
+
+ColorTransformMethod (methodID = 402)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|alphaMultiplier		|\ref awd_pt2_5_3				|1
+102			|redMultiplier			|\ref awd_pt2_5_3				|1
+103			|greenMultiplier		|\ref awd_pt2_5_3				|1
+104			|blueMultiplier			|\ref awd_pt2_5_3				|1
+601			|colorOffset			|color					|0x00000000
+
+EnvMapMethod (methodID = 403)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|cubeTexture			|AWD::TYPES::BADDR				|DefaultCubeTexture
+101			|alpha					|\ref awd_pt2_5_3				|1
+2			|mask					|AWD::TYPES::BADDR				|Default-Texture
+
+LightMapMethod (methodID = 404)
+
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+401			|blendMode				|uint8					|default MULTIPLY(10) / other option= ADD(1)
+1			|texture				|AWD::TYPES::BADDR				|Default_Texture
+
+ProjectiveTextureMethod (methodID = 405)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+401			|mode					|uint8					|Default=MULTIPLY options: ADD MIX
+1			|textureProjector		|AWD::TYPES::BADDR				|default = null
+
+RimLightMethod (methodID = 406)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+601			|color					|color					|0xffffff
+101			|Strength				|\ref awd_pt2_5_3				|0.4
+102			|power					|\ref awd_pt2_5_3				|2
+
+AlphaMaskMethod (methodID = 407)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+701			|UseSecondaryUV			|bool					|false
+1			|texture				|AWD::TYPES::BADDR				|Default_texture
+
+RefractionEnvMapMethod (methodID = 408)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|envMap(CubeTexture)	|AWD::TYPES::BADDR				|Default_Cube_texture
+101			|RefractionIndex		|\ref awd_pt2_5_3				|0.1
+102			|Dispersion R			|\ref awd_pt2_5_3				|0.01
+103			|Dispersion G			|\ref awd_pt2_5_3				|0.01
+104			|Dispersion B			|\ref awd_pt2_5_3				|0.01
+105			|Alpha					|\ref awd_pt2_5_3				|1
+
+OutlineMethod (methodID = 409)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+601			|OutlineColor			|color					|0x00000000
+101			|OutlineSize			|\ref awd_pt2_5_3				|1	
+701			|ShowInnerLines			|bool					|true
+702			|DedicatedMesh			|bool					|false
+
+FresnelEnvMapMethod (methodID = 410)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|envMap					|AWD::TYPES::BADDR				|Default_Cube_Texture
+101			|alpha					|\ref awd_pt2_5_3				|1
+
+FogMethod (methodID = 411)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|Min-Distance			|\ref awd_pt2_5_3				|0
+102			|Max-Distance			|\ref awd_pt2_5_3				|1000
+601			|Color					|color					|0x808080
+
+
+\subsection awd_pt2_13_6 EffectMethodsShadowMapMethod-Block (ID 92)
+
+A ShadowMap is a Block that contains a ShadowMapMethod, and the AWD-ID (for the light it should be applied to).
+In the AWD-Block-Structure it must appear after the associated Light-Block, and before any Material-Block that is using it.
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|11						|BlockHeader			|\ref awd_pt2_9_1
+11			|Variable				|VarString				|Look-up name.
+Variable	|32						|Block-Address			|LightID
+Variable	|Variable				|NumAttrList			|Method
+Variable	|Variable				|UserAttrList			|User attributes.
+
+Table 18: Container block fields (in addition to common scene object fields).
+
+ShadowMapMethods
+
+Type ID ShadowMapMethod Type Category
+ID			|		 ShadowMapMethod			|		 Type Category		
+------------|-------------------			----|-------------------	
+1001 		|CascadeShadowMapMethod				|Composite-Method
+1002		| NearShadowMapMethod				|Composite-Method
+1101		| FilteredShadowMapMethod			|Methods
+1102		| DitheredShadowMapMethod			|Methods
+1103		|SoftShadowMapMethod				|Methods
+1104		|HardShadowMapMethod				|Methods
+
+CascadeShadowMapMethod (methodID = 1001)
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|baseMethod				| Method				|ShadowMapMethodBase (?)
+
+NearShadowMapMethod (methodID = 1002)
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|baseMethod				|Method					|ShadowMapMethodBase (?)
+
+FilteredShadowMapMethod (methodID = 1101)
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|Alpha					|\ref awd_pt2_5_3				|1.0
+102			|Epsilon				|\ref awd_pt2_5_3				|0.002
+
+DitheredShadowMapMethod (methodID = 1102)
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|Alpha					|\ref awd_pt2_5_3				|1
+102			|Epsilon				|\ref awd_pt2_5_3				|0.002
+201			|Samples				|\ref awd_pt2_5_3				|5
+103			|Range					|\ref awd_pt2_5_3				|1
+
+SoftShadowMapMethod (methodID = 1103)
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|Alpha					|\ref awd_pt2_5_3				|1
+102			|Epsilon				|\ref awd_pt2_5_3				|0.002
+201			|Samples				|\ref awd_pt2_5_3				|5
+103			|Range					|\ref awd_pt2_5_3				|1
+
+HardShadowMapMethod (methodID = 1104)
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+101			|Alpha					|\ref awd_pt2_5_3				|1
+102			|Epsilon				|\ref awd_pt2_5_3				|0.002
+
+\section awd_pt2_14 Animation blocks
+
+\subsection awd_pt2_14_1 Skeleton (ID 101)
+
+The Skeleton block defines a skeletal hierarchy of joints that can be bound to by any mesh (see the MeshData block for details on how to bind a mesh to a skeleton.)
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|11						|BlockHeader			|\ref awd_pt2_9_1
+0			|Variable				|VarString				|Look-up name
+Variable	|2						|uint16					|Number of joints
+Variable	|Variable				|NumAttrList			|Skeleton properties (none in this version.)
+Variable	|Variable				|List of SkeletonJoint	|A list of joints
+Variable	|Variable				|UserAttrList			|Skeleton user attributes.
+
+Table 30: Structure of a skeleton block.
+
+The skeleton block contains a list of joints which are the "bones" in the skeleton. The internal structure of a
+joint in AWD is defined by the next section. There can be virtually any number of joints (limited only by the
+16-bit integer defining the number) in a skeleton block, but the receiving engine might have harder
+restrictions on how many joints it can handle.
+
+\subsubsection awd_pt2_14_1_1 Skeleton joint
+
+The skeleton joint defines a deformable and bindable "bone" in the skeletal hierarchy. The data inside a joint
+structure defines it's name and parent-child relationships, as well as the "bind" transform, which describes
+the transformational state that the joint should be in when vertices are bound to it.
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|2						|uint16					|Joint ID
+4			|2						|uint16					|Parent joint ID
+Variable	|Variable				|VarString				|Look-up name
+Variable	|Variable				|Matrix4x3				|Bind pose transform
+Variable	|Variable				|NumAttrList			|Joint properties (none in this version.)
+Variable	|Variable				|UserAttrList			|Joint user attributes.
+
+Table 31: Structure of joints inside a skeleton block
+
+Each joint has an ID, which among other things is used by other joints to define the parent joint. A parent
+joint ID of -1 means there is no parent, i.e. that the defining joint is the root. The joint ID is also used to
+reference a particular joint from the joint index data stream in geometry blocks for binding.
+
+
+\subsection awd_pt2_14_2 SkeletonPose (ID 102)
+
+The skeleton pose block defines the transformations for all bones in a skeleton such that the skeleton assumes a particular static pose.
+These can then be used to position a mesh (e.g. a character) statically, or in a frame-by-frame animation using a SkeletonAnimation block (see the next section.)
+A pose comprises a list of joint transform structures, which in turn define the transformation for each of the joints in the skeleton. 
+It also defines the length of said list, and a name. There is no hard binding between a skeleton pose and a particular skeleton. 
+It's up to the logic of the parsing party (e.g. a game engine) to apply the pose to a compatible skeleton. 
+This allows for the same poses (and hence animations) to be used for several different skeletons, as long as they have the same structure.
+The below table defines the structure of the SkeletonPose block.
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|11						|BlockHeader			|\ref awd_pt2_9_1
+0			|Variable				|VarString				|Look-up name
+Variable	|2						|uint16					|Number of joint transformations
+Variable	|Variable				|NumAttrList			|Pose properties (none in this version.)
+Variable	|Variable				|List of JointTransform	|A list of joint transformations
+Variable	|Variable				|UserAttrList			|Pose user attributes.
+
+Table 32: Structure of SkeletonPose block.
+
+\subsubsection awd_pt2_14_2_1 Skeleton pose joint transform
+
+The joint transform element, a list of which is contained within the skeleton pose block, comprises a transform matrix for a single joint. 
+The order of the joint transform elements within the pose block should be the same as the order of the joint elements in the skeleton block, that is depth-first incrementally recursive.
+The first field of the joint transform element is a boolean which indicates whether there is a transformation defined for the joint represented by this element. 
+If true, the next field is a 4x4 matrix. If false, there is no second field and the next piece of data will be the next joint transform (if any.)
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|1						|bool					|Defines whether joint has transformation
+1			|Variable				|Matrix4x3				|Transformation for joint (if any)
+
+Table 33: Structure of a joint transform element inside a SkeletonPose block.
+
+\subsection awd_pt2_14_3 SkeletonAnimation (ID 103)
+
+Skeleton animation blocks define actual animation of a skeleton as frame-by-frame poses. 
+The term "frame" is used for a point in time at which an exact pose is defined in the file format. 
+It does not necessarily coincide with a refresh in the playback engine. 
+Instead, these frames should be regarded as keyframes, and the actual output during playback be calculated by interpolating two subsequent keyframes.
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			| 11					|BlockHeader			|\ref awd_pt2_9_1
+0			|Variable				|VarString				|Look-up name
+Variable	|2						|uint16					|Number of frames
+Variable	|Variable				|NumAttrList			|Animation properties (none in this version.)
+Variable	|Variable				|List of SkelAnimFrame	|Frames as a list of skeleton animation frame structures (see below.)
+Variable	|Variable				|UserAttrList			|Animation user attributes.
+
+Table 34: Structure of SkeletonAnimation blocks.
+
+\subsubsection awd_pt2_14_3_1 Skeleton animation frames
+
+The frames in a skeleton animation are defined in a list of skeleton animation frame structures, which are explained in the structure table below. 
+They consist of a reference to a skeleton pose block, as well as a duration in milliseconds for that frame. 
+This allows for variable-duration frames, which would typically be interpolated between by the animation engine.
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|4						| AWD::TYPES::BADDR				|ID of skeleton pose block.
+4			|2						|uint16					|Duration in milliseconds
+Table 35: Structure of SkelAnimFrame elements.
+
+\subsection awd_pt2_14_4 MeshPose (ID 111) / MeshPoseAnimation (ID 112)
+
+The MeshPose block defines the Vertex- Animation state of a Geometry .
+The MeshPoseAnimationBlock is similar to the MeshPose-Block. The only difference is, that, it contains a addional list of Animation-States and a additional UINT16 ( Number Of Frames/lenght of the addional list +1).
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			| Variable				|VarString				|Look-up name
+Variable	|4						|AWD::TYPES::BADDR		|targetGeometryID
+Variable	|2						|uint16					|Number of Frames
+Variable	|2						|uint16					|Number of Subgeometries
+Variable	|2						|uint16					|number of streams
+Variable	|2*number of streams	|uint16					|types of streams
+Variable	|Variable				|NumAttrList			|Mesh-Animation properties
+Variable	|Variable				|AnimationState			| Mesh-Animation-State
+Variable	|Variable				|AnimationStateList		|List of addional´Mesh-Animation-States
+Variable	|Variable				|UserAttrList			|Animation user attributes.
+
+Table 34: Structure of MeshPose / MeshPoseAnimation Blocks.
+
+Mesh Animation Properties
+
+All Mesh-Animation-properties are optional, so we have a minimal fileSize for the MeshAnimations with
+default settings. (you might want to overwrite the settings by code later anyway).
+
+ID			|		 Name			|		 Type			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|Loop					|bool					|true
+2			|StitchFinalFrame		|bool					|false
+3			|useTranlation			|bool					|false
+4			|absolutePositions		|bool					|true
+5			|parsingStyle			|uint16					|Default = 0
+
+
+0: all verticles saved
+1: use vertOffset
+2: vector3D + AWD::TYPES::UINT32
+6 vertOffset List of AWD::TYPES::UINT32 0 (can be used if the encoder orders verticles by
+unMorphed/Morphed)
+
+must be set for each subgeometry
+
+7 parsingStyleFrame bool Default = false.
+If true, the parsingStyle-property is expected to be
+written in every frame
+
+Mesh Animation State
+
+The Length of Stream and the List of Vertex-position are repeated for each SubGeometry.
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|2						|uint16					|Frame Duration
+2 (optional)| 2						|uint16					|ParsingStyle This is only set when “parsingStyleFrame” is true !
+variable	|4						| AWD::TYPES::UINT32				|Length of all Streams together
+Variable	|Variable				|variable				|All Streams
+
+
+	ID		|		  Stream 		|		 Type			
+------------|-----------------------|-------------------	
+1			|Vertex positions		|(float32)
+2			| Vertex positions		|(float64)
+3			| Original-Indicies (see parsingStyle 2)| 
+4			| UV coordinates (not used yet)| (float32)
+5			|UV coordinates (not used yet)| (float64)
+6			|Vertex normals (not used yet) |(float32)
+7			|Vertex normals (not used yet) |(float64)
+
+Streamdata
+
+The Number of Streams and theire Types are defined by the MeshPoseAnimationBlock, because they should be the same for each frame.
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|2						|AWD::TYPES::UINT32					|Length of Stream
+4			|variable				|variable				|StreamData
+
+Parsing Style
+
+The ParsingStyle tells the Parser how the StreamData of the Streams have to be interpreted.
+
+By setting the MeshPoseBlock-property “parsingStyleFrame” to True, the parsingStyle is not expected to be the same for all frames. 
+If “parsingStyleFrame” is False, the parsingStyle will not be written in the MeshAnimationState (the frames).
+
+Style Description
+
+0 (default) The Data of the Stream is expected to be present for each Vert of the SubGeometry 
+1 The Encoder has ordered the VertBuffer by nonAnimated and animated, and only the data for the animated verts are stored.
+To make this work, the MeshBlock-Property “vertOffset” must be set (for each SubGeometry). 
+This can only be used if “parsingStyleFrame” is false! 
+2 Only the data for the animated Verts is stored. To make this happen, a addional Stream has to be saved (add parsed as first stream)
+containing the original-list-Indicies of the animated verts.
+
+The Encoder have to calculate the parsing-style to use, so we end up with the lowest file-size possible.
+
+\subsection awd_pt2_14_5 AnimationSet (ID 113)
+
+An AnimationSet-Block is used to group multiple Animation-Blocks into one AnimationSet-Block.
+A AnimationSet-Blocks can be used for all types of Animation-Blocks, but one AnimationSet-Block cannot contain different types of Animations-Block.
+The AnimationSet-Block has no Animationset-type. Its Type is defined by the type of Animation-Blocks it contains.
+Atm the AnimationSet-Block can only be used for SkeletonAnimations and VertexAnimations.
+
+Offset		|		 Size			|		 Type				|		 Description
+------------|-----------------------|-------------------		|--------------------
+0			|Variable				|VarString					|Look-up name
+Variable	|2						|uint16						|Number of frames
+Variable	|Variable				| NumAttrList				|Animation properties (not used yet)
+Variable	|Variable				|List of AWD::TYPES::BADDR	|List of AnimationBlockIDs
+Variable	|Variable				|UserAttrList				|Animation user attributes
+
+Animation Properties
+
+ID		|		 Name			|		 Type			|Default	|		 Description
+--------|-------	------------|-------------------	|----------	|----------
+1		|jointsPerVerticle		|uint					| 4			|only used for SkeletonAnimationSet
+
+
+\subsection awd_pt2_14_6 Animator (ID 122)
+
+A Animator is the object that is used to bind a AnimationSet to a Mesh, and control its playback.
+Like the AnimationSet, this AnimatorBlock can be used for any time of Animation.
+
+Offset		|		 Size				|		 Type			|		 Description
+------------|-----------------------	|-------------------	|--------------------
+0			| 11						|BlockHeader			|\ref awd_pt2_9_1
+0			|Variable					|VarString				|Look-up name
+Variable	|Variable					|TypedPropertiesList	|\ref awd_pt2_animator_type and the type-specific properties
+Variable	|4							|AWD::TYPES::UINT32		|AnimationSet ID
+Variable	|2							|uint16					|Number of TargetsIDs
+Variable	|4 * Number of TargetsIDs	|AWD::TYPES::UINT32		|Target ID
+Variable	|2							|uint16					|The Active State of the AnimationSet (index of current active anim-clip)
+Variable	|1							|bool					|autoPlay (default=false)
+Variable	|Variable					|NumAttrList			|Animator properties
+Variable	|Variable					|UserAttrList			|Animator user attributes
+
+The type field defines the animator-type according to the following table:
+
+\subsubsection awd_pt2_animator_type Animator-Type
+
+Type ID 			|		Animator-Type  			
+--------------------|----------------------
+1					|SkeletonAnimator
+2					|VertexAnimator (no properties yet)
+3					|UVAnimator (not used yet)
+4					|ParticleAnimator (not used yet)
+
+
+SkeletonAnimator (type = 1)
+
+ID 			|		Name  			|		 Type 			|		 Default
+------------|-----------------------|-------------------	|--------------------
+1			|skeleton				|AWD::TYPES::BADDR				| must be set
+701			|use condensed indices	|bool					| false
+
+
+\subsection awd_pt2_14_6 UVAnimation (ID 121)
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			| 11					|BlockHeader			|\ref awd_pt2_9_1
+0			|Variable				|VarString				| Look-up name
+Variable	|2						|uint16					|Number of \ref awd_pt2_uvanim_frame
+Variable	|Variable				| NumAttrList			|Animation properties
+Variable	|Variable				|List of UVAnimFrame	|List of \ref awd_pt2_uvanim_frame
+Variable	|Variable				| UserAttrList			|Animation user attributes
+
+\subsubsection awd_pt2_uvanim_frame UV Animation Frame
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|24						|Matrix3x2				|Two-dimensional UV transformation.
+24			|1						|uint16					|Duration in milliseconds
+
+
+
+\subsection awd_pt2_14_7 TimeLine
+
+No already existing Block to compare to.
+A Timeline is what a MovieClip is called in FlashUI. 
+It consists of a number of frames. Each Frame containsa number of frame-commands.
+The frame-commands are used to put display-objects into the scenegraph.
+A timeline can be added to another timeline, using these commands.
+
+
+Offset    |Size     |Type                     |Description
+----------|---------|-------------------------|--------------------------------------
+0		  |11		|BlockHeader			  |\ref awd_pt2_9_1
+11        |variable |VarString                |Name
+variable  |1        |bool                     |IsScene (isRoot)
+variable  |1        |uint8                    |SceneID (if we have multiple scenes)
+variable  |1        |uint16                   |Number of Frames
+variable  |variable |List of AWDTimeLineFrame |All the TimeLine Frames
+variable  |variable |NumAttrList              |Timeline-properties
+variable  |variable |UserAttrList             |User Attributes
+
+
+\subsubsection awd_pt2_14_7_1 AWDTimeLineFrame
+
+Each Frame has a duration, so on import we can count the durations up to total duration.
+
+Offset    |Size                 |Type							|Description
+----------|---------------------|-----------------------------	|---------------------------------
+0         |4                    |Float32						|Frame Duration
+0         |2                    |uint16							|number of Frame-labels - the next 2 properties are parsed for each frame-label
+variable  |2  					|uint8 							|Frame Identifier-type (type of frame label)
+variable  |variable             |VarString						|Frame Identifier (Frame label
+variable  |1                    |uint16							|Number of AWDFrameCommand
+variable  |variable             |List of Frame-Command-Blocks	|Frame Command-blocks
+variable  |4                    |uint32							|Length of code-string
+variable  |Length of code-string|String							|The frame-script (js-code)
+variable  |variable             |UserAttrList					|User Attributes
+
+
+\subsection awd_pt2_14_8 AWDFrameCommand
+
+Adobes Frame-Generator provides us with FrameCommands for all the different properties that we might want to update on a object.\n
+This means, that we might have multiple Commands for the same object and the same frame.\n
+For AWD we will merge the commands, so we only will ever have 1 command per frame and object.\n
+The types of AWD-frameCommands are:
+
+ID	|	FrameCommand-Name              
+----|------------
+0	|Update Object 
+1	|Remove Object 
+2	|Update Sound 
+
+\subsubsection awd_pt2_14_8_1 Remove Object Command
+
+Offset  |Size					|Type				|Description							| Default
+--------|---------------------	|-------------------|-----------------------------			|-----------
+1		|4						|uint32				|The ObjectID of the object to remove   |0 (ERROR)
+
+\subsubsection awd_pt2_add_sound_command Add Sound Command
+
+The Add Sound Command is s asepperate Command, because the properties for a this command are very different than the properties for the commands that affect other type of objects.
+
+Offset  |Size					|Type				|Description										| Default
+--------|---------------------	|-------------------|-----------------------------						|-----------
+1		|4						|uint32				|The ObjectID that should be applied to the Sound   |0 (ERROR)
+1		|4						|uint32				|The Ressource (AWD) ID of the Sound to add			|0 (ERROR)	
+
+
+\todo Sound-properties like Loop, should be added here
+
+
+\subsubsection awd_pt2_14_8_3 Update Object Command
+
+The UpdateObject command includes all the other commands that adobe outputs. \n
+We first read a list of bool, to decide what properties of the objects should be updated. \n
+The first of the bool decides whether we are updating an existing item, or if we want to add a new item to the timelines-display list. \n
+
+Offset  |Size               |Type							|Description
+--------|-------------------|-----------------------------	|-------------------------
+0		|9					|Update Object Command Header	|defines what is expected as body
+9		|2					|Update Object Command Body		|the variable body of the Command
+
+\subsubsection awd_pt2_14_8_34 FrameCommand-ObjectProperties bitflag 
+Offset    |Type           |Name					|Description
+----------|---------------|--------------		|---------------------------------
+0         |boolean		  |addOrUpdate			|new = 0 / update = 1
+1         |boolean        |updateDisplayMatrix  |no-displaymatrix = 0 / displaymatrix  = 1
+2         |boolean        |updateColorMatrix    |no-colormatrix = 0 / colormatrix  = 1
+3         |boolean        |changeDepth          |no-depth-change = 0 / depth-change  = 1
+4         |boolean        |changeFilter         |no-filter-change = 0 / filter-change  = 1
+5		  |boolean        |changeVisibility     |no-visible-change = 0 / visibility-change  = 1
+6         |boolean		  |changeBlendMode      |no-blendmode = 0 / blendmode  = 1
+7		  |boolean		  |updateMaskDepth		|no-maskDepth= 0 / maskDepth= 1
+...		  |boolean		  |not used yet			|might be used later.
+15		  |boolean		  |read addinonal		|if we get to a point that 16 bit are not enough to descripe all properties, we can activate a adional properties list
+
+
+\subsubsection awd_pt2_14_8_35 Update Object Command -  Body
+
+Offset    |Size     |Type							|Description									|Parse if
+----------|---------|-----------------------------	|------------									|---------------------
+0         |4		|uint32							|Object ID - This is not depentant on any boolean (objectID must always be included). It is either the ID that is assigned to the new object, or the ID of the already existing object, that should be updated| always
+4         |4		|Blockaddr						|The AWD-ID of the object to add or update.		|addOrUpdate=false
+variable  |24       |6 x float32                    |DisplayMatrix2x3								|updateDisplayMatrix
+variable  |24       |20 x float32                   |ColorMatrix4x5									|updateColorMatrix
+variable  |4        |uint32							|Depth of the Clip								|changeDepth       
+variable  |TODO     |TODO							|TODO:specs for filter							|changeFilter
+variable  |1        |boolean						|Visible state of object						|changeVisibility
+variable  |variable |varString						|The instance-name of the new object.			|setInstanceName 
+variable  |1		|uint8							|BlendMode										|changeBlendMode
+variable  |1		|uint32							|The depth of clip-mask. 0=not used as mask		|updateMaskDepth
+variable  |2		| uint16						|Number of subshapes							|This should always be parsed, but should be 0 if the object found at objectID / ressourceID is not a shape
+variable  |variable	|list of BlockAddr				|The awd-ID to the fill-object for each subMesh	|If number of subshapes is > 0
+
+
+>	Claus suggested to get rid of the object-id, because we could use the objects-depth instead.
+>	I think in AWD this is not possible, because we rely heavily on that the objectID is correct for a object for all FrameCommands for this timeline, \n
+>	even if changing the object depth.
+
+
+
+
+
+\section awd_pt2_15 Sound Blocks
+
+\subsection awd_pt2_15_1 Sound
+
+The structure of the Sound-Block is the same as the structure of the texture-Block.\n
+They only differ in their Block-Type, and in the type of properties they can have in their properties-list.\n
+
+As with textures, the sound can be present in the file as embed data, or as URL.\n
+In either way, the parser will stop parsing the current AWD, hand the sound-data over to the Parsing-system, and wait until processing has finished.\n 
+
+#####Sound-properties
+
+ID		| Size	|Type		|Name			|Description 
+--------|-------|-----------|---------------|-----------
+TODO	|TODO	|TODO		|TODO			|TODO
+
+\todo The sound-properties are defined in the \ref awd_pt2_add_sound_command, so we should not need to store any properties on the sound-block.
+
+
+
+
+
+
+\section awd_pt2_16 Text BLocks
+
+\subsection awd_pt2_16_1 Font
+
+Because a font can have different styles, a font-block contains a list of font-styles.\n
+Each font-style provides a 2d-subgeometry for each included character of this font-style.\n
+Each fontstyle has a name.\n
+
+Standart FontStyle names:
+
+- Regular
+- Bold
+- Italc
+- Bold-Italic
+
+This is not a fixed list, other FontStyle-names can be used.\n
+
+After parsing, we should be able to get a character of a font (2D-subgeometry) for a specific fontstyle, from the font.\n
+
+For localization, the Font-blocks should be saved in sepperate AWD-files.\n
+
+
+Offset    |Size                 |Type                       |Description 
+----------|---------------------|---------------------------|------------
+0         |11					|Blockheader				|\ref block_header
+11		  |variable				|varString					|The FontName
+variable  |1					|uint8						|Number of \ref awd_pt2_font_style
+variable  |variable				|List of FontStyle			|List of  \ref awd_pt2_font_style
+variable  |variable				|NumAttrList				|Font-properties
+variable  |variable				|UserAttrList				|User Attributes
+
+
+\subsubsection awd_pt2_font_style FontStyle
+
+Offset		|Size					|Type               |Description 
+----------	|---------------------	|-------------------|------------
+0			|variable				|varString			|Font-style as string (e.g. "regular"/ "bold" / etc...)
+variable	|1						|uint32				|Number of \ref awd_pt2_font_shape for this FontStyle (is uint32 enough???)
+variable	|variable				|List of FontShapes |List of \ref awd_pt2_font_shape for this FontStyle
+
+\subsubsection awd_pt2_font_shape FontShape
+
+Offset  |Size       |Type       |Description 
+--------|-----------|-----------|------------
+0		|4			|uint32		|char that this SubGeometry should display
+4		|variable	|SubGeometry|The SubGeometry for this FontShape
+
+
+\subsection awd_pt2_16_2 Text-Format Block
+
+
+A TextFormat contains one ore more Text-format elements that can be used to style a Text.\n
+
+Offset    |Size                 |Type                       |Description 
+----------|---------------------|---------------------------|------------
+0         |11					|Blockheader				|\ref block_header
+variable  |1					|uint8						|Number of \ref awd_pt2_test_format
+variable  |variable				|List of FontStyle			|List of  \ref awd_pt2_test_format
+variable  |variable				|NumAttrList				|Text-format-properties
+variable  |variable				|UserAttrList				|User Attributes
+
+
+\subsubsection awd_pt2_test_format Text-format Element
+
+A Text-Format Element can be stored inside a Text-Format block or a Text-Element block.\n
+
+Offset		|Size               |Type                       |Description 
+----------	|-------------------|---------------------------|------------
+0			| 2					|unti16						| The id of this Text-format
+2			| Variable			|var_string					| The name of this Text-format
+Variable	| Variable			|NummAttrList				| The properties of this Text-format.
+
+Text-Format Properties:
+
+ID		| Size	|Type		|Name			|Description 
+--------|-------|-----------|---------------|-----------
+TODO	|TODO	|TODO		|TODO			|TODO
+
+
+\subsection awd_pt2_16_3 TextElement
+
+
+Textelement is the element that is used to define a Text for display on the screen.\n
+
+One Text-element might contain mutliple Text-Paragraphs.\n
+
+A text-paragraph defines  the behavior of (multi-line) texts, and can contain a number of TextRuns.\n
+
+A Text-Element with only a single line, contains only one Text-Paragraph.\n
+
+A TextRun is a series of text-letters that share the same Text-Format (Font, FontStyle, FontSize, etc.).\n
+
+There is a big difference if a Text-element should be using language-localization or not.\n
+
+Like for all other display-objects, things like DisplayMatrix and Instancename of TextElements are set by the FrameCommand, that adds them into a timeline.\n
+
+If no localization is used, of course we need to include all the Paragraphs and TextRuns-information into this TextElement directly, so we can collect and arrange the shapes we need to display the text.\n
+
+If localization is used, we have two Options:\n
+
+-	Fully Localization: 
+		-	We can redirect/map/translate this Text-element to another localized Text-element (probably loaded from another AWD-file),\n
+			so that each localization can have its unique Text-formatting. \n
+			In this case, the only property that needs to be provided by the TextField-Block must be a localizationID, \n
+			all other TextureFormatting and Content will be provided by the localized TextField we redirect to.\n
+-	Content Localization:  
+		-	Only the Content of this TextField is redirected/mapped/translated by localized content, \n
+			that can be found at localizationID. The Text-Properties are still used from the TextField, and global for all languages. \n
+			This comes with the restriction, that for "Content localization", a TextField should have only one TextRun.\n
+
+The first option could be nice for workflow, where a artists doing localization inside the flash-project, and adjust the text-formatting as needed. \n
+We could provide a special exporter option like "Create language awd", that would enable to export only all the text-fields in the document (that are now localized) while taking care that they are still saved with same localizationID as the original Textfields.\n
+
+At first glance, the first option (Fully Localization) seams like the way to go.\n
+
+But what is with supporting basic html parsing into the function that collects and arranges the text-shapes for display.\n
+
+If we would include this feature, the second option "Content Localization" can now also have localized text-formatting (via html).\n
+
+So i am not sure what is the best way to do it.\n
+
+
+
+Offset  |Size       |Type               |Description 
+--------|-----------|-------------------|------------
+0       |11         |Blockheader        |\ref block_header
+11		|1			|uint8				|Type of textfield (static/dynamic/input) 
+12		|1			|uint8				|Type of textfield-renderer to use (For now only GPU-Shape-render, but might be useful to have the option to switch renderer of text per textField...- even for localized textfields)
+13		|1			|uint8				|localization type (0: none, 1:Full, 2:Content)
+14      |4          |uint32				|The ID for localization lookup - only parsed if localization-type>0
+variable|1          |uint8				|number of text-format stored with this text-element (might be 0, when text-formats are stored in blocks)
+variable|variable   |\ref awd_pt2_test_format		|number of text-format stored with this text-element (might be 0, when text-formats are stored in blocks)
+variable|2          |uint8				|number of \ref awd_pt2_paragraph must be 0 if localization-type==1
+variable|variable	|list of Paragraph  |The list of \ref awd_pt2_paragraph, that are containing TextRun - if localization-type==2 only the first TextRun will be used (replacing all TextRuns in all paragraphs)
+variable|variable	|NumAttrList        |TextField-properties
+variable|variable	|UserAttrList       |User Attributes
+
+
+\subsubsection awd_pt2_paragraph Text-Paragraph
+
+Offset		|Size               |Type                       |Description 
+----------	|-------------------|---------------------------|------------
+0			|variable			|NumAttrList				|Paragraph-properties (better not use NumAttrList, but just store some properties directly ?)
+variable    |2					|uint16						|The Number of \ref awd_pt2_textrun
+variable	|variable			|list of TextRun			|The list of \ref awd_pt2_textrun,that are defining Text-formatting for a series of letter
+
+#####ParagraphProperties
+
+TODO: add specs for Paragraph-properties
+
+ID    | Size                 |Type                 |Name        |Description 
+----------|---------------------|------------|-----------------|-----------
+TODO|TODO|TODO|TODO|TODO
+
+\subsubsection awd_pt2_textrun TextRun
+
+Offset    |Size                 |Type                       |Description 
+----------|---------------------|---------------------------|------------
+0         |variable				|varstring						|The text of this TextRun
+variable  |2					|uint16						|The id of the text-format to use
+
+
+\subsubsection awd_pt2_textfiel_propsh TextField-Properties
+
+TODO: add specs for textfield-properties (renderAsHtml / etc)
+
+ID    | Size                 |Type                 |Name        |Description 
+----------|---------------------|------------|-----------------|-----------
+TODO|TODO|TODO|TODO|TODO
+
+
+
+
+
+
+
+
+\section awd_pt2_15 Miscellaneous blocks
+
+\subsection awd_pt2_15_1 Command Block(ID 253)
+
+A Command Block is used to execute a action defined by the CommandID. 
+In AWD2.1 the only available action is: “PutObjectIntoSceneGraph”.
+
+Offset		|		 Size			|		 Type			|		 Description
+------------|-----------------------|-------------------	|--------------------
+0			|11						| BlockHeader			|\ref awd_pt2_9_1
+11			|1						| bool					|has SceneHeader
+12			|Variable				|SceneHeader			|\ref awd_pt2_12_1(optional)
+11			|2						|uint					|Number of Commands
+0			|Variable				|TypedpropertiesList *	|List of Command-properties
+Variable	|Variable				| NumAttrList			|Commandattributes.
+Variable	|Variable				| UserAttrList			|User attributes.
+
+Table 18: Container block fields (in addition to common scene object fields).
+
+Type-ID		|		 name				| 		 Description
+-------		|------------------			|-------------
+1			|Put Object into SceneGraph	| 
+2			|Copy SceneGraph-Object		|
+
+Table 14: Command-Types
+
+Command “Put-Object-into-SceneGraph” - Properties
+
+ID		|		 Name			|		 Type		
+--------|-----------------------|-------------------
+1		|targetObject			|BADDR
+2		|Parent-Object			|BADDR
+
+\subsection awd_pt2_15_2 Namespace blocks (ID 254)
+
+The namespace block is a block that must exist in any AWD file with user extensions. 
+A namespace block couples a short numeric "namespace handle" which is unique within the file, with a namespace string identifier which should be globally unique. 
+To make sure that namespace string identifiers are unique, good practice is using a URI with a domain that is controlled by the defining party, e.g. http://www.away3d.com/prefab/awpns for the Prefab3D AWP project format.
+The block body itself consists of an 8-bit integer for the numeric ID, and a variable string for the URI/string identifier, as defined by the below table.
+
+Offset		|		 Size			|		 Type		|		 Description
+------------|-----------------------|-------------------|--------------------
+0			|	1					|	uint8			| Namespace handle	(Zero is reserved for null namespaces.)
+1			|	Variable			|	VarString		| Namespace URI/string identifier.
+Table 36: Structure of a single namespace definition, multiple of which can occur in a namespace list block.
+
+NOTE: Zero must not be used as a numeric namespace ID. It is reserved for use as a null reference when a block or user attribute does not have a namespace.
+See the section on "Extending AWD" for more information about how to use namespaces.
+
+\subsection awd_pt2_15_3 Meta-data blocks (ID 255)
+
+The meta-data block is something that encoders must include in an AWD document to define metadata such as creation date, name and version of encoder etc. 
+Only one meta-data block should exist in an AWD document, and it should occur at the very start of the block list.
+The structure is very simple, comprising only a numeric property list.
+
+Offset    |		 Size			|		 Type		|		 Description
+----------|---------------------|-------------------|--------------------
+0		  |		Variable		|	NumAttrList		|	Meta-data properties.
+
+The properties of a meta-data blocks are defined by the following table.
+
+ID		|		 Name			|		 Type		|		 Description
+--------|-----------------------|-------------------|--------------------
+1		|Timestamp				| AWD::TYPES::UINT32			|	Generation date and time defined as seconds since the Epoch (00:00, 1/1 1970.)
+2		|Encoder name			| ConstString		|	Name of encoder (i.e. the library or tool used to encode the AWD file, e.g. libawd.)
+3		|Encoder version		| ConstString		|	Encoder version.
+4		|Generator name			| ConstString		|	Name of generator (i.e. the tool used to create the content, e.g. Maya.)
+5		|Generator version		| ConstString		|	Generator version.
+
+ */

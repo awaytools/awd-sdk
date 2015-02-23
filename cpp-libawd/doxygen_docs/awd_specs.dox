@@ -1,0 +1,55 @@
+﻿/*! \page awd_specs AWD 3.0 Specifications
+\brief %AWD 3.0 Specification in markdown format.
+
+# Away3D Data format (AWD) v3.0 Alpha
+
+This is a work-in-progress draft of the file format specification for the binary (second-generation) Away3D data format (AWD).
+
+This AWD3.0 Specification is an extension of the AWD2.1 Specification.
+
+Any community feedback is welcome at:
+
+● https://github.com/awaytools
+
+● http://www.away3d.com/forum
+
+● 80prozent@differentdesign.de
+
+
+Please note that this is an incomplete document, in an early pre-release state.
+
+Also note that the tools that are available at https://github.com/awaytools are under development and should not be expected to conform fully to this specification at any point before it's final release.
+
+
+
+\subpage awd_specs_1
+
+1.	\ref awd_pt1_1
+2.	\ref awd_pt1_2
+3.	\ref awd_pt1_3
+4.	\ref awd_pt1_4
+5.	\ref awd_pt1_5
+6.	\ref awd_pt1_6
+
+\subpage awd_specs_2
+
+1.	\ref awd_pt2_1
+2.	\ref awd_pt2_2
+3.	\ref awd_pt2_3
+4.	\ref awd_pt2_4
+5.	\ref awd_pt2_data_block_concept
+6.	\ref awd_pt2_9
+7.	\ref awd_pt2_10
+8.	\ref awd_pt2_11
+9.	\ref awd_pt2_12
+10.	\ref awd_pt2_13
+11.	\ref awd_pt2_14
+12.	\ref awd_pt2_15
+
+\subpage awd_specs_3
+
+1.	\ref awd_pt3_1
+2.	\ref awd_pt3_2
+3.	\ref awd_pt3_3
+4.	\ref awd_pt3_4
+ */

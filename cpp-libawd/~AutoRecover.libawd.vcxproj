@@ -1,0 +1,1028 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="2010 Debug new|Win32">
+      <Configuration>2010 Debug new</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2010 Debug new|x64">
+      <Configuration>2010 Debug new</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2010 Debug|Win32">
+      <Configuration>2010 Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2010 Debug|x64">
+      <Configuration>2010 Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2010 Release|Win32">
+      <Configuration>2010 Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2010 Release|x64">
+      <Configuration>2010 Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2011 debug|Win32">
+      <Configuration>2011 debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2011 debug|x64">
+      <Configuration>2011 debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2011 Release|Win32">
+      <Configuration>2011 Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2011 Release|x64">
+      <Configuration>2011 Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2013 Debug libawd|Win32">
+      <Configuration>2013 Debug libawd</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2013 Debug libawd|x64">
+      <Configuration>2013 Debug libawd</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2013 Release libawd|Win32">
+      <Configuration>2013 Release libawd</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2013 Release libawd|x64">
+      <Configuration>2013 Release libawd</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2014 Debug libawd|Win32">
+      <Configuration>2014 Debug libawd</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2014 Debug libawd|x64">
+      <Configuration>2014 Debug libawd</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2014 Release libawd|Win32">
+      <Configuration>2014 Release libawd</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2014 Release libawd|x64">
+      <Configuration>2014 Release libawd</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2015 Debug|Win32">
+      <Configuration>2015 Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2015 Debug|x64">
+      <Configuration>2015 Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2015 Release|Win32">
+      <Configuration>2015 Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="2015 Release|x64">
+      <Configuration>2015 Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{9C852FB1-3261-4AD6-8ACD-C97B1AAEBA29}</ProjectGuid>
+    <RootNamespace>libawd</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v90</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v90</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v90</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v90</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v90</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v90</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v100</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release2012|x64'">
+    <PlatformToolset>v90</PlatformToolset>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 debug|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Debug|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|x64'" Label="Configuration">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='2010 Debug|Win32'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='2010 Debug|x64'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2011 debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2015 Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2011 debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='2015 Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2011 debug|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2015 Debug|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2011 debug|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2015 Debug|x64'">build\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2011 debug|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2015 Debug|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2011 debug|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2015 Debug|x64'">build\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2011 Release|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2010 Release|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2015 Release|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|Win32'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2011 Release|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2010 Release|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2015 Release|x64'">build\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|x64'">build\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2011 Release|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2010 Release|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2015 Release|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|Win32'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2011 Release|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2010 Release|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2015 Release|x64'">build\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|x64'">build\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release2012|x64'">build\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release2012|x64'">build\</IntDir>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release2012|x64'">.lib</TargetExt>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2011 debug|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|Win32'">false</PostBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2011 debug|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2011 Release|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2010 Release|Win32'">false</PreBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2011 Release|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2010 Release|Win32'">false</PostBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PreBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|Win32'">false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|Win32'">false</PostBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|Win32'">false</PreBuildEventUseInBuild>
+    <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|Win32'">false</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|x64'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|x64'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|x64'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|x64'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|x64'">
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "{rev}"</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ShowIncludes>false</ShowIncludes>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2011 debug|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "{rev}"</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "{rev}"</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "{rev}"</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "{rev}"</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2015 Debug|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "{rev}"</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2011 debug|x64'">
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2010 Debug new|x64'">
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2013 Debug libawd|x64'">
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2014 Debug libawd|x64'">
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level2</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2015 Debug|x64'">
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|Win32'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2011 Release|x64'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2010 Release|x64'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2014 Release libawd|x64'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2015 Release|x64'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='2013 Release libawd|x64'">
+    <PreBuildEvent>
+      <Command>hg tip --template "#define AWD_VERSION_BUILD {rev}" &gt; include/hgversion.h</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command>xcopy /Y /I include build\awd</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release2012|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_7ZIP_ST;%(PreprocessorDefinitions);AWD_VERSION_BUILD=0</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>include;lib\lzma;lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\awd.h" />
+    <ClInclude Include="include\base\anim_clip.h" />
+    <ClInclude Include="include\base\anim_frame.h" />
+    <ClInclude Include="include\base\attr.h" />
+    <ClInclude Include="include\base\block.h" />
+    <ClInclude Include="include\base\datablock.h" />
+    <ClInclude Include="include\base\name.h" />
+    <ClInclude Include="include\base\scene_base.h" />
+    <ClInclude Include="include\base\state_element_base.h" />
+    <ClInclude Include="include\blocks\animator.h" />
+    <ClInclude Include="include\blocks\anim_set.h" />
+    <ClInclude Include="include\blocks\audio.h" />
+    <ClInclude Include="include\blocks\bitmap_texture.h" />
+    <ClInclude Include="include\blocks\camera.h" />
+    <ClInclude Include="include\blocks\command.h" />
+    <ClInclude Include="include\blocks\cube_texture.h" />
+    <ClInclude Include="include\blocks\effect_method.h" />
+    <ClInclude Include="include\blocks\font.h" />
+    <ClInclude Include="include\blocks\geometry.h" />
+    <ClInclude Include="include\blocks\light.h" />
+    <ClInclude Include="include\blocks\light_picker.h" />
+    <ClInclude Include="include\blocks\material.h" />
+    <ClInclude Include="include\blocks\mesh.h" />
+    <ClInclude Include="include\blocks\meta.h" />
+    <ClInclude Include="include\blocks\namespace.h" />
+    <ClInclude Include="include\blocks\objectcontainer.h" />
+    <ClInclude Include="include\blocks\primitive.h" />
+    <ClInclude Include="include\blocks\scene.h" />
+    <ClInclude Include="include\blocks\shadows.h" />
+    <ClInclude Include="include\blocks\skeleton_anim_clip.h" />
+    <ClInclude Include="include\blocks\skeleton_pose.h" />
+    <ClInclude Include="include\blocks\skeleton.h" />
+    <ClInclude Include="include\blocks\skybox.h" />
+    <ClInclude Include="include\blocks\texture_projector.h" />
+    <ClInclude Include="include\blocks\text_element.h" />
+    <ClInclude Include="include\blocks\text_format.h" />
+    <ClInclude Include="include\blocks\timeline.h" />
+    <ClInclude Include="include\blocks\uv_pose.h" />
+    <ClInclude Include="include\blocks\uv_anim_clip.h" />
+    <ClInclude Include="include\blocks\vertex_anim_clip.h" />
+    <ClInclude Include="include\blocks\vertex_pose.h" />
+    <ClInclude Include="include\awd_project.h" />
+    <ClInclude Include="include\elements\block_instance.h" />
+    <ClInclude Include="include\elements\fonts.h" />
+    <ClInclude Include="include\elements\frame_commands.h" />
+    <ClInclude Include="include\elements\geom_elements.h" />
+    <ClInclude Include="include\elements\shading.h" />
+    <ClInclude Include="include\elements\skeleton_joint.h" />
+    <ClInclude Include="include\elements\stream.h" />
+    <ClInclude Include="include\elements\subgeometry.h" />
+    <ClInclude Include="include\elements\timeline_frame.h" />
+    <ClInclude Include="include\files\awd_file.h" />
+    <ClInclude Include="include\files\awd_lzma.h" />
+    <ClInclude Include="include\files\awd_zlib.h" />
+    <ClInclude Include="include\files\file_reader.h" />
+    <ClInclude Include="include\files\file_writer.h" />
+    <ClInclude Include="include\utils\awd_globals.h" />
+    <ClInclude Include="include\utils\awd_properties.h" />
+    <ClInclude Include="include\utils\awd_types.h" />
+    <ClInclude Include="include\utils\lists.h" />
+    <ClInclude Include="include\utils\platform.h" />
+    <ClInclude Include="include\utils\settings.h" />
+    <ClInclude Include="include\utils\util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="doxygen_docs\awd_specs.dox" />
+    <None Include="doxygen_docs\awd_specs_part_1.dox" />
+    <None Include="doxygen_docs\awd_specs_part_2.dox" />
+    <None Include="doxygen_docs\awd_specs_part_3.dox" />
+    <None Include="doxygen_docs\libawd_coding_conventions.dox" />
+    <None Include="doxygen_docs\libawd_exporter_example.dox" />
+    <None Include="doxygen_docs\libawd_features.dox" />
+    <None Include="doxygen_docs\libawd_general_usage.dox" />
+    <None Include="doxygen_docs\libawd_importer_example.dox" />
+    <None Include="doxygen_docs\libawd_introduction.dox" />
+    <None Include="doxygen_docs\libawd_main.dox" />
+    <None Include="doxygen_docs\libawd_usage.dox" />
+    <None Include="lib\lzma\README" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\awd_project.cc" />
+    <ClCompile Include="src\base\AnimationClipBase.cc" />
+    <ClCompile Include="src\base\AnimationFrameBase.cc" />
+    <ClCompile Include="src\base\AttrElementBase.cc" />
+    <ClCompile Include="src\base\BlockBase.cc" />
+    <ClCompile Include="src\base\DataBlockBase.cc" />
+    <ClCompile Include="src\base\NamedElementBase.cc" />
+    <ClCompile Include="src\base\SceneBlockBase.cc" />
+    <ClCompile Include="src\base\StateElementbase.cc" />
+    <ClCompile Include="src\blocks\AnimationSet.cc" />
+    <ClCompile Include="src\blocks\Animator.cc" />
+    <ClCompile Include="src\blocks\Audio.cc" />
+    <ClCompile Include="src\blocks\BitmapTexture.cc" />
+    <ClCompile Include="src\blocks\Camera.cc" />
+    <ClCompile Include="src\blocks\Command.cc" />
+    <ClCompile Include="src\blocks\CubeTexture.cc" />
+    <ClCompile Include="src\blocks\EffectMethod.cc" />
+    <ClCompile Include="src\blocks\Font.cc" />
+    <ClCompile Include="src\blocks\Geometry.cc" />
+    <ClCompile Include="src\blocks\Light.cc" />
+    <ClCompile Include="src\blocks\LightPicker.cc" />
+    <ClCompile Include="src\blocks\Material.cc" />
+    <ClCompile Include="src\blocks\Mesh.cc" />
+    <ClCompile Include="src\blocks\MetaData.cc" />
+    <ClCompile Include="src\blocks\Namespace.cc" />
+    <ClCompile Include="src\blocks\ObjectContainer3D.cc" />
+    <ClCompile Include="src\blocks\Primitive.cc" />
+    <ClCompile Include="src\blocks\Scene.cc" />
+    <ClCompile Include="src\blocks\ShadowMethod.cc" />
+    <ClCompile Include="src\blocks\Skeleton.cc" />
+    <ClCompile Include="src\blocks\SkeletonAnimationClip.cc" />
+    <ClCompile Include="src\blocks\SkeletonPose.cc" />
+    <ClCompile Include="src\blocks\SkyBox.cc" />
+    <ClCompile Include="src\blocks\TextElement.cc" />
+    <ClCompile Include="src\blocks\TextFormat.cc" />
+    <ClCompile Include="src\blocks\TextureProjector.cc" />
+    <ClCompile Include="src\blocks\Timeline.cc" />
+    <ClCompile Include="src\blocks\UVAnimationClip.cc" />
+    <ClCompile Include="src\blocks\UVPose.cc" />
+    <ClCompile Include="src\blocks\VertexAnimationClip.cc" />
+    <ClCompile Include="src\blocks\VertexPose.cc" />
+    <ClCompile Include="src\elements\attributes\AttrBase.cc" />
+    <ClCompile Include="src\elements\attributes\NumAttr.cc" />
+    <ClCompile Include="src\elements\attributes\NumAttrList.cc" />
+    <ClCompile Include="src\elements\attributes\UserAttr.cc" />
+    <ClCompile Include="src\elements\attributes\UserAttrList.cc" />
+    <ClCompile Include="src\elements\BlockInstance.cc" />
+    <ClCompile Include="src\elements\FontElements.cc" />
+    <ClCompile Include="src\elements\FrameCommands.cc" />
+    <ClCompile Include="src\elements\ShadingMethod.cc" />
+    <ClCompile Include="src\elements\SkeletonJoint.cc" />
+    <ClCompile Include="src\elements\SubGeom.cc" />
+    <ClCompile Include="src\elements\TimeLineFrame.cc" />
+    <ClCompile Include="src\files\AWDFile.cc" />
+    <ClCompile Include="src\files\awdlzma.cc" />
+    <ClCompile Include="src\files\awdzlib.cc" />
+    <ClCompile Include="src\files\FileReader.cc" />
+    <ClCompile Include="src\files\FileWriter.cc" />
+    <ClCompile Include="src\utils\geomutil\geomutil.cc" />
+    <ClCompile Include="src\utils\geomutil\geomutil_helper.cc" />
+    <ClCompile Include="src\utils\settings\Settings.cc" />
+    <ClCompile Include="src\utils\util.cc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

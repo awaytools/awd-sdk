@@ -13,285 +13,492 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{88ff70bd-d79d-4981-ba62-221a281a686d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils">
+      <UniqueIdentifier>{a842c22d-3643-4416-9ba4-ca12e04ed003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utils\geometryutil">
+      <UniqueIdentifier>{d8dbca34-3fda-4efe-9eec-67e33a33c133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\blocks">
+      <UniqueIdentifier>{dd7fdd09-348e-4ac7-b6ed-20a41c20fa23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="doxygen_doc">
+      <UniqueIdentifier>{2ae2e980-687d-4e33-866a-efd5f12c2d09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\files">
+      <UniqueIdentifier>{4efec3da-cea3-4112-97eb-234b65dc1f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\files">
+      <UniqueIdentifier>{01a4e209-bc81-4257-b217-19f89837dd5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\elements">
+      <UniqueIdentifier>{cfc94353-2e5f-4e0e-a0ce-b7d04414ce4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\elements">
+      <UniqueIdentifier>{dfadf973-1a42-4730-83c1-32922e1d6e80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\blocks">
+      <UniqueIdentifier>{2bc63879-0528-4c39-8d0e-f8e91f62802d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\base">
+      <UniqueIdentifier>{d18b8179-273b-40cb-a719-319fe9eef8b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\base">
+      <UniqueIdentifier>{c379cdf1-aac6-400e-ad7c-cccbc54eb5df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\elements\attributes">
+      <UniqueIdentifier>{278e86f4-25f9-4201-b375-7f7ff098aa4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\elements\geom">
+      <UniqueIdentifier>{0374a699-5833-4230-9256-49818771e3ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lib\lzma\Alloc.h">
+    <ClInclude Include="include\blocks\anim_set.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\animator.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\bitmap_texture.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\camera.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\command.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\cube_texture.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\effect_method.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\geometry.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\light.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\light_picker.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\material.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\mesh.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\meta.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\namespace.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\objectcontainer.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\primitive.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\scene.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\shadows.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\skeleton.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\skybox.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\texture_projector.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\uv_anim_clip.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\vertex_anim_clip.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\vertex_pose.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\skeleton_anim_clip.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\skeleton_pose.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\uv_pose.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\audio.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\font.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\timeline.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\text_element.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\text_format.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\awd_project.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\attr.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\base\anim_clip.h">
+      <Filter>Header Files\base</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\anim_frame.h">
+      <Filter>Header Files\base</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\attr.h">
+      <Filter>Header Files\base</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\block.h">
+      <Filter>Header Files\base</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\datablock.h">
+      <Filter>Header Files\base</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\scene_base.h">
+      <Filter>Header Files\base</Filter>
+    </ClInclude>
+    <ClInclude Include="include\base\state_element_base.h">
+      <Filter>Header Files\base</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elements\skeleton_joint.h">
+      <Filter>Header Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elements\stream.h">
+      <Filter>Header Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elements\subgeometry.h">
+      <Filter>Header Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elements\timeline_frame.h">
+      <Filter>Header Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elements\fonts.h">
+      <Filter>Header Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elements\frame_commands.h">
+      <Filter>Header Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elements\shading.h">
+      <Filter>Header Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elements\block_instance.h">
+      <Filter>Header Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\awd_file.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\awd_lzma.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\awd_zlib.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\file_reader.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\files\file_writer.h">
+      <Filter>Header Files\files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\awd_properties.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\awd_types.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\lists.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\platform.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\settings.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\util.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elements\geom_elements.h">
+      <Filter>Header Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils\awd_globals.h">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
     <ClInclude Include="include\awd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\awd_types.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\utils\dirent.h">
+      <Filter>Header Files\utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\awdlzma.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\awdzlib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\block.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lzma\Bra.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\crc32.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\deflate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\inffast.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\inffixed.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\inflate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\inftrees.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\libawd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lzma\LzFind.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lzma\LzFindMt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lzma\LzHash.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lzma\LzmaDec.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lzma\LzmaEnc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lzma\LzmaLib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\meta.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\name.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ns.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\platform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\shading.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\skelanim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\skeleton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\stream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\trees.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\lzma\Types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\uvanim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\zconf.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\zlib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\zlib\zutil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\geomutil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\anim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\vertexanim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\geomutilhelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\primitive.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\light.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\method.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\message.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\shadows.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="lib\zlib\adler32.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\lzma\Alloc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\attr.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\awd.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\awdlzma.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\awdzlib.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\block.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\lzma\Bra.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\camera.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\zlib\crc32.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\zlib\deflate.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\geomutil.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\zlib\inffast.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\zlib\inflate.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\light.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\lzma\LzFind.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\lzma\LzmaDec.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\lzma\LzmaEnc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\lzma\LzmaLib.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\material.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mesh.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\meta.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\name.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ns.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\primitive.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scene.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shading.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\skelanim.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\skeleton.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\stream.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\texture.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\zlib\trees.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\util.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\uvanim.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\zlib\zutil.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\vertexanim.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\anim.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\geomutilhelper.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\method.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\message.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\shadows.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\lzma\README" />
+    <None Include="doxygen_docs\awd_specs_part_1.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\awd_specs_part_2.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\awd_specs_part_3.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\awd_specs.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\libawd_importer_example.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\libawd_introduction.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\libawd_main.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\libawd_coding_conventions.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\libawd_exporter_example.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\libawd_features.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\libawd_usage.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+    <None Include="doxygen_docs\libawd_general_usage.dox">
+      <Filter>doxygen_doc</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\blocks\AnimationSet.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Animator.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\BitmapTexture.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Camera.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Command.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\CubeTexture.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\EffectMethod.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Geometry.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Light.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\LightPicker.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Material.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\MetaData.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Namespace.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\ObjectContainer3D.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Primitive.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Scene.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\ShadowMethod.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Skeleton.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\SkeletonAnimationClip.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\SkeletonPose.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\SkyBox.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\TextureProjector.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\UVAnimationClip.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\UVPose.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\VertexAnimationClip.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\VertexPose.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Audio.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Timeline.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\Font.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\AnimationClipBase.cc">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\AnimationFrameBase.cc">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\AttrElementBase.cc">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\BlockBase.cc">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\DataBlockBase.cc">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\SceneBlockBase.cc">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\base\StateElementbase.cc">
+      <Filter>Source Files\base</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\ShadingMethod.cc">
+      <Filter>Source Files\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\SkeletonJoint.cc">
+      <Filter>Source Files\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\BlockInstance.cc">
+      <Filter>Source Files\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\attributes\NumAttr.cc">
+      <Filter>Source Files\elements\attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\attributes\NumAttrList.cc">
+      <Filter>Source Files\elements\attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\attributes\UserAttr.cc">
+      <Filter>Source Files\elements\attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\attributes\UserAttrList.cc">
+      <Filter>Source Files\elements\attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\attributes\AttrBase.cc">
+      <Filter>Source Files\elements\attributes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\FileReader.cc">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\FileWriter.cc">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\util.cc">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\geomutil\geomutil.cc">
+      <Filter>Source Files\utils\geometryutil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\geomutil\geomutil_helper.cc">
+      <Filter>Source Files\utils\geometryutil</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\AWDFile.cc">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\awdzlib.cc">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\files\awdlzma.cc">
+      <Filter>Source Files\files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\awd_project.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\FontElements.cc">
+      <Filter>Source Files\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\TextElement.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\TextFormat.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\FrameCommands.cc">
+      <Filter>Source Files\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\TimeLineFrame.cc">
+      <Filter>Source Files\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="src\blocks\MeshInst.cc">
+      <Filter>Source Files\blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\DataStream.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\DataStreamAttrBase.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\geom_types.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\PathSegment.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\PathShape.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\SharedVertex.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\SubGeom.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\SubGeomInternal.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\Triangle.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\elements\geom\Vertex.cc">
+      <Filter>Source Files\elements\geom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\Settings.cc">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\Dirent.cpp">
+      <Filter>Source Files\utils</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

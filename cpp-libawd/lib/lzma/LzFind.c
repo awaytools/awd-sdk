@@ -43,7 +43,7 @@ static int LzInWindow_Create(CMatchFinder *p, UInt32 keepSizeReserv, ISzAlloc *a
 }
 
 Byte *MatchFinder_GetPointerToCurrentPos(CMatchFinder *p) { return p->buffer; }
-Byte MatchFinder_GetIndexByte(CMatchFinder *p, Int32 index) { return p->buffer[index]; }
+Byte MatchFinder_GetIndexByte(CMatchFinder *p, INT32 index) { return p->buffer[index]; }
 
 UInt32 MatchFinder_GetNumAvailableBytes(CMatchFinder *p) { return p->streamPos - p->pos; }
 

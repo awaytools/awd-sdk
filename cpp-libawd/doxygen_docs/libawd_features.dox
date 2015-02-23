@@ -1,0 +1,61 @@
+﻿/*! \page libawd_features Features of cpp-libawd
+ 
+ This features should be supported by libawd 3.0 (we are working on it):
+
+ \section features_sec_1 Multiple Files
+ 
+The libawd should be able to export and import multiple AWDFiles with cross referencing assets.
+After exporting a file, the libawd should still keep all exported AWDBlocks and their connections intakt, so that we are able to create applications that are using libawd as a asset-library.
+
+ \section features_sec_2 Animated 2d timelines
+
+ The libawd should be able to store the animated Timelines that come from Adobe Flash Professional.
+ 
+ \section features_sec_3 Animated 3d property-tracks
+
+ The libawd should be able to store animated 3d property-tracks that are made available by most 3d-applications.
+ 
+ \section features_sec_4 Custom Streams
+
+ The libawd should be most flexible with the way the subGeometry streams are stored / defined.
+ 
+ \section features_sec_5 Python compatibility
+
+ The cpp-libawd should be portable to python, so we can use the exact same structure to create python applications.
+ Also we might be able to create a python-cpp binding later.
+  
+ \section features_sec_6 Support Sound
+
+ The libawd should support storage of sound-data
+ 
+ \section features_sec_7 Caching of AWDBlocks
+
+ The libawd should be able to cache AWDBlocks by different keys.
+  
+ This keys are:
+
+ * External-Pointer can be used to get a AWDBlock that was defined for a specific external Object (e.g. a 3dsmax mesh).
+
+ * External-ID can be used to get a AWDBlock that was defined for a specific External-ID (string).
+
+ * Name can be used to get a AWDBlock that has a specific name.
+
+ These cache-functions are not exclusive. A AWDBlock can have a External-Pointer, a External-ID and a Name set, and can be queried for all these properties.
+ 
+ \section features_sec_8 Texture-Atlas
+
+ The libawd should be able to create textureatlas for a list of materials (merge materials).
+Color-materials must be converted to texture-materials ( printing the color into a pixel of the texture).
+
+ \section features_sec_9 Merge Meshes
+
+Merge meshes including animation and materials.
+
+ \section features_sec_10 Split mesh
+
+Split a mesh into multiple meshes, so that each mesh only contains 1 sub-geometry. 
+This is usefull to split a skinned mesh with a high bone-count, into multiple meshes with smaller bone-count.
+
+
+
+ */

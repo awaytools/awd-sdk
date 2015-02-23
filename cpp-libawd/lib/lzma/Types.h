@@ -53,14 +53,14 @@ typedef int WRes;
 #endif
 
 typedef unsigned char Byte;
-typedef short Int16;
+typedef short INT16;
 typedef unsigned short UInt16;
 
 #ifdef _LZMA_UINT32_IS_ULONG
-typedef long Int32;
+typedef long INT32;
 typedef unsigned long UInt32;
 #else
-typedef int Int32;
+typedef int INT32;
 typedef unsigned int UInt32;
 #endif
 

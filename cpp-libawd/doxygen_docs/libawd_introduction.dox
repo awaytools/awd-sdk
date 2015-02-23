@@ -1,0 +1,26 @@
+﻿/*! \page libawd_introduction Introduction & Building Instructions
+
+\section libawd_introduction_1 What is the purpose of libawd
+
+The libawd exists to help simplify the process of exporting and importing assets from the AWD format. 
+
+\section libawd_introduction_2 What is AWD
+
+AWD is a binary data format used to store assets for Away3d / AwayJS. 
+It is highly optimized for parsing and loading data ready to use on GPU.
+
+\section libawd_introduction_3 Development
+
+The libAWD is currently in development.
+
+
+
+\section libawd_introduction_4 Building Instructions
+
+\todo Add building instructions
+
+
+
+ 
+  
+ */

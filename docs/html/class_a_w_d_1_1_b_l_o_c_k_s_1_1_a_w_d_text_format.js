@@ -1,0 +1,28 @@
+var class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format =
+[
+    [ "AWDTextFormat", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#ab4f7bd7ebf650325c86583bfadf8bd44", null ],
+    [ "AWDTextFormat", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#ae6073fce87da4d928cc2bd0449a2cdc5", null ],
+    [ "~AWDTextFormat", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a36a691b17e528bd9a707656846361903", null ],
+    [ "calc_body_length", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#ab832d05afb1bde4f1912a644011f967e", null ],
+    [ "get_baseLineShift", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a8bd0bfa26879e27565b632d161959f07", null ],
+    [ "get_fill", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#aa78b8f3f854ec490bd6b2d9c6a5ebd8a", null ],
+    [ "get_fontName", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a08d69da8579254b59374832b1090a28f", null ],
+    [ "get_fontSize", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#aab2a4d1b910aa1ce664535c1dc383086", null ],
+    [ "get_fontStyle", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a6428326c1b805b343409e8d6d88767a6", null ],
+    [ "get_letterSpacing", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#acada4a63bd9d4e61ddacfc1558945312", null ],
+    [ "prepare_and_add_dependencies", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#ab9e82a362aae9343fd0970b5969e8f21", null ],
+    [ "set_baseLineShift", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a6f607aeeef43578fbd457418a1934133", null ],
+    [ "set_fill", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#adcb401d9d5c88fa5ff1424d71128495d", null ],
+    [ "set_fontName", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a2f07754b34a64a4a3149f2bc84374150", null ],
+    [ "set_fontSize", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a75484cdccd4f97aef9bdf3ff1dbc210c", null ],
+    [ "set_fontStyle", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#afe04abf8362cbc6d38c48da2f9051607", null ],
+    [ "set_letterSpacing", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a23d15cb411ddfeb5e4635aaedd6440de", null ],
+    [ "validate_block_state", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#ac537ddf36adc400a399a7da7c77805ec", null ],
+    [ "write_body", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a53544c368d7a416b7ac1dfba8efc1835", null ],
+    [ "baseLineShift", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a19d6fd3b3fee434a84fad2f5f2cdd5a5", null ],
+    [ "fill", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a9343e24012f2a272e6a4a786f5eb2f6f", null ],
+    [ "fontName", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#aa47ac8d9907be5f4dca72f62c4a0d231", null ],
+    [ "fontSize", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#afd1c85305a708d167f02e8387c789221", null ],
+    [ "fontStyle", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#afb5d80bb28c11d9065e23ef8c6904ec4", null ],
+    [ "letterSpacing", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_a_w_d_text_format.html#a305c4d21982e9d81ccdf25e3d2f17c22", null ]
+];

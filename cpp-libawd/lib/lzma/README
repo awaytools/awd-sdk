@@ -1,9 +1,9 @@
 
 This folder contains a sub-set of the LZMA C SDK, for use of the LZMA algorithm
-in the AWD file format SDK.
+in the AWDProject file format SDK.
 
 The contents of these files have not been altered, but some files from the
-original LZMA distribution have been omitted since they are not used by the AWD
+original LZMA distribution have been omitted since they are not used by the AWDProject
 SDKs or tools.
 
 

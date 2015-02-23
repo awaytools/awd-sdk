@@ -328,7 +328,7 @@ static int MY_FAST_CALL LzmaDec_DecodeReal(CLzmaDec *p, SizeT limit, const Byte 
               {
                 UInt32 t;
                 code -= range;
-                t = (0 - ((UInt32)code >> 31)); /* (UInt32)((Int32)code >> 31) */
+                t = (0 - ((UInt32)code >> 31)); /* (UInt32)((INT32)code >> 31) */
                 distance = (distance << 1) + (t + 1);
                 code += range & t;
               }

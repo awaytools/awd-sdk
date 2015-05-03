@@ -60,12 +60,15 @@ FilledRegionGroup::merge_group_into(FilledRegionGroup* filled_group)
 
 FilledRegion::FilledRegion(TYPES::filled_region_type type)
 {
+	this->uv_transform=new MATRIX2x3();
 	this->fill_material=NULL;
 	this->type=type;
 }
 
 FilledRegion::~FilledRegion()
 {
+	for(Path* onePath:pathes)
+		delete onePath;
 }
 void
 FilledRegion::add_path()

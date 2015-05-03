@@ -22,6 +22,15 @@ namespace AWD
 				std::vector<FONT::Paragraph*> textParagraphs;
 				std::string text;
 				bool isLocalized;
+				FONT::Textfield_type tf_type;
+				bool is_selectable;
+				bool render_as_html;
+				bool is_border_drawn;
+				bool is_scrollable;
+				FONT::TextFlow textflow;
+				FONT::OrientationMode orient_mode;
+				FONT::LineMode line_mode;
+				GEOM::BOUNDS2D bounds;
 		
 			protected:
 				TYPES::UINT32 calc_body_length(FILES::AWDFile*, SETTINGS::BlockSettings *);
@@ -34,11 +43,43 @@ namespace AWD
 				TextElement(const std::string& name);
 				TextElement();
 				~TextElement();
-		
-				std::string& get_text();
+
+				void init();
+
+				
+				double text_width;
+				double text_height;
+				void set_bounds(GEOM::BOUNDS2D bounds);
+				GEOM::BOUNDS2D get_bounds();
+				void set_tf_type(FONT::Textfield_type tf_type);
+				FONT::Textfield_type get_tf_type();
+
+				void set_is_selectable(bool is_selectable);
+				bool get_is_selectable();
+				
+				void set_render_as_html(bool render_as_html);
+				bool get_render_as_html();
+				
+				void set_is_border_drawn(bool is_border_drawn);
+				bool get_is_border_drawn();
+
+				void set_is_scrollable(bool is_scrollable);
+				bool get_is_scrollable();
+
+								
+				void set_textflow(FONT::TextFlow textflow);
+				FONT::TextFlow get_textflow();
+				
+				void set_orientationMode(FONT::OrientationMode orient_mode);
+				FONT::OrientationMode get_orientationMode();
+
+				void set_line_mode(FONT::LineMode line_mode);
+				FONT::LineMode get_line_mode();
+
 				bool get_isLocalized();
 				void set_isLocalized(bool);
 				void set_text(const std::string&);
+				std::string& get_text();
 				void add_paragraph(FONT::Paragraph*);
 
 		};

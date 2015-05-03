@@ -80,9 +80,10 @@ CubeTexture::calc_body_length(AWDFile* awd_file, BlockSettings * settings)
 	else {
 		//TODO: HANDLE ERROR HERE; OR DO IT BEFORE THIS
 	}
+	/*
 	for(BitmapTexture *awdBitmap : this->texture_blocks){
 		//len += awdBitmap->calc_bytes_length(this->saveType);		
-	}
+	}*/
 	len += this->calc_attr_length(true, true, settings);
 	return len;
 }
@@ -101,11 +102,11 @@ CubeTexture::write_body(FileWriter * fileWriter, BlockSettings *settings, FILES:
 	fileWriter->writeUINT8(saveType);
 	fileWriter->writeSTRING(this->get_name(), FILES::write_string_with::LENGTH_AS_UINT16);
 
-	
+	/*
 	for(BitmapTexture *awdBitmap : this->texture_blocks){
 		//awdBitmap->write_for_CubeTex(fileWriter,this->saveType);		
 	}
-
+	*/
 	this->properties->write_attributes(fileWriter, settings);
 	this->user_attributes->write_attributes(fileWriter, settings);
 	return result::AWD_SUCCESS;

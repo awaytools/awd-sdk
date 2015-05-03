@@ -109,11 +109,12 @@ GEOM::resolve_curve_curve_intersection(PathSegment* curve, PathSegment* curve_2,
 			startpoint_curve=subSeg->get_startPoint();
 			endPoint_curve=subSeg->get_endPoint();
 			controlPoint_curve=subSeg->get_controlPoint();
+			subSeg->calculate_bounds();
 			for(PathSegment* subSeg2:curve_2->get_subdivided_path()){
 				if(subSeg2->get_state()!=edge_state::TEST_INTERSECTING)
 					continue;
-				bool isIntersect=bounds_intersect(subSeg->min_x, subSeg->max_x, subSeg->max_y, subSeg->max_y, subSeg2->min_x, subSeg2->max_x, subSeg2->max_y, subSeg2->max_y);
-				if(isIntersect){
+				subSeg2->calculate_bounds();
+				if(bounds_intersect(subSeg->min_x, subSeg->max_x, subSeg->min_y, subSeg->max_y, subSeg2->min_x, subSeg2->max_x, subSeg2->min_y, subSeg2->max_y)){
 					startpoint_curve2=subSeg2->get_startPoint();
 					endPoint_curve2=subSeg2->get_endPoint();
 					controlPoint_curve2=subSeg2->get_controlPoint();
@@ -122,10 +123,10 @@ GEOM::resolve_curve_curve_intersection(PathSegment* curve, PathSegment* curve_2,
 						isResolved=false;
 						subSeg->set_state(edge_state::SUBDIVIDED);
 						subSeg2->set_state(edge_state::SUBDIVIDED);
-						/*if(subSeg->get_size()>=subSeg2->get_size())
+						if(subSeg->get_size()>=subSeg2->get_size())
 							subSeg->set_state(edge_state::SUBDIVIDED);
 						else
-							subSeg2->set_state(edge_state::SUBDIVIDED);*/
+							subSeg2->set_state(edge_state::SUBDIVIDED);
 						continue;
 					}
 					TYPES::UINT32 endpoint2_in_triangle1 = PointInTri(endPoint_curve2.x, endPoint_curve2.y, startpoint_curve.x, startpoint_curve.y, controlPoint_curve.x, controlPoint_curve.y, endPoint_curve.x, endPoint_curve.y);
@@ -133,10 +134,10 @@ GEOM::resolve_curve_curve_intersection(PathSegment* curve, PathSegment* curve_2,
 						isResolved=false;
 						subSeg->set_state(edge_state::SUBDIVIDED);
 						subSeg2->set_state(edge_state::SUBDIVIDED);
-						/*if(subSeg->get_size()>=subSeg2->get_size())
+						if(subSeg->get_size()>=subSeg2->get_size())
 							subSeg->set_state(edge_state::SUBDIVIDED);
 						else
-							subSeg2->set_state(edge_state::SUBDIVIDED);*/
+							subSeg2->set_state(edge_state::SUBDIVIDED);
 						continue;
 					}
 					TYPES::UINT32 curvepoint2_in_triangle1 = PointInTri(controlPoint_curve2.x, controlPoint_curve2.y, startpoint_curve.x, startpoint_curve.y, controlPoint_curve.x, controlPoint_curve.y, endPoint_curve.x, endPoint_curve.y);
@@ -144,10 +145,10 @@ GEOM::resolve_curve_curve_intersection(PathSegment* curve, PathSegment* curve_2,
 						isResolved=false;
 						subSeg->set_state(edge_state::SUBDIVIDED);
 						subSeg2->set_state(edge_state::SUBDIVIDED);
-						/*if(subSeg->get_size()>=subSeg2->get_size())
+						if(subSeg->get_size()>=subSeg2->get_size())
 							subSeg->set_state(edge_state::SUBDIVIDED);
 						else
-							subSeg2->set_state(edge_state::SUBDIVIDED);*/
+							subSeg2->set_state(edge_state::SUBDIVIDED);
 						continue;
 					}
 					TYPES::UINT32 startpoint1_in_triangle2 = PointInTri(startpoint_curve.x, startpoint_curve.y, startpoint_curve2.x, startpoint_curve2.y, controlPoint_curve2.x, controlPoint_curve2.y, endPoint_curve2.x, endPoint_curve2.y);
@@ -155,10 +156,10 @@ GEOM::resolve_curve_curve_intersection(PathSegment* curve, PathSegment* curve_2,
 						isResolved=false;
 						subSeg->set_state(edge_state::SUBDIVIDED);
 						subSeg2->set_state(edge_state::SUBDIVIDED);
-						/*if(subSeg->get_size()>=subSeg2->get_size())
+						if(subSeg->get_size()>=subSeg2->get_size())
 							subSeg->set_state(edge_state::SUBDIVIDED);
 						else
-							subSeg2->set_state(edge_state::SUBDIVIDED);*/
+							subSeg2->set_state(edge_state::SUBDIVIDED);
 						continue;
 					}
 					TYPES::UINT32 endpoint1_in_triangle2 = PointInTri(endPoint_curve.x, endPoint_curve.y, startpoint_curve2.x, startpoint_curve2.y, controlPoint_curve2.x, controlPoint_curve2.y, endPoint_curve2.x, endPoint_curve2.y);
@@ -166,10 +167,10 @@ GEOM::resolve_curve_curve_intersection(PathSegment* curve, PathSegment* curve_2,
 						isResolved=false;
 						subSeg->set_state(edge_state::SUBDIVIDED);
 						subSeg2->set_state(edge_state::SUBDIVIDED);
-						/*if(subSeg->get_size()>=subSeg2->get_size())
+						if(subSeg->get_size()>=subSeg2->get_size())
 							subSeg->set_state(edge_state::SUBDIVIDED);
 						else
-							subSeg2->set_state(edge_state::SUBDIVIDED);*/
+							subSeg2->set_state(edge_state::SUBDIVIDED);
 						continue;
 					}
 					TYPES::UINT32 curvepoint1_in_triangle2 = PointInTri(controlPoint_curve.x, controlPoint_curve.y, startpoint_curve2.x, startpoint_curve2.y, controlPoint_curve2.x, controlPoint_curve2.y, endPoint_curve2.x, endPoint_curve2.y);
@@ -177,10 +178,10 @@ GEOM::resolve_curve_curve_intersection(PathSegment* curve, PathSegment* curve_2,
 						isResolved=false;
 						subSeg->set_state(edge_state::SUBDIVIDED);
 						subSeg2->set_state(edge_state::SUBDIVIDED);
-						/*if(subSeg->get_size()>=subSeg2->get_size())
+						if(subSeg->get_size()>=subSeg2->get_size())
 							subSeg->set_state(edge_state::SUBDIVIDED);
 						else
-							subSeg2->set_state(edge_state::SUBDIVIDED);*/
+							subSeg2->set_state(edge_state::SUBDIVIDED);
 						continue;
 					}
 				}
@@ -197,29 +198,6 @@ GEOM::resolve_curve_curve_intersection(PathSegment* curve, PathSegment* curve_2,
 		}
 			
 	}
-}
-
-void
-GEOM::subdivideCurve(double startx, double starty, double cx, double cy, double endx, double endy, std::vector<double>& resultVec)
-  {
-   double c1x = startx + (cx - startx) * 0.5;
-   double c1y = starty + (cy - starty) * 0.5;
-   
-   double c2x = cx + (endx - cx) * 0.5;
-   double c2y = cy + (endy - cy) * 0.5;
-   
-   double ax = c1x + (c2x - c1x) * 0.5;
-   double ay = c1y + (c2y - c1y) * 0.5;
-   resultVec.push_back(startx);
-   resultVec.push_back(starty);
-   resultVec.push_back(c1x);
-   resultVec.push_back(c1y);
-   resultVec.push_back(ax);
-   resultVec.push_back(ay);
-   resultVec.push_back(c2x);
-   resultVec.push_back(c2y);
-   resultVec.push_back(endx);
-   resultVec.push_back(endy);
 }
 
 result GEOM::update_simplified_path(std::vector<double>& simplyifed_path, std::vector<PathSegment*>& path)
@@ -266,252 +244,6 @@ bool GEOM::PointInTri(double x, double y, double t1x, double t1y, double t2x, do
 }
 */
 
-TYPES::UINT32 GEOM::PointInTri(double x, double y, double t1x, double t1y, double t2x, double t2y, double t3x, double t3y)
-{
-				
-    TYPES::UINT32 interext_cnt = 0;
-	
-    if (((t1y < y) && (t3y >= y)) || ((t3y < y) && (t1y >= y))){
-		if ((t1x + (y - t1y)/(t3y - t1y)*(t3x - t1x)) < x)
-			interext_cnt++;
-	}
-    if (((t2y < y) && (t1y >= y)) || ((t1y < y) && (t2y >= y))){
-		if ((t2x + (y - t2y)/(t1y - t2y)*(t1x - t2x)) < x)
-			interext_cnt++;
-	}
-    if (((t3y < y) && (t2y >= y)) || ((t2y < y) && (t3y >= y))){
-		if ((t3x + (y - t3y)/(t2y - t3y)*(t2x - t3x)) < x)
-			interext_cnt++;
-	}
-	return interext_cnt;
-}
-TYPES::UINT32 GEOM::PointInPath(std::vector<double>& simplyifed_path, double x, double y)
-{
-				
-    TYPES::UINT32 interext_cnt = 0;
-	int j = int(simplyifed_path.size()) - 2;
-	for (int i = 0; i < simplyifed_path.size(); i+=2)
-	{
-		//Utils::Trace(GetCallback(), "check points %f vs %f\n", newPoints[i]->x, newPoints[i]);
-        if (((simplyifed_path[i+1] < y) && (simplyifed_path[j+1] >= y)) || ((simplyifed_path[j+1] < y) && (simplyifed_path[i+1] >= y)))
-		{
-			if ((simplyifed_path[i] + (y - simplyifed_path[i+1])/(simplyifed_path[j+1] - simplyifed_path[i+1])*(simplyifed_path[j] - simplyifed_path[i])) < x)
-				interext_cnt++;
-		}
-		j = i;
-	}
-	return interext_cnt;
-}
-
-result 
-GEOM::get_edge_string(std::string& string_out, double x1, double x2, double y1, double y2)
-{
-	string_out="";
-	if(x1>x2)
-		string_out+=std::to_string(x1)+"#"+std::to_string(x2)+"#";
-	else
-		string_out+=std::to_string(x2)+"#"+std::to_string(x1)+"#";
-	if(y1>y2)
-		string_out+=std::to_string(y1)+"#"+std::to_string(y2)+"#";
-	else
-		string_out+=std::to_string(y2)+"#"+std::to_string(y1)+"#";
-	return result::AWD_SUCCESS;
-}
-
-
-result GEOM::ResolvePathIntersections(Settings* settings,  std::string& message, GEOM::Path* path_2, GEOM::Path* path_1, bool inside_region)
-{
-	edge_type curve_type_path_check = edge_type::CONCAVE_EDGE;
-	edge_type curve_type_intersect = edge_type::CONVEX_EDGE;
-	if(inside_region){
-		curve_type_path_check = edge_type::CONVEX_EDGE;
-		curve_type_intersect = edge_type::CONCAVE_EDGE;
-	}
-	result res = result::AWD_SUCCESS;
-	// we check if any control-points of convex curves of the hole path are intersecting with the contour path
-	// prepare the path_1 and the hole path for lookup (this must be called everytime a path is updated (subdivided))
-	path_1->prepare(curve_type_path_check);	
-	path_2->prepare(curve_type_path_check);
-
-	if(!path_1->check_boundingbox(path_2->max_x, path_2->max_y, path_2->min_x, path_2->min_y))
-		return res;
-	message="";	
-	TYPES::UINT32 intersections_path1 = 0;
-	TYPES::UINT32 intersections_path2= 0;
-
-	// for both pathes, reset the states of all curved segments. (if state is MAX_SUBDIVISION, we leave as is)
-	for(PathSegment* seg : path_2->get_segments()){
-		if(seg->get_edgeType()!=edge_type::OUTTER_EDGE){
-			if(seg->get_state()!=edge_state::MAX_SUBDIVISION){
-				if(seg->get_state()==edge_state::SUBDIVIDED_RESOLVED){
-					seg->set_state(edge_state::SUBDIVIDED);
-				}
-				else if(seg->get_state()==edge_state::NOT_INTERSECTING){
-					seg->set_state(edge_state::TEST_INTERSECTING);
-				}
-				for(PathSegment* inner_seg:seg->get_subdivided_path()){
-					if(inner_seg->get_state()!=edge_state::MAX_SUBDIVISION){
-						if(inner_seg->get_state()==edge_state::SUBDIVIDED_RESOLVED){
-							inner_seg->set_state(edge_state::SUBDIVIDED);
-						}
-						else if(inner_seg->get_state()==edge_state::NOT_INTERSECTING){
-							inner_seg->set_state(edge_state::TEST_INTERSECTING);
-						}
-					}
-				}
-			}
-		}
-	}	
-	for(PathSegment* seg : path_1->get_segments()){
-		if(seg->get_edgeType()!=edge_type::OUTTER_EDGE){
-			if(seg->get_state()!=edge_state::MAX_SUBDIVISION){
-				if(seg->get_state()==edge_state::SUBDIVIDED_RESOLVED){
-					seg->set_state(edge_state::SUBDIVIDED);
-				}
-				else if(seg->get_state()==edge_state::NOT_INTERSECTING){
-					seg->set_state(edge_state::TEST_INTERSECTING);
-				}
-				for(PathSegment* inner_seg:seg->get_subdivided_path()){
-					if(inner_seg->get_state()!=edge_state::MAX_SUBDIVISION){
-						if(inner_seg->get_state()==edge_state::SUBDIVIDED_RESOLVED){
-							inner_seg->set_state(edge_state::SUBDIVIDED);
-						}
-						else if(inner_seg->get_state()==edge_state::NOT_INTERSECTING){
-							inner_seg->set_state(edge_state::TEST_INTERSECTING);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	// we keep repeating the process for this pathes, until either the max_iteration is reached, or if we can not find any more intersections.	
-
-	// first test if any convex curve of path_2 is intersecting with path_1
-
-	int iteration_cnt=0;
-	bool intersection_found=true;
-	while((iteration_cnt<settings->get_max_iterations())&&(intersection_found)){
-		intersection_found=false;		
-		for(PathSegment* seg:path_2->get_segments()){
-			if(seg->get_edgeType()==curve_type_path_check){
-				if((seg->get_state()==edge_state::MAX_SUBDIVISION)||(seg->get_state()==edge_state::NOT_INTERSECTING))
-					continue;
-				else if(seg->get_state()==edge_state::SUBDIVIDED)
-					seg->set_state(edge_state::SUBDIVIDED_RESOLVED);
-				else if(seg->get_state()==edge_state::TEST_INTERSECTING)
-					seg->set_state(edge_state::NOT_INTERSECTING);
-
-				for(PathSegment* inner_seg:seg->get_subdivided_path()){
-					if((inner_seg->get_state()==edge_state::MAX_SUBDIVISION)||(inner_seg->get_state()==edge_state::NOT_INTERSECTING))
-						continue;						
-					bool is_inside_path = path_1->point_inside_path(inner_seg->get_controlPoint().x, inner_seg->get_controlPoint().y);
-					if(is_inside_path){
-						if(inner_seg->get_state()==edge_state::SUBDIVIDED)
-							inner_seg->set_state(edge_state::SUBDIVIDED_RESOLVED);
-						else if(inner_seg->get_state()==edge_state::TEST_INTERSECTING)
-							inner_seg->set_state(edge_state::NOT_INTERSECTING);
-						continue;
-					}
-					inner_seg->set_state(edge_state::SUBDIVIDED);
-					seg->set_state(edge_state::SUBDIVIDED);
-					intersections_path2++;
-					//	point is not in path. this must be a intersection.
-				}
-				if(seg->get_state()==edge_state::SUBDIVIDED){
-					seg->subdividePath(settings);
-					for(PathSegment* inner_seg:seg->get_subdivided_path()){
-						if(inner_seg->get_state()==edge_state::NOT_INTERSECTING)
-							continue;	
-						bool is_inside_path = path_1->point_inside_path(inner_seg->get_controlPoint().x, inner_seg->get_controlPoint().y);
-						if(is_inside_path){
-							if(inner_seg->get_state()==edge_state::SUBDIVIDED)
-								inner_seg->set_state(edge_state::SUBDIVIDED_RESOLVED);
-							else if(inner_seg->get_state()==edge_state::TEST_INTERSECTING)
-								inner_seg->set_state(edge_state::NOT_INTERSECTING);
-							continue;
-						}	
-						inner_seg->set_state(edge_state::SUBDIVIDED);
-						seg->set_state(edge_state::SUBDIVIDED);					
-					}
-					intersection_found=true;
-				}				
-			}
-		}	
-
-		// next we check if any concave curves of path_1 intersect with the newly subdivided curves of path_2
-
-		// this uses line-intersection tests, but we only test against the convex-curves that are already marked as intersecting (state is SUBDIVIDED or TEST_INTERSECTION)
-		if(intersection_found){
-			bool changed_path_1=false;
-			for(PathSegment* seg:path_1->get_segments()){
-				if(seg->get_edgeType()==curve_type_intersect){
-					if((seg->get_state()==edge_state::NOT_INTERSECTING))
-						continue;
-					else if(seg->get_state()==edge_state::SUBDIVIDED)
-						seg->set_state(edge_state::SUBDIVIDED_RESOLVED);
-					else if(seg->get_state()==edge_state::TEST_INTERSECTING)
-						seg->set_state(edge_state::NOT_INTERSECTING);
-					for(PathSegment* inner_seg:seg->get_subdivided_path()){
-						if((inner_seg->get_state()==edge_state::MAX_SUBDIVISION)||(inner_seg->get_state()==edge_state::NOT_INTERSECTING))
-							continue;		
-						for(PathSegment* seg_test:path_2->get_segments()){
-							if(seg_test->get_edgeType()==curve_type_path_check){
-								if(seg_test->get_state()==edge_state::NOT_INTERSECTING)
-									continue;
-								bool keep_searching=true;
-								for(PathSegment* inner_seg_test:seg_test->get_subdivided_path()){
-									if(inner_seg_test->get_state()==edge_state::NOT_INTERSECTING)
-										continue;
-									
-									if(!GEOM::line_intersect(inner_seg_test->get_test_point2().x, inner_seg_test->get_test_point2().y, inner_seg_test->get_controlPoint().x, inner_seg_test->get_controlPoint().y,  inner_seg->get_startPoint().x,inner_seg->get_startPoint().y,inner_seg->get_endPoint().x,inner_seg->get_endPoint().y)){
-										if(inner_seg->get_state()==edge_state::SUBDIVIDED)
-											inner_seg->set_state(edge_state::SUBDIVIDED_RESOLVED);
-										else if(inner_seg->get_state()==edge_state::TEST_INTERSECTING)
-											inner_seg->set_state(edge_state::NOT_INTERSECTING);
-									}
-									else{
-										inner_seg->set_state(edge_state::SUBDIVIDED);
-										seg->set_state(edge_state::SUBDIVIDED);
-										keep_searching=false;
-										intersections_path1++;
-										break;					
-									}
-								}
-								if(!keep_searching)
-									break;
-							}
-						}
-					}
-					if(seg->get_state()==edge_state::SUBDIVIDED){
-						seg->subdividePath(settings);	
-						changed_path_1=true;
-					}								
-				}
-			}	
-			if(changed_path_1){
-				path_1->make_dirty();
-				path_1->prepare(curve_type_path_check);
-			}
-		}
-		iteration_cnt++;
-		if((iteration_cnt==settings->get_max_iterations())&&(intersection_found)){
-			message+="\nWARING: Intersection-test could not be resolved within max iterations\n This does not mean, that the intersections are not resolved. It might be that everything is resolved, but it wasnt verified.";
-			res=result::AWD_ERROR;
-		}
-	}
-
-	if((intersections_path1>0)||(intersections_path2>0)){
-		res=result::SUBDIVIDED_PATHES;
-		if(intersections_path1>0)
-			message+="\n -> divided "+std::to_string(intersections_path1)+" curves to resolve intersections for input path1";
-		if(intersections_path2>0)
-			message+="\n -> divided "+std::to_string(intersections_path2)+" curves to resolve intersections for input path2";
-	}
-
-
-	return res;
-}
 
 double  GEOM::distance_point_to_line(float startx, float starty, float testx, float testy, float endx, float endy)
 {
@@ -1192,6 +924,7 @@ vector<double>
 					
 	return returnBounds; 
 } 
+
 bool ShapeEncoder::resolve_segment_intersection(AWDPathIntersection* thisIntersection) {
 	
 	double min_Curveiness=awd->getExporterSettings()->get_curve_threshold();

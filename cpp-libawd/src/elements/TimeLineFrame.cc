@@ -17,6 +17,7 @@ using namespace AWD::ANIM;
 TimelineFrame::TimelineFrame() :
     AttrElementBase()
 {
+	this->max_depth=0;
 	this->frame_duration=0;
     this->command_properties=new ATTR::NumAttrList();
 }
@@ -29,22 +30,6 @@ TimelineFrame::~TimelineFrame()
 	}
 }
 
-void
-TimelineFrame::add_dirty_layer(int newDirtyLayer)
-{
-	for(int i : this->dirty_layer_idx){
-		if(i==newDirtyLayer){
-			return;
-		}
-	}
-	this->dirty_layer_idx.push_back(newDirtyLayer);
-}
-
-std::vector<int>
-TimelineFrame::get_dirty_layers()
-{
-	return this->dirty_layer_idx;
-}
 
 TYPES::UINT32
 TimelineFrame::get_frame_duration()
@@ -56,6 +41,12 @@ void
 TimelineFrame::set_frame_duration(TYPES::UINT32 frame_duration)
 {
 	this->frame_duration=frame_duration;
+}
+
+std::vector<std::string>&
+TimelineFrame::get_labels()
+{
+	return this->labels;
 }
 void
 TimelineFrame::add_label(frame_label_type label_type, const std::string& label)
@@ -101,87 +92,265 @@ TimelineFrame::get_command(TYPES::UINT32 objectID, frame_command_type command_ty
 {
 	for (FrameCommandBase* fc :  this->commands){
 		if(fc->get_objID()==objectID){
-			if((command_type==frame_command_type::AWD_FRAME_COMMAND_UPDATE)&&((fc->get_command_type()==frame_command_type::AWD_FRAME_COMMAND_ADD_GLOBAL_RESSOURCE)||(fc->get_command_type()==frame_command_type::AWD_FRAME_COMMAND_ADD_LOCAL_RESSOURCE)))
+			if((command_type==frame_command_type::FRAME_COMMAND_REMOVE)&&(fc->get_command_type()==frame_command_type::FRAME_COMMAND_REMOVE))
+				return fc;
+			if((command_type==frame_command_type::FRAME_COMMAND_UPDATE)&&((fc->get_command_type()==frame_command_type::FRAME_COMMAND_UPDATE)||(fc->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD)))
 				return fc;
 			fc->set_command_type(command_type);
 			return fc;
 		}
 	}
-	
-	FrameCommandDisplayObject* newFrameCommand=  new FrameCommandDisplayObject();
-	newFrameCommand->set_objID(objectID);
-	newFrameCommand->set_command_type(command_type);
-	this->commands.push_back(newFrameCommand);
-	return newFrameCommand;
+	if((command_type==frame_command_type::FRAME_COMMAND_UPDATE)||(command_type==frame_command_type::FRAME_COMMAND_ADD_CHILD)){
+		FrameCommandDisplayObject* newFrameCommand = new FrameCommandDisplayObject();
+		newFrameCommand->set_objID(objectID);
+		newFrameCommand->set_command_type(command_type);
+		this->commands.push_back(newFrameCommand);
+		return newFrameCommand;
+	}
+	else if((command_type==frame_command_type::FRAME_COMMAND_REMOVE)){
+		FrameCommandRemoveObject* newFrameCommand = new FrameCommandRemoveObject();
+		newFrameCommand->set_objID(objectID);
+		newFrameCommand->set_command_type(command_type);
+		this->commands.push_back(newFrameCommand);
+		return newFrameCommand;
+	}
+	return NULL;
 }
 
-result 
-TimelineFrame::collect_dependencies(FILES::AWDFile* target_file, BLOCK::instance_type instance_type)
-{	
-	// reorder the commands, so they appear in this order: remove / add / update / sound
-	std::vector<FrameCommandBase *> remove_commands;
-	std::vector<FrameCommandBase *> add_commands;
-	std::vector<FrameCommandBase *> update_commands;
-	std::vector<FrameCommandBase *> sound_commands;
-	for (FrameCommandBase * f : this->commands) 
-	{
-		if(f->get_command_type()==frame_command_type::AWD_FRAME_COMMAND_REMOVE_OBJECT)
-			remove_commands.push_back(f);
-		else if((f->get_command_type()==frame_command_type::AWD_FRAME_COMMAND_ADD_LOCAL_RESSOURCE)||(f->get_command_type()==frame_command_type::AWD_FRAME_COMMAND_ADD_GLOBAL_RESSOURCE))
-			add_commands.push_back(f);
-		else if(f->get_command_type()==frame_command_type::AWD_FRAME_COMMAND_UPDATE)
-			update_commands.push_back(f);
-		else if(f->get_command_type()==frame_command_type::AWD_FRAME_COMMAND_SOUND)
-			sound_commands.push_back(f);
+TimelineChild_instance*
+TimelineFrame::get_display_object_by_id(TYPES::UINT32 obj_id)
+{
+	for(ANIM::TimelineChild_instance* tlchild_inst : this->display_objects){
+		if(tlchild_inst->obj_id==obj_id){
+			return tlchild_inst;
+		}
 	}
-	this->commands.clear();
-	for (FrameCommandBase * f : remove_commands) 
-		this->commands.push_back(f);
-	for (FrameCommandBase * f : add_commands) 
-		this->commands.push_back(f);
-	for (FrameCommandBase * f : update_commands) 
-		this->commands.push_back(f);
-	for (FrameCommandBase * f : sound_commands) 
-		this->commands.push_back(f);
-
-	for (FrameCommandBase * f : this->commands) 
-	{
-		f->collect_dependencies(target_file, instance_type);
+	return NULL;
+}
+TimelineChild_instance* 
+TimelineFrame::remove_display_object_by_id(TYPES::UINT32 obj_id)
+{
+	std::vector<ANIM::TimelineChild_instance*> new_display_objects;
+	this->max_depth = 0;
+	TimelineChild_instance* child_id = NULL;
+	for(ANIM::TimelineChild_instance* tlchild_inst : this->display_objects){
+		if(tlchild_inst->obj_id!=obj_id){
+			new_display_objects.push_back(tlchild_inst);
+			tlchild_inst->depth=this->max_depth;
+			this->max_depth+=3;
+		}
+		else{
+			child_id=tlchild_inst;
+			tlchild_inst->child->used=false;
+			if(tlchild_inst->depth_obj!=NULL){
+				tlchild_inst->depth_obj->in_use=false;
+			}
+		}
 	}
-	return result::AWD_SUCCESS;
-	
+	if(this->max_depth>=3)
+		this->max_depth-=3;
+	this->display_objects.clear();
+	this->display_objects=new_display_objects;
+	return child_id;
+}
+void
+TimelineFrame::add_display_object_after_id(TYPES::UINT32 obj_id, ANIM::TimelineChild_instance* new_display_object)
+{
+	std::vector<ANIM::TimelineChild_instance*> objects_before_id;
+	std::vector<ANIM::TimelineChild_instance*> objects_after_id;
+	if(obj_id==0){
+		for(ANIM::TimelineChild_instance* tlchild_inst:this->display_objects){
+			objects_after_id.push_back(tlchild_inst);
+		}
+	}
+	else{
+		bool found=false;
+		for(ANIM::TimelineChild_instance* tlchild_inst:this->display_objects){
+			if(!found)
+				objects_before_id.push_back(tlchild_inst);
+			else{
+				objects_after_id.push_back(tlchild_inst);
+			}
+			if(tlchild_inst->obj_id==obj_id)
+				found=true;
+		}
+		if(!found){
+			int error=0; // this is a error. obj_id was not found on frame
+		}
+	}
+	this->display_objects.clear();
+	this->max_depth = 0;
+	for(ANIM::TimelineChild_instance* tlchild_inst:objects_before_id){
+		this->display_objects.push_back(tlchild_inst);
+	}
+	this->display_objects.push_back(new_display_object);
+	for(ANIM::TimelineChild_instance* tlchild_inst:objects_after_id){
+		this->display_objects.push_back(tlchild_inst);
+	}
+}
+void 
+TimelineFrame::copy_display_objects(std::vector<ANIM::TimelineChild_instance*>& objects_to_copy)
+{
+	this->display_objects.clear();
+	for(ANIM::TimelineChild_instance* tlchild_inst:objects_to_copy){
+		TimelineChild_instance* timelinechild_inst = new TimelineChild_instance();
+		timelinechild_inst->child=tlchild_inst->child;
+		timelinechild_inst->depth=tlchild_inst->depth;
+		timelinechild_inst->depth_obj=tlchild_inst->depth_obj;
+		timelinechild_inst->obj_id=tlchild_inst->obj_id;
+		timelinechild_inst->new_obj=false;
+		this->display_objects.push_back(timelinechild_inst);
+	}
 }
 	
 result
 TimelineFrame::get_frame_info(std::vector<std::string>& infos)
 {	
-	for (FrameCommandBase * f : this->commands) 
+	//infos.push_back("input  commands:");
+	/*for (FrameCommandBase * f : this->commands) 
 	{
 		std::string this_string;
 		f->get_command_info(this_string);
-		infos.push_back("	"+this_string);
+		infos.push_back("		"+this_string);
+	}*/
+	infos.push_back("	commands:");
+	for (FrameCommandBase * f : this->final_commands) 
+	{
+		std::string this_string;
+		f->get_command_info(this_string);
+		infos.push_back("		"+this_string);
 	}
 	return AWD::result::AWD_SUCCESS;
+}
+
+void
+TimelineFrame::calculate_command_depths()
+{
+	//
+}
+/*
+used only when generating frames from adobe frame generator. prepares the commands, so they are exactly same as when generating own commands
+*/
+void
+TimelineFrame::calc_mask_ids()
+{
+
+	// todo: this works, but its a bit confusing and not simple to read. better redo this function.
+
+	for (int i=0;i< this->commands.size();i++){
+		if((this->commands[i]->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD)||(this->commands[i]->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE)){
+			std::vector<FrameCommandDisplayObject*> fcommands;
+			std::vector<TYPES::INT32> mask_ids;
+			FrameCommandDisplayObject* fd = reinterpret_cast<FrameCommandDisplayObject*>(this->commands[i]);
+			if(fd!=NULL){
+				// each command only needs to be processed once.
+				if(!fd->calculated_mask){
+					if(fd->get_hasTargetMaskIDs()){
+						int this_id=fd->get_objID();
+						int mask_id=fd->get_clipDepth();
+						fd->calculated_mask=true;
+						FrameCommandDisplayObject* fd2 = fd;
+						while ((this_id==mask_id)&&(i<this->commands.size()-1)){
+							i++;
+							fcommands.push_back(fd2);
+							mask_ids.push_back(this_id);
+							if((this->commands[i]->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD)||(this->commands[i]->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE)){
+								fd2 = reinterpret_cast<FrameCommandDisplayObject*>(this->commands[i]);
+								if(fd2!=NULL){
+									if(fd2->get_hasTargetMaskIDs()){
+										this_id=fd2->get_objID();
+										mask_id=fd2->get_clipDepth();
+										fd2->calculated_mask=true;
+									}
+								}
+							}
+						}
+						if(this_id!=mask_id){
+							mask_ids.push_back(this_id);
+							fcommands.push_back(fd2);
+						}
+						for (FrameCommandDisplayObject * fd3 : fcommands) 
+						{
+							fd3->mask_ids.clear();
+							fd3->mask_ids.push_back(TYPES::INT32(-1));
+							fd3->set_hasTargetMaskIDs(true);
+						}
+
+						for (FrameCommandBase * f2 : this->commands) 
+						{
+							if((f2->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD)||(f2->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE)){
+								
+								FrameCommandDisplayObject* fd2 = reinterpret_cast<FrameCommandDisplayObject*>(f2);
+								if(fd2!=NULL){
+									int this_id2=fd2->get_objID();
+									if((this_id2>this_id)&&(this_id2<=mask_id)){
+										fd2->mask_ids=mask_ids;
+										fd2->set_hasTargetMaskIDs(true);
+										fd2->calculated_mask=true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+FrameCommandBase*
+TimelineFrame::get_command_for_obj_id(TYPES::UINT32 obj_id)
+{
+	for (FrameCommandBase * f : this->commands) 
+	{
+		if(f->get_objID()==obj_id){
+			return f;
+		}
+	}
+	return NULL;
+
+}
+
+void
+TimelineFrame::finalize_object_states()
+{
+	std::vector<FrameCommandBase*> final_commands;
+	for (FrameCommandBase * f : this->final_commands) 
+	{
+		if((f->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD)||(f->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE)){
+			
+			FrameCommandDisplayObject* fd = reinterpret_cast<FrameCommandDisplayObject*>(f);
+			if(fd->update_from_prev()>0)
+				final_commands.push_back(f);
+		}
+		else{
+			final_commands.push_back(f);
+		}
+	}
+
 }
 
 TYPES::UINT32
 TimelineFrame::calc_frame_length(BlockSettings * blockSettings)
 {
+	/* reset mask ids for adobe commands
+	*/
     int len;
     len = sizeof(TYPES::UINT32); // frame duration
-	len += sizeof(TYPES::UINT16);//labels-cnt
+	len += sizeof(TYPES::UINT8);//labels-cnt
 	for (std::string s : this->labels) 
 	{
-		len += sizeof(TYPES::UINT8);
 		len += sizeof(TYPES::UINT16) + s.size();
 	}
-
-	len += sizeof(TYPES::UINT16);// number of frame commands
-
-	for (FrameCommandBase * f : this->commands) 
-	{
+	
+	len += sizeof(TYPES::UINT16);
+	for (FrameCommandBase* f : this->final_commands){
 		len+=f->calc_command_length(blockSettings);
 	}
+
+	
+	if(!blockSettings->get_export_framescripts())
+		this->frame_code="";
 	
     len += sizeof(TYPES::UINT32) +  TYPES::UINT16(this->frame_code.size()); 
 
@@ -199,36 +368,18 @@ void
 TimelineFrame::write_frame(FILES::FileWriter * fileWriter, BlockSettings * blockSettings, AWDFile* awd_file)
 {
 	fileWriter->writeUINT32(this->frame_duration);// frameduration (whole frames / default = 1)
-	fileWriter->writeUINT16(TYPES::UINT16(this->labels.size()));
-	int labelCnt=0;
+	fileWriter->writeUINT8(TYPES::UINT8(this->labels.size()));
 	for (std::string s : this->labels) 
 	{
-		TYPES::UINT8 labelType=TYPES::UINT8(this->label_types[labelCnt]);
-		fileWriter->writeUINT8(labelType);
-		labelCnt++;
 		fileWriter->writeSTRING(s,  FILES::write_string_with::LENGTH_AS_UINT16);
 	}
-	fileWriter->writeUINT16(TYPES::UINT16(this->commands.size()));// num of commands	
-
-	// reverse the order in which commands are written to file
-	// at the moment this is done, so the as3 runtime works correctly.
-	// for js runtime, this should not be needed
-	bool reverseCommandOrder=false;
-
-	if(reverseCommandOrder){
-		int cmdCnt = int(this->commands.size());
-		while(cmdCnt>0){
-			cmdCnt--;
-			FrameCommandBase * f = this->commands[cmdCnt]; 
-			f->write_command(fileWriter, blockSettings, awd_file);
-		}
+	fileWriter->writeUINT16(TYPES::UINT16(this->final_commands.size()));// num of commands	
+	
+	for (FrameCommandBase* f : this->final_commands) 
+	{
+		f->write_command(fileWriter, blockSettings, awd_file);
 	}
-	else{
-		for(int cmdCnt=0; cmdCnt<this->commands.size(); cmdCnt++){
-			FrameCommandBase * f = this->commands[cmdCnt]; 
-			f->write_command(fileWriter, blockSettings, awd_file);
-		}
-	}
+
 	fileWriter->writeSTRING(this->get_frame_code(),  FILES::write_string_with::LENGTH_AS_UINT32);// frame code	
 	this->user_attributes->write_attributes(fileWriter, blockSettings);
 }

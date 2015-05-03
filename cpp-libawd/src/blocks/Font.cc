@@ -14,8 +14,7 @@ using namespace AWD::FONT;
 using namespace AWD::BLOCK;
 
 Font::Font(const std::string& name):
-	AWDBlock(BLOCK::block_type::FONT, name),
-    
+	AWDBlock(BLOCK::block_type::FONT, name),    
     AttrElementBase()
 {
 }
@@ -27,7 +26,6 @@ Font::Font():
 }
 Font::~Font()
 {
-	//free the url ?
 }
 
 TYPES::state Font::validate_block_state()
@@ -54,12 +52,12 @@ std::vector<FontStyle*> Font::get_font_styles()
 TYPES::UINT32
 Font::calc_body_length(AWDFile* awd_file, SETTINGS::BlockSettings * settings)
 {
-    TYPES::UINT32 len;
-
-    len = 0;//sizeof(TYPES::UINT32); //datalength;
-	//len += sizeof(TYPES::UINT16) + this->get_name().size(); //name
-    //len += sizeof(TYPES::UINT8); //save type (external/embbed)
-
+    TYPES::UINT32 len=0;
+	
+	len += sizeof(TYPES::UINT16) + this->get_name().size(); //name
+    len += sizeof(TYPES::UINT32); //number of font-styles;
+	for(FontStyle* font_style: font_styles)
+		len+=font_style->calc_body_length(settings);	
 
     len += this->calc_attr_length(true, true, settings);
 
@@ -79,8 +77,11 @@ result
 Font::write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * curBlockSettings, AWDFile* awd_file)
 {
 
-	//awdutil_write_varstr(fd, this->get_name().c_str(), this->get_name().size());
-
+	fileWriter->writeSTRING(this->get_name(), FILES::write_string_with::LENGTH_AS_UINT16);
+	
+	fileWriter->writeUINT32(this->font_styles.size());
+	for(FontStyle* font_style: font_styles)
+		font_style->write_body(fileWriter, curBlockSettings);	
 
     this->properties->write_attributes(fileWriter,  curBlockSettings);
     this->user_attributes->write_attributes(fileWriter,  curBlockSettings);

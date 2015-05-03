@@ -25,6 +25,7 @@
 #include "blocks/anim_set.h"
 #include "blocks/animator.h"
 #include "blocks/bitmap_texture.h"
+#include "blocks/billboard.h"
 #include "blocks/camera.h"
 #include "blocks/command.h"
 #include "blocks/cube_texture.h"
@@ -34,6 +35,7 @@
 #include "blocks/light_picker.h"
 #include "blocks/material.h"
 #include "blocks/mesh_inst.h"
+#include "blocks/mesh_library.h"
 #include "blocks/meta.h"
 #include "blocks/namespace.h"
 #include "blocks/objectcontainer.h"
@@ -76,6 +78,114 @@ BLOCK::get_block_address_for_file(BASE::AWDBlock* awdBlock, FILES::AWDFile* file
 }
 
 result
+BLOCK::get_asset_type_as_string(BLOCK::block_type blocktype, std::string& type_str)
+{
+
+	switch(blocktype){
+		case BLOCK::block_type::ANIMATION_SET:
+			type_str="ANIMATION_SET";
+			break;
+		case BLOCK::block_type::ANIMATOR:
+			type_str="ANIMATOR";
+			break;
+		case BLOCK::block_type::BITMAP_TEXTURE:
+			type_str="BITMAP_TEXTURE";
+			break;
+		case BLOCK::block_type::BILLBOARD:
+			type_str="BILLBOARD";
+			break;
+		case BLOCK::block_type::CAMERA:
+			type_str="CAMERA";
+			break;
+		case BLOCK::block_type::COMMAND:
+			type_str="COMMAND";
+			break;
+		case BLOCK::block_type::CUBE_TEXTURE:
+			type_str="CUBE_TEXTURE";
+			break;
+		case BLOCK::block_type::EFFECT_METHOD:
+			type_str="EFFECT_METHOD";
+			break;
+		case BLOCK::block_type::FONT:
+			type_str="FONT";
+			break;
+		case BLOCK::block_type::FORMAT:
+			type_str="FORMAT";
+			break;
+		case BLOCK::block_type::TRI_GEOM:
+			type_str="TRI_GEOM";
+			break;
+		case BLOCK::block_type::LIGHT:
+			type_str="LIGHT";
+			break;
+		case BLOCK::block_type::LIGHTPICKER:
+			type_str="LIGHTPICKER";
+			break;
+		case BLOCK::block_type::SIMPLE_MATERIAL:
+			type_str="SIMPLE_MATERIAL";
+			break;
+		case BLOCK::block_type::MESH_INSTANCE:
+			type_str="MESH_INSTANCE";
+			break;
+		case BLOCK::block_type::MESH_INSTANCE_2:
+			type_str="MESH_INSTANCE_2";
+			break;
+		case BLOCK::block_type::METADATA:
+			type_str="METADATA";
+			break;
+		case BLOCK::block_type::NAMESPACE:
+			type_str="NAMESPACE";
+			break;
+		case BLOCK::block_type::CONTAINER:
+			type_str="CONTAINER";
+			break;
+		case BLOCK::block_type::PRIM_GEOM:
+			type_str="PRIM_GEOM";
+			break;
+		case BLOCK::block_type::SHADOW_METHOD:
+			type_str="SHADOW_METHOD";
+			break;
+		case BLOCK::block_type::SKELETON:
+			type_str="SKELETON";
+			break;
+		case BLOCK::block_type::SKELETON_ANIM:
+			type_str="SKELETON_ANIM";
+			break;
+		case BLOCK::block_type::SKELETON_POSE:
+			type_str="SKELETON_POSE";
+			break;
+		case BLOCK::block_type::SKYBOX:
+			type_str="SKYBOX";
+			break;
+		case BLOCK::block_type::SOUND_SOURCE:
+			type_str="SOUND_SOURCE";
+			break;
+		case BLOCK::block_type::TEXT_ELEMENT:
+			type_str="TEXT_ELEMENT";
+			break;
+		case BLOCK::block_type::TEXTURE_PROJECTOR:
+			type_str="TEXTURE_PROJECTOR";
+			break;
+		case BLOCK::block_type::TIMELINE:
+			type_str="TIMELINE";
+			break;
+		case BLOCK::block_type::UV_ANIM:
+			type_str="UV_ANIM";
+			break;
+		case BLOCK::block_type::VERTEX_POSE:
+			type_str="VERTEX_POSE";
+			break;
+		case BLOCK::block_type::VERTEX_ANIM:
+			type_str="VERTEX_ANIM";
+			break;
+		default:
+			type_str="";
+			return result::AWD_ERROR;
+	}
+
+	return result::AWD_SUCCESS;
+}
+result
 BLOCK::create_block_for_block_type(BASE::AWDBlock** awdBlock, BLOCK::block_type blocktype, FILES::AWDFile* awd_file)
 {
 	switch(blocktype){
@@ -87,6 +197,9 @@ BLOCK::create_block_for_block_type(BASE::AWDBlock** awdBlock, BLOCK::block_type 
 			break;
 		case BLOCK::block_type::BITMAP_TEXTURE:
 			*awdBlock = new BLOCKS::BitmapTexture();
+			break;
+		case BLOCK::block_type::BILLBOARD:
+			*awdBlock = new BLOCKS::Billboard();
 			break;
 		case BLOCK::block_type::CAMERA:
 			*awdBlock = new BLOCKS::Camera();
@@ -120,6 +233,9 @@ BLOCK::create_block_for_block_type(BASE::AWDBlock** awdBlock, BLOCK::block_type 
 			break;
 		case BLOCK::block_type::MESH_INSTANCE:
 			*awdBlock = new BLOCKS::Mesh();
+			break;
+		case BLOCK::block_type::MESH_INSTANCE_2:
+			*awdBlock = new BLOCKS::MeshLibrary();
 			break;
 		case BLOCK::block_type::METADATA:
 			*awdBlock = new BLOCKS::MetaData(awd_file->get_settings()->get_generator_name(), awd_file->get_settings()->get_generator_version());
@@ -225,7 +341,7 @@ FILES::copy_files_from_directory(std::string& source_dir, std::string& target_di
                     if(res==result::AWD_SUCCESS){
                         if(extension=="protected_js"){
                             std::string path_no_extension;
-                            result res = FILES::extract_path_without_file_extension(complete_path_target, path_no_extension);
+                            FILES::extract_path_without_file_extension(complete_path_target, path_no_extension);
                             complete_path_target=path_no_extension+".js";
                         }
                         res = copy_file(complete_path_source, complete_path_target);
@@ -531,7 +647,7 @@ TYPES::get_single_val_data_type_size_for_precision_category(data_types type, SET
 TYPES::UINT32
 TYPES::get_data_type_size(data_types type, bool storage_precision)
 {
-	TYPES::UINT32 elem_size;
+	TYPES::UINT32 elem_size=0;
 
 	switch (type) {
 		case data_types::INT8:
@@ -605,7 +721,7 @@ TYPES::get_data_type_size(data_types type, bool storage_precision)
 TYPES::UINT32
 TYPES::get_single_val_data_type_size(data_types type, bool storage_precision)
 {
-	TYPES::UINT32 elem_size;
+	TYPES::UINT32 elem_size=0;
 
 	switch (type) {
 		case data_types::INT8:

@@ -18,6 +18,50 @@ namespace AWD
 		class Vertex3D;
 		class Triangle;
 		
+		/** \struct BOUNDS2D
+		* 
+		*/
+		struct BOUNDS2D
+		{
+			TYPES::F64 minX;
+			TYPES::F64 maxX;
+			TYPES::F64 minY;
+			TYPES::F64 maxY;
+			BOUNDS2D()
+			{
+			}
+			BOUNDS2D(TYPES::F64 minX, TYPES::F64 maxX, TYPES::F64  minY, TYPES::F64 maxY)
+			{
+				minX = minX;
+				maxX = maxX;
+				minY = minY;
+				maxY = maxY;
+			}
+		};
+		/** \struct BOUNDS3D
+		* 
+		*/
+		struct BOUNDS3D
+		{
+			TYPES::F64 minX;
+			TYPES::F64 maxX;
+			TYPES::F64 minY;
+			TYPES::F64 maxY;
+			TYPES::F64 minZ;
+			TYPES::F64 maxZ;
+			BOUNDS3D()
+			{
+			}
+			BOUNDS3D(TYPES::F64 minX, TYPES::F64 maxX, TYPES::F64  minY, TYPES::F64 maxY, TYPES::F64 minZ, TYPES::F64 maxZ)
+			{
+				minX = minX;
+				maxX = maxX;
+				minY = minY;
+				maxY = maxY;
+				minZ = minZ;
+				maxZ = maxZ;
+			}
+		};
 		/** \struct VECTOR3D
 		*	\brief A VECTOR3D contains three values of type TYPES::F64
 		* 
@@ -119,18 +163,18 @@ namespace AWD
 
 		};
 		
-		/**\brief A MATRIX4x5 class, used for color-transform etc \n 
+		/**\brief A ColorTransform class, used for color-transform etc \n 
 		* 
 		*/
-		class MATRIX4x5
+		class ColorTransform
 		{
 			private:
 				TYPES::F64* matrix_data;
 				
 			public:
-				MATRIX4x5(TYPES::F64* matrix_data);
-				MATRIX4x5();
-				~MATRIX4x5();
+				ColorTransform(TYPES::F64* matrix_data);
+				ColorTransform();
+				~ColorTransform();
 				result read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *);
 				result write_to_file(FILES::FileWriter*, SETTINGS::BlockSettings *);
 				result set(TYPES::F64* matrix_data);
@@ -181,19 +225,18 @@ namespace AWD
 				GEOM::VECTOR2D test_point;
 				GEOM::VECTOR2D test_point2;
 				GEOM::VECTOR2D test_point3;
+
 				GEOM::PathSegment* next;
 				GEOM::PathSegment* last;
-				GEOM::Path* parent_path;
-				GEOM::edge_type edgeType;
-				std::vector< GEOM::PathSegment*> subdividedPath;
-				int hole_idx;
+
 				int originalSegment;
 				std::string id;
 				double size;
 				double length;
-				TYPES::UINT32 num_id;
 				double curviness;
-				std::vector<GEOM::AWDPathIntersection*> path_intersections;
+
+				GEOM::edge_type edgeType;
+				std::vector< GEOM::PathSegment*> subdividedPath;
 		 
 			public:
 				PathSegment();
@@ -204,53 +247,36 @@ namespace AWD
 				int min_x;
 				int min_y;	
 				
-				inline double maximum(double x, double y, double z) {
-					double max_val = x; 
-					if (y > max_val) 
-						max_val = y;
-					if (z > max_val) 
-						max_val = z;
-					return max_val; 
-				} 
-				inline double minimum(double x, double y, double z) {
-					double min_val = x; 
-					if (y < min_val)
-						min_val = y;
-					if (z < min_val) 
-						min_val = z;
-					return min_val; 
-				} 
 				TYPES::UINT16 bit_id_x;
 				TYPES::UINT32 bit_id;
-				TYPES::UINT16 bit_id_y;
-				
-				TYPES::UINT32 get_num_id();
-				void set_num_id(TYPES::UINT32);
+				TYPES::UINT16 bit_id_y;				
 
 				GEOM::PathSegment* get_next();
 				void set_next(GEOM::PathSegment*);
+
 				GEOM::PathSegment* get_last();
 				void set_last(GEOM::PathSegment*);
-				GEOM::Path* get_parent_path();
-				void set_parent_path(GEOM::Path*);
 				
-				bool get_contains_origin();
-				void set_contains_origin(bool);
-
 				GEOM::edge_state get_state();
 				void set_state(GEOM::edge_state);
+
 				GEOM::VECTOR2D get_startPoint();
 				void set_startPoint(GEOM::VECTOR2D);
+
 				GEOM::VECTOR2D get_endPoint();
 				void set_endPoint(GEOM::VECTOR2D);
+
 				GEOM::VECTOR2D get_controlPoint();
 				void set_controlPoint(GEOM::VECTOR2D);
-				GEOM::VECTOR2D get_test_point();
-				GEOM::VECTOR2D get_test_point2();
-				GEOM::VECTOR2D get_test_point3();
-				void sub_divide_outside_edge(std::vector<GEOM::VECTOR2D>& new_tri1,std::vector<GEOM::VECTOR2D>& new_tri2, double threshold);
+				
 				GEOM::edge_type get_edgeType();
 				void set_edgeType(GEOM::edge_type);
+				/* test_point is a point that is used to test if a curve-segment is a Concave or convex.
+				*/
+				GEOM::VECTOR2D get_test_point();
+
+				void sub_divide_outside_edge(std::vector<GEOM::VECTOR2D>& new_tri1,std::vector<GEOM::VECTOR2D>& new_tri2, double threshold);
+
 		
 				void add_path_intersections(GEOM::AWDPathIntersection*);
 				GEOM::AWDPathIntersection* find_path_intersections(GEOM::PathSegment* path1, GEOM::PathSegment* path2);
@@ -274,15 +300,19 @@ namespace AWD
 				void set_no_intersecting(bool);
 				int get_originalSegment();       
 				void set_originalSegment(int); 
+
 				void clear_subdivison();
+
 				double get_curviness();
+
 				std::string& get_id();
 				void set_id(std::string& );
 				
-				TYPES::UINT16 get_bit16(int start, int end);
+
 				std::vector<GEOM::PathSegment*>& get_subdivided_path();
+
 				result subdividePath(SETTINGS::Settings*);
-				std::vector<double> subDivideCurve(double startx, double starty, double cx, double cy, double endx, double endy);
+
 
 
 		};
@@ -302,10 +332,12 @@ namespace AWD
 				float* constant;
 				float* multiple;
 				bool has_curves;
+				bool delete_segs;
 				int* path_seg_indicies;
 				int* path_seg_indicies_inner;
 		 
 			public:
+				Path(bool);
 				Path();
 				~Path();
 
@@ -358,6 +390,7 @@ namespace AWD
 				FilledRegion(TYPES::filled_region_type type);
 				~FilledRegion();
 
+				GEOM::MATRIX2x3* uv_transform;
 				void add_path();
 				void add_existing_path(GEOM::Path*);
 				

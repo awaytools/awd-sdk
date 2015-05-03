@@ -41,8 +41,13 @@ namespace AWD{
 				std::string external_id;
 				void* external_object;
 				std::string name;
+				std::string encountered_at;
+				std::string script_name;
+				
 				
 			protected:
+				
+				std::vector<std::string> ressource_ids;
 
 				TYPES::state validate_state();
 				/**\brief The block_type of this AWDBlock. Deriving classes must set this in the constructor.
@@ -72,6 +77,21 @@ namespace AWD{
 				AWDBlock(BLOCK::block_type, const std::string&);
 				virtual ~AWDBlock();
 			
+				int inc_id;
+				TYPES::UINT32 byte_cnt;
+				std::vector<std::string> scene_names;
+				void add_scene_name(const std::string&);
+				void get_scene_names( std::string&);
+
+				void add_res_id(const std::string&);
+				bool has_res_id(const std::string&);
+				void clear_res_ids();
+
+				std::string& get_encountered_at();
+				void set_encountered_at(const std::string& encountered_at);
+				std::string& get_script_name();
+				void set_script_name(const std::string& script_name);
+
 				/**
 				*\brief Get the name.
 				*/

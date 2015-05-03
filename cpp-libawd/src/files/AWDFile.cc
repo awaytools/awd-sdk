@@ -107,6 +107,7 @@ AWDFile::process()
 	result res = this->settings->get_export_block_catergories_order(block_export_categories_order);
 	if(res!=result::AWD_SUCCESS)
 		return res;
+	/*
 	for(BLOCK::category block_category : block_export_categories_order){
 		for(BlockInstance* blockInstance : unordered_blocks){
 			if((!this->settings->get_export_materials())&&(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::SIMPLE_MATERIAL)){
@@ -135,28 +136,113 @@ AWDFile::process()
 				}
 			}
 		}
-	}
-	// if all blocks should be exported, we also export the blocks that are still left.
-	if(this->settings->get_export_all()){
-		for(BlockInstance* blockInstance : unordered_blocks){
-			if((!this->settings->get_export_materials())&&(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::SIMPLE_MATERIAL)){
-				continue;
+	}*/
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::SOUND_SOURCE){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+					blockInstance->add_with_dependencies();
 			}
-			else{
-				if(blockInstance->get_state()!=state::INVALID){
-					if(blockInstance->get_process_state()==process_state::UNPROCESSED){
-						if(blockInstance->get_awdBlock()->is_category(BLOCK::category::SCENE_OBJECT)){
-							SceneBlockBase* sceneblock = reinterpret_cast<SceneBlockBase*>( blockInstance->get_awdBlock());
-							if(sceneblock->get_parent()==NULL)
-								blockInstance->add_with_dependencies();
-						}
-						else
-							blockInstance->add_with_dependencies();
-					}
+		}
+	}
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::BITMAP_TEXTURE){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+					blockInstance->add_with_dependencies();
+			}
+		}
+	}
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::SIMPLE_MATERIAL){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+					blockInstance->add_with_dependencies();
+			}
+		}
+	}
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::BILLBOARD){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+					blockInstance->add_with_dependencies();
+			}
+		}
+	}
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::FONT){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+					blockInstance->add_with_dependencies();
+			}
+		}
+	}
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::FORMAT){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+					blockInstance->add_with_dependencies();
+			}
+		}
+	}
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TEXT_ELEMENT){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+					blockInstance->add_with_dependencies();
+			}
+		}
+	}
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TRI_GEOM){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+					blockInstance->add_with_dependencies();
+			}
+		}
+	}
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::MESH_INSTANCE_2){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+					blockInstance->add_with_dependencies();
+			}
+		}
+	}
+	// now export all library-symbols. 
+	// this are timelines that are not on the stage of any other timeline, and are no scene	
+	for(BlockInstance* blockInstance : unordered_blocks){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TIMELINE){
+			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+				if(blockInstance->get_process_state()==process_state::UNPROCESSED){
+					BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline*>( blockInstance->get_awdBlock());
+					if((timeline->instance_cnt==0)&&(!timeline->get_is_scene()))
+						blockInstance->add_with_dependencies();
 				}
 			}
 		}
 	}
+	// now export all scenes 
+	//if(this->settings->get_export_all()){
+		for(BlockInstance* blockInstance : unordered_blocks){
+			//if((!this->settings->get_export_materials())&&(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::SIMPLE_MATERIAL)){
+			//	continue;
+			//}
+			//else{
+				if(blockInstance->get_state()!=state::INVALID){
+					if(blockInstance->get_process_state()==process_state::UNPROCESSED){
+						if(blockInstance->get_awdBlock()->is_category(BLOCK::category::SCENE_OBJECT)){
+							if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TIMELINE){
+								BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline*>( blockInstance->get_awdBlock());
+								if(timeline->get_is_scene())
+									blockInstance->add_with_dependencies();
+							}
+						}
+					}
+				}
+			//}
+		}
+	//}
 	TYPES::UINT32 addr_cnt=0;
 	for(BlockInstance* blockInstance : this->block_instances){
 		blockInstance->set_addr(addr_cnt);
@@ -270,13 +356,74 @@ AWDFile::add_block(BASE::AWDBlock* awd_block, BLOCK::instance_type instance_type
 result 
 AWDFile::get_statistics(std::vector<std::string>& output_list)
 {
-	std::string stat_str ="		AWDFile stats\n\n";
-	stat_str+="			Output-url = '"+this->get_settings()->get_root_directory()+"'\n";
-	stat_str+="			Total AWDBlockInstance count =	"+std::to_string(this->get_block_cnt())+"\n\n";
+	std::string stat_str =	"AWDFile stats\n";
+	stat_str += "	Output-url = '"+this->get_settings()->get_root_directory()+"'\n";
+	stat_str += "	AWDBlockInstances =	"+std::to_string(this->get_block_cnt())+"\n";
 	
 	output_list.push_back(stat_str);
 	for(BlockInstance* block_inst : this->block_instances){
-		std::string stat_str_block ="				Blockid = "+std::to_string(block_inst->get_addr())+" type = "+std::to_string(TYPES::UINT32(block_inst->get_awdBlock()->get_type()))+" name = '"+block_inst->get_awdBlock()->get_name()+"'";
+		std::string asset_type_str;
+		get_asset_type_as_string(block_inst->get_awdBlock()->get_type(), asset_type_str);
+		
+		std::string asset_type_output;
+		for(int i=0; i<15;i++){
+			if(asset_type_str.size()>i)
+				asset_type_output+=asset_type_str[i];
+			else
+				asset_type_output+=" ";
+		}
+		std::string additional_infos="";
+		
+		std::string usage_str;
+		block_inst->get_awdBlock()->get_scene_names(usage_str);
+		std::string usage = "";
+		if(usage_str.size()>0)
+			usage=" | usage = '"+usage_str+"'";
+		std::string this_name="";
+		if(block_inst->get_awdBlock()->get_name().size()>0)
+			this_name=" | name = '"+block_inst->get_awdBlock()->get_name()+"'";;
+
+		if(block_inst->get_awdBlock()->get_type()==block_type::TEXT_ELEMENT){
+			BLOCKS::TextElement* thisText=reinterpret_cast<BLOCKS::TextElement*>(block_inst->get_awdBlock());
+			additional_infos+=" | text = '"+thisText->get_text()+"'";
+		}
+		if(block_inst->get_awdBlock()->get_type()==block_type::FONT){
+			BLOCKS::Font* thisfont=reinterpret_cast<BLOCKS::Font*>(block_inst->get_awdBlock());
+			additional_infos+=" | font-styles: '";
+			for(FONT::FontStyle* fs: thisfont->get_font_styles()){
+				additional_infos+=fs->get_style_name();
+				if(fs!=thisfont->get_font_styles().back())
+					additional_infos+=", ";
+			}
+			additional_infos+="'";
+		}
+		if(block_inst->get_awdBlock()->get_type()==block_type::FORMAT){
+			BLOCKS::TextFormat* thisfont=reinterpret_cast<BLOCKS::TextFormat*>(block_inst->get_awdBlock());
+			additional_infos+=" | font: "+thisfont->get_font()->get_name();
+			additional_infos+=" | font-style: "+thisfont->get_fontStyle();
+			additional_infos+=" | size: "+std::to_string(thisfont->get_fontSize());
+			additional_infos+=" | spacing: "+std::to_string(thisfont->get_letterSpacing());
+		}
+		if(block_inst->get_awdBlock()->get_type()==block_type::BITMAP_TEXTURE){
+			BLOCKS::BitmapTexture* thisbitmap=reinterpret_cast<BLOCKS::BitmapTexture*>(block_inst->get_awdBlock());
+			if(thisbitmap->get_storage_type()==BLOCK::storage_type::EMBEDDED){
+				additional_infos+=" | embbed ("+std::to_string(double(double(thisbitmap->embed_data_len)/double(1024)))+" kb)";
+			}
+			else{
+				additional_infos+=" | external url = '"+thisbitmap->get_url()+"'";
+			}
+		}
+		if(block_inst->get_awdBlock()->get_type()==block_type::SOUND_SOURCE){
+			BLOCKS::Audio* this_sound=reinterpret_cast<BLOCKS::Audio*>(block_inst->get_awdBlock());
+			if(this_sound->get_storage_type()==BLOCK::storage_type::EMBEDDED){
+				additional_infos+=" | embbed ("+std::to_string(double(double(this_sound->embed_data_len)/double(1024)))+" kb)";
+			}
+			else{
+				additional_infos+=" | external url = '"+this_sound->get_url()+"'";
+			}
+		}
+
+		std::string stat_str_block = "	ID = "+std::to_string(block_inst->get_addr())+" | "+asset_type_output + " | "+std::to_string((block_inst->get_awdBlock()->byte_cnt/1024))+" kb" + usage + this_name + additional_infos;
 		output_list.push_back(stat_str_block);
 		
 	}
@@ -319,14 +466,14 @@ AWDFile::write_to_disc()
 	// make sure blocks are correctly ordered, all dependencies are resolved, and all blocks are prepared
 	result res = process();
 	if(res!=result::AWD_SUCCESS)
-		return res;
+		return result::FILEREADER_ERROR_READING_BYTES;
 	// set the filewriter to write to a tmp file.
 	
 	// on windows this gives a warning that we should use tmpfile_s instead, but because this works on mac and win, i left it as is
 	FILES::FileWriter* fileWriter = new FileWriter();
 	res = fileWriter->set_file(tmpfile());
 	if(res!=result::AWD_SUCCESS)
-		return res;
+		return result::FILEREADER_ERROR_GETTING_POS;
 	
 	// write all blocks into the tmp file
 	TYPES::UINT32 body_length = 0;
@@ -339,40 +486,40 @@ AWDFile::write_to_disc()
 	TYPES::UINT8* body_buf = NULL;
 	res = fileWriter->get_compressed_bytes(&body_buf, this->settings->get_compression(), body_length);
 	if(res!=result::AWD_SUCCESS)
-		return res;
+		return result::PATH_NOT_CLOSING;
 
 	// set the file-writer to use the output file
 	res = fileWriter->open_file(this->url);
 	if(res!=result::AWD_SUCCESS)
-		return res;
+		return result::FILEREADER_ERROR_CLOSING_FILE;
 	
 	// write the file-header into the output file
 	std::string magic_string="AWD";
 	res = fileWriter->writeSTRING(magic_string, write_string_with::NO_LENGTH_VALUE);
 	if(res!=result::AWD_SUCCESS)
-		return res;
+		return result::RESULT_STRING_NOT_FOUND;
 	res =fileWriter->writeUINT8(AWD::VERSION_MAJOR);
 	if(res!=result::AWD_SUCCESS)
-		return res;
+		return result::READ_ERROR;
 	res =fileWriter->writeUINT8(AWD::VERSION_MINOR);
 	if(res!=result::AWD_SUCCESS)
-		return res;
+		return result::COULD_NOT_DECIDE_ON_CURVE_TYPE;
 	res =fileWriter->writeUINT16(this->settings->get_file_header_flag());
 	if(res!=result::AWD_SUCCESS)
-		return res;
+		return result::BLOCK_INVLAID;
 	res =fileWriter->writeUINT8(TYPES::UINT8(this->settings->get_compression()));
 	if(res!=result::AWD_SUCCESS)
-		return res;
+		return result::DIFFERENT_PROPERTY_VALUE;
 	
 	// write length of body
 	res = fileWriter->writeUINT32(body_length);	
 	if(res!=result::AWD_SUCCESS)
-		return res;	
+		return result::WRITE_WARNING;
 
 	// write body
 	res = fileWriter->writeBytes(body_buf, body_length);	
 	if(res!=result::AWD_SUCCESS)
-		return res;	
+		return result::DIFFERENT_PROPERTY_VALUE;
 	
 	//delete body_buffer
 	free(body_buf);

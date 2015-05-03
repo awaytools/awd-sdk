@@ -39,7 +39,7 @@ namespace AWD
 				std::vector<BASE::AWDBlock *> meshInstances;
 				std::vector<GEOM::Triangle*> awdTriangles;
 				std::vector<GEOM::Vertex3D*> awdVertices;
-				std::vector<GEOM::FilledRegion*> all_path_shapes;
+				std::vector<GEOM::FilledRegion*> all_filled_regions;
 
 
 
@@ -48,8 +48,10 @@ namespace AWD
 
 				SETTINGS::BlockSettings* subGeomSettings;
 				result add_vertex3D(GEOM::Vertex3D* vert);
-
+				bool delete_subs;
 				TYPES::F64 * bind_mtx;
+				BASE::AWDBlock* mesh_instance;
+				std::vector<GEOM::MATRIX2x3*> frame_cmd_inst_matrices;
 
 			protected:
 				TYPES::UINT32 calc_body_length(FILES::AWDFile*, SETTINGS::BlockSettings *);
@@ -65,12 +67,17 @@ namespace AWD
 				* 
 				*/
 				Geometry(std::string& name);
+				Geometry(bool);
 				Geometry();
 				~Geometry();
-
-				result add_path_shape(GEOM::FilledRegion* path_shape);
+				
+				void add_res_id_geom(const std::string&, GEOM::MATRIX2x3*);
+				GEOM::MATRIX2x3* has_res_id_geom(const std::string&);
+				void clear_res_ids_geom();
+				result add_filled_region(GEOM::FilledRegion* filled_regions);
 				
 				
+				result merge_subgeos();
 				result merge_for_textureatlas(BLOCKS::Material* );
 				void clear_mesh_inst_list();
 
@@ -106,9 +113,12 @@ namespace AWD
 				std::vector<GEOM::SharedVertex3D*>& get_shared_verts();
 
 				Geometry* get_cloned_geometry();
-				void add_mesh_inst(AWDBlock* mesh_inst);
-				AWDBlock* get_first_mesh();
+				void add_mesh_inst(BASE::AWDBlock* mesh_inst);
+				BASE::AWDBlock* get_first_mesh();
 				
+				void set_mesh_instance(BASE::AWDBlock* mesh_inst);
+				BASE::AWDBlock* get_mesh_instance();
+
 				TYPES::F64 *get_bind_mtx();
 				void set_bind_mtx(TYPES::F64 *bind_mtx);
 				bool get_is_created();

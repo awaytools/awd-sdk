@@ -70,7 +70,7 @@ namespace AWD
 			std::map<BLOCK::block_type, std::vector<BASE::AWDBlock*> > all_blocks;	/// < all blocks in the AWDProject. ordered by BLOCK::block_type
 			
 			std::vector<FILES::AWDFile*> files;		/// < The list of files. all AWDFiles will be deleted on deconstruct
-			
+			int block_id_cnt;
 			result find_block(BASE::AWDBlock*);		/// < Add a AWDBLock to the list of blocks
 			BLOCKS::Namespace * name_space;			/// < This name_space_block should contain all names_spaces used on all AWDfile. It acts as name_space-library and is not added to the block-list.
 			SETTINGS::Settings * settings;			/// < the settings for this project. They might be shared or copied for the files. Files that share settings do not need to delete them in deconstructor.
@@ -187,17 +187,22 @@ namespace AWD
 			*	@return AWD::result
 			*/
 			BASE::AWDBlock* get_block_by_external_id(const std::string& externalID);
+			BASE::AWDBlock* get_block_by_external_id_shared(const std::string& externalID);
+			
 			/**
 			* \brief Get AWDBlock for a external-id (string) and type
 			*	@return AWD::result
 			*/
 			BASE::AWDBlock* get_block_by_external_id_and_type(const std::string& externalID, BLOCK::block_type,  bool create_if_not_exists);
+			BASE::AWDBlock* get_block_by_external_id_and_type_shared(const std::string& externalID, BLOCK::block_type,  bool create_if_not_exists);
 			/**
 			* \brief Get AWDBlock for a name (string) and type
 			*	@return AWD::result
 			*/
 			BASE::AWDBlock* get_block_by_name_and_type(const std::string& name, BLOCK::block_type,  bool create_if_not_exists);
-
+			
+			BLOCKS::Timeline* get_timeline_by_symbol_name(const std::string& name);
+			BASE::AWDBlock* get_block_by_external_object_and_type(void* extern_obj, BLOCK::block_type blocktype, bool create_if_not_exists);
 			/**
 			* \brief Get Material for a color 
 			*	@return AWD::result

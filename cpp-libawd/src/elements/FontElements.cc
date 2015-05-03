@@ -41,19 +41,26 @@ void TextRun::set_text(const std::string& text)
 TYPES::UINT32
 TextRun::calc_body_length(SETTINGS::BlockSettings * settings)
 {
-    TYPES::UINT32 len;
-
-    len = 0;//sizeof(TYPES::UINT32); //datalength;
-    len += this->calc_attr_length(true, true, settings);
-
+    TYPES::UINT32 len = sizeof(TYPES::BADDR);// textformat id
+	len += TYPES::UINT32(sizeof(TYPES::UINT32) + this->text.size()); //text
     return len;
 }
 
 result
-TextRun::write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * curBlockSettings)
+TextRun::add_dependencies(FILES::AWDFile* target_file, BLOCK::instance_type instance_type)
 {
-    this->properties->write_attributes(fileWriter,  curBlockSettings);
-    this->user_attributes->write_attributes(fileWriter,  curBlockSettings);
+	if(this->textFormat!=NULL)
+		this->textFormat->add_with_dependencies(target_file, instance_type);
+	return result::AWD_SUCCESS;
+}
+result
+TextRun::write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * curBlockSettings, FILES::AWDFile* awd_file)
+{	
+	TYPES::UINT32 block_addr=0;
+	if (this->textFormat != NULL)
+		this->textFormat->get_block_addr(awd_file, block_addr);
+	fileWriter->writeUINT32(block_addr);
+	fileWriter->writeSTRING(this->text, FILES::write_string_with::LENGTH_AS_UINT32);
 	return result::AWD_SUCCESS;
 }
 
@@ -75,29 +82,27 @@ void Paragraph::add_textrun(TextRun* textRun)
 TYPES::UINT32
 Paragraph::calc_body_length(SETTINGS::BlockSettings * settings)
 {
-    TYPES::UINT32 len;
-
-    len = 0;//sizeof(TYPES::UINT32); //datalength;
-	len+=sizeof(TYPES::UINT32);
-	for(TextRun* tr : this->textRuns){
+    TYPES::UINT32 len = sizeof(TYPES::UINT32);
+	for(TextRun* tr : this->textRuns)
 		len+=tr->calc_body_length(settings);
-	}
-    len += this->calc_attr_length(true, true, settings);
-
     return len;
 }
 
 
+result
+Paragraph::add_dependencies(FILES::AWDFile* target_file, BLOCK::instance_type instance_type)
+{
+	for(TextRun* tr : this->textRuns)
+		tr->add_dependencies(target_file, instance_type);
+	return result::AWD_SUCCESS;
+}
 
 result
-Paragraph::write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * curBlockSettings)
+Paragraph::write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * curBlockSettings, FILES::AWDFile* awd_file)
 {
 	fileWriter->writeUINT32(TYPES::UINT32(this->textRuns.size()));
-	for(TextRun* tr : this->textRuns){
-		tr->write_body(fileWriter, curBlockSettings);
-	}
-    this->properties->write_attributes(fileWriter,  curBlockSettings);
-    this->user_attributes->write_attributes(fileWriter,  curBlockSettings);
+	for(TextRun* tr : this->textRuns)
+		tr->write_body(fileWriter, curBlockSettings, awd_file);
 	return result::AWD_SUCCESS;
 }
 
@@ -105,11 +110,13 @@ Paragraph::write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * 
 FontShape::FontShape() 
 {
 	shape_data=false;
+	subShape=NULL;
 }
 
 FontShape::~FontShape()
 {
-	//free the url ?
+	if(shape_data)
+		delete this->subShape;
 }
     
 	
@@ -125,24 +132,44 @@ bool FontShape::has_shape_data()
 {
 	return this->shape_data;
 }
-GEOM::FilledRegion* FontShape::get_subShape() 
+GEOM::SubGeom* FontShape::get_subShape() 
 {
 	return this->subShape;
 }
-void FontShape::set_subShape(GEOM::FilledRegion* subShape) 
+void FontShape::set_subShape(GEOM::SubGeom* subGeom) 
 {
-	if(subShape!=NULL){
-		this->subShape=subShape;
-		this->shape_data=true;
-	}
+	this->subShape=subGeom;
+	this->shape_data=true;
+
 }
 		
-TYPES::UINT32 FontShape::calc_body_length(SETTINGS::BlockSettings*) 
+TYPES::UINT32 FontShape::calc_body_length(SETTINGS::BlockSettings* settings) 
 {
-	return 0;
+	TYPES::UINT32 len =0;
+	len += 4; // charcode
+	len += 4; // subgeom_length
+	if(subShape!=NULL){
+		if(subShape->get_sub_geoms().size()>0)
+			len += subShape->calc_subgeom_streams_length(subShape->get_sub_geoms()[0]);
+	}
+	return len;
 }
-result FontShape::write_body(FILES::FileWriter*, SETTINGS::BlockSettings*) 
+result FontShape::write_body(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings* settings, double font_size) 
 {
+	fileWriter->writeUINT32(this->charCode);
+	if(subShape!=NULL){
+		if(subShape->get_sub_geoms().size()>0){
+			
+			TYPES::UINT32 sub_len = subShape->calc_subgeom_streams_length(subShape->get_sub_geoms()[0]);
+			// Write sub-mesh header
+			fileWriter->writeUINT32(sub_len);
+			subShape->modify_font_char(font_size);
+			subShape->write_subgeom_streams(fileWriter, subShape->get_sub_geoms()[0]);
+		}
+	}
+	else{
+		fileWriter->writeUINT32(0);
+	}
 	return result::AWD_SUCCESS;
 }
 
@@ -167,10 +194,10 @@ void FontStyle::set_style_size(int style_size)
 {
 	this->style_size=style_size;
 }
+typedef std::map<int, FontShape*>::iterator it_type;
 std::vector<FontShape*> FontStyle::get_ungenerated_chars()
 {
 	std::vector<FontShape*> returner;
-	typedef std::map<int, FontShape*>::iterator it_type;
 	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {
 		// iterator->first = key
 		if(!iterator->second->has_shape_data()){	
@@ -202,12 +229,34 @@ FontShape* FontStyle::get_fontShape(int char_code)
 	}
 	return shapesmap[char_code];
 }
-TYPES::UINT32 FontStyle::calc_body_length(SETTINGS::BlockSettings*) 
+TYPES::UINT32 FontStyle::calc_body_length(SETTINGS::BlockSettings* settings) 
 {
-	return 0;
+	
+    TYPES::UINT32 len=0;
+	
+	len += sizeof(TYPES::UINT16) + this->get_style_name().size(); //name
+    len += sizeof(TYPES::UINT32); //size;
+    len += sizeof(TYPES::UINT32); //char_count;
+	
+	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {
+		// iterator->first = key
+		if(iterator->second->has_shape_data()){	
+			len+=iterator->second->calc_body_length(settings);
+		}
+	}
+	return len;
 }
-result FontStyle::write_body(FILES::FileWriter*, SETTINGS::BlockSettings*) 
+result FontStyle::write_body(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings* settings) 
 {
+	fileWriter->writeSTRING(this->get_style_name(), FILES::write_string_with::LENGTH_AS_UINT16);	
+	fileWriter->writeUINT32(this->style_size);
+	fileWriter->writeUINT32(this->shapesmap.size());//charcount
+	
+	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {
+		if(iterator->second->has_shape_data()){	
+			iterator->second->write_body(fileWriter, settings, this->style_size);
+		}
+	}
 	return result::AWD_SUCCESS;
 }
 

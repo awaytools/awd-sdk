@@ -78,7 +78,7 @@ SharedVertex3D::calculate_normals()
 				continue; // do nothing if objects are the same
 			BlockSettings* comp_vn_settings=comp_vert->get_v_n_settings();
 			vertex_normals_mode comp_v_n__mode=comp_vn_settings->get_vertex_normals_mode();
-			if((v_n__mode==vertex_normals_mode::EXPLICIT_FACE_NORMALS)||(v_n__mode==vertex_normals_mode::EXPLICIT_FACE_NORMALS)){
+			if((comp_v_n__mode==vertex_normals_mode::EXPLICIT_FACE_NORMALS)||(comp_v_n__mode==vertex_normals_mode::EXPLICIT_FACE_NORMALS)){
 				// this vertex should never share its normal with other vertex.
 				// it might be merged later, but its normal should never be affected, so we look at next vert
 				continue;

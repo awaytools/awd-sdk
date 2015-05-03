@@ -21,6 +21,7 @@ SubGeom::SubGeom(SETTINGS::BlockSettings* subGeomSettings):
 	BASE::AttrElementBase(),
 	BASE::StateElementBase()
 {
+	this->uv_transform=new MATRIX2x3();
 	this->tri_cnt=0;
 	this->material_block=NULL;
 	this->allowed_tris=0;
@@ -33,11 +34,30 @@ SubGeom::SubGeom(SETTINGS::BlockSettings* subGeomSettings):
 
 SubGeom::~SubGeom()
 {
+	delete this->uv_transform;
 	for(SubGeomInternal* subGeo : this->sub_geoms)
 		delete subGeo;
 	delete this->settings;
 }
 
+std::string&
+SubGeom::get_name()
+{
+	return this->name;
+}
+void
+SubGeom::set_name(const std::string& name)
+{
+	this->name = name;
+}
+
+result
+SubGeom::modify_font_char(double size)
+{
+	for(SubGeomInternal* subGeo:this->sub_geoms)
+		subGeo->modify_font_char(size);
+	return result::AWD_SUCCESS;
+}
 TYPES::state 
 SubGeom::validate_state()
 {
@@ -88,9 +108,20 @@ SubGeom::get_material_blocks(std::vector<BASE::AWDBlock*>& material_blocks)
 		material_blocks.push_back(this->material_block);
 }
 TYPES::UINT32
-	SubGeom::get_tri_cnt()
+SubGeom::get_tri_cnt_for_type(GEOM::edge_type edge_type) 
 {
-	return this->tri_cnt;
+	TYPES::UINT32 tricnt=0;
+	for(SubGeomInternal* subGeo:this->sub_geoms)
+		tricnt+=subGeo->get_tri_cnt_for_type(edge_type);
+	return tricnt;
+}
+TYPES::UINT32
+SubGeom::get_tri_cnt()
+{
+	TYPES::UINT32 tricnt=0;
+	for(SubGeomInternal* subGeo:this->sub_geoms)
+		tricnt+=subGeo->get_tri_cnt();
+	return tricnt;
 }
 
 result 
@@ -114,13 +145,49 @@ SubGeom::merge_subgeo(SubGeom* subgeom_to_merge)
 	}
 	this->sub_geoms.push_back(last_subgeo);
 	std::vector<GEOM::GeomStreamElementBase*> verts = subgeom_to_merge->get_sub_geoms().back()->get_vertices();
-	for(GEOM::Triangle* tri: subgeom_to_merge->get_sub_geoms().back()->get_triangles()){
-		std::string id;
-		this->get_internal_id(id);
-		TYPES::UINT32 idx1 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_1()]));
-		TYPES::UINT32 idx2 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_2()]));
-		TYPES::UINT32 idx3 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_3()]));
-		this->sub_geoms.back()->add_triangle(new Triangle( idx1,  idx2, idx3));
+	if(subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__9F)!=NULL){
+		for(GEOM::Triangle* tri: subgeom_to_merge->get_sub_geoms().back()->get_triangles()){
+			std::string id;
+			this->get_internal_id(id);
+			TYPES::UINT32 idx1 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_1()]), false);
+			TYPES::UINT32 idx2 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_2()]), false);
+			TYPES::UINT32 idx3 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_3()]), false);
+			this->sub_geoms.back()->add_triangle(new Triangle( idx1,  idx2, idx3));
+		}
+	}
+	else{
+		for(GEOM::Triangle* tri: subgeom_to_merge->get_sub_geoms().back()->concave_triangles){
+			std::string id;
+			this->get_internal_id(id);
+			TYPES::UINT32 idx1 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_1()]), true);
+			TYPES::UINT32 idx2 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_2()]), true);
+			TYPES::UINT32 idx3 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_3()]), true);
+			this->sub_geoms.back()->add_triangle_by_type(new Triangle( idx1,  idx2, idx3), GEOM::edge_type::CONCAVE_EDGE);
+		}
+		for(GEOM::Triangle* tri: subgeom_to_merge->get_sub_geoms().back()->convex_triangles){
+			std::string id;
+			this->get_internal_id(id);
+			TYPES::UINT32 idx1 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_1()]), true);
+			TYPES::UINT32 idx2 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_2()]), true);
+			TYPES::UINT32 idx3 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_3()]), true);
+			this->sub_geoms.back()->add_triangle_by_type(new Triangle( idx1,  idx2, idx3), GEOM::edge_type::CONVEX_EDGE);
+		}
+		for(GEOM::Triangle* tri: subgeom_to_merge->get_sub_geoms().back()->exterior_triangles){
+			std::string id;
+			this->get_internal_id(id);
+			TYPES::UINT32 idx1 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_1()]), true);
+			TYPES::UINT32 idx2 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_2()]), true);
+			TYPES::UINT32 idx3 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_3()]), true);
+			this->sub_geoms.back()->add_triangle_by_type(new Triangle( idx1,  idx2, idx3), GEOM::edge_type::OUTTER_EDGE);
+		}
+		for(GEOM::Triangle* tri: subgeom_to_merge->get_sub_geoms().back()->interior_triangles){
+			std::string id;
+			this->get_internal_id(id);
+			TYPES::UINT32 idx1 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_1()]), true);
+			TYPES::UINT32 idx2 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_2()]), true);
+			TYPES::UINT32 idx3 = this->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_3()]), true);
+			this->sub_geoms.back()->add_triangle_by_type(new Triangle( idx1,  idx2, idx3), GEOM::edge_type::INNER_EDGE);
+		}
 	}
 	return result::AWD_SUCCESS;
 
@@ -146,38 +213,118 @@ SubGeom::set_uvs()
 				}
 			}
 		}
-		else if(thisMat->get_material_type()==MATERIAL::type::SOLID_TEXTUREATLAS_MATERIAL){
-			
-			GEOM::MATRIX2x3* uv_transform = thisMat->get_uv_transform_mtx();
-			double this_width = this->max_x - this->min_x;
-			double this_height = this->max_y - this->min_y;
-			double u_max = this_width / double(thisMat->get_texture()->get_width());
-			double v_max = this_height / double(thisMat->get_texture()->get_height());
-			u = ((this_width-thisMat->get_texture()->get_width())/this_width)/2;
-			v = ((this_height-thisMat->get_texture()->get_height())/this_height)/2;
-			double this_u_width = u_max - u;
-			double this_v_height = v_max - v;
-			for(SubGeomInternal* subGeom : this->sub_geoms){
-				std::vector<GEOM::GeomStreamElementBase*> verts = subGeom->get_vertices();
-				for(GeomStreamElementBase* vert_base: verts){
-					GEOM::Vertex2D* vert = reinterpret_cast<GEOM::Vertex2D*>(vert_base);
-					vert->set_uv(u+(1-(((vert->get_position().x-this->min_x)/this_width))*this_u_width), v+(1-((vert->get_position().y-this->min_y)/this_height))*this_v_height);
-				}
+		else {
+			double sizex= 1638.4;
+			double sizey= 1638.4;
+			if(thisMat->get_material_type()==MATERIAL::type::SOLID_TEXTUREATLAS_MATERIAL){
+				sizex = (double(thisMat->get_texture()->get_width())/double(20));
+				sizey = (double(thisMat->get_texture()->get_height())/double(20));
 			}
-		}
-		else{
+			double sizex_half= sizex * 0.5;
+			double sizey_half= sizey * 0.5;
+			TYPES::F64* uv_transform = this->uv_transform->get();
+			TYPES::F64 a =  uv_transform[0];
+			TYPES::F64 b =  uv_transform[1];
+			TYPES::F64 c =  uv_transform[2];
+			TYPES::F64 d =  uv_transform[3];
+			TYPES::F64 tx =  uv_transform[4];
+			TYPES::F64 ty =  uv_transform[5];
+
+			TYPES::F64 a_inv =  d / (a*d - b*c);
+			TYPES::F64 b_inv =  -b / (a*d - b*c);
+			TYPES::F64 c_inv =  -c / (a*d - b*c);
+			TYPES::F64 d_inv =  a / (a*d - b*c);
+			TYPES::F64 tx_inv =  (c*ty - d*tx)/(a*d - b*c);
+			TYPES::F64 ty_inv =  -(a*ty - b*tx)/(a*d - b*c);
+			
 			double u_max = thisMat->texture_u_max;
 			double v_max = thisMat->texture_v_max;
-			GEOM::MATRIX2x3* uv_transform = thisMat->get_uv_transform_mtx();
+			//GEOM::MATRIX2x3* uv_transform = thisMat->get_uv_transform_mtx();
 			double this_width = this->max_x - this->min_x;
 			double this_height = this->max_y - this->min_y;
 			double this_u_width = u_max - u;
 			double this_v_height = v_max - v;
+			double max_u_value=std::numeric_limits<double>::max()*-1;
+			double max_v_value=std::numeric_limits<double>::max()*-1;
+			double min_u_value=std::numeric_limits<double>::max();
+			double min_v_value=std::numeric_limits<double>::max();
 			for(SubGeomInternal* subGeom : this->sub_geoms){
 				std::vector<GEOM::GeomStreamElementBase*> verts = subGeom->get_vertices();
 				for(GeomStreamElementBase* vert_base: verts){
 					GEOM::Vertex2D* vert = reinterpret_cast<GEOM::Vertex2D*>(vert_base);
-					vert->set_uv(u+(1-(((vert->get_position().x-this->min_x)/this_width))*this_u_width), v+(((vert->get_position().y-this->min_y)/this_height)*this_v_height));
+					//vert->set_uv(u, v);
+					
+					//double new_x= vert->get_position().x * a + vert->get_position().y * c + tx;
+					//double new_y= vert->get_position().x * b + vert->get_position().y * d + ty;
+					double new_x= vert->get_position().x * a_inv + vert->get_position().y * c_inv + tx_inv;
+					double new_y= vert->get_position().x * b_inv + vert->get_position().y * d_inv + ty_inv;
+					//vert->set_uv(u+((((vert->get_position().x-this->min_x)/this_width))*this_u_width), v+(1-((vert->get_position().y-this->min_y)/this_height))*this_v_height);
+					vert->set_uv(new_x, new_y);
+					//vert->set_position(new_x, new_y);
+					//vert->set_uv(u+((((vert->get_position().x-this->min_x)/this_width))*this_u_width), v+(1-((vert->get_position().y-this->min_y)/this_height))*this_v_height);
+				}
+				double max_u = max_u_value-min_u_value;
+				double max_v = max_v_value-min_v_value;
+				for(GeomStreamElementBase* vert_base: verts){
+					GEOM::Vertex2D* vert = reinterpret_cast<GEOM::Vertex2D*>(vert_base);
+					//vert->set_uv(u, v);
+					double new_x1=0;
+					double new_y1=0;
+					if(thisMat->get_material_type()==MATERIAL::type::SOLID_TEXTUREATLAS_MATERIAL){
+						new_x1 = vert->get_uv().x / sizex;
+						new_y1 = 1-(vert->get_uv().y / sizey);
+					}
+					else{
+						new_x1= (vert->get_uv().x + sizex_half)/(sizex);
+						new_y1= (vert->get_uv().y + sizey_half)/(sizey);
+					}
+					if(new_x1<0){
+						if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_EXTEND)
+							new_x1=0;
+						else if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_REFLECT)
+							new_x1*=-1;
+						else if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_REPEAT)
+							new_x1=1+new_x1;
+					}
+					else if(new_x1>1) {
+						if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_EXTEND)
+							new_x1=1;
+						else if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_REFLECT){
+							int testx=new_x1;
+							if(testx<new_x1)
+								testx++;
+							new_x1=testx-new_x1;
+						}
+						else if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_REPEAT){
+							while (new_x1>1)
+								new_x1--;
+						}
+					}
+					if(new_y1<0){
+						if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_EXTEND)
+							new_y1=0;
+						else if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_REFLECT)
+							new_y1*=-1;
+						else if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_REPEAT)
+							new_y1=1+new_y1;
+					}
+					else if(new_y1>1) {
+						if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_EXTEND)
+							new_y1=1;
+						else if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_REFLECT){
+							int testx=new_y1;
+							if(testx<new_y1)
+								testx++;
+							new_y1=testx-new_y1;
+						}
+						else if(thisMat->gradient_spread==MATERIAL::GradientSpread::GRADIENT_SPREAD_REPEAT){
+							while (new_y1>1)
+								new_y1--;
+						}
+					}
+					vert->set_uv(u+((new_x1)*this_u_width), v+((1-new_y1)*this_v_height));
+					//vert->set_position(new_x, new_y);
+					//vert->set_uv(u+((((vert->get_position().x-this->min_x)/this_width))*this_u_width), v+(1-((vert->get_position().y-this->min_y)/this_height))*this_v_height);
 				}
 			}
 		}
@@ -211,12 +358,12 @@ SubGeom::create_triangle(GEOM::edge_type edge_type, GEOM::VECTOR2D v1, GEOM::VEC
 	GEOM::VECTOR2D vert_ctr = v2;
 	GEOM::VECTOR2D vert_2 = v3;
 	
-	if (isClockWiseXY(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y)){
+	if(!isClockWiseXY(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y)){
 		vert_1 = v3;
 		vert_ctr = v2;
 		vert_2 = v1;
 	}
-
+	
 	GEOM::Vertex2D* vert1 = new Vertex2D();
 	vert1->set_position(vert_1.x, vert_1.y);
 
@@ -231,26 +378,39 @@ SubGeom::create_triangle(GEOM::edge_type edge_type, GEOM::VECTOR2D v1, GEOM::VEC
 	GEOM::Triangle* new_triangle;
 
 	if(edge_type == GEOM::edge_type::CONCAVE_EDGE){
-		vert1->set_curve_attributes(1, 1, 1);
-		vert2->set_curve_attributes(1, 0.5, 0); 
-		vert3->set_curve_attributes(1, 0, 0);
-	}
-	else if(edge_type == GEOM::edge_type::CONVEX_EDGE){
 		vert1->set_curve_attributes(-1, 1, 1);
-		vert2->set_curve_attributes(-1, 0.5, 0);
+		vert2->set_curve_attributes(-1, 0.5, 0); 
 		vert3->set_curve_attributes(-1, 0, 0);
 	}
-	else{
-		vert1->set_curve_attributes(1, 0.5, 1);
-		vert2->set_curve_attributes(1, 0.5, 1);
-		vert3->set_curve_attributes(1, 0.5, 1);
+	else if(edge_type == GEOM::edge_type::CONVEX_EDGE){
+		vert1->set_curve_attributes(1, 1, 1);
+		vert2->set_curve_attributes(1, 0.5, 0);
+		vert3->set_curve_attributes(1, 0, 0);
 	}
-	TYPES::UINT32 idx1 = this->add_vertex2D(vert1);
-	TYPES::UINT32 idx2 = this->add_vertex2D(vert2);
-	TYPES::UINT32 idx3 = this->add_vertex2D(vert3);
-	new_triangle = new Triangle( idx1, idx3, idx2);
-	this->sub_geoms.back()->add_triangle(new_triangle);
-
+	else if (edge_type==GEOM::edge_type::INNER_EDGE){
+		vert1->set_curve_attributes(1, 2, 1);
+		vert2->set_curve_attributes(1, 3, 1);
+		vert3->set_curve_attributes(1, 4, 1);
+	}
+	else{
+		vert1->set_curve_attributes(1, 2, 0);
+		vert2->set_curve_attributes(1, 2, 1);
+		vert3->set_curve_attributes(1, 2, 0);
+	}
+	if(this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__9F)!=NULL){
+		TYPES::UINT32 idx1 = this->add_vertex2D(vert1, false);
+		TYPES::UINT32 idx2 = this->add_vertex2D(vert2, false);
+		TYPES::UINT32 idx3 = this->add_vertex2D(vert3, false);
+		new_triangle = new Triangle(idx1, idx2, idx3);
+		this->sub_geoms.back()->add_triangle(new_triangle);
+	}
+	else{	
+		TYPES::UINT32 idx1 = this->add_vertex2D(vert1, true);
+		TYPES::UINT32 idx2 = this->add_vertex2D(vert2, true);
+		TYPES::UINT32 idx3 = this->add_vertex2D(vert3, true);
+		new_triangle = new Triangle(idx1, idx2, idx3);
+		this->sub_geoms.back()->add_triangle_by_type(new_triangle, edge_type);
+	}
 	return result::AWD_SUCCESS;
 }
 
@@ -265,7 +425,7 @@ SubGeom::add_triangle(GEOM::Triangle* new_triangle)
 }
 
 TYPES::INT32 
-SubGeom::add_vertex2D(GEOM::Vertex2D* vertex)
+SubGeom::add_vertex2D(GEOM::Vertex2D* vertex, bool use_cache)
 {
 	if(this->sub_geoms.back()==NULL)
 		return -1;
@@ -277,7 +437,12 @@ SubGeom::add_vertex2D(GEOM::Vertex2D* vertex)
 		max_y=vertex->get_position().y;
 	if(min_y>vertex->get_position().y)
 		min_y=vertex->get_position().y;
-	return this->sub_geoms.back()->add_vertex(vertex);
+
+	if(!use_cache)
+		return this->sub_geoms.back()->add_vertex(vertex);
+
+	return this->sub_geoms.back()->add_vertex_with_cache(vertex);
+
 }
 TYPES::INT32 
 SubGeom::add_vertex(GEOM::Vertex3D* vertex)
@@ -334,6 +499,15 @@ SubGeom::calc_stream_length(DataStreamRecipe* data_stream, SubGeomInternal* subG
 	int element_cnt=subGeo->get_vert_cnt();
 	if(data_stream->get_stream_target_type()==stream_target::TRIANGLE_STREAM)
 		element_cnt=subGeo->get_tri_cnt();
+	else if(data_stream->get_stream_target_type()==stream_target::INTERIOR_TRIANGLES)
+		element_cnt=subGeo->get_tri_cnt_for_type(GEOM::edge_type::INNER_EDGE);
+	else if(data_stream->get_stream_target_type()==stream_target::EXTERIOR_TRIANGLES)
+		element_cnt=subGeo->get_tri_cnt_for_type(GEOM::edge_type::OUTTER_EDGE);
+	else if(data_stream->get_stream_target_type()==stream_target::CONCAVE_TRIANGLES)
+		element_cnt=subGeo->get_tri_cnt_for_type(GEOM::edge_type::CONCAVE_EDGE);
+	else if(data_stream->get_stream_target_type()==stream_target::CONVEX_TRIANGLES)
+		element_cnt=subGeo->get_tri_cnt_for_type(GEOM::edge_type::CONVEX_EDGE);
+	
 	int attr_length=0;
 	for(DataStreamAttrDesc attr_desc : data_stream->get_attr_descriptions())
 		attr_length+= get_data_type_size_for_precision_category(attr_desc.get_data_type(), this->settings, attr_desc.get_storage_cat()) * attr_desc.get_data_length();
@@ -395,7 +569,6 @@ SubGeom::write_vertex_stream(FileWriter* filewWriter, DataStreamRecipe* data_str
 	else{
 		// if the stream is not homogen, we need to write each DataStreamAttr on its own.
 		// \todo: heterogen vertices streams are not tested yet.
-		TYPES::UINT32 values_cnt;
 		std::vector<GeomStreamElementBase*> verts = subGeo->get_vertices();
 		for(GeomStreamElementBase* vert : verts){
 			for(DataStreamAttrDesc attr_desc : data_stream->get_attr_descriptions()){
@@ -439,7 +612,6 @@ SubGeom::write_triangle_stream(FileWriter* filewWriter, DataStreamRecipe* data_s
 	else{
 		// if the stream is not homogen, we need to write each DataStreamAttr on its own.
 		// \todo: heterogen Triangle streams are not tested yet.
-		TYPES::UINT32 values_cnt;
 		std::vector<Triangle*> tris = subGeo->get_triangles();
 		for(Triangle* tri : tris){
 			for(DataStreamAttrDesc attr_desc : data_stream->get_attr_descriptions()){
@@ -454,7 +626,6 @@ SubGeom::write_triangle_stream(FileWriter* filewWriter, DataStreamRecipe* data_s
 result
 SubGeom::write_subgeom_streams(FileWriter* filewWriter, SubGeomInternal* subGeo)
 {
-	int streams_length=0;
 	result res = result::AWD_SUCCESS;
 	for(DataStreamRecipe* data_stream : this->settings->get_stream_recipes()){
 		

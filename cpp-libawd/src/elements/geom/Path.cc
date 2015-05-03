@@ -15,11 +15,27 @@ using namespace AWD::FILES;
 using namespace AWD::BLOCK;
 using namespace AWD::SETTINGS;
 
+Path::Path(bool delete_segs)
+{
+	this->is_dirty=true;
+	this->is_hole = false;
+	this->has_curves=false;
+	this->delete_segs=delete_segs;
+	// just malloc some memory on all the internal stuff, so we can always call free before setting them
+	// alternative would be to keep track if the memory had been malloc or not.
+	polyX = (float*)malloc(sizeof(float));
+	polyY = (float*)malloc(sizeof(float));
+	constant = (float*)malloc(sizeof(float));
+	multiple = (float*)malloc(sizeof(float));
+	path_seg_indicies = (int*)malloc(sizeof(int));
+	path_seg_indicies_inner = (int*)malloc(sizeof(int));
+}
 Path::Path()
 {
 	this->is_dirty=true;
 	this->is_hole = false;
 	this->has_curves=false;
+	this->delete_segs=true;
 	// just malloc some memory on all the internal stuff, so we can always call free before setting them
 	// alternative would be to keep track if the memory had been malloc or not.
 	polyX = (float*)malloc(sizeof(float));
@@ -32,6 +48,10 @@ Path::Path()
 
 Path::~Path()
 {
+	if(this->delete_segs){
+		//for(PathSegment* one_seg:this->path_segments)
+		//	delete one_seg;
+	}
 	free(polyX);
 	free(polyY);
 	free(constant);
@@ -94,19 +114,18 @@ Path::validate_path()
 {
 	if(this->path_segments.size()<3)
 		return result::PATH_CONTAINS_LESS_THAN_THREE_SEGMENTS;
-
+	result thisres = result::AWD_SUCCESS; 
 	if((this->path_segments.front()->get_startPoint().x != this->path_segments.back()->get_endPoint().x)||(this->path_segments.front()->get_startPoint().y != this->path_segments.back()->get_endPoint().y)){
 		GEOM::PathSegment* new_segment = new GEOM::PathSegment();
 		new_segment->set_startPoint(GEOM::VECTOR2D(this->path_segments.back()->get_endPoint().x, this->path_segments.back()->get_endPoint().y));
 		new_segment->set_endPoint(GEOM::VECTOR2D(this->path_segments.front()->get_startPoint().x, this->path_segments.front()->get_startPoint().y));
-		return result::PATH_NOT_CLOSING;
+		thisres = result::PATH_NOT_CLOSING;
 	}
 
 	this->max_x=std::numeric_limits<int>::max()*-1;
 	this->max_y=std::numeric_limits<int>::max()*-1;
 	this->min_x=std::numeric_limits<int>::max();
 	this->min_y=std::numeric_limits<int>::max();
-	int segcnt = 0;
 
 	PathSegment* prev_seg = this->path_segments.back();
 
@@ -126,7 +145,7 @@ Path::validate_path()
 		if(min_y>path_seg->min_y)
 			min_y=floor(path_seg->min_y);
 	}
-	return result::AWD_SUCCESS;
+	return thisres;
 }
 
 std::string& 
@@ -162,8 +181,6 @@ Path::prepare(GEOM::edge_type edgetype) {
 		multiple = (float*)malloc(sizeof(float)*polyCorners);
 		int pcntX=0;
 		int pcntY=0;
-		int seg_cnt=0;
-		int seg_cnt_inner=0;
 		bool export_curve=false;
 		for(PathSegment* one_seg: this->path_segments){			
 			for(PathSegment* one_inner_seg:one_seg->get_subdivided_path()){
@@ -303,170 +320,6 @@ void
 Path::make_dirty(){
 	this->is_dirty=true;
 }
-result
-Path::resolve_curve_intersections_contour_vs_holes(Settings* settings,  std::string& message, std::vector<GEOM::Path*> all_pathes)
-{
-	result res = result::AWD_SUCCESS;
-	message="";	
-	TYPES::UINT32 path_cnt = 0;
-	TYPES::UINT32 subdivison_hole_cnt = 0;
-	TYPES::UINT32 subdivison_contour_cnt = 0;
-	for(GEOM::Path* one_path: all_pathes){
-		path_cnt++;
-		if(path_cnt>1){
-			// this is a hole path: we need to make sure that the control points of all convex curves are inside the contour-path.\n
-			// if the control point of a convex curve of a hole-path is not inside the contour-path, we have a intersection that we should be solveable by subdividing the curve of the hole path.\n
-			subdivison_hole_cnt=0;
-			// reset the state for all convex path-segments of the hole-path
-			for(PathSegment* seg:one_path->get_segments()){
-				if(seg->get_edgeType()==edge_type::CONVEX_EDGE){
-					if(seg->get_state()!=edge_state::MAX_SUBDIVISION){
-						if(seg->get_state()==edge_state::SUBDIVIDED_RESOLVED){
-							seg->set_state(edge_state::SUBDIVIDED);
-						}
-						else if(seg->get_state()==edge_state::NOT_INTERSECTING){
-							seg->set_state(edge_state::TEST_INTERSECTING);
-						}
-						for(PathSegment* inner_seg:seg->get_subdivided_path()){
-							if(inner_seg->get_state()!=edge_state::MAX_SUBDIVISION){
-								if(inner_seg->get_state()==edge_state::SUBDIVIDED_RESOLVED){
-									inner_seg->set_state(edge_state::SUBDIVIDED);
-								}
-								else if(inner_seg->get_state()==edge_state::NOT_INTERSECTING){
-									inner_seg->set_state(edge_state::TEST_INTERSECTING);
-								}
-							}
-						}
-					}
-				}
-			}
-
-			// reset the state for all convex path-segments of the contour-path (need to reset the contour path for each hole!)
-			for(PathSegment* seg:all_pathes[0]->get_segments()){
-				if(seg->get_edgeType()==edge_type::CONVEX_EDGE){
-					if(seg->get_state()!=edge_state::MAX_SUBDIVISION){
-						if(seg->get_state()==edge_state::SUBDIVIDED_RESOLVED){
-							seg->set_state(edge_state::SUBDIVIDED);
-						}
-						else if(seg->get_state()==edge_state::NOT_INTERSECTING){
-							seg->set_state(edge_state::TEST_INTERSECTING);
-						}
-						for(PathSegment* inner_seg:seg->get_subdivided_path()){
-							if(inner_seg->get_state()!=edge_state::MAX_SUBDIVISION){
-								if(inner_seg->get_state()==edge_state::SUBDIVIDED_RESOLVED){
-									inner_seg->set_state(edge_state::SUBDIVIDED);
-								}
-								else if(inner_seg->get_state()==edge_state::NOT_INTERSECTING){
-									inner_seg->set_state(edge_state::TEST_INTERSECTING);
-								}
-							}
-						}
-					}
-				}
-			}
-
-			// we keep repeating the process for this hole vs contour, until either the max_iteration is reached, or if we cannot find any more intersections.	
-			int iteration_cnt=0;
-			bool intersection_found=true;
-			while((iteration_cnt<settings->get_max_iterations())&&(intersection_found)){
-				intersection_found=false;
-				
-				// prepare the path includes control-points for convex curves.
-				this->prepare(edge_type::CONVEX_EDGE);
-
-				for(PathSegment* seg:one_path->get_segments()){
-					if(seg->get_edgeType()==edge_type::CONVEX_EDGE){
-						if((seg->get_state()==edge_state::MAX_SUBDIVISION)||(seg->get_state()==edge_state::NOT_INTERSECTING))
-							continue;
-						else if(seg->get_state()==edge_state::SUBDIVIDED)
-							seg->set_state(edge_state::SUBDIVIDED_RESOLVED);
-						else if(seg->get_state()==edge_state::TEST_INTERSECTING)
-							seg->set_state(edge_state::NOT_INTERSECTING);
-
-						for(PathSegment* inner_seg:seg->get_subdivided_path()){
-							if((inner_seg->get_state()==edge_state::MAX_SUBDIVISION)||(inner_seg->get_state()==edge_state::NOT_INTERSECTING))
-								continue;						
-							bool is_inside_path = point_inside_path(inner_seg->get_controlPoint().x, inner_seg->get_controlPoint().y);
-							if(is_inside_path){
-								if(inner_seg->get_state()==edge_state::SUBDIVIDED)
-									inner_seg->set_state(edge_state::SUBDIVIDED_RESOLVED);
-								else if(inner_seg->get_state()==edge_state::TEST_INTERSECTING)
-									inner_seg->set_state(edge_state::NOT_INTERSECTING);
-								continue;
-							}
-							intersection_found=true;
-							inner_seg->set_state(edge_state::SUBDIVIDED);
-							seg->set_state(edge_state::SUBDIVIDED);
-							subdivison_hole_cnt++;
-							//	point is not in path. this must be a intersection.
-						}
-						if(seg->get_state()==edge_state::SUBDIVIDED){
-							seg->subdividePath(settings);
-							one_path->make_dirty();
-							//
-						}
-					}
-				}		
-				/*
-				one_path->prepare(edge_type::CONVEX_EDGE);
-				// next step is to make sure that the control-points of convex curves of the contour-path are all outside of the hole-path
-				// if the control point of a convex curve is not inside the hole-path, we have a intersection that we should be solveable by subdividing the curve of the contour path.
-				for(PathSegment* seg:all_pathes[0]->get_segments()){
-					if(seg->get_edgeType()==edge_type::CONVEX_EDGE){
-						if((seg->get_state()==edge_state::MAX_SUBDIVISION)||(seg->get_state()==edge_state::NOT_INTERSECTING))
-							continue;
-						else if(seg->get_state()==edge_state::SUBDIVIDED)
-							seg->set_state(edge_state::SUBDIVIDED_RESOLVED);
-						else if(seg->get_state()==edge_state::TEST_INTERSECTING)
-							seg->set_state(edge_state::NOT_INTERSECTING);
-
-						for(PathSegment* inner_seg:seg->get_subdivided_path()){
-							if((inner_seg->get_state()==edge_state::MAX_SUBDIVISION)||(inner_seg->get_state()==edge_state::NOT_INTERSECTING))
-								continue;						
-							bool is_inside_path = one_path->point_inside_path(inner_seg->get_controlPoint().x, inner_seg->get_controlPoint().y);
-							if(is_inside_path){
-								inner_seg->set_state(edge_state::SUBDIVIDED_RESOLVED);
-								continue;
-							}
-							intersection_found=true;
-							inner_seg->set_state(edge_state::SUBDIVIDED);
-							seg->set_state(edge_state::SUBDIVIDED);
-							subdivison_contour_cnt++;
-							//	point is not in path. this must be a intersection.
-						}
-						if(seg->get_state()==edge_state::SUBDIVIDED){
-							seg->subdividePath(settings);
-							all_pathes[0]->make_dirty();
-						}
-					}
-				}
-				*/
-				iteration_cnt++;
-				if((iteration_cnt==settings->get_max_iterations())&&(intersection_found)){
-					message+="ERROR: Intersections for Contour vs hole nr " + std::to_string(path_cnt) + " could not be resolved within max iterations";
-					res=result::AWD_ERROR;
-				}
-			}
-			if((subdivison_contour_cnt>0)||(subdivison_hole_cnt>0)){
-				res=result::SUBDIVIDED_PATHES;
-				if(subdivison_contour_cnt>0)
-					message+="Contour vs Hole "+std::to_string(path_cnt)+" divided "+std::to_string(subdivison_contour_cnt)+" curves to resolve intersections";
-				if(subdivison_hole_cnt>0)
-					message+="Hole "+std::to_string(path_cnt)+" vs Contour - divided "+std::to_string(subdivison_hole_cnt)+" curves to resolve intersections";
-			}
-
-		}
-	}
-	return res;
-}
-
-result
-Path::resolve_curve_intersections_hole_vs_holes(Settings* settings,  std::string& message, std::vector<GEOM::Path*> all_pathes)
-{
-	message="";
-	return result::AWD_SUCCESS;
-}
-
 
 TYPES::UINT32 
 Path::get_point_count(GEOM::edge_type edgetype)

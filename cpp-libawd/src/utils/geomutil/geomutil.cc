@@ -98,7 +98,7 @@ GEOM::append_triangle_attr_to_stream(TYPES::union_ptr output_ptr,  Triangle* tri
 }
 
 TYPES::UINT32 
-GEOM::append_vertex_attr_to_stream(TYPES::union_ptr output_ptr,  Vertex2D* vert, DataStreamAttrDesc* attr_desc, TYPES::UINT32 all_cnt)
+	GEOM::append_vertex_attr_to_stream(TYPES::union_ptr output_ptr,  Vertex2D* vert, DataStreamAttrDesc* attr_desc, TYPES::UINT32 all_cnt)
 {
 	if(attr_desc->get_type()==GEOM::data_stream_attr_type::POSITION2D){		
 		output_ptr.F32[all_cnt++] = vert->get_position().x;// \todo: add scale and storage precision
@@ -417,8 +417,6 @@ GEOM::ProcessMeshGeometry(Geometry* geom, AWDProject* awd_project){
 		///		The Target-Vertex and ID-maps are later used to redirect a Vertex to another Vertex and its index in a SubGeometry-vert-list.
 		///	-	In this step we add the subgeocontrols to the geom, in synch with adding materials to mesh. If no material can be found for a mesh, we use default material.
 		
-		BlockSettings* defaultSettings = geom->get_sub_geom_settings();
-		Mesh* this_mesh = reinterpret_cast<Mesh*>(oneGeom->get_first_mesh());
 		std::map<SUBGEOM_ID_STRING, SubGeom*> subgeom_map;
 		for(GEOM::Triangle* tri : this_triangles){
 			SUBGEOM_ID_STRING sub_geo_id = tri->get_subgeom_id();
@@ -426,8 +424,7 @@ GEOM::ProcessMeshGeometry(Geometry* geom, AWDProject* awd_project){
 			
 			BlockSettings* settings = NULL; 
 			if ( subgeom_map.find(sub_geo_id) == subgeom_map.end() ) {
-
-				
+								
 				for(AWDBlock* awd_block : oneGeom->get_mesh_instances()){
 					Mesh* thisMesh = reinterpret_cast<Mesh*>(awd_block);
 					Material* thisMat = reinterpret_cast<Material*>(thisMesh->get_material_by_face_id(face_group_id));
@@ -510,7 +507,7 @@ GEOM::ProcessMeshGeometry(Geometry* geom, AWDProject* awd_project){
 #define DEBUGSHAPEPROCESS =1;
 
 result
-GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
+GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Settings* subgeom_settings)
 {	
 	
 	/// \section   ProcessPathGeometry Process Path Geometry.
@@ -529,7 +526,6 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 	/// >	Maybe we will even need to check intersections across FilledRegion (?)
 	
 	AWD::result path_result;
-	AWD::result region_result;
 
 	int region_cnt=0; 
 	int path_cnt=0; 
@@ -549,9 +545,11 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 	int cnt_regions_strokes = 0;
 	int cnt_regions_fonts = 0;
 
+	/*
 	std::string geom_message = "";
 	std::string geom_warning = "";
 	std::string geom_errors = "";
+	*/
 
 	std::vector<FilledRegion*> valid_regions;
 
@@ -566,7 +564,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 		else
 			cnt_regions_fonts++;
 		
-		geom_message += "Region "+std::to_string(region_cnt)+" -  path-count = "+std::to_string(filled_region->get_pathes().size())+"\n";
+		//geom_message += "Region "+std::to_string(region_cnt)+" -  path-count = "+std::to_string(filled_region->get_pathes().size())+"\n";
 
 ///		\subsection PathGeoStep2 Step 2: Validate and prepare the FilledRegion.	
 ///		-	For each path inside a FilledRegion, we do this:\n		
@@ -582,20 +580,17 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 			all_path_cnt++;
 			path_cnt++;
 			path_result = one_path->validate_path();
-			if(path_result==result::PATH_CONTAINS_LESS_THAN_THREE_SEGMENTS)
-				geom_errors += "Path contains less than 3 segs.\n";		
-
-			else{				
+			if(path_result!=result::PATH_CONTAINS_LESS_THAN_THREE_SEGMENTS){	
 				has_valid_path=true;
-				if(path_result==result::PATH_NOT_CLOSING){
+				/*if(path_result==result::PATH_NOT_CLOSING){
 					geom_warning += "Path not closing.\n";		
-				}
+				}*/
 			}
 			
 		}
 ///		-	If all path of this FilledRegion are invalid, we skip to next FilledRegion.\n
 		if(!has_valid_path){
-			geom_errors += "No path of region valid\n";		
+			//geom_errors += "No path of region valid\n";		
 			continue;
 		}		
 		valid_regions.push_back(filled_region);	
@@ -645,6 +640,29 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 			all_max_y=filled_region->get_pathes()[0]->max_y;		
 	}
 
+	/*
+	int concaves=0;
+	int convex=0;
+	int straight=0;
+	int all_segs=0;
+	for(FilledRegion* filled_region : geom->get_filled_regions()){	
+		for(GEOM::Path* one_path: filled_region->get_pathes()){
+			for(PathSegment* pathSeg:one_path->get_segments()){
+				if(pathSeg->get_edgeType()==edge_type::CONCAVE_EDGE)
+					concaves++;
+				else if(pathSeg->get_edgeType()==edge_type::CONVEX_EDGE)
+					convex++;
+				else
+					straight++;
+				all_segs++;
+
+			}
+
+		}
+	}
+	geom_message += "\nSEGMENT-COUNT IN = "+std::to_string(all_segs)+" | concave = "+std::to_string(concaves)+" | convex "+std::to_string(convex)+" | straight "+std::to_string(straight)+"\n";
+	
+	*/
 	// at this point we have validated all input (all path-segments are continious and the path is closed)
 	// self intersecting is not detected yet.
 	
@@ -708,6 +726,12 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 	double max_y_double = 0.0;
 	
 	std::vector<FilledRegion*> final_filled_regions_list;
+				
+	/*	
+	std::string new_message="complete bounds = "+std::to_string(all_width)+","+std::to_string(all_height)+"\n";	
+	geom->add_message(new_message, message_type::STATUS_MESSAGE);
+	*/
+
 
 	if((false)||(cnt_regions_fonts>0)){
 		// loop over regions:
@@ -716,7 +740,11 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 		for(FilledRegion* filled_region :  valid_regions){	
 		
 			// convert the bounds as doubles in range 0.0 - 16.0
-
+			/*
+			std::string new_message2="path bounds x = "+std::to_string(filled_region->get_pathes()[0]->min_x )+","+std::to_string(filled_region->get_pathes()[0]->max_x)+"\n";
+			new_message2+="path bounds y = "+std::to_string(filled_region->get_pathes()[0]->min_y )+","+std::to_string(filled_region->get_pathes()[0]->max_y)+"\n";
+			*/
+			//geom->add_message(new_message2, message_type::STATUS_MESSAGE);
 			min_x_double = double(filled_region->get_pathes()[0]->min_x - all_min_x ) * double(all_conversionFactorx);
 			max_x_double = double(filled_region->get_pathes()[0]->max_x - all_min_x ) * double(all_conversionFactorx);
 			min_y_double = double(filled_region->get_pathes()[0]->min_y - all_min_y ) * double(all_conversionFactory);
@@ -761,10 +789,11 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 			InputValues_regions[region_cnt] = combined_int;
 			region_bits[region_cnt++]=region_bit;	
 		
-			/*
+			
 			std::bitset<16> x1(x_int);
 			std::bitset<16> x2(y_int);
 			std::bitset<32> x3(combined_int);
+			/*
 			std::string new_message = "\nCreated BitCell for Filled-region-group id: "+std::to_string(region_cnt-1)+" (int: "+std::to_string(combined_int)+")\n";
 			new_message += "	x-axis-ints: "+std::to_string(minx_int)+" "+std::to_string(maxx_int)+"\n";
 			new_message += "	x-axis-bits: "+x1.to_string()+"\n";
@@ -773,6 +802,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 			new_message += "	32bit value: "+x3.to_string()+"\n";
 			geom->add_message(new_message, message_type::STATUS_MESSAGE);
 			*/
+			
 		}	
 		/*
 		std::string new_message = "region bits before sort: \n";
@@ -827,10 +857,11 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 		// at this point we have lists of filled_regions that we know might intersect.
 		// we could further check bounding boxes etc, but i think this might be good enough.
 	
+		/*
 		std::string geom_message_bkp = geom_message;
 		geom_message = "\nInput Regions = "+std::to_string(valid_regions.size())+ " ( "+std::to_string(cnt_regions_standart)+" fill / "+std::to_string(cnt_regions_strokes)+" strokes / "+std::to_string(cnt_regions_fonts)+" font )\n"+geom_message;
 		geom_message += "\nCalculated intersecting groups of regions = "+std::to_string(final_sorted_filled_groups.size())+"\n";
-		
+		*/
 		// if we do not deal with regions generated for fonts, we can just use the input list of pathes for tesselation.
 		if(cnt_regions_fonts==0)
 			final_filled_regions_list = valid_regions;
@@ -847,30 +878,52 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 			// if it intersects a odd number, it is a hole
 
 			final_filled_regions_list=std::vector<FilledRegion*>();
-			Path newPath = Path();
+			Path newPath = Path(false);
 			for(FilledRegionGroup* filled_regions_group : final_sorted_filled_groups){
 				FilledRegion* filled_region = new FilledRegion(TYPES::filled_region_type::GENERATED_FONT_OUTLINES);
-				for(FilledRegion* filled_region : filled_regions_group->filled_regions){
-					for(PathSegment* pathSeg:filled_region->get_pathes()[0]->get_segments()){
+				for(FilledRegion* filled_region1 : filled_regions_group->filled_regions){
+					for(PathSegment* pathSeg:filled_region1->get_pathes()[0]->get_segments()){
 						newPath.add_segment_fonts(pathSeg);
 					}
-					filled_region->add_existing_path(filled_region->get_pathes()[0]);
-					final_filled_regions_list.push_back(filled_region);
+					filled_region->add_existing_path(filled_region1->get_pathes()[0]);
 				}
+				final_filled_regions_list.push_back(filled_region);
 			}
 			newPath.prepare(edge_type::OUTTER_EDGE);
 			for(FilledRegionGroup* filled_regions_group : final_sorted_filled_groups){
 				for(FilledRegion* filled_region : filled_regions_group->filled_regions){
-					PathSegment* this_seg = filled_region->get_pathes()[0]->get_segments()[0];
-					int is_hole=newPath.point_inside_path(this_seg->get_startPoint().x, this_seg->get_startPoint().y);
-					if(is_hole % 2){
-						// this is a hole. so we update the path accordingly
-						newPath.set_is_hole(true);
-						for(PathSegment* pathSeg:filled_region->get_pathes()[0]->get_segments()){
-							if(pathSeg->get_edgeType()==edge_type::CONCAVE_EDGE)
-								pathSeg->set_edgeType(edge_type::CONVEX_EDGE);
-							else if(pathSeg->get_edgeType()==edge_type::CONVEX_EDGE)
-								pathSeg->set_edgeType(edge_type::CONCAVE_EDGE);
+					PathSegment* this_seg = NULL;
+					for(PathSegment* pathSeg:filled_region->get_pathes()[0]->get_segments()){
+						if((pathSeg->get_edgeType()==edge_type::CONCAVE_EDGE)||(pathSeg->get_edgeType()==edge_type::CONVEX_EDGE)){
+							this_seg = pathSeg;
+							break;
+						}
+					}
+					if(this_seg!=NULL){
+						int is_hole=newPath.point_inside_path(this_seg->get_test_point().x, this_seg->get_test_point().y);
+						if(this_seg->get_edgeType()==edge_type::CONCAVE_EDGE){
+							if(is_hole % 2){
+								// this is a hole. so we update the path accordingly
+								newPath.set_is_hole(true);
+								for(PathSegment* pathSeg:filled_region->get_pathes()[0]->get_segments()){
+									if(pathSeg->get_edgeType()==edge_type::CONCAVE_EDGE)
+										pathSeg->set_edgeType(edge_type::CONVEX_EDGE);
+									else if(pathSeg->get_edgeType()==edge_type::CONVEX_EDGE)
+										pathSeg->set_edgeType(edge_type::CONCAVE_EDGE);
+								}
+							}
+						}
+						else if(this_seg->get_edgeType()==edge_type::CONVEX_EDGE){
+							if(!(is_hole % 2)){
+								// this is a hole. so we update the path accordingly
+								newPath.set_is_hole(true);
+								for(PathSegment* pathSeg:filled_region->get_pathes()[0]->get_segments()){
+									if(pathSeg->get_edgeType()==edge_type::CONCAVE_EDGE)
+										pathSeg->set_edgeType(edge_type::CONVEX_EDGE);
+									else if(pathSeg->get_edgeType()==edge_type::CONVEX_EDGE)
+										pathSeg->set_edgeType(edge_type::CONCAVE_EDGE);
+								}
+							}
 						}
 					}
 				}
@@ -897,7 +950,6 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 	
 	// declare vars:
 
-	int cnt_all_segs = 0;	
 	
 	int cnt_region_segs = 0;
 	int width = 0;
@@ -908,7 +960,6 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 	int region_max_y=0;	
 	std::vector<int> bounds(4);	
 	std::vector<PathSegment*> all_intersecting_segs;
-	int cnt_intersects = 0;
 	int seg_cnt=0;
 	int seg_cnt2=0;
 	std::string segbytes_as_string="";
@@ -986,7 +1037,6 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 					
 					pathSeg->bit_id_x=x_int;
 					pathSeg->bit_id_y=y_int;
-					pathSeg->set_num_id(cnt_region_segs);
 
 					// add Cell to final list.
 					InputValues_segments[cnt_region_segs]=combined_int;
@@ -1052,10 +1102,11 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 		DELETEARRAY(InputValues_segments);
 
 	}
-	if(all_intersecting_segs.size()>0)
-		geom_message+="Found pairs of possible intersecting segments: "+std::to_string(all_intersecting_segs.size()/2);
+	//if(all_intersecting_segs.size()>0)
+	//	geom_message+="Found pairs of possible intersecting segments: "+std::to_string(all_intersecting_segs.size()/2)+"\n";
 
-	//region_messages_list[region_cnt]+="\nINTERSECTIONS: Found "+std::to_string(all_intersecting_segs.size()/2)+" possible intersecting pairs of segments\n";
+	int curve_curve_intersects = 0;
+	int curve_line_intersects = 0;
 	for(seg_cnt=0; seg_cnt<all_intersecting_segs.size(); seg_cnt+=2){
 		seg_1 = all_intersecting_segs[seg_cnt];
 		seg_2 = all_intersecting_segs[seg_cnt+1];
@@ -1065,16 +1116,21 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 			subSeg2->set_state(edge_state::SUBDIVIDED);
 		for(PathSegment* subSeg2:seg_2->get_subdivided_path())
 			subSeg2->set_state(edge_state::SUBDIVIDED);
-		if(seg_1->get_edgeType()==edge_type::OUTTER_EDGE)
+		if(seg_1->get_edgeType()==edge_type::OUTTER_EDGE){
+			curve_line_intersects++;
 			resolve_line_curve_intersection(seg_2, seg_1, awd_project->get_settings());
-		else if(seg_2->get_edgeType()==edge_type::OUTTER_EDGE)
+		}
+		else if(seg_2->get_edgeType()==edge_type::OUTTER_EDGE){
+			curve_line_intersects++;
 			resolve_line_curve_intersection(seg_1, seg_2, awd_project->get_settings());
-		else
+		}
+		else{
+			curve_curve_intersects++;
 			resolve_curve_curve_intersection(seg_1, seg_2, awd_project->get_settings());
-
+		}
 	}
-
-
+	
+	//geom_message+="Found intersecting : curve_line_intersects "+std::to_string(curve_line_intersects)+" curve_curve_intersects "+std::to_string(curve_curve_intersects)+"\n";
 	
 	region_cnt=0;
 	for(FilledRegion* filled_region : final_filled_regions_list){	
@@ -1103,6 +1159,9 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 
 		for(GEOM::Path* one_path: filled_region->get_pathes()){
 			pnt_cnt=one_path->get_point_count(GEOM::edge_type::CONVEX_EDGE);
+			
+			//geom_message+="CURVE POINTCNT = "+std::to_string(pnt_cnt)+"\n";
+	
 			// for each path create the list of TESSreal and add it as contour.
 			TESSreal* thisPoints = (TESSreal*)malloc(sizeof(TESSreal) * pnt_cnt*2);
 			int pnt_cnt_2=0;
@@ -1177,7 +1236,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 		int hasTriangulated=tessTesselate(tess, TESS_WINDING_ODD, TESS_POLYGONS, 3, 2, NULL);
 		if(hasTriangulated!=1)
 		{
-			geom_errors+="TRIANGULATION FAILED (libtess return with failure = no triangulated data is available)";
+			//geom_errors+="TRIANGULATION FAILED (libtess return with failure = no triangulated data is available)";
 			continue;
 		}
 		//AwayJS::Utils::Trace(m_pCallback, "hasTriangulated  = %d\n",hasTriangulated);
@@ -1188,12 +1247,12 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 		const int nelems	= tessGetElementCount(tess);	
 
 		
-		GEOM::SubGeom* new_subgeom = new SubGeom(awd_project->get_settings());
+		GEOM::SubGeom* new_subgeom = new SubGeom(subgeom_settings);
 
 		BLOCKS::Material* this_mat = reinterpret_cast<BLOCKS::Material*>(filled_region->get_material());
 
 		new_subgeom->set_material(this_mat);
-
+		new_subgeom->uv_transform->set(filled_region->uv_transform->get());
 		// different pointers for subgeos, all point to the same subgeo, unless we want to split the shape across multiple subgeos (debug mode)
 		GEOM::SubGeom* new_subgeom_inner = new_subgeom;
 		GEOM::SubGeom* new_subgeom_outter = new_subgeom;
@@ -1203,11 +1262,11 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 		
 		// if we want to split the shape into multiple subgeos, we crreate the subgeos, and the needed materials.
 		if(awd_project->get_settings()->get_export_shapes_in_debug_mode()){
-			new_subgeom_inner = new SubGeom(awd_project->get_settings());
-			new_subgeom_outter = new SubGeom(awd_project->get_settings());
-			new_subgeom_concave = new SubGeom(awd_project->get_settings());
-			new_subgeom_convex = new SubGeom(awd_project->get_settings());
-			new_subgeom_intersect = new SubGeom(awd_project->get_settings());
+			new_subgeom_inner = new SubGeom(subgeom_settings);
+			new_subgeom_outter = new SubGeom(subgeom_settings);
+			new_subgeom_concave = new SubGeom(subgeom_settings);
+			new_subgeom_convex = new SubGeom(subgeom_settings);
+			new_subgeom_intersect = new SubGeom(subgeom_settings);
 			BLOCKS::Material* this_mat0 = reinterpret_cast<BLOCKS::Material*>(awd_project->get_default_material_by_color(0xffff0000, true, MATERIAL::type::SOLID_COLOR_MATERIAL));
 			BLOCKS::Material* this_mat1 = reinterpret_cast<BLOCKS::Material*>(awd_project->get_default_material_by_color(0xff00bdbd, true, MATERIAL::type::SOLID_COLOR_MATERIAL));
 			BLOCKS::Material* this_mat2 = reinterpret_cast<BLOCKS::Material*>(awd_project->get_default_material_by_color(0xff00ff00, true, MATERIAL::type::SOLID_COLOR_MATERIAL));
@@ -1242,13 +1301,14 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 			}
 		}
 		
+		/*
 
 		geom_message  += "\n tesselation result: tricnt: " + std::to_string(nelems);
 		geom_message  += " / points in: " + std::to_string(all_pnt_cnt) + "  / points out: " + std::to_string(nverts) + "\n";
 		if(all_pnt_cnt!=nverts)
 			geom_warning += "\n tesselation changed point-count. points in: " + std::to_string(all_pnt_cnt) + " points out: " + std::to_string(nverts) + "\n";
 		
-		
+		*/
 		std::vector<GEOM::VECTOR2D> all_verts;
 		std::vector<std::vector<GEOM::VECTOR2D> > all_inner_tris;
 
@@ -1389,8 +1449,6 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 							new_tri2[0]=path_segs_found[first_idx+1]->get_startPoint();
 						}
 					}
-					else
-						int error=0;					
 
 					double tempx2 = 0;
 					double tempy2 = 0;
@@ -1453,15 +1511,16 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 						if(pathSeg->get_export_this_linear()){
 							SUBGEOM_ID_STRING subGeo_id;
 							new_subgeom_outter->get_internal_id(subGeo_id);
-							new_subgeom_outter->create_triangle(edge_type::OUTTER_EDGE, pathSeg->get_startPoint(), pathSeg->get_endPoint(), pathSeg->get_controlPoint());
+							new_subgeom_outter->create_triangle(edge_type::OUTTER_EDGE, pathSeg->get_startPoint(), pathSeg->get_controlPoint(), pathSeg->get_endPoint());
 						}
 						else
 							cnt_error_segments++;
 					}
 				}
+				/*
 				if(pathSeg->get_edgeType()==GEOM::edge_type::CURVED_EDGE)
 					bool test=true;	// this means the curve-tppe wasnt calculated correctly. should NEVER happen
-
+					*/
 				else if((pathSeg->get_edgeType()==GEOM::edge_type::CONCAVE_EDGE) || (pathSeg->get_edgeType()==GEOM::edge_type::CONVEX_EDGE)){					
 					for(PathSegment* inner_seg:pathSeg->get_subdivided_path())
 					{
@@ -1484,9 +1543,10 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 				}
 			}
 		}
+		/*
 		if(cnt_error_segments>0)
 			geom_errors+="ERROR: "+std::to_string(cnt_error_segments)+" linear path segments could not be asociated with a triangle. This segments will not be exported!\n";
-					
+				*/	
 		for(std::vector<GEOM::VECTOR2D> one_tri : all_inner_tris){
 			SUBGEOM_ID_STRING subGeo_id;
 			new_subgeom_inner->get_internal_id(subGeo_id);
@@ -1517,6 +1577,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 		region_cnt++;
 	}
 	// if have not processed anything successfully, we add a error on the geometry and set it to be invalid
+	/*
 	if(!has_valid_shape){
 		geom_errors += "No valid regions - no valid geometry created\n";		
 		geom->set_state(state::INVALID);
@@ -1524,6 +1585,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project)
 	geom->add_message(geom_message, TYPES::message_type::STATUS_MESSAGE);
 	geom->add_message(geom_warning, TYPES::message_type::WARNING_MESSAGE);
 	geom->add_message(geom_errors, TYPES::message_type::ERROR_MESSAGE);
+	*/
 
 	return result::AWD_SUCCESS;
 }

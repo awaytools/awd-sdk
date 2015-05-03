@@ -12,23 +12,72 @@ using namespace AWD::BLOCKS;
 AWDBlock::AWDBlock(BLOCK::block_type type) :
 	StateElementBase()
 {
+	this->inc_id=0;
 	this->type = type;
 	this->external_id="";
 	this->external_object=NULL;
+	this->set_state(TYPES::state::VALID);
+	this->script_name="-";
+	this->byte_cnt=0;
 }
 AWDBlock::AWDBlock(BLOCK::block_type type, const std::string& name) :
 	StateElementBase()
 {
+	this->inc_id=0;
 	this->type = type;
 	this->external_id="";
 	this->external_object=NULL;
 	this->name=name;
+	this->set_state(TYPES::state::VALID);
+	this->script_name="-";
+	this->byte_cnt=0;
 }
 
 AWDBlock::~AWDBlock()
 {
 }
 
+void 
+AWDBlock::get_scene_names(std::string& scene_names_str){
+	scene_names_str="";
+	for(std::string id:this->scene_names){
+		scene_names_str+=id;
+		if(id!=this->scene_names.back())
+			scene_names_str+=", ";
+	}
+}
+
+void 
+AWDBlock::add_scene_name(const std::string& scene_name){
+	for(std::string id:this->scene_names){
+		if(id==scene_name)
+			return;
+	}
+	this->scene_names.push_back(scene_name);
+}
+void 
+AWDBlock::add_res_id(const std::string& new_res){
+	if(has_res_id(new_res))
+		return;
+	else
+		this->ressource_ids.push_back(new_res);
+}
+
+bool 
+AWDBlock::has_res_id(const std::string& new_res){
+	for(std::string id:this->ressource_ids){
+		if(id==new_res)
+			return true;
+	}
+	return false;
+}
+
+
+void 
+AWDBlock::clear_res_ids()
+{
+	this->ressource_ids.clear();
+}
 
 TYPES::state 
 AWDBlock::validate_state()
@@ -69,8 +118,6 @@ AWDBlock::read_block(FILES::FileReader* fileWriter, SETTINGS::BlockSettings *set
 size_t
 AWDBlock::write_block(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings *settings, FILES::AWDFile* file)
 {
-	TYPES::UINT32 length=0;
-
 	if(settings->get_use_compression_per_block()){
 		//TODO: add compression per block so we finally can support streaming
 		/*
@@ -81,7 +128,7 @@ AWDBlock::write_block(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings *se
 	else{
 		// Calculate length of body using concrete implementation in block sub-classes
 		TYPES::UINT32 length = this->calc_body_length(file, settings);
-
+		this->byte_cnt=length;
 		fileWriter->writeUINT32(length); // write length of body	
 		// Write body using concrete implementation in block sub-classes
 		this->write_body(fileWriter, settings, file);
@@ -90,6 +137,26 @@ AWDBlock::write_block(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings *se
 	return 0;
 }
 	
+std::string&
+AWDBlock::get_encountered_at()
+{
+	return this->encountered_at;
+}
+void
+AWDBlock::set_encountered_at(const std::string& encountered_at)
+{
+	this->encountered_at = encountered_at;
+}
+std::string&
+AWDBlock::get_script_name()
+{
+	return this->script_name;
+}
+void
+AWDBlock::set_script_name(const std::string& script_name)
+{
+	this->script_name = script_name;
+}
 std::string&
 AWDBlock::get_name()
 {

@@ -53,13 +53,53 @@ namespace AWD
 			* @return The index of the block in the file, or 0 if the block doesnt exist
 			*/
 			result get_block_address_for_file(BASE::AWDBlock* awdBlock, FILES::AWDFile* file, TYPES::UINT32& output_address);
-
+			
+			result get_asset_type_as_string(BLOCK::block_type blocktype, std::string& type_str);
 			result create_block_for_block_type(BASE::AWDBlock** awdBlock, BLOCK::block_type blocktype, FILES::AWDFile* awd_file);
 			
 	}
 	namespace GEOM
 	{
 		
+		inline void subdivideCurve(double startx, double starty, double cx, double cy, double endx, double endy, std::vector<double>& resultVec)
+		  {
+		   double c1x = startx + (cx - startx) * 0.5;
+		   double c1y = starty + (cy - starty) * 0.5;
+   
+		   double c2x = cx + (endx - cx) * 0.5;
+		   double c2y = cy + (endy - cy) * 0.5;
+   
+		   double ax = c1x + (c2x - c1x) * 0.5;
+		   double ay = c1y + (c2y - c1y) * 0.5;
+		   resultVec.push_back(startx);
+		   resultVec.push_back(starty);
+		   resultVec.push_back(c1x);
+		   resultVec.push_back(c1y);
+		   resultVec.push_back(ax);
+		   resultVec.push_back(ay);
+		   resultVec.push_back(c2x);
+		   resultVec.push_back(c2y);
+		   resultVec.push_back(endx);
+		   resultVec.push_back(endy);
+		}
+		
+		inline double maximum(double x, double y, double z) {
+			double max_val = x; 
+			if (y > max_val) 
+				max_val = y;
+			if (z > max_val) 
+				max_val = z;
+			return max_val; 
+		} 
+		inline double minimum(double x, double y, double z) {
+			double min_val = x; 
+			if (y < min_val)
+				min_val = y;
+			if (z < min_val) 
+				min_val = z;
+			return min_val; 
+		} 
+
 		inline bool bounds_intersect(double minx_a, double maxx_a, double miny_a, double maxy_a, double minx_b, double maxx_b, double miny_b, double maxy_b )
 		{
 			if((minx_a==maxx_b)&&(maxx_a==maxx_b)&&(miny_a==miny_b)&&(maxy_a==maxy_b))
@@ -74,6 +114,58 @@ namespace AWD
 				return false;
 			return true;
 		}
+		
+		inline TYPES::UINT32 PointInTri(double x, double y, double t1x, double t1y, double t2x, double t2y, double t3x, double t3y)
+		{
+				
+			TYPES::UINT32 interext_cnt = 0;
+	
+			if (((t1y < y) && (t3y >= y)) || ((t3y < y) && (t1y >= y))){
+				if ((t1x + (y - t1y)/(t3y - t1y)*(t3x - t1x)) < x)
+					interext_cnt++;
+			}
+			if (((t2y < y) && (t1y >= y)) || ((t1y < y) && (t2y >= y))){
+				if ((t2x + (y - t2y)/(t1y - t2y)*(t1x - t2x)) < x)
+					interext_cnt++;
+			}
+			if (((t3y < y) && (t2y >= y)) || ((t2y < y) && (t3y >= y))){
+				if ((t3x + (y - t3y)/(t2y - t3y)*(t2x - t3x)) < x)
+					interext_cnt++;
+			}
+			return interext_cnt;
+		}
+
+		inline TYPES::UINT32 PointInPath(std::vector<double>& simplyifed_path, double x, double y)
+		{
+				
+			TYPES::UINT32 interext_cnt = 0;
+			int j = int(simplyifed_path.size()) - 2;
+			for (int i = 0; i < simplyifed_path.size(); i+=2)
+			{
+				//Utils::Trace(GetCallback(), "check points %f vs %f\n", newPoints[i]->x, newPoints[i]);
+				if (((simplyifed_path[i+1] < y) && (simplyifed_path[j+1] >= y)) || ((simplyifed_path[j+1] < y) && (simplyifed_path[i+1] >= y)))
+				{
+					if ((simplyifed_path[i] + (y - simplyifed_path[i+1])/(simplyifed_path[j+1] - simplyifed_path[i+1])*(simplyifed_path[j] - simplyifed_path[i])) < x)
+						interext_cnt++;
+				}
+				j = i;
+			}
+			return interext_cnt;
+		}
+
+		inline result get_edge_string(std::string& string_out, double x1, double x2, double y1, double y2)
+		{
+			string_out="";
+			if(x1>x2)
+				string_out+=std::to_string(x1)+"#"+std::to_string(x2)+"#";
+			else
+				string_out+=std::to_string(x2)+"#"+std::to_string(x1)+"#";
+			if(y1>y2)
+				string_out+=std::to_string(y1)+"#"+std::to_string(y2)+"#";
+			else
+				string_out+=std::to_string(y2)+"#"+std::to_string(y1)+"#";
+			return result::AWD_SUCCESS;
+		}
 
 	
 		result get_edge_string(std::string& string_out, double x1, double x2, double y1, double y2);
@@ -85,8 +177,6 @@ namespace AWD
 
 		result update_simplified_path(std::vector<double>& simplyifed_path, std::vector<PathSegment*>& path);
 
-		TYPES::UINT32 PointInPath(std::vector<double>& simplyifed_path, double x, double y);
-		TYPES::UINT32  PointInTri(double x, double y, double t1x, double t1y, double t2x, double t2y, double t3x, double t3y);
 		result write_stream_attr_to_file(FILES::FileWriter*, GeomStreamElementBase*, DataStreamAttrDesc*);
 		result write_vertex_attr_to_file(FILES::FileWriter*, Vertex2D*, DataStreamAttrDesc*);
 		result write_triangle_attr_to_file(FILES::FileWriter*, Triangle*, DataStreamAttrDesc*);
@@ -113,7 +203,7 @@ namespace AWD
 		* \todo add error return type (?)
 
 		*/
-		result ProcessShapeGeometry(BLOCKS::Geometry* geom, AWDProject* assetlib=NULL);
+		result ProcessShapeGeometry(BLOCKS::Geometry* geom, AWDProject* assetlib, SETTINGS::Settings* subgeom_settings);
 		
 		bool bounds_intersect(double minx_a, double maxx_a, double miny_a, double maxy_a, double minx_b, double maxx_b, double miny_b, double maxy_b );
 

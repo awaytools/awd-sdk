@@ -72,6 +72,7 @@ Material::Material(std::string& name) :
 	this->lightPicker = NULL;
 	this->animator = NULL;
 	this->shadowMethod = NULL;
+	this->focalPoint=0;
 
 	this->uv_transform_mtx = NULL;
 }
@@ -123,8 +124,12 @@ Material::Material():
 	this->lightPicker = NULL;
 	this->animator = NULL;
 	this->shadowMethod = NULL;
-
-	this->uv_transform_mtx = NULL;
+	this->texture_u=-1;
+	this->texture_v=-1;
+	this->texture_u_max=-1;
+	this->texture_v_max=-1;
+	this->focalPoint=0;
+	this->uv_transform_mtx = new GEOM::MATRIX2x3();
 }
 Material::~Material()
 {
@@ -152,6 +157,51 @@ TYPES::state Material::validate_block_state()
 	return TYPES::state::VALID;
 }
 
+GEOM::VECTOR4D 
+Material::get_interpolated_color(TYPES::UINT32 gradient_position)
+{
+	GEOM::VECTOR4D output_color=GEOM::VECTOR4D();
+	if(gradient_positions.size()==0)
+		return output_color;
+	if(gradient_positions.size()!=gradient_colors.size())
+		return output_color;
+	if(gradient_positions.size()==1)
+		return gradient_colors[0];
+	
+	/*if(gradient_position<=0)
+		return gradient_colors[0];
+	if(gradient_position>=255)
+		return gradient_colors.back();
+		*/
+	TYPES::UINT32 last_pos=gradient_positions[0];
+	if(gradient_position==last_pos)
+		return gradient_colors[0];
+	
+	GEOM::VECTOR4D color_1=gradient_colors[0];
+	GEOM::VECTOR4D color_2=gradient_colors[0];
+	for(int i = 1; i<gradient_positions.size(); i++){
+		color_2=gradient_colors[i];
+		TYPES::UINT32 this_pos=gradient_positions[i];
+		if(this_pos==gradient_position){
+			return color_2;
+		}
+		if((gradient_position>last_pos)&&(gradient_position<this_pos)){
+			int max_pos=this_pos-last_pos;
+			double this_percent = double((gradient_position-last_pos)/double(max_pos));
+
+			output_color.x=(color_2.x*this_percent)+(color_1.x*(1-this_percent));
+			output_color.y=(color_2.y*this_percent)+(color_1.y*(1-this_percent));
+			output_color.z=(color_2.z*this_percent)+(color_1.z*(1-this_percent));
+			output_color.w=(color_2.w*this_percent)+(color_1.w*(1-this_percent));
+			return output_color;
+		}
+		last_pos=this_pos;
+		color_1 = color_2;
+	}
+	output_color=gradient_colors.back();
+	return output_color;
+
+}
 SETTINGS::BlockSettings*
 Material::get_sub_geom_settings()
 {
@@ -654,9 +704,11 @@ Material::get_unique_material(LightPicker * lightPicker, AWDBlock * animator, st
 	clonedMat->glossStrength=this->glossStrength;
 	clonedMat->specularStrength=this->specularStrength;
 	//clonedMat->effectMethods=this->effectMethods;
+	/*
 	for(ShadingMethod * shadingMethod : this->shadingMethods){
 		//clonedMat->get_shadingMethods().push_back(shadingMethod);
 	}
+	*/
 	clonedMat->set_multiPass(this->multiPass);
 	clonedMat->set_shadowMethod(this->shadowMethod);
 	if(animator!=NULL)

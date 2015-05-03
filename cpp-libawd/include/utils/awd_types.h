@@ -320,6 +320,18 @@ namespace AWD
 			RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL = 6,		
 		};
 		
+        enum class GradientSpread
+        {
+            /** Extended spread */
+            GRADIENT_SPREAD_EXTEND,
+
+            /** Reflect spread */
+            GRADIENT_SPREAD_REFLECT,
+
+            /** Repeat spread : Gradient is repeated */
+            GRADIENT_SPREAD_REPEAT
+        };
+		
 		/** \enum shading_type
 		 * \brief Types for ShadingMethod
 		 */
@@ -454,6 +466,10 @@ namespace AWD
 		enum class stream_target {
 			VERTEX_STREAM=1,			///< The stream contains vertex-data.
 			TRIANGLE_STREAM=2,			///< The stream contains index-data
+			INTERIOR_TRIANGLES=11,		///< The index data for faces
+			EXTERIOR_TRIANGLES=12,		///< The index data for faces
+			CONCAVE_TRIANGLES=13,		///< The index data for faces
+			CONVEX_TRIANGLES=14,		///< The index data for faces
 		};
 		
 		/** \enum geom_smoothing_mode
@@ -528,6 +544,11 @@ namespace AWD
 			SUVS=8,				///< The UV for the vertices			
 			ALLVERTDATA3D_13F=9,		///< The Combined Vertices Data		
 			ALLVERTDATA2D__9F=10,		///< The Combined Vertices Data	
+			POINTS=11,		///< The Combined Vertices Data	
+			INTERIOR_TRIANGLES=12,		///< The index data for faces
+			EXTERIOR_TRIANGLES=13,		///< The index data for faces
+			CONCAVE_TRIANGLES=14,		///< The index data for faces
+			CONVEX_TRIANGLES=15,		///< The index data for faces
 		};
 	}
 	
@@ -564,6 +585,8 @@ namespace AWD
 			SCENE=21,				///< AWD::BLOCKS::Scene
 			CONTAINER=22,			///< AWD::BLOCKS::ObjectContainer3D
 			MESH_INSTANCE=23,		///< AWD::BLOCKS::Mesh
+			MESH_INSTANCE_2=24,		///< AWD::BLOCKS::Mesh library block
+			BILLBOARD=25,			///< AWD::BLOCKS::Billboard
 
 			SKYBOX=31,				///< AWD::BLOCKS::SkyBox
 
@@ -631,7 +654,48 @@ namespace AWD
 			BASELINE_UP=1,
 			BASELINE_DOWN=2
 		} ;
+            
+        
+		enum class TextFlow {
+			TEXT_FLOW_LEFT_TO_RIGHT,
+			TEXT_FLOW_RIGHT_TO_LEFT
+		} ;
+		enum class OrientationMode {
+			ORIENTATION_MODE_HORIZONTAL,
+			ORIENTATION_MODE_VERTICAL
+		} ;
+		enum class Textfield_type {
+			STATIC,
+			DYNAMIC,
+			INPUT,
+			INPUT_PSW
+		} ;
+		enum class LineMode {
+			LINE_MODE_SINGLE,
+			LINE_MODE_MULTI,
+			LINE_MODE_MULTI_NO_WRAP
+		} ;
 		
+         enum class AlignMode
+         {
+             /** 
+              * Left align if orientation is horizontal. Top align if orientation 
+              * is vertical 
+              */
+             ALIGN_MODE_LEFT,
+
+             /** 
+              * Right align if orientation is horizontal. Bottom align if orientation 
+              * is vertical. 
+              */
+             ALIGN_MODE_RIGHT,                
+
+             /** Center Align */
+             ALIGN_MODE_CENTER,
+
+             /** Justify Align */
+             ALIGN_MODE_JUSTIFY
+           };
 	}
 	namespace ANIM{
 		/** \enum anim_type
@@ -644,12 +708,13 @@ namespace AWD
 			UV=3,			///< UVAnimation (Animation of the UV-transform of a SubMesh)
 		};
 		enum class frame_command_type {
-			AWD_FRAME_COMMAND_UNDEFINED=0,
-			AWD_FRAME_COMMAND_ADD_LOCAL_RESSOURCE=1,
-			AWD_FRAME_COMMAND_ADD_GLOBAL_RESSOURCE=2,
-			AWD_FRAME_COMMAND_UPDATE=3,
-			AWD_FRAME_COMMAND_REMOVE_OBJECT=4,
-			AWD_FRAME_COMMAND_SOUND=5
+			AWD_FRAME_COMMAND_UNDEFINED,
+			FRAME_COMMAND_REMOVE,
+			FRAME_COMMAND_ADD_CHILD,
+			FRAME_COMMAND_UPDATE,
+			AWD_FRAME_COMMAND_SOUND,
+			AWD_FRAME_COMMAND_SOUND_MULTIPLE,
+			AWD_FRAME_COMMAND_OBJECT_EXISTS,
 		};
 
 		enum class frame_label_type{

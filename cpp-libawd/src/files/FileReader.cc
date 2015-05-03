@@ -196,7 +196,7 @@ FileReader::get_uncompress_data(TYPES::UINT32 compressed_length, compression com
 	result res;
     int curPos = ftell(this->file);
     fseek(this->file,0,SEEK_END);
-    int size = ftell(this->file);
+    unsigned int size = ftell(this->file);
     fseek(this->file, curPos, SEEK_SET);
 
     if (compressed_length!=size){

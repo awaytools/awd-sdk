@@ -19,13 +19,11 @@ PathSegment::PathSegment()
 	this->state=GEOM::edge_state::TEST_INTERSECTING;
 	this->edgeType=GEOM::edge_type::OUTTER_EDGE;
 	this->test_point_dirty=true;
-	this->test_point_dirty2=true;
-	this->no_intersecting=false;
 	this->has_control_point = false;
 	this->export_this_linear = false;
+
 	this->curviness = -1;
 	this->length = 0;
-	this->num_id=0;
 	this->contains_origin=false;
 	this->subdivion_cnt=0;
 	this->size=0;
@@ -33,6 +31,8 @@ PathSegment::PathSegment()
 
 PathSegment::~PathSegment()
 {
+	for(PathSegment* pathseg:subdividedPath)
+		delete pathseg;
 }
 
 double
@@ -48,17 +48,6 @@ PathSegment::get_size()
 	}
 	return this->size;
 }
-bool 
-PathSegment::get_contains_origin()
-{
-	return this->contains_origin;
-}
-void 
-PathSegment::set_contains_origin(bool contains_origin)
-{
-	this->contains_origin=contains_origin;
-}
-
 void
 PathSegment::calculate_bounds(){
 	if(this->edgeType==edge_type::OUTTER_EDGE){
@@ -87,16 +76,6 @@ PathSegment::calculate_bounds(){
 	}
 }
 
-TYPES::UINT32 
-PathSegment::get_num_id()
-{
-	return this->num_id;
-}
-void
-PathSegment::set_num_id(TYPES::UINT32 num_id)
-{
-	this->num_id = num_id;
-}
 GEOM::PathSegment* 
 PathSegment::get_next()
 {
@@ -121,36 +100,6 @@ PathSegment::set_last(GEOM::PathSegment* last)
 	this->last=last;
 }
 
-TYPES::UINT16 
-PathSegment::get_bit16(int start, int end)
-{
-	TYPES::UINT16 int_min = 1 << start;
-	TYPES::UINT16 int_max = 1 << end;
-	return (int_max | int_max - int_min);
-}
-
-std::string& 
-PathSegment::get_id()
-{
-	return this->id;
-}
-
-void 
-PathSegment::set_id(std::string& id)
-{
-	this->id=id;
-}
-GEOM::Path* 
-PathSegment::get_parent_path()
-{
-	return this->parent_path;
-}
-
-void 
-PathSegment::set_parent_path(GEOM::Path* parent_path)
-{
-	this->parent_path=parent_path;
-}
 
 double PathSegment::get_length() {
 	if(length==0){
@@ -158,6 +107,7 @@ double PathSegment::get_length() {
 	}
 	return length;
 }
+
 double
 PathSegment::get_curviness() {
 	if(curviness<0.0){		
@@ -168,6 +118,7 @@ PathSegment::get_curviness() {
 	}
 	return curviness;
 }
+
 GEOM::edge_state 
 PathSegment::get_state(){
 	return this->state;
@@ -186,47 +137,56 @@ PathSegment::set_export_this_linear(bool export_this_linear)
 {
 	this->export_this_linear=export_this_linear;
 }
+
 bool
 PathSegment::get_has_control_point()
 {
 	return this->has_control_point;
 }
+
 GEOM::VECTOR2D 
 PathSegment::get_startPoint()
 {
 	return this->startPoint;
 }
+
 void 
 PathSegment::set_startPoint(GEOM::VECTOR2D startPoint)
 {
 	this->startPoint = startPoint;
 }
+
 GEOM::VECTOR2D 
 PathSegment::get_endPoint()
 {
 	return this->endPoint;
 }
+
 void 
 PathSegment::set_endPoint(GEOM::VECTOR2D endPoint)
 {
 	this->endPoint = endPoint;
 }
+
 GEOM::VECTOR2D 
 PathSegment::get_controlPoint()
 {
 	return this->controlPoint;
 }
+
 void 
 PathSegment::set_controlPoint(GEOM::VECTOR2D controlPoint)
 {
 	this->controlPoint = controlPoint;
 	this->has_control_point = true;
 }
+
 GEOM::edge_type 
 PathSegment::get_edgeType()
 {
 	return this->edgeType;
 }
+
 void 
 PathSegment::set_edgeType(GEOM::edge_type edgeType)
 {
@@ -266,43 +226,12 @@ PathSegment::get_test_point()
 	this->test_point_dirty=false;
 	return this->test_point;
 }
-GEOM::VECTOR2D
-PathSegment::get_test_point2()
-{
-	if(this->test_point_dirty2){
-		double tmpPointx=this->startPoint.x + (( this->endPoint.x - this->startPoint.x)/2);
-		double tmpPointy=this->startPoint.y + (( this->endPoint.y - this->startPoint.y)/2);
-		double tmpPointx2=(( this->controlPoint.x - tmpPointx));
-		double tmpPointy2=(( this->controlPoint.y - tmpPointy));
-		this->test_point2.x=this->controlPoint.x - ((tmpPointx2) * 20);
-		this->test_point2.y=this->controlPoint.y - ((tmpPointy2) * 20);
-	}
-	
-	this->test_point_dirty2=false;
-	return this->test_point2;
-}
-GEOM::VECTOR2D
-PathSegment::get_test_point3()
-{
-	if(this->test_point_dirty3){
-		double tmpPointx=this->startPoint.x + (( this->endPoint.x - this->startPoint.x)/2);
-		double tmpPointy=this->startPoint.y + (( this->endPoint.y - this->startPoint.y)/2);
-		double tmpPointx2=(( this->controlPoint.x - tmpPointx));
-		double tmpPointy2=(( this->controlPoint.y - tmpPointy));
-		this->test_point3.x=this->controlPoint.x + ((tmpPointx2) * 13);
-		this->test_point3.y=this->controlPoint.y + ((tmpPointy2) * 13);
-	}
-	
-	this->test_point_dirty3=false;
-	return this->test_point3;
-}
 
 void
 PathSegment::sub_divide_outside_edge(std::vector<GEOM::VECTOR2D>& new_tri1,std::vector<GEOM::VECTOR2D>& new_tri2, double threshold)
 {
 	double tmpPointx=this->startPoint.x + (( this->endPoint.x - this->startPoint.x)/2);
-	double tmpPointy=this->startPoint.y + (( this->endPoint.y - this->startPoint.y)/2);
-	
+	double tmpPointy=this->startPoint.y + (( this->endPoint.y - this->startPoint.y)/2);	
 	double tmpPointx2=(( this->controlPoint.x - tmpPointx));
 	double tmpPointy2=(( this->controlPoint.y - tmpPointy));
 	double length = sqrt( ( tmpPointx2 * tmpPointx2 ) + ( tmpPointy2 * tmpPointy2 ));
@@ -316,39 +245,14 @@ PathSegment::sub_divide_outside_edge(std::vector<GEOM::VECTOR2D>& new_tri1,std::
 	new_tri2.push_back(new_point);
 	this->controlPoint=new_point;
 }
-bool
-PathSegment::get_no_intersecting(){
-	return this->no_intersecting;
-}
-void
-PathSegment::set_no_intersecting(bool subdivide)
-{
-	this->no_intersecting=subdivide;
-}
-bool
-PathSegment::get_subdivide(){
-	return this->subdivide;
-}
-void
-PathSegment::set_subdivide(bool subdivide)
-{
-	this->subdivide=subdivide;
-}
-bool
-PathSegment::get_deleteIt(){
-	return this->deleteIt;
-}
-void
-PathSegment::set_deleteIt(bool deleteIt)
-{
-	this->deleteIt=deleteIt;
-}
+
 void
 PathSegment::set_dirty()
 {
 	this->test_point_dirty=true;
-	this->test_point_dirty2=true;
-	this->test_point_dirty3=true;
+	this->curviness=-1;
+	this->length=0;
+	this->size=0;
 }
 
 result
@@ -368,7 +272,7 @@ PathSegment::subdividePath(SETTINGS::Settings* settings)
 			pathSeg->set_endPoint(VECTOR2D(newPoints[4], newPoints[5]));
 			pathSeg->set_edgeType(this->edgeType);
 			pathSeg->set_dirty();
-			pathSeg->subdivion_cnt++;
+			pathSeg->calculate_bounds();
 			newPath.push_back(pathSeg);
 			
 			if(pathSeg->get_curviness() <= settings->get_curve_threshold())
@@ -382,19 +286,20 @@ PathSegment::subdividePath(SETTINGS::Settings* settings)
 			newSeg->set_controlPoint(VECTOR2D(newPoints[6], newPoints[7]));
 			newSeg->set_endPoint(VECTOR2D(newPoints[8], newPoints[9]));
 			newSeg->set_edgeType(this->edgeType);
-			newSeg->subdivion_cnt++;
+			newSeg->calculate_bounds();
 			newPath.push_back(newSeg);
 			if(newSeg->get_curviness() <= settings->get_curve_threshold())
 				newSeg->set_state(edge_state::MAX_SUBDIVISION);
 			else
 				newSeg->set_state(edge_state::SUBDIVIDED);
 				
-			newPoints.clear();
 		}
 		else{
 			newPath.push_back(pathSeg);
 		}
 	}
-	subdividedPath=newPath;
+	subdividedPath.clear();
+	subdividedPath = newPath;
+	
 	return result::AWD_SUCCESS;
 }

@@ -21,36 +21,83 @@ Geometry::Geometry(std::string& name) :
 	BASE::AWDBlock(BLOCK::block_type::TRI_GEOM, name),
 	BASE::AttrElementBase()
 {		
+	this->delete_subs=true;
 	this->subGeomSettings=new BlockSettings(true);
 	this->bind_mtx = NULL;
 	this->num_subs = 0;
 	this->is_created = false;
 	this->split_faces = false;
 	this->originalPointCnt = 0;
+	this->mesh_instance=NULL;
 }
 
 Geometry::Geometry():
 	AWDBlock(BLOCK::block_type::TRI_GEOM),
 	AttrElementBase()
 {
+	this->delete_subs=true;
 	this->subGeomSettings=new BlockSettings(true);
 	this->bind_mtx = NULL;
 	this->num_subs = 0;
 	this->is_created = false;
 	this->split_faces = false;
 	this->originalPointCnt = 0;
+	this->mesh_instance=NULL;
 }
 
+Geometry::Geometry(bool delete_subs):
+	AWDBlock(BLOCK::block_type::TRI_GEOM),
+	AttrElementBase()
+{
+	this->delete_subs=delete_subs;
+	this->subGeomSettings=new BlockSettings(true);
+	this->bind_mtx = NULL;
+	this->num_subs = 0;
+	this->is_created = false;
+	this->split_faces = false;
+	this->originalPointCnt = 0;
+	this->mesh_instance=NULL;
+}
 Geometry::~Geometry()
 {
     
-	for(SubGeom * subGeom: this->subGeometries){
-		delete subGeom;
+	for (GEOM::FilledRegion* filled_region: all_filled_regions)
+		delete filled_region;
+	if(delete_subs){
+		for(SubGeom * subGeom: this->subGeometries){
+			delete subGeom;
+		}
 	}
 	if (this->bind_mtx) {
 		free(this->bind_mtx);
 		this->bind_mtx = NULL;
 	}
+}
+
+void 
+	Geometry::add_res_id_geom(const std::string& new_res, GEOM::MATRIX2x3* new_matrix){
+	if(has_res_id(new_res))
+		return;
+	this->ressource_ids.push_back(new_res);
+	this->frame_cmd_inst_matrices.push_back(new_matrix);
+}
+
+GEOM::MATRIX2x3* 
+Geometry::has_res_id_geom(const std::string& new_res){
+	int cnt=0;
+	for(std::string id:this->ressource_ids){
+		if(id==new_res)
+			return this->frame_cmd_inst_matrices[cnt];
+		cnt++;
+	}
+	return NULL;
+}
+
+void 
+Geometry::clear_res_ids_geom()
+{	
+	this->frame_cmd_inst_matrices.clear();
+	this->ressource_ids.clear();
 }
 
 result
@@ -78,6 +125,17 @@ Geometry::set_mesh_instance_list(std::vector<Mesh*> meshInstances)
 }
 */
 
+void
+Geometry::set_mesh_instance(AWDBlock* mesh_instance)
+{
+	this->mesh_instance=mesh_instance;
+}
+
+AWDBlock*
+Geometry::get_mesh_instance()
+{
+	return this->mesh_instance;
+}
 void
 Geometry::add_mesh_inst(AWDBlock* mesh_inst)
 {
@@ -107,9 +165,9 @@ Geometry::get_num_subs()
 }
 
 result 
-Geometry::add_path_shape(GEOM::FilledRegion* path_shape)
+Geometry::add_filled_region(GEOM::FilledRegion* filled_region)
 {
-	this->all_path_shapes.push_back(path_shape);
+	this->all_filled_regions.push_back(filled_region);
 	return result::AWD_SUCCESS;
 }
 	
@@ -173,7 +231,7 @@ Geometry::add_triangle(GEOM::Triangle* triangle)
 SubGeom *
 Geometry::get_sub_at(unsigned int idx)
 {
-	if (idx < this->num_subs) {
+	if (idx < this->subGeometries.size()) {
 		return this->subGeometries[idx];
 	}
 
@@ -207,7 +265,7 @@ Geometry::set_mesh_instances(std::vector<BASE::AWDBlock*>& meshInstances)
 std::vector<GEOM::FilledRegion*>& 
 Geometry::get_filled_regions()
 {
-	return this->all_path_shapes;
+	return this->all_filled_regions;
 }
 
 std::vector<GEOM::Triangle*>& 
@@ -315,6 +373,35 @@ Geometry::calc_body_length(AWDFile* awd_file, BlockSettings * settings)
 	return mesh_len;
 }
 result 
+Geometry::merge_subgeos()
+{
+	if(this->subGeometries.size()==0){
+		return result::AWD_ERROR;
+	}
+	std::vector<SubGeom* > new_subgeos;
+	new_subgeos.push_back(this->subGeometries.back());
+	for(SubGeom * subGeom: this->subGeometries){
+		if(subGeom!=this->subGeometries.back()){
+			bool found = false;
+			for(SubGeom * new_subgeo: new_subgeos){
+				if(new_subgeo->merge_subgeo(subGeom)==result::AWD_SUCCESS){
+					found=true;
+					break;
+				}
+			}
+			if(!found){
+				new_subgeos.push_back(subGeom);
+			}
+		}
+	}
+	this->subGeometries.clear();
+	for(SubGeom * subGeom: new_subgeos){
+		this->subGeometries.push_back(subGeom);
+	}
+	return result::AWD_SUCCESS;
+}
+
+result 
 Geometry::merge_for_textureatlas(BLOCKS::Material* this_material)
 {
 	if(this->subGeometries.size()==0){
@@ -323,8 +410,12 @@ Geometry::merge_for_textureatlas(BLOCKS::Material* this_material)
 	for(SubGeom * subGeom: this->subGeometries){
 		subGeom->set_uvs();
 		BLOCKS::Material* subgeom_mat = reinterpret_cast<BLOCKS::Material*>(subGeom->material_block);
-		if(this_material->get_texture()==subgeom_mat->get_texture()){
-			subGeom->material_block=this_material;
+		if(subgeom_mat!=NULL){
+			AWDBlock* tex1=this_material->get_texture();
+			AWDBlock* tex2=subgeom_mat->get_texture();
+			if(tex1==tex2){
+				subGeom->material_block=this_material;
+			}
 		}
 	}
 

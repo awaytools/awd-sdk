@@ -26,14 +26,15 @@ namespace AWD
 				std::string& get_text();
 				void set_text(const std::string&);
 				TYPES::UINT32 calc_body_length(SETTINGS::BlockSettings *);
-				result write_body(FILES::FileWriter*, SETTINGS::BlockSettings *);
+				result write_body(FILES::FileWriter*, SETTINGS::BlockSettings *, FILES::AWDFile* awd_file);
+				result add_dependencies(FILES::AWDFile* target_file, BLOCK::instance_type instance_type);
 		};
 		class FontShape
 		{
 			private:
 				int charCode;
 				bool shape_data;
-				GEOM::FilledRegion* subShape;
+				GEOM::SubGeom* subShape;
 
 			public:
 				FontShape();
@@ -41,10 +42,10 @@ namespace AWD
 				int get_charCode();
 				void set_charCode(int);
 				bool has_shape_data();
-				GEOM::FilledRegion* get_subShape();
-				void set_subShape(GEOM::FilledRegion*);
+				GEOM::SubGeom* get_subShape();
+				void set_subShape(GEOM::SubGeom*);
 				TYPES::UINT32 calc_body_length(SETTINGS::BlockSettings *);
-				result write_body(FILES::FileWriter*, SETTINGS::BlockSettings *);
+				result write_body(FILES::FileWriter*, SETTINGS::BlockSettings *, double font_size);
 		};
 		class FontStyle
 		{
@@ -76,7 +77,8 @@ namespace AWD
 				~Paragraph();
 				void add_textrun(TextRun*);
 				TYPES::UINT32 calc_body_length(SETTINGS::BlockSettings *);
-				result write_body(FILES::FileWriter*, SETTINGS::BlockSettings *);
+				result write_body(FILES::FileWriter*, SETTINGS::BlockSettings *, FILES::AWDFile* awd_file);
+				result add_dependencies(FILES::AWDFile* target_file, BLOCK::instance_type instance_type);
 		};
 		
 	}

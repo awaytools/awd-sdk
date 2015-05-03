@@ -67,7 +67,6 @@ bool
 LightPicker::check_shadowMethod(ShadowMethod * checkMethod)
 {
 	Light * shadowLight=(Light*)checkMethod->get_awdLight();
-	Light * awdLight=NULL;
 	for (Light * awdLight:this->lights){
 		if (awdLight==shadowLight){
 			return true;

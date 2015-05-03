@@ -69,6 +69,11 @@ namespace AWD
 				bool flipYaxis;
 				int max_iterations;
 				TYPES::F64 scale;
+				bool embbed_audio;
+				bool export_framescripts;
+				bool embbed_textures;
+				std::string sound_file_extension;
+				TYPES::UINT32 radial_gradient_size;
 
 			public:
 				BlockSettings(bool create_default);
@@ -90,7 +95,17 @@ namespace AWD
 
 				bool is_compatible(BlockSettings*);
 		
+				
+				void set_sound_file_extension(const std::string& sound_file_extension);
+				/**	\brief Get the channel-id that can be used to retrieve the correct value for the SecondaryUV-stream of a SubGeomInternal. 
+				*/
+				std::string& get_sound_file_extension();
 		
+				bool get_embbed_audio();
+				void set_embbed_audio(bool);
+				bool get_embbed_textures();
+				void set_embbed_textures(bool);
+
 				bool get_use_compression_per_block();
 				bool get_wide_matrix();
 				void set_wide_matrix(bool);
@@ -116,6 +131,12 @@ namespace AWD
 				void set_max_iterations(int);
 				TYPES::F64 get_fps();
 				void set_fps(TYPES::F64);
+				TYPES::UINT32 get_radial_gradient_size();
+				void set_radial_gradient_size(TYPES::UINT32);
+				bool get_export_framescripts();
+				void set_export_framescripts(bool);
+
+				
 				SETTINGS::compression get_compression();
 				void set_compression(SETTINGS::compression);
 				TYPES::UINT8 get_block_header_flag();
@@ -136,6 +157,7 @@ namespace AWD
 				std::string generator_version;	
 				std::string generator_name;	
 				TYPES::UINT8 default_ns_handle;	
+				bool export_invisible_timeline_layer;	
 				bool export_curves;
 				bool distinglish_interior_exterior_triangles_2d;
 				bool export_shapes_in_debug_mode;
@@ -149,6 +171,9 @@ namespace AWD
 				~Settings();
 			
 				
+				bool get_export_invisible_timeline_layer();
+				void set_export_invisible_timeline_layer(bool);
+
 				TYPES::UINT16 get_file_header_flag();
 				void set_file_header_flag(TYPES::UINT16);
 				

@@ -53,7 +53,6 @@ Namespace::find_namespace_by_handle(TYPES::UINT8  name_space_handle)
 result
 Namespace::add_namespace(const std::string& name_space, TYPES::UINT8 ns_handle)
 {
-	result res = result::AWD_SUCCESS;
 	if(name_space.empty()){
 		return result::AWD_ERROR;
 	}

@@ -94,6 +94,10 @@ VertexNormalsSettings::get_normal_threshold()
 BlockSettings::BlockSettings(bool create_default_streams):
 	VertexNormalsSettings()
 {
+		this->radial_gradient_size=512;
+		this->sound_file_extension="keep";
+		this->embbed_audio=true;
+		this->embbed_textures=true;
 		this->compression = compression::UNCOMPRESSED;
 		this->wideMatrix=false;
 		this->wideGeom=false;
@@ -107,7 +111,7 @@ BlockSettings::BlockSettings(bool create_default_streams):
 		this->exterior_threshold_for_strokes=0.0;
 		this->flipYaxis=false;
 		this->flipXaxis=false;
-
+		this->export_framescripts=false;
 	if(create_default_streams){
 
 		// define streams for triangle. this is the same for 2d and 3d verts
@@ -255,6 +259,27 @@ BlockSettings::set_fps(TYPES::F64 fps)
 {
 	this->fps=fps;
 }
+TYPES::UINT32
+BlockSettings::get_radial_gradient_size()
+{
+	return this->radial_gradient_size;
+}
+void
+BlockSettings::set_radial_gradient_size(TYPES::UINT32 radial_gradient_size)
+{
+	this->radial_gradient_size=radial_gradient_size;
+}
+bool
+BlockSettings::get_export_framescripts()
+{
+	return this->export_framescripts;
+}
+void
+BlockSettings::set_export_framescripts(bool export_framescripts)
+{
+	this->export_framescripts=export_framescripts;
+}
+
 int
 BlockSettings::get_max_iterations()
 {
@@ -274,6 +299,37 @@ void
 BlockSettings::set_wide_matrix(bool wideMatrix)
 {
 	this->wideMatrix=wideMatrix;
+}
+
+std::string&
+BlockSettings::get_sound_file_extension()
+{
+	return this->sound_file_extension;
+}
+void
+BlockSettings::set_sound_file_extension(const std::string& sound_file_extension)
+{
+	this->sound_file_extension = sound_file_extension;
+}
+bool
+BlockSettings::get_embbed_audio()
+{
+	return this->embbed_audio;
+}
+void
+BlockSettings::set_embbed_audio(bool embbed_audio)
+{
+	this->embbed_audio=embbed_audio;
+}
+bool
+BlockSettings::get_embbed_textures()
+{
+	return this->embbed_textures;
+}
+void
+BlockSettings::set_embbed_textures(bool embbed_textures)
+{
+	this->embbed_textures=embbed_textures;
 }
 bool
 BlockSettings::get_wide_geom()
@@ -342,6 +398,9 @@ BlockSettings::clone_block_settings()
 {
 	BlockSettings* new_blockSettings = new BlockSettings(true);
 	// todo: fill the blocksettings from original
+	new_blockSettings->set_embbed_audio(this->embbed_audio);
+	new_blockSettings->set_embbed_textures(this->embbed_textures);
+	new_blockSettings->set_export_framescripts(this->export_framescripts);
 	return new_blockSettings;
 }
 
@@ -401,7 +460,6 @@ Two BlockSettings are compatible if they can share the same set of DataStreamRec
 bool
 BlockSettings::is_compatible(BlockSettings* subGeom)
 {
-	bool this_uses_normals = false;
 	std::string uvchannel1;
 	std::string uvchannel2;
 
@@ -457,15 +515,24 @@ Settings::Settings(const std::string& root_directory, const std::string& generat
 {
 	this->export_shapes_in_debug_mode=false;
 	this->export_curves=false;
-	this->audio_directory_name = "sounds/";
-	this->texture_directory_name = "textures/";
+#ifdef _WINDOWS
+    this->audio_directory_name = "sounds\\";
+    this->texture_directory_name = "textures\\";
+#endif
+    
+#ifdef __APPLE__
+    this->audio_directory_name = "sounds/";
+    this->texture_directory_name = "textures/";
+#endif
 	this->file_header_flag = 0;
 	this->distinglish_interior_exterior_triangles_2d=false;
 	this->keep_verticles_in_path_order=false;
 	this->export_materials=false;
+	this->export_all=true;
 	this->root_directory = root_directory;	
 	this->generator_name = generator_name;	
 	this->generator_version = generator_version;	
+	this->export_invisible_timeline_layer = false;
 	this->export_block_categries_order.push_back(BLOCK::category::SCENE_OBJECT);
 	this->export_block_categries_order.push_back(BLOCK::category::MATERIALS);
 	this->export_block_categries_order.push_back(BLOCK::category::LIGHTS);
@@ -475,6 +542,19 @@ Settings::Settings(const std::string& root_directory, const std::string& generat
 Settings::~Settings()
 {
 }
+
+
+void 
+Settings::set_export_invisible_timeline_layer(bool export_invisible_timeline_layer)
+{
+	this->export_invisible_timeline_layer=export_invisible_timeline_layer;
+}
+bool 
+Settings::get_export_invisible_timeline_layer()
+{
+	return this->export_invisible_timeline_layer;
+}
+
 TYPES::UINT16
 Settings::get_file_header_flag()
 {

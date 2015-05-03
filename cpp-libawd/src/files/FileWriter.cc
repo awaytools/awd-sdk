@@ -90,11 +90,11 @@ FileWriter::writeINT16(TYPES::INT16 val)
 {
 	if(this->swapBytes){
 		TYPES::INT16 swaptVal=swapui16(val);
-		if(!fwrite(reinterpret_cast<const char*>(&swaptVal), sizeof(TYPES::UINT32), 1, this->file))
+		if(!fwrite(reinterpret_cast<const char*>(&swaptVal), sizeof(TYPES::INT16), 1, this->file))
 			return result::WRITE_ERROR;
 	}
 	else{
-		if(!fwrite(reinterpret_cast<const char*>(&val), sizeof(TYPES::UINT16), 1, this->file))
+		if(!fwrite(reinterpret_cast<const char*>(&val), sizeof(TYPES::INT16), 1, this->file))
 			return result::WRITE_ERROR;
 	}
 	fflush (this->file);
@@ -106,7 +106,7 @@ FileWriter::writeUINT16(TYPES::UINT16 val)
 {
 	if(this->swapBytes){
 		TYPES::UINT16 swaptVal=swapui16(val);
-		if(!fwrite(reinterpret_cast<const char*>(&swaptVal), sizeof(TYPES::UINT32), 1, this->file))
+		if(!fwrite(reinterpret_cast<const char*>(&swaptVal), sizeof(TYPES::UINT16), 1, this->file))
 			return result::WRITE_ERROR;
 	}
 	else{
@@ -377,8 +377,8 @@ FileWriter::get_compressed_bytes(TYPES::UINT8** buffer_to_compress, SETTINGS::co
 		free(tmp_buf);
 		return result::AWD_SUCCESS;
 	}
-#endif
 	return result::AWD_SUCCESS;
+#endif
 		
 }
 

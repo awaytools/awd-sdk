@@ -23,15 +23,15 @@ namespace AWD
 				BLOCK::storage_type storage;
 				std::string url;
 				std::string input_url;
-				TYPES::UINT8 *embed_data;
-				TYPES::UINT32 embed_data_len;
+				char *embed_data;
 				
 
 			public:
 				DataBlockBase(const std::string&);
 				~DataBlockBase();
-
-				void set_embed_data(TYPES::UINT8 *, TYPES::UINT32);
+				
+				TYPES::UINT32 embed_data_len;
+				void set_embed_data(char *, TYPES::UINT32);
 
 				std::string& get_url();
 				void set_url(std::string&);

@@ -86,9 +86,11 @@ namespace AWD
 				Material(std::string&);
 				Material();
 				~Material();
-				
+				TYPES::INT32 focalPoint;
+				GEOM::VECTOR4D get_interpolated_color(TYPES::UINT32);
+				MATERIAL::GradientSpread gradient_spread;
 				std::vector<TYPES::UINT32> gradient_positions;
-				std::vector<TYPES::COLOR> gradient_colors;
+				std::vector<GEOM::VECTOR4D> gradient_colors;
 				TYPES::F64 texture_u;
 				TYPES::F64 texture_v;
 				TYPES::F64 texture_u_max;

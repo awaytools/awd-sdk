@@ -13,6 +13,7 @@ using namespace AWD::FILES;
 using namespace AWD::BLOCK;
 using namespace AWD::SETTINGS;
 
+
 MATRIX2x3::MATRIX2x3(TYPES::F64 *mtx)
 {
 	this->matrix_data = (TYPES::F64*)malloc(6 * sizeof(TYPES::F64));
@@ -38,8 +39,9 @@ MATRIX2x3::set(TYPES::F64 *matrix_data)
 {
 	// no values given. set from 
 	if (matrix_data == NULL) {
-		this->matrix_data[0]  = 1.0;		this->matrix_data[1]  = 0.0;		this->matrix_data[2]  = 0.0; 
-		this->matrix_data[3]  = 0.0;		this->matrix_data[4]  = 1.0;		this->matrix_data[5]  = 0.0; 
+		this->matrix_data[0]  = 1.0;		this->matrix_data[1]  = 0.0;		
+		this->matrix_data[2]  = 0.0; 		this->matrix_data[3]  = 1.0;		
+		this->matrix_data[4]  = 0.0;		this->matrix_data[5]  = 0.0; 
 	}
 	else{
 		for(int cnt=0; cnt<6; cnt++)
@@ -173,39 +175,42 @@ MATRIX4x3::write_to_file(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings 
 	return result::AWD_SUCCESS;
 }
 
-MATRIX4x5::MATRIX4x5(TYPES::F64 *mtx)
+ColorTransform::ColorTransform(TYPES::F64 *mtx)
 {
-	this->matrix_data = (TYPES::F64*)malloc(20 * sizeof(TYPES::F64));
+	this->matrix_data = (TYPES::F64*)malloc(8 * sizeof(TYPES::F64));
 	set(mtx);
 }
-MATRIX4x5::MATRIX4x5()
+ColorTransform::ColorTransform()
 {
-	this->matrix_data = (TYPES::F64*)malloc(20 * sizeof(TYPES::F64));
+	this->matrix_data = (TYPES::F64*)malloc(8 * sizeof(TYPES::F64));
 	set(NULL);
 }
 
-MATRIX4x5::~MATRIX4x5()
+ColorTransform::~ColorTransform()
 {
 	free(this->matrix_data);
 }
 
 TYPES::F64* 
-MATRIX4x5::get(){
+ColorTransform::get(){
 	return this->matrix_data;
 }
 result
-MATRIX4x5::set(TYPES::F64 *matrix_data)
+ColorTransform::set(TYPES::F64 *matrix_data)
 {
 	// no values given. set from 
 	if (matrix_data == NULL) {
-		this->matrix_data[0]  = 1.0;		this->matrix_data[1]  = 0.0;		this->matrix_data[2]  = 0.0;    this->matrix_data[3]  = 0.0;		
-		this->matrix_data[4]  = 1.0;		this->matrix_data[5]  = 0.0; 		this->matrix_data[6]  = 0.0;	this->matrix_data[7]  = 0.0;	
-		this->matrix_data[8]  = 1.0;		this->matrix_data[9]  = 2.50; 		this->matrix_data[10] = 1.5;	this->matrix_data[11] = 0.8;
-		this->matrix_data[12]  = 1.0;		this->matrix_data[13]  = 2.50; 		this->matrix_data[14] = 1.5;	this->matrix_data[15] = 0.8;
-		this->matrix_data[16]  = 1.0;		this->matrix_data[17]  = 2.50; 		this->matrix_data[18] = 1.5;	this->matrix_data[19] = 0.8;
+		this->matrix_data[0]  = 1.0;
+		this->matrix_data[1]  = 0.0;
+		this->matrix_data[2]  = 1.0;
+		this->matrix_data[3]  = 0.0;
+		this->matrix_data[4]  = 1.0;
+		this->matrix_data[5]  = 0.0;
+		this->matrix_data[6]  = 1.0;
+		this->matrix_data[7]  = 0.0;
 	}
 	else{
-		for(int cnt=0; cnt<20; cnt++)
+		for(int cnt=0; cnt<8; cnt++)
 			this->matrix_data[cnt]=matrix_data[cnt];
 	}
 
@@ -213,18 +218,22 @@ MATRIX4x5::set(TYPES::F64 *matrix_data)
 }
 
 result
-MATRIX4x5::read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *)
+ColorTransform::read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *)
 {
 	return result::AWD_SUCCESS;
 }
 
 result
-MATRIX4x5::write_to_file(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings * settings)
+ColorTransform::write_to_file(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings * settings)
 {
-	result res = result::AWD_SUCCESS;
-	// matrix4x5 is not scale-able, so we can write it to file in one go.
-	if(settings->get_scale()==1)
-		return fileWriter->writeNumbers(this->matrix_data, 20, settings->get_wide_matrix());		
+	fileWriter->writeFLOAT32(TYPES::F32(this->matrix_data[0]));
+	fileWriter->writeFLOAT32(TYPES::F32(this->matrix_data[2]));
+	fileWriter->writeFLOAT32(TYPES::F32(this->matrix_data[4]));
+	fileWriter->writeFLOAT32(TYPES::F32(this->matrix_data[6]));
+	fileWriter->writeINT16(TYPES::INT16(this->matrix_data[1]));
+	fileWriter->writeINT16(TYPES::INT16(this->matrix_data[3]));
+	fileWriter->writeINT16(TYPES::INT16(this->matrix_data[5]));
+	fileWriter->writeINT16(TYPES::INT16(this->matrix_data[7]));
 
 	return result::AWD_SUCCESS;
 }

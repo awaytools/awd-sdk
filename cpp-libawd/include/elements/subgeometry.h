@@ -35,11 +35,18 @@ namespace AWD
 				*/
 				SubGeomInternal();
 				~SubGeomInternal();
-
-				TYPES::UINT32 get_tri_cnt();		
-				TYPES::UINT32 get_vert_cnt();			
+				
+				result modify_font_char(double size);
+				std::vector<GEOM::Triangle*> exterior_triangles;
+				std::vector<GEOM::Triangle*> interior_triangles;
+				std::vector<GEOM::Triangle*> concave_triangles;
+				std::vector<GEOM::Triangle*> convex_triangles;
+				TYPES::UINT32 get_tri_cnt_for_type(GEOM::edge_type edge_type);
+				TYPES::UINT32 get_tri_cnt();
+				TYPES::UINT32 get_vert_cnt();
 				TYPES::UINT32 add_vertex_with_cache(GEOM::GeomStreamElementBase*);
 				TYPES::UINT32 add_vertex(GEOM::GeomStreamElementBase*);
+				TYPES::UINT32 add_triangle_by_type(Triangle* triangle, GEOM::edge_type edge_type);
 				TYPES::UINT32 add_triangle(GEOM::Triangle*);
 				std::vector<GEOM::GeomStreamElementBase*>& get_vertices();	
 				void set_vertices(std::vector<GEOM::GeomStreamElementBase*>&);				
@@ -65,6 +72,7 @@ namespace AWD
 				TYPES::F64 max_y;
 				TYPES::F64 min_x;
 				TYPES::F64 min_y;
+				std::string name;
 				
 				
 			protected:
@@ -74,10 +82,23 @@ namespace AWD
 				SubGeom(SETTINGS::BlockSettings *);
 				~SubGeom();
 				
+				GEOM::MATRIX2x3* uv_transform;
+				/**
+				*\brief Get the name.
+				*/
+				std::string& get_name();
+
+				/**
+				*\brief Set the name.
+				*/
+				void set_name(const std::string& name);
+				
+				result modify_font_char(double size);
 				BASE::AWDBlock* material_block;
 				TYPES::UINT32 allowed_tris;
 				result merge_subgeo(SubGeom*);
 				result set_uvs();
+				TYPES::UINT32 get_tri_cnt_for_type(GEOM::edge_type edge_type);
 				TYPES::UINT32 get_tri_cnt();
 				void set_material(BASE::AWDBlock*);
 				void get_material_blocks(std::vector<BASE::AWDBlock*>& material_blocks);
@@ -88,7 +109,7 @@ namespace AWD
 				bool isClockWiseXY(double point1x, double point1y, double point2x, double point2y, double point3x, double point3y);
 				result create_triangle(GEOM::edge_type edge_type, GEOM::VECTOR2D v1, GEOM::VECTOR2D v2, GEOM::VECTOR2D v3);
 				
-				TYPES::INT32 add_vertex2D(GEOM::Vertex2D* vertex);
+				TYPES::INT32 add_vertex2D(GEOM::Vertex2D* vertex, bool use_cache);
 				TYPES::INT32 add_vertex(GEOM::Vertex3D*);
 				
 				void set_settings(SETTINGS::BlockSettings * settings);

@@ -306,7 +306,7 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 								// check distance of current pixel to circle center 
 								TYPES::UINT32 distance_to_middle= sqrt(((width_radial_half-i)*(width_radial_half-i))+((width_radial_half-k)*(width_radial_half-k)));
 								GEOM::VECTOR4D new_color;
-								focalpoint;
+								//focalpoint;
 								if(distance_to_middle<width_radial_half){
 									GEOM::VECTOR2D intercept_point = GEOM::VECTOR2D();
 									if(i!=width_radial_half)

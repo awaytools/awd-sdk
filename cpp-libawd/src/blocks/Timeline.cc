@@ -459,7 +459,7 @@ Timeline::get_child_for_block(BASE::AWDBlock* awd_block, ANIM::FrameCommandBase*
 	// this groupd provides a list of PotentialTimelineChild
 
 	for(PotentialTimelineChildGroup* childgroup: this->timeline_childs){
-		if((childgroup->awd_block==awd_block)){
+		if(childgroup->awd_block==awd_block){
 			for(PotentialTimelineChild* child: childgroup->childs){
 				if(!child->used){
 					child->used=true;

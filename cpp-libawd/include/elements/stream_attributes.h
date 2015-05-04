@@ -36,7 +36,7 @@ namespace AWD
 				virtual std::string& intern_get_vertex_string()=0;
 			public:
 				GeomStreamElementBase();
-				~GeomStreamElementBase();
+				virtual ~GeomStreamElementBase();
 				
 				std::string& get_vertex_string();
 				int get_idx_for_sub_geo_id(TYPES::SUBGEOM_ID_STRING);

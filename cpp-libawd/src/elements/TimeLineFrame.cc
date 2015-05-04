@@ -107,7 +107,7 @@ TimelineFrame::get_command(TYPES::UINT32 objectID, frame_command_type command_ty
 		this->commands.push_back(newFrameCommand);
 		return newFrameCommand;
 	}
-	else if((command_type==frame_command_type::FRAME_COMMAND_REMOVE)){
+	else if(command_type==frame_command_type::FRAME_COMMAND_REMOVE){
 		FrameCommandRemoveObject* newFrameCommand = new FrameCommandRemoveObject();
 		newFrameCommand->set_objID(objectID);
 		newFrameCommand->set_command_type(command_type);

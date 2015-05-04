@@ -40,7 +40,8 @@ int main(int argc, char* argv[])
 	}
 
 	// Multiple sort keys
-	if(0)
+    int test=0;
+	if(test)
 	{
 		udword n = 1000;
 		udword* input = new udword[n];

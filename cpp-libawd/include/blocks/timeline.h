@@ -37,7 +37,7 @@ namespace AWD
 				
 			protected:
 				TYPES::UINT32 calc_body_length(FILES::AWDFile*, SETTINGS::BlockSettings *);
-				TYPES::state validate_block_state();				
+				TYPES::state validate_block_state();
 				result write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * settings, FILES::AWDFile* file);
 				result read_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * settings, FILES::AWDFile* file);
 				result collect_dependencies(FILES::AWDFile* target_file, BLOCK::instance_type instance_type);
@@ -48,6 +48,8 @@ namespace AWD
 				~Timeline();
 				
 				
+				bool is_grafic_instance;
+				bool has_grafic_instances;
 				void calc_mask_ids();
 				void calculate_command_depths();
 				bool is_finalized;

@@ -30,6 +30,8 @@ Timeline::Timeline(const std::string& name):
 	this->is_finalized=false;
 	this->instance_cnt=0;
 	this->add_category(BLOCK::category::SCENE_OBJECT);
+	this->has_grafic_instances=false;
+	this->is_grafic_instance=true;
 	
 }
 Timeline::Timeline():
@@ -42,6 +44,8 @@ Timeline::Timeline():
 	this->is_finalized=false;
 	this->fps=0.0;
 	this->add_category(BLOCK::category::SCENE_OBJECT);
+	this->has_grafic_instances=false;
+	this->is_grafic_instance=true;
 	
 }
 Timeline::~Timeline()

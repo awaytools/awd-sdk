@@ -51,7 +51,7 @@
 #include "blocks/uv_pose.h"
 #include "blocks/vertex_anim_clip.h"
 #include "blocks/vertex_pose.h"
-
+#include "HTTPServer.h"
 
 using namespace AWD;
 using namespace AWD::TYPES;
@@ -431,7 +431,11 @@ FILES::open_preview(FILES::AWDFile* output_file, std::string& preview_file, std:
 	res=extract_path_without_file_extension(output_file->get_url(), output_path_no_extension);
 	if(res!=result::AWD_SUCCESS)
 		return res;
-
+	
+	std::string output_filename;
+	res = FILES::extract_name_from_path(output_path_no_extension, output_filename);
+	if(res!=result::AWD_SUCCESS)
+		return res;
 	std::string extension;
 	res=extract_file_extension(preview_file, extension);
 	if(res!=result::AWD_SUCCESS)
@@ -449,17 +453,63 @@ FILES::open_preview(FILES::AWDFile* output_file, std::string& preview_file, std:
 	if(open_path.size()>0){
 		preview_file_output=open_path;
 		if(append_name)
-			preview_file_output = open_path + "/" + preview_filename;
+			preview_file_output = open_path + "/" + output_filename;
 	}
+
+    // We are now about to start a web server
+    HTTPServer* server;
+    ServerConfigParam config;
+
+    //Utils::GetFileName(outFile, fileName);
+
+    server = HTTPServer::GetInstance();
+    if (server)
+    {
+        // Stop the web server just in case it is running
+        server->Stop();
+    }
+
+    int numTries = 0;
+    while (numTries < MAX_RETRY_ATTEMPT)
+    {
+        // Configure the web server
+        config.port = server->GetUnusedLocalPort();
+        config.root = out_root_directory;
+        server->SetConfig(config);
+
+        // Start the web server
+        int res = server->Start();
+        if (res==0)
+        {
+            break;
+        }
+        numTries++;
+    }
+
+    if (numTries == MAX_RETRY_ATTEMPT)
+    {
+        //Utils::Trace(GetCallback(), "Failed to start web server\n");
+        //res = FCM_GENERAL_ERROR;
+		return result::AWD_ERROR;
+    }
+
+
 
 	// open the preview_file
 
 #ifdef _WIN32
 		
 #ifdef _UNICODE
-	std::wstring tail;
-	tail.assign(preview_file_output.begin(), preview_file_output.end());
-	ShellExecute(NULL, L"open", tail.c_str(), NULL, NULL, SW_SHOWNORMAL);
+        std::wstring output = L"http://localhost:";
+        std::wstring tail;
+        tail.assign(output_filename.begin(), output_filename.end());
+        std::wstring tail2;
+		std::string extension_html=".html";
+        tail2.assign(extension_html.begin(), extension_html.end());
+		output += std::to_wstring(config.port);
+        output += L"/";
+        output += tail+tail2;
+        ShellExecute(NULL, L"open", output.c_str(), NULL, NULL, SW_SHOWNORMAL);
 
 #else
 	std::string tail;
@@ -468,9 +518,14 @@ FILES::open_preview(FILES::AWDFile* output_file, std::string& preview_file, std:
 
 #endif
 #else
-    std::string output = preview_file_output;
+    std::string output = "http://localhost:";
+    output += std::to_string(port);
+    output += "/";
+    output += outputFileName;
+    output += ".html";
     std::string str = "/usr/bin/open " + output;
-    system(str.c_str());
+    popen(str.c_str(), "r");
+    //system(str.c_str());
 
 #endif
 

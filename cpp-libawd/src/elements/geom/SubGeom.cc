@@ -387,14 +387,15 @@ SubGeom::create_triangle(GEOM::edge_type edge_type, GEOM::VECTOR2D v1, GEOM::VEC
 		vert2->set_curve_attributes(1, 0.5, 0);
 		vert3->set_curve_attributes(1, 0, 0);
 	}
+	/*
 	else if (edge_type==GEOM::edge_type::INNER_EDGE){
 		vert1->set_curve_attributes(1, 2, 1);
 		vert2->set_curve_attributes(1, 3, 1);
 		vert3->set_curve_attributes(1, 4, 1);
-	}
+	}*/
 	else{
 		vert1->set_curve_attributes(1, 2, 0);
-		vert2->set_curve_attributes(1, 2, 1);
+		vert2->set_curve_attributes(1, 2, 0);
 		vert3->set_curve_attributes(1, 2, 0);
 	}
 	if(this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__9F)!=NULL){

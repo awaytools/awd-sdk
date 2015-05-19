@@ -477,10 +477,9 @@ FILES::open_preview(FILES::AWDFile* output_file, std::string& preview_file, std:
 #endif
 #else
 		std::string output = open_path;
-		output += std::to_string(port);
 		if(append_name){
 			// we want to append the filename to the url
-			output += outputFileName;
+			output += output_filename;
 			output += ".html";
 		}
 		std::string str = "/usr/bin/open " + output;
@@ -549,9 +548,9 @@ FILES::open_preview(FILES::AWDFile* output_file, std::string& preview_file, std:
 #endif
 #else
 		std::string output = "http://localhost:";
-		output += std::to_string(port);
+		output += std::to_string(config.port);
 		output += "/";
-		output += outputFileName;
+		output += output_filename;
 		output += ".html";
 		std::string str = "/usr/bin/open " + output;
 		popen(str.c_str(), "r");

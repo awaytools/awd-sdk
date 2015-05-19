@@ -23,6 +23,7 @@
     #include <netinet/in.h>
     #include <arpa/inet.h>
     #include <copyfile.h>
+    typedef int SOCKET;
 #endif
 #include <string>
 #ifdef _WINDOWS

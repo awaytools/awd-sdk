@@ -451,54 +451,84 @@ FILES::open_preview(FILES::AWDFile* output_file, std::string& preview_file, std:
     outFile.close();
 	
 	if(open_path.size()>0){
+		// a path was given to use as URL when opening a browser. no webserver started
 		preview_file_output=open_path;
-		if(append_name)
-			preview_file_output = open_path + "/" + output_filename;
-	}
-
-    // We are now about to start a web server
-    HTTPServer* server;
-    ServerConfigParam config;
-
-    //Utils::GetFileName(outFile, fileName);
-
-    server = HTTPServer::GetInstance();
-    if (server)
-    {
-        // Stop the web server just in case it is running
-        server->Stop();
-    }
-
-    int numTries = 0;
-    while (numTries < MAX_RETRY_ATTEMPT)
-    {
-        // Configure the web server
-        config.port = server->GetUnusedLocalPort();
-        config.root = out_root_directory;
-        server->SetConfig(config);
-
-        // Start the web server
-        int res = server->Start();
-        if (res==0)
-        {
-            break;
-        }
-        numTries++;
-    }
-
-    if (numTries == MAX_RETRY_ATTEMPT)
-    {
-        //Utils::Trace(GetCallback(), "Failed to start web server\n");
-        //res = FCM_GENERAL_ERROR;
-		return result::AWD_ERROR;
-    }
-
-
-
-	// open the preview_file
-
 #ifdef _WIN32
-		
+#ifdef _UNICODE
+        std::wstring output;
+        output.assign(open_path.begin(), open_path.end());
+		if(append_name){
+			// we want to append the filename to the url
+			std::wstring tail;
+			tail.assign(output_filename.begin(), output_filename.end());
+			std::wstring tail2;
+			std::string extension_html=".html";
+			tail2.assign(extension_html.begin(), extension_html.end());
+			output += L"/";
+			output += tail+tail2;
+		}
+        ShellExecute(NULL, L"open", output.c_str(), NULL, NULL, SW_SHOWNORMAL);
+#else
+		// NOT TESTED YET!!!
+		/*std::string tail;
+		tail.assign(preview_file_output.begin(), preview_file_output.end());
+		ShellExecute(NULL, "open", tail.c_str(), NULL, NULL, SW_SHOWNORMAL);*/
+
+#endif
+#else
+		std::string output = open_path;
+		output += std::to_string(port);
+		if(append_name){
+			// we want to append the filename to the url
+			output += outputFileName;
+			output += ".html";
+		}
+		std::string str = "/usr/bin/open " + output;
+		popen(str.c_str(), "r");
+		//system(str.c_str());
+
+#endif
+	}
+	else{
+		// no path was given to use as URL when opening a browser
+		// We are now about to start a web server
+		HTTPServer* server;
+		ServerConfigParam config;
+
+		//Utils::GetFileName(outFile, fileName);
+
+		server = HTTPServer::GetInstance();
+		if (server)
+		{
+			// Stop the web server just in case it is running
+			server->Stop();
+		}
+
+		int numTries = 0;
+		while (numTries < MAX_RETRY_ATTEMPT)
+		{
+			// Configure the web server
+			config.port = server->GetUnusedLocalPort();
+			config.root = out_root_directory;
+			server->SetConfig(config);
+
+			// Start the web server
+			int res = server->Start();
+			if (res==0)
+			{
+				break;
+			}
+			numTries++;
+		}
+
+		if (numTries == MAX_RETRY_ATTEMPT)
+		{
+			//Utils::Trace(GetCallback(), "Failed to start web server\n");
+			//res = FCM_GENERAL_ERROR;
+			return result::AWD_ERROR;
+		}
+	// open the preview_file
+#ifdef _WIN32
 #ifdef _UNICODE
         std::wstring output = L"http://localhost:";
         std::wstring tail;
@@ -510,26 +540,25 @@ FILES::open_preview(FILES::AWDFile* output_file, std::string& preview_file, std:
         output += L"/";
         output += tail+tail2;
         ShellExecute(NULL, L"open", output.c_str(), NULL, NULL, SW_SHOWNORMAL);
-
 #else
-	std::string tail;
-	tail.assign(preview_file_output.begin(), preview_file_output.end());
-	ShellExecute(NULL, "open", tail.c_str(), NULL, NULL, SW_SHOWNORMAL);
+		// NOT TESTED YET!!!
+		/*std::string tail;
+		tail.assign(preview_file_output.begin(), preview_file_output.end());
+		ShellExecute(NULL, "open", tail.c_str(), NULL, NULL, SW_SHOWNORMAL);*/
 
 #endif
 #else
-    std::string output = "http://localhost:";
-    output += std::to_string(port);
-    output += "/";
-    output += outputFileName;
-    output += ".html";
-    std::string str = "/usr/bin/open " + output;
-    popen(str.c_str(), "r");
-    //system(str.c_str());
+		std::string output = "http://localhost:";
+		output += std::to_string(port);
+		output += "/";
+		output += outputFileName;
+		output += ".html";
+		std::string str = "/usr/bin/open " + output;
+		popen(str.c_str(), "r");
+		//system(str.c_str());
 
 #endif
-
-
+	}
 
 	return res; 
 }

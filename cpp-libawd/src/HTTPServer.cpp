@@ -1,30 +1,6 @@
-/*************************************************************************
-* ADOBE CONFIDENTIAL
-* ___________________
-*
-*  Copyright [2015] Adobe Systems Incorporated
-*  All Rights Reserved.
-*
-* NOTICE:  All information contained herein is, and remains
-* the property of Adobe Systems Incorporated and its suppliers,
-* if any.  The intellectual and technical concepts contained
-* herein are proprietary to Adobe Systems Incorporated and its
-* suppliers and are protected by all applicable intellectual 
-* property laws, including trade secret and copyright laws.
-* Dissemination of this information or reproduction of this material
-* is strictly forbidden unless prior written permission is obtained
-* from Adobe Systems Incorporated.
-**************************************************************************/
-
-#ifndef USE_HTTP_SERVER
-#define USE_HTTP_SERVER
-#endif
-#ifdef USE_HTTP_SERVER
-
 #include "HTTPServer.h"
 #include "Utils.h"
 
-		
 #include <time.h>
 namespace AWD
 {
@@ -169,4 +145,3 @@ namespace AWD
 
 };
 
-#endif // USE_HTTP_SERVER

@@ -217,7 +217,8 @@ void FontStyle::delete_fontShape(int char_code){
 }
 FontShape* FontStyle::get_fontShape(int char_code) 
 {
-	if(char_code==32){
+	// we do not need any geometry for "\r" "\n" " "
+	if((char_code==32)||(char_code==10)||(char_code==13)){
 		return NULL;
 	}
 	if(shapesmap.find(char_code) == shapesmap.end())

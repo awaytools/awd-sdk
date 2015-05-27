@@ -41,6 +41,7 @@ using namespace AWD::ANIM;
  
 FrameCommandBase::FrameCommandBase() 
 {
+	this->graphic_instance=NULL;
     this->command_properties=new ATTR::NumAttrList();
 	this->command_type = frame_command_type::FRAME_COMMAND_ADD_CHILD;
 	this->hasRessource=false;// if true than the command will be "add" not "update"
@@ -50,7 +51,6 @@ FrameCommandBase::FrameCommandBase()
 	this->hasRessource=false;// if true than the command will be "add" not "update"
 	this->prev_frame=NULL;
 	this->is_child=false;
-	this->child_instance=NULL;
 	this->child=NULL;
 }
 
@@ -108,17 +108,6 @@ void
 FrameCommandBase::set_objectType(const std::string& objectType)
 {
     this->objectType = objectType;
-}
-std::string&
-FrameCommandBase::get_resID()
-{
-	return this->resID;
-}
-void
-FrameCommandBase::set_resID(const std::string& new_res)
-{
-	this->hasRessource=true;
-    this->resID = new_res;
 }
 TYPES::UINT32
 FrameCommandBase::get_objID()

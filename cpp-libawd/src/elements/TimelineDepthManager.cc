@@ -1,23 +1,5 @@
 #include "elements/frame_commands.h"
-#include "elements/stream.h"
-#include "utils/awd_types.h"
-#include "base/attr.h"
-#include "utils/settings.h"
-#include "blocks/geometry.h"
-#include "blocks/material.h"
-#include "blocks/mesh_library.h"
-#include "blocks/text_element.h"
-#include "utils/awd_properties.h"
 
-#include "files/file_writer.h"
-
-using namespace AWD;
-using namespace AWD::GEOM;
-using namespace AWD::TYPES;
-using namespace AWD::FILES;
-using namespace AWD::BLOCK;
-using namespace AWD::SETTINGS;
-using namespace AWD::ANIM;
 #include "elements/timeline_depth_manager.h"
 #include "elements/stream.h"
 #include "utils/awd_types.h"
@@ -39,6 +21,62 @@ using namespace AWD::BLOCK;
 using namespace AWD::SETTINGS;
 using namespace AWD::ANIM;
  
+
+TimelineDepthLayer::TimelineDepthLayer() 
+{
+	this->depth=0;
+	this->in_use=true;
+}
+
+TimelineDepthLayer::~TimelineDepthLayer()
+{
+}
+
+void 
+TimelineDepthLayer::advance_frame(TYPES::UINT32 frame)
+{
+	if(depth_objs.size()==0)
+		return;
+	if(depth_objs.back()->end_frame == (frame-1))
+		depth_objs.back()->end_frame=frame;
+}
+bool 
+TimelineDepthLayer::is_occupied_on_frame(TYPES::UINT32 frame)
+{
+	if(depth_objs.size()==0)
+		return false;
+	if(depth_objs.back()->end_frame >= frame)
+		return true;
+	return false;
+}
+
+bool 
+TimelineDepthLayer::is_occupied_on_frame_range(TYPES::UINT32 start, TYPES::UINT32 end)
+{
+	// check all objects, because they might not be ordered by frame anymore 
+	for(TimelineChild_instance* child:depth_objs){
+		if((child->start_frame<=start)&&(child->end_frame>=start))
+			return true; 
+		if((child->start_frame<=end)&&(child->end_frame>=end))
+			return true; 
+	}
+	return false; 
+}
+void
+TimelineDepthLayer::apply_depth(int depth)
+{
+	this->depth=depth;
+	for(TimelineChild_instance* tl_depth:this->depth_objs){
+		tl_depth->depth=this->depth;
+	}
+}
+
+void
+TimelineDepthLayer::add_new_child(TimelineChild_instance* new_obj)
+{
+	this->depth_objs.push_back(new_obj);
+}
+
 TimelineDepthManager::TimelineDepthManager() 
 {
 }
@@ -47,304 +85,190 @@ TimelineDepthManager::~TimelineDepthManager()
 {
 }
 
-void
-TimelineDepthManager::free_unused_layers(int frame_nr)
+
+TimelineChild_instance* 
+TimelineDepthManager::get_parent_for_graphic_clip(TimelineChild_instance* child)
 {
-	for(TimelineDepthLayer* this_layer:this->depth_layers){
-		if(!this_layer->depth_objs.back()->in_use)
-			this_layer->in_use=false;
-		else
-			this_layer->in_use=true;
-		if(!this_layer->in_use){
-			if(this_layer->depth_objs.back()->obj_id>=0){
-				this_layer->depth_objs.back()->end_frame=frame_nr-1;
-				TimelineDepthObject* depth_obj2 = new TimelineDepthObject();
-				depth_obj2->obj_id=-1;
-				depth_obj2->start_frame=frame_nr;
-				depth_obj2->in_use=false;
-				depth_obj2->end_frame=frame_nr;
-				this_layer->depth_objs.push_back(depth_obj2);
+	int found_layer=-1;
+	int layer_cnt=0;
+	TimelineChild_instance* return_child=child;
+	for(TimelineDepthLayer* layer:this->depth_layers){
+		if(found_layer>=0){
+			if(layer->is_occupied_on_frame(child->end_frame)){
+				if(layer->depth_objs.back()->graphic_clip_origin==child)
+					return_child=layer->depth_objs.back();
+				else
+					return return_child;
 			}
 		}
-		//this_layer->depth_objs.back()->end_frame=frame_nr;
+		if(layer->depth_objs.size()>0){
+			if(layer->depth_objs.back()==child){
+				found_layer=layer_cnt;
+			}
+		}
+
+		layer_cnt++;
 	}
+	if(found_layer<0)
+		_ASSERT(0);
+	return return_child;
 }
-
-
-
-
-bool
-TimelineDepthManager::has_active_layers()
-{
-	for(TimelineDepthLayer* this_layer:this->depth_layers){
-		if(this_layer->in_use)
-			return true;
-	}
-	return false;
-}
-
-
 void
-TimelineDepthManager::set_last_frame(int frame)
+TimelineDepthManager::advance_frame(TYPES::UINT32 frame)
 {
-	int cnt_obj=0;
 	for(TimelineDepthLayer* this_layer:this->depth_layers){
-		this_layer->depth_objs.back()->end_frame=frame;
+		this_layer->advance_frame(frame);
 	}
 }
 void
 TimelineDepthManager::apply_depth()
 {
-	int cnt_obj=-16383;
-	for(TimelineDepthLayer* this_layer:this->depth_layers){
-		for(TimelineDepthObject* tl_depth:this_layer->depth_objs){
-			tl_depth->depth=cnt_obj;
-		}
-		this_layer->depth=cnt_obj;
-		cnt_obj+=3;
-	}
-}
-
-int
-TimelineDepthManager:: get_depth_by_obj_id(int obj_id)
-{
-	int cnt_obj=0;
-	for(TimelineDepthLayer* this_layer:this->depth_layers){
-		if(this_layer->depth_objs.back()->obj_id==obj_id)
-			return cnt_obj;
-		if(this_layer->depth_objs.back()->obj_id==-1){
-			int cur_find=this_layer->depth_objs.size()-1;
-			while(cur_find--){
-				if(this_layer->depth_objs[cur_find]->obj_id==-1)
-					continue;
-				else if(this_layer->depth_objs[cur_find]->obj_id==obj_id)
-					return cnt_obj;
-				else
-					break;
-			}
-		}
-		cnt_obj++;
-	}
-	return cnt_obj;
-}
-void
-TimelineDepthManager::add_objects(std::vector<TimelineChild_instance*>& input_objects, int frame_nr)
-{
-	int count_slots = get_available_slots_cnt_no_target_obj();
-	if(count_slots>input_objects.size())
-		count_slots=input_objects.size();
-	for(TimelineChild_instance* one_obj:input_objects){
-		TimelineDepthLayer* new_depth_layer;
-		if(count_slots>0){
-			// a depth layer is already available and free for this object
-			count_slots--;
-			new_depth_layer=this->depth_layers[count_slots];
-
-		}
-		else{
-			// we need to insert a new depth layer at the bottom 
-			new_depth_layer = new TimelineDepthLayer();
-			if(frame_nr>0){
-				TimelineDepthObject* depth_obj2 = new TimelineDepthObject();
-				depth_obj2->obj_id=-1;
-				depth_obj2->start_frame=0;
-				depth_obj2->end_frame=frame_nr-1;
-				depth_obj2->in_use=false;
-				new_depth_layer->depth_objs.push_back(depth_obj2);
-			}
-			this->depth_layers.insert(this->depth_layers.begin(), new_depth_layer);
-		}		
-		TimelineDepthObject* depth_obj;
-		bool add_new_obj=true;
-		if(new_depth_layer->depth_objs.back()->obj_id<0){
-			if(new_depth_layer->depth_objs.back()->start_frame==frame_nr){
-				add_new_obj=false;
-				depth_obj=new_depth_layer->depth_objs.back();
-			}
-		}
-		if(add_new_obj){
-			depth_obj = new TimelineDepthObject();
-			new_depth_layer->depth_objs.push_back(depth_obj);
-		}		
-		one_obj->depth_obj=depth_obj;
-		depth_obj->obj_id=one_obj->obj_id;
-		depth_obj->child=one_obj->child;
-		depth_obj->start_frame=frame_nr;
-		depth_obj->end_frame=frame_nr;
-	}
-}
-
-void
-TimelineDepthManager::add_objects_above_obj_id(std::vector<TimelineChild_instance*>& input_objects, int obj_id, int frame_nr)
-{
-	int layer_id = get_depth_by_obj_id(obj_id);
-	int count_slots = get_available_slots_cnt(obj_id);
-	bool start_inserting = false;
-	int slot_cnt = 0;
-	int obj_cnt=input_objects.size();
-	while(obj_cnt--){
-		TimelineChild_instance* one_obj=input_objects[obj_cnt];
-		TimelineDepthLayer* new_depth_layer=NULL;
-		slot_cnt++;
-		if((count_slots>0)&&((layer_id+slot_cnt)<this->depth_layers.size())){
-			// a depth layer is already available and free for this object
-			count_slots--;
-			new_depth_layer=this->depth_layers[layer_id+slot_cnt];
-		}
-		else{
-			// we need to insert a new depth layer at the bottom 
-			new_depth_layer = new TimelineDepthLayer();
-			if(frame_nr>0){
-				TimelineDepthObject* depth_obj2 = new TimelineDepthObject();
-				depth_obj2->obj_id=-1;
-				depth_obj2->start_frame=0;
-				depth_obj2->end_frame=frame_nr-1;
-				depth_obj2->in_use=false;
-				new_depth_layer->depth_objs.push_back(depth_obj2);
-			}
-			this->depth_layers.insert(this->depth_layers.begin()+layer_id+slot_cnt, new_depth_layer);
-		}
-		if(new_depth_layer==NULL){
-
-		}
-		else{
-			TimelineDepthObject* depth_obj;
-			bool add_new_obj=true;
-			if(new_depth_layer->depth_objs.back()->obj_id<0){
-				if(new_depth_layer->depth_objs.back()->start_frame==frame_nr){
-					add_new_obj=false;
-					depth_obj=new_depth_layer->depth_objs.back();
+	
+	TimelineChild_instance* parent = NULL;
+	
+	std::vector<TimelineDepthLayer*> new_layers;
+	for(TimelineDepthLayer* layer:this->depth_layers){
+		if(layer->depth_objs.size()>0){
+			std::vector<TimelineChild_instance*> new_childs;
+			for(TimelineChild_instance* child:layer->depth_objs){
+				if(!child->graphic_instance){// we dont need graphic clip childs anymore
+					new_childs.push_back(child);
 				}
 			}
-			if(add_new_obj){
-				depth_obj = new TimelineDepthObject();
-				new_depth_layer->depth_objs.push_back(depth_obj);
-			}		
-			one_obj->depth_obj=depth_obj;
-			depth_obj->obj_id=one_obj->obj_id;
-			depth_obj->child=one_obj->child;
-			depth_obj->start_frame=frame_nr;
-			depth_obj->end_frame=frame_nr;
+			if(new_childs.size()!=layer->depth_objs.size()){
+				layer->depth_objs.clear();
+				for(TimelineChild_instance* child:new_childs)
+					layer->depth_objs.push_back(child);
+				new_childs.clear();
+			}
+			if(layer->depth_objs.size()>0)
+				new_layers.push_back(layer);
 		}
 	}
+
+	/*
+	// first we want to make sure that we dont waste depth space.
+	// e.g. in AS2 the depth for every object should be as small as possible.
+	int layer_cnt=this->depth_layers.size()-1;
+	while(layer_cnt--){
+		TimelineDepthLayer* layer = this->depth_layers[layer_cnt];
+		std::vector<TimelineChild_instance*> new_depth_obj;
+		for(TimelineChild_instance* child : layer->depth_objs){
+			int cnt_up=layer_cnt+1;
+			int merge_into_id=-1;
+			while ((cnt_up<this->depth_layers.size())&&(!this->depth_layers[cnt_up]->is_occupied_on_frame_range(child->start_frame, child->end_frame))){
+				merge_into_id=cnt_up;
+				cnt_up++;
+			}
+			if(merge_into_id>=0)
+				this->depth_layers[merge_into_id]->depth_objs.push_back(child);
+			else
+				new_depth_obj.push_back(child);
+		}
+		layer->depth_objs.clear();
+		for(TimelineChild_instance* child : new_depth_obj)
+			layer->depth_objs.push_back(child);
+		new_depth_obj.clear();
+	}
+	*/
+
+	this->depth_layers.clear();
+	for(TimelineDepthLayer* one_layer: new_layers)
+		this->depth_layers.push_back(one_layer);
+
+	int cnt_obj=-16383 + ((this->depth_layers.size()-1)*3);
+	for(TimelineDepthLayer* this_layer:this->depth_layers){
+		this_layer->apply_depth(cnt_obj);
+		cnt_obj-=3;
+	}
+
 }
 
-void
-TimelineDepthManager::shift_depth_objects()
+TimelineDepthLayer* 
+TimelineDepthManager::get_available_layer_after_child(TimelineChild_instance* child)
 {
-	int layer_cnt = 0;
-	int obj_cnt=0;
-	for(TimelineDepthLayer* depth_layer:this->depth_layers){
-		if(layer_cnt>0){
-			obj_cnt=0;
-			depth_layer->merge_empty_objects();
-			for(TimelineDepthObject* depth_obj:depth_layer->depth_objs){
-				if(depth_obj->obj_id>=0){
-					// check if we can move this obj to a lower layer
-					int current_layer_cnt=layer_cnt;
-					int possible_merge=-1;
-					while (current_layer_cnt--){
-						TimelineDepthLayer* lower_layer = this->depth_layers[current_layer_cnt];
-						if(lower_layer->depth_used_for_frame_range(depth_obj->start_frame, depth_obj->end_frame)){
-							possible_merge=current_layer_cnt;
-						}
-						else{
-							current_layer_cnt=0;
-						}
-					}
-					if(possible_merge>=0){
-						this->depth_layers[possible_merge]->insert_object_at(depth_obj);
-						this->depth_layers[possible_merge]->merge_empty_objects();
-						TimelineDepthObject* new_obejct=new TimelineDepthObject();
-						new_obejct->obj_id=-1;
-						new_obejct->start_frame=depth_obj->start_frame;
-						new_obejct->end_frame=depth_obj->end_frame;
-						depth_layer->depth_objs[obj_cnt]=new_obejct;
-					}
+	int found_layer=-1;
+	int layer_cnt=0;
+	for(TimelineDepthLayer* layer:this->depth_layers){
+		if(found_layer>=0){
+			if(layer->is_occupied_on_frame(child->end_frame)){
+				int layer_cnt2=0;
+				std::vector<TimelineDepthLayer*> new_layers;
+				TimelineDepthLayer* new_layer = new TimelineDepthLayer();
+				for(TimelineDepthLayer* layer2:this->depth_layers){
+					new_layers.push_back(layer2);
+					if(layer_cnt2==found_layer)
+						new_layers.push_back(new_layer);
+					layer_cnt2++;
 				}
-				obj_cnt++;
+				this->depth_layers.clear();
+				for(TimelineDepthLayer* layer2:new_layers)
+					this->depth_layers.push_back(layer2);
+				new_layers.clear();
+				return new_layer;
 			}
-			depth_layer->merge_empty_objects();
+			else{
+				// this layer is free.
+				return layer;
+			}
 		}
+		if(layer->depth_objs.back()==child)
+			found_layer=layer_cnt;
+
 		layer_cnt++;
 	}
-
-}
-int
-TimelineDepthManager::get_available_slots_cnt_no_target_obj()
-{
-	int available_slots=0;
-	for(TimelineDepthLayer* depth_layer:this->depth_layers){
-		if(depth_layer->in_use){
-			return available_slots;
-		}
-		else{
-			available_slots++;
-		}
-	}
-	return available_slots;
-}
-int
-TimelineDepthManager:: get_available_slots_cnt(int obj_id)
-{
-	int available_slots=0;
-	bool found_obj=false;
-	for(TimelineDepthLayer* depth_layer:this->depth_layers){
-		if(depth_layer->in_use){
-			if(found_obj){
-				return available_slots;
-			}
-			if(depth_layer->depth_objs.back()->obj_id==obj_id){
-				found_obj=true;
-			}
-			available_slots=0;
-		}
-		else{
-			available_slots++;
-		}
-	}
-	return available_slots;
+	if(found_layer<0)
+		_ASSERT(0);
+	//	_ASSERT(0); //error because parent child not found;
+	// the child was the last found 
+	TimelineDepthLayer* new_layer = new TimelineDepthLayer();
+	this->depth_layers.push_back(new_layer);
+	return new_layer;
 }
 
-TimelineDepthLayer*
-TimelineDepthManager:: get_depth_obj_by_id(int obj_id)
+void 
+TimelineDepthManager::add_child_after_child(TimelineChild_instance* child, TimelineChild_instance* after_child)
 {
-	for(TimelineDepthLayer* depth_layer:this->depth_layers){
-		if(depth_layer->depth_objs.back()->obj_id==obj_id){
-			return depth_layer;
-		}
-		if(depth_layer->depth_objs.back()->obj_id==-1){
-			int cur_find=depth_layer->depth_objs.size()-1;
-			while(cur_find--){
-				if(depth_layer->depth_objs[cur_find]->obj_id==-1)
-					continue;
-				else if(depth_layer->depth_objs[cur_find]->obj_id==obj_id)
-					return depth_layer;
-				else
-					break;
-			}
-		}
+	child->parent_child=after_child;
+	if(this->depth_layers.size()==0){
+		// no layer exists. simple. create one. add child. exit
+		if(after_child!=NULL)
+			_ASSERT(0);// error because if no laye4r exist, we can not find a child.
+		TimelineDepthLayer* new_layer = new TimelineDepthLayer();
+		new_layer->add_new_child(child);
+		this->depth_layers.push_back(new_layer);
+		return;
 	}
-	return NULL;
+	if(after_child==NULL){
+		// should be added on top. check if first layer is empty. if yes, than add the object. if not, create a new layer on top
+		TimelineDepthLayer* target_layer = this->depth_layers[0];
+		if(target_layer->is_occupied_on_frame(child->end_frame)){
+			// first layer is occupied, cretae a new layer and add on top.
+			target_layer = new TimelineDepthLayer();
+			std::vector<TimelineDepthLayer*> old_layers;
+			for(TimelineDepthLayer* layer:this->depth_layers)
+				old_layers.push_back(layer);
+			this->depth_layers.clear();
+			this->depth_layers.push_back(target_layer);
+			for(TimelineDepthLayer* layer:old_layers)
+				this->depth_layers.push_back(layer);
+			old_layers.clear();
+		}
+		target_layer->add_new_child(child);
+		return;
+	}
+	TimelineDepthLayer* target_layer1 = get_available_layer_after_child(after_child);
+	target_layer1->add_new_child(child);
 }
 
-int
-TimelineDepthManager:: get_first_active_idx()
+void 
+TimelineDepthManager::remove_child(TimelineChild_instance* child)
 {
-	int cnt=0;
-	for(TimelineDepthLayer* depth_layer:this->depth_layers){
-		if(depth_layer->in_use)
-			return cnt;
-		cnt++;
+	for(TimelineDepthLayer* this_layer:this->depth_layers){
+		if(this_layer->depth_objs.back()==child){
+			this_layer->depth_objs.back()->end_frame--;
+			return;
+		}
 	}
-	return -1;
-}
-TimelineDepthObject*
-TimelineDepthManager:: get_first_active()
-{
-	for(TimelineDepthLayer* depth_layer:this->depth_layers){
-		if(depth_layer->in_use)
-			return depth_layer->depth_objs.back();
-	}
-	return NULL;
+	_ASSERT(0);
 }

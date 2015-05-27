@@ -27,6 +27,8 @@ FrameCommandDisplayObject::FrameCommandDisplayObject() :
 
 	this->adobe_depth_change=false;
 	this->display_matrix=new GEOM::MATRIX2x3();
+	this->bkp_matrix=new GEOM::MATRIX2x3();
+	this->bkp_color_matrix=new GEOM::ColorTransform();	
 	this->color_matrix=new GEOM::ColorTransform();
 	this->hasDisplayMatrix=false;
 	this->hasColorMatrix=false;
@@ -43,6 +45,8 @@ FrameCommandDisplayObject::FrameCommandDisplayObject() :
 	this->child_id=0;
 	this->cur_depth=0;
 	this->visible=true;
+	this->does_something=false;
+	this->add_at_index=0;
 
 }
 
@@ -87,6 +91,7 @@ FrameCommandDisplayObject::get_hasVisiblitiyChange(){
 void
 FrameCommandDisplayObject::set_display_matrix(TYPES::F64* display_matrix)
 {
+	this->does_something=true;
 	this->hasDisplayMatrix=true;
 	this->display_matrix->set(display_matrix);
 }
@@ -98,6 +103,7 @@ FrameCommandDisplayObject::get_display_matrix()
 void
 FrameCommandDisplayObject::set_color_matrix(TYPES::F64* color_matrix)
 {
+	this->does_something=true;
 	this->hasColorMatrix=true;
     this->color_matrix->set(color_matrix);
 }
@@ -114,11 +120,13 @@ FrameCommandDisplayObject::get_instanceName()
 void
 FrameCommandDisplayObject::set_instanceName(const std::string& instanceName)
 {
+	this->does_something=true;
     this->instanceName = instanceName;
 }
 void
 FrameCommandDisplayObject::set_visible(bool visible)
 {
+	this->does_something=true;
 	this->hasVisiblitiyChange=true;
 	this->visible = visible;
 }
@@ -135,11 +143,13 @@ FrameCommandDisplayObject::get_blendmode()
 void
 FrameCommandDisplayObject::set_blendmode(int blendMode)
 {
+	this->does_something=true;
 	this->blendMode=blendMode;
 }
 void
 FrameCommandDisplayObject::set_clipDepth(TYPES::UINT32 clipDepth)
 {
+	this->does_something=true;
 	this->hasTargetMaskIDs=true;
 	this->clip_depth = clipDepth;
 }
@@ -183,8 +193,11 @@ FrameCommandDisplayObject::get_command_info_specific(std::string& info)
 		info = "	Update";
 
 	if(this->child!=NULL)
-		info += " | child-name: "+this->child->awd_block->get_name()+" | child-id: "+std::to_string(this->child->id)+" | depth: "+std::to_string(this->cur_depth);
+		info += " | child-name: "+this->child->child->awd_block->get_name()+" | child-id: "+std::to_string(this->child->child->id)+" | depth: "+std::to_string(this->child->depth);
+	else{
+		info += " | obj_id: "+std::to_string(this->get_objID())+" | child-id: "+std::to_string(this->child->child->id)+" | depth: "+std::to_string(this->child->depth);
 	
+	}
 	if(this->get_hasTargetMaskIDs()){
 		info +=" | mask-id: ";
 		for(int one_mask_id:this->mask_ids)
@@ -438,9 +451,9 @@ FrameCommandDisplayObject::write_command_specific(FILES::FileWriter * fileWriter
 	if((this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD)||(this->get_command_type()==frame_command_type::FRAME_COMMAND_UPDATE)){
 		
 		std::bitset<16> props_flag(0);
-		fileWriter->writeUINT16(this->child->id);
+		fileWriter->writeUINT16(this->child->child->id);
 		if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			fileWriter->writeINT16(this->cur_depth);
+			fileWriter->writeINT16(this->child->depth);
 			if(this->instanceName.size()>0)
 				props_flag.set(6, true);
 		}

@@ -6,6 +6,7 @@
 #include "blocks/anim_set.h"
 #include "blocks/animator.h"
 #include "blocks/audio.h"
+#include "blocks/billboard.h"
 #include "blocks/bitmap_texture.h"
 #include "blocks/camera.h"
 #include "blocks/command.h"

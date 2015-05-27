@@ -39,13 +39,14 @@ MATRIX2x3::set(TYPES::F64 *matrix_data)
 {
 	// no values given. set from 
 	if (matrix_data == NULL) {
-		this->matrix_data[0]  = 1.0;		this->matrix_data[1]  = 0.0;		
-		this->matrix_data[2]  = 0.0; 		this->matrix_data[3]  = 1.0;		
+		this->matrix_data[0]  = 1.0;		this->matrix_data[1]  = 0.0;
+		this->matrix_data[2]  = 0.0; 		this->matrix_data[3]  = 1.0;
 		this->matrix_data[4]  = 0.0;		this->matrix_data[5]  = 0.0; 
 	}
 	else{
-		for(int cnt=0; cnt<6; cnt++)
+		for(int cnt=0; cnt<6; cnt++){
 			this->matrix_data[cnt]=matrix_data[cnt];
+		}
 	}
 
 	return result::AWD_SUCCESS;
@@ -54,6 +55,53 @@ MATRIX2x3::set(TYPES::F64 *matrix_data)
 result
 MATRIX2x3::read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *)
 {
+	return result::AWD_SUCCESS;
+}
+result
+MATRIX2x3::append(MATRIX2x3* mtx)
+{
+	TYPES::F64 a1 =  this->matrix_data[0];
+	TYPES::F64 b1 =  this->matrix_data[1];
+	TYPES::F64 c1 =  this->matrix_data[2];
+	TYPES::F64 d1 =  this->matrix_data[3];
+	TYPES::F64 tx1 =  this->matrix_data[4];
+	TYPES::F64 ty1 =  this->matrix_data[5];
+	
+	TYPES::F64* input_mtx=mtx->get();
+
+	this->matrix_data[0]= a1 * input_mtx[0] + b1 * input_mtx[2];
+	this->matrix_data[1]= a1 * input_mtx[1] + b1 * input_mtx[3];
+
+	this->matrix_data[2]= c1 * input_mtx[0] + d1 * input_mtx[2];
+	this->matrix_data[3]= c1 * input_mtx[1] + d1 * input_mtx[3];
+
+	this->matrix_data[4]= tx1 * input_mtx[0] + ty1 * input_mtx[2] + input_mtx[4];
+	this->matrix_data[5]= tx1 * input_mtx[1] + ty1 * input_mtx[3] + input_mtx[5];
+
+	return result::AWD_SUCCESS;
+}
+
+result
+MATRIX2x3::prepend(MATRIX2x3* mtx)
+{	
+	TYPES::F64* input_mtx=mtx->get();
+
+	TYPES::F64 a2 =  this->matrix_data[0];
+	TYPES::F64 b2 =  this->matrix_data[1];
+	TYPES::F64 c2 =  this->matrix_data[2];
+	TYPES::F64 d2 =  this->matrix_data[3];
+	TYPES::F64 tx2 = this->matrix_data[4];
+	TYPES::F64 ty2 = this->matrix_data[5];
+
+	this->matrix_data[0]= input_mtx[0] * a2 + input_mtx[1] * c2;
+	this->matrix_data[1]= input_mtx[0] * b2 + input_mtx[1] * d2;
+
+	this->matrix_data[2]= input_mtx[2] * a2 + input_mtx[3] * c2;
+	this->matrix_data[3]= input_mtx[2] * b2 + input_mtx[3] * d2;
+
+	this->matrix_data[4]= input_mtx[4] * a2 + input_mtx[5] * c2 + tx2;
+	this->matrix_data[5]= input_mtx[4] * b2 + input_mtx[5] * d2 + ty2;
+
 	return result::AWD_SUCCESS;
 }
 
@@ -200,13 +248,13 @@ ColorTransform::set(TYPES::F64 *matrix_data)
 {
 	// no values given. set from 
 	if (matrix_data == NULL) {
-		this->matrix_data[0]  = 1.0;
+		this->matrix_data[0]  = 1.0;//r
 		this->matrix_data[1]  = 0.0;
-		this->matrix_data[2]  = 1.0;
+		this->matrix_data[2]  = 1.0;//g
 		this->matrix_data[3]  = 0.0;
-		this->matrix_data[4]  = 1.0;
+		this->matrix_data[4]  = 1.0;//b
 		this->matrix_data[5]  = 0.0;
-		this->matrix_data[6]  = 1.0;
+		this->matrix_data[6]  = 1.0;//a
 		this->matrix_data[7]  = 0.0;
 	}
 	else{
@@ -216,7 +264,31 @@ ColorTransform::set(TYPES::F64 *matrix_data)
 
 	return result::AWD_SUCCESS;
 }
+result
+ColorTransform:: prepend(ColorTransform* mtx)
+{
+	TYPES::F64* mtx2=mtx->get();
+	
+	TYPES::F64 mr =  mtx2[0];
+	TYPES::F64 or =  mtx2[1];
+	TYPES::F64 mg =  mtx2[2];
+	TYPES::F64 og =  mtx2[3];
+	TYPES::F64 mb =  mtx2[4];
+	TYPES::F64 ob =  mtx2[5];
+	TYPES::F64 ma =  mtx2[6];
+	TYPES::F64 oa =  mtx2[7];
+	
+	this->matrix_data[0]= mr * this->matrix_data[0];
+	this->matrix_data[1]= or +  (this->matrix_data[1] * mr);
+	this->matrix_data[2]= mg * this->matrix_data[2];
+	this->matrix_data[3]= og +  (this->matrix_data[3] * mg);
+	this->matrix_data[4]= mb * this->matrix_data[4];
+	this->matrix_data[5]= ob +  (this->matrix_data[5] * mb);
+	this->matrix_data[6]= ma * this->matrix_data[6];
+	this->matrix_data[7]= oa +  (this->matrix_data[7] * ma);
 
+	return result::AWD_SUCCESS;
+}
 result
 ColorTransform::read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *)
 {

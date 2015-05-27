@@ -53,8 +53,8 @@ namespace AWD
 				std::vector<FrameCommandBase*> child_commands; // if this are filled, the commadn will store multiple obj-ids instead of just one
 				FrameCommandBase* prev_frame;
 				TYPES::UINT32 child_id;
-				PotentialTimelineChild* child;
-				TimelineChild_instance* child_instance; //used for remove command only
+				TimelineChild_instance* graphic_instance;
+				TimelineChild_instance* child;
 				bool isUsed;// if true than the command will be "add" not "update"
 				AWD::result get_command_info(std::string& info);
 				void set_object_block(BASE::AWDBlock *);
@@ -63,8 +63,6 @@ namespace AWD
 				void set_layerID(TYPES::UINT32);
 				std::string& get_objectType();
 				void set_objectType(const std::string&);
-				std::string& get_resID();
-				void set_resID(const std::string&);
 				TYPES::UINT32 get_objID();
 				void set_objID(TYPES::UINT32);
 				TYPES::UINT32 get_depth();
@@ -97,6 +95,7 @@ namespace AWD
         public:
             FrameCommandRemoveObject();
             ~FrameCommandRemoveObject();
+			int remove_at_index;
             
 		};
 		class FrameCommandDisplayObject :
@@ -116,7 +115,6 @@ namespace AWD
 				bool hasDepthChange;
 				bool hasFilterChange;
 				bool hasBlendModeChange;
-				bool hasTargetMaskIDs;
 				bool hasVisiblitiyChange;
 
 			protected:
@@ -126,18 +124,24 @@ namespace AWD
 				double compare_to_command_specific(FrameCommandBase *);
 				void update_by_command_specific(FrameCommandBase *);
 				AWD::result get_command_info_specific(std::string& info);
-
+				
 			public:
 				FrameCommandDisplayObject();
 				~FrameCommandDisplayObject();
-
+				
+				bool hasTargetMaskIDs;
+				GEOM::MATRIX2x3* bkp_matrix;
+				GEOM::ColorTransform* bkp_color_matrix;
+				bool does_something;
+				int add_at_index;
 				int update_from_prev();
 				bool adobe_depth_change;
 				int target_mask_id;
 				bool isMask;
 				bool calculated_mask;
 				std::vector<TYPES::INT32> mask_ids;
-				double compareColorMatrix(TYPES::F64* color_matrix);		
+				std::vector<TimelineChild_instance*> mask_childs;
+				double compareColorMatrix(TYPES::F64* color_matrix);
 				double comparedisplaMatrix(TYPES::F64* display_matrix);
 				bool get_hasDisplayMatrix();
 				bool get_hasColorMatrix();

@@ -23,6 +23,7 @@ FrameCommandRemoveObject::FrameCommandRemoveObject() :
 FrameCommandBase()
 { 
 	this->set_command_type(frame_command_type::FRAME_COMMAND_REMOVE);
+	this->remove_at_index=0;
     
 }
 
@@ -33,10 +34,10 @@ result
 FrameCommandRemoveObject::get_command_info_specific(std::string& info)
 {
 	info = "	Remove objects at depth : ";
-	info += std::to_string(this->cur_depth)+" | ";//+" name: "+this->child->awd_block->get_name()+"\n";
+	info += std::to_string(this->child->depth)+" | ";//+" name: "+this->child->awd_block->get_name()+"\n";
 	if(this->child_commands.size()>0){
 		for(FrameCommandBase* child_cmd:this->child_commands){
-			info += std::to_string(child_cmd->cur_depth)+" | ";//+" name: "+child_cmd->child->awd_block->get_name()+"\n";
+			info += std::to_string(child_cmd->child->depth)+" | ";//+" name: "+child_cmd->child->awd_block->get_name()+"\n";
 		}
 	}
 	return AWD::result::AWD_SUCCESS;
@@ -91,9 +92,9 @@ FrameCommandRemoveObject::write_command_specific(FILES::FileWriter * fileWriter,
 	fileWriter->writeUINT8(TYPES::UINT8(ANIM::frame_command_type::FRAME_COMMAND_REMOVE));// command type
 	TYPES::UINT16 num_commands=TYPES::UINT16(this->child_commands.size()+1);
 	fileWriter->writeUINT16(num_commands);	// number of commands
-	fileWriter->writeINT16(this->cur_depth);	// first target depth
+	fileWriter->writeINT16(this->child->depth);	// first target depth
 	for(FrameCommandBase* child_cmd:this->child_commands){
-		fileWriter->writeINT16(child_cmd->cur_depth);// target_depth
+		fileWriter->writeINT16(child_cmd->child->depth);// target_depth
 	}
 	
     //this->command_properties->write_attributes(fileWriter, blockSettings);

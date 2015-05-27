@@ -101,88 +101,6 @@ AWDProject::get_blocks_for_external_ids()
 	if (this->all_blocks.find(BLOCK::block_type::TIMELINE) == this->all_blocks.end())
 		return result::AWD_ERROR;
 	
-	for(AWDBlock* one_awd_block : this->all_blocks[BLOCK::block_type::TIMELINE]){
-		BLOCKS::Timeline* this_timeline = reinterpret_cast<BLOCKS::Timeline*>(one_awd_block);
-		if(!this_timeline->is_finalized){
-			this_timeline->is_finalized=true;
-			this_timeline->set_fps(this->settings->get_fps());
-			std::vector<ANIM::TimelineFrame*> thisFrames=this_timeline->get_frames();
-			TYPES::UINT32 frame_cnt=1;
-			for (ANIM::TimelineFrame * f : thisFrames) 
-			{
-				TYPES::UINT32 shape_cnt=1;
-				std::vector<ANIM::FrameCommandBase*> thisCommands=f->get_commands();
-				for (ANIM::FrameCommandBase * c : thisCommands) 
-				{
-					if((c->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD)||(c->get_command_type()==ANIM::frame_command_type::AWD_FRAME_COMMAND_SOUND)){
-						std::string resID=c->get_resID();
-						if (resID.c_str()!=NULL) {
-							AWDBlock * thisBlock = this->get_block_by_external_id_shared(resID);
-							if(thisBlock==NULL)
-								res=result::AWD_ERROR;//todo: better error-managment
-							else{
-								if(thisBlock->get_type()==BLOCK::block_type::TEXT_ELEMENT){
-									//ANIM::FrameCommandDisplayObject* dfc = reinterpret_cast<ANIM::FrameCommandDisplayObject*>(c);
-									//thisBlock->set_name(dfc->get_instanceName());
-								}
-								else if(thisBlock->get_type()==BLOCK::block_type::SIMPLE_MATERIAL){
-									// this is a bitmap texture. create a rectangle shape for it.
-									BLOCKS::Material* thisMat = reinterpret_cast<BLOCKS::Material*>(thisBlock);
-									BLOCKS::Billboard* thisBillBoard = reinterpret_cast<BLOCKS::Billboard*>(this->get_block_by_external_id_and_type(thisBlock->get_external_id(), block_type::BILLBOARD, true));
-									thisBillBoard->set_name("billboard_"+thisMat->get_texture()->get_name());
-									thisBillBoard->set_external_id(thisBlock->get_external_id());
-									thisBillBoard->set_material(thisMat);
-									thisBlock=thisBillBoard;
-								}
-								else if(thisBlock->get_type()==BLOCK::block_type::TRI_GEOM){
-									BLOCKS::Geometry* this_geom = reinterpret_cast<BLOCKS::Geometry*>(thisBlock);
-									ANIM::FrameCommandDisplayObject* dfc = reinterpret_cast<ANIM::FrameCommandDisplayObject*>(c);
-									GEOM::MATRIX2x3* this_shape_mtx2x3=this_geom->has_res_id_geom(resID);
-									if(this_shape_mtx2x3!=NULL){
-										TYPES::F64* this_shape_mtx=this_shape_mtx2x3->get();
-										TYPES::F64* this_mesh_mtx=dfc->get_display_matrix()->get();
-										TYPES::F64* new_mesh_mtx=(TYPES::F64*)malloc(6*8);
-										TYPES::F64 a1 =  this_mesh_mtx[0];
-										TYPES::F64 b1 =  this_mesh_mtx[1];
-										TYPES::F64 c1 =  this_mesh_mtx[2];
-										TYPES::F64 d1 =  this_mesh_mtx[3];
-										TYPES::F64 tx1 =  this_mesh_mtx[4];
-										TYPES::F64 ty1 =  this_mesh_mtx[5];
-
-										TYPES::F64 a2 =  this_shape_mtx[0];
-										TYPES::F64 b2 =  this_shape_mtx[1];
-										TYPES::F64 c2 =  this_shape_mtx[2];
-										TYPES::F64 d2 =  this_shape_mtx[3];
-										TYPES::F64 tx2 =  this_shape_mtx[4];
-										TYPES::F64 ty2 =  this_shape_mtx[5];
-										new_mesh_mtx[0]= a1 * a2 + b1 * c2;
-										new_mesh_mtx[1]= a1 * b2 + b1 * d2;
-
-										new_mesh_mtx[2]= c1 * a2 + d1 * c2;
-										new_mesh_mtx[3]= c1 * b2 + d1 * d2;
-
-										new_mesh_mtx[4]= tx1 * a2 + ty1 * c2 + tx2;
-										new_mesh_mtx[5]= tx1 * b2 + ty1 * d2 + ty2;
-
-										dfc->set_display_matrix(new_mesh_mtx);
-									}
-									// apply the matrix to already existing matrix, or apply as new one.
-									thisBlock=this_geom->get_mesh_instance();
-									shape_cnt++;
-								}
-								else if(thisBlock->get_type()==BLOCK::block_type::TIMELINE){
-									BLOCKS::Timeline* this_timeline = reinterpret_cast<BLOCKS::Timeline*>(thisBlock);
-									this_timeline->instance_cnt++;
-								}
-								c->set_object_block(thisBlock);
-							}
-						}
-					}
-				}
-				frame_cnt+=f->get_frame_duration();
-			}
-		}
-	}
 	this->clear_external_ids();
 	return res;
 }
@@ -219,6 +137,18 @@ AWDProject::get_file_for_path(const std::string& path, AWDFile**  awdFile){
 	return result::AWD_SUCCESS;
 }
 
+result
+AWDProject::finalize_timelines()
+{
+	if (this->all_blocks.find(BLOCK::block_type::TIMELINE) == this->all_blocks.end())
+		return result::AWD_ERROR;
+	
+	for(AWDBlock* one_awd_block : this->all_blocks[BLOCK::block_type::TIMELINE]){
+		BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline* >(one_awd_block);
+		timeline->finalize();
+	}
+	return result::AWD_SUCCESS;
+}
 result
 AWDProject::export_file()
 {

@@ -140,6 +140,8 @@ namespace AWD
 				~MATRIX2x3();
 				result read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *);
 				result write_to_file(FILES::FileWriter*, SETTINGS::BlockSettings *);
+				result prepend(MATRIX2x3*);
+				result append(MATRIX2x3*);
 				result set(TYPES::F64* matrix_data);
 				TYPES::F64* get();
 
@@ -178,6 +180,7 @@ namespace AWD
 				result read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *);
 				result write_to_file(FILES::FileWriter*, SETTINGS::BlockSettings *);
 				result set(TYPES::F64* matrix_data);
+				result prepend(ColorTransform* matrix_data);
 				TYPES::F64* get();
 
 		};

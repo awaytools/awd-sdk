@@ -16,6 +16,7 @@
 #include "blocks/animator.h"
 #include "blocks/audio.h"
 #include "blocks/bitmap_texture.h"
+#include "blocks/billboard.h"
 #include "blocks/camera.h"
 #include "blocks/command.h"
 #include "blocks/cube_texture.h"
@@ -133,7 +134,8 @@ namespace AWD
 			*	@resultAWD::result
 			*/
 			result export_file();	
-
+			()
+			result finalize_timelines();	
 			/**
 			* \brief Imports the active-file. This should result in a AWDFile that is fully processed and ready to export again.
 			* 

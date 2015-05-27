@@ -16,8 +16,6 @@
 #include "files/file_reader.h"
 
 
-
-
 using namespace AWD;
 using namespace AWD::TYPES;
 using namespace AWD::FILES;
@@ -216,8 +214,10 @@ AWDFile::process()
 			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
 				if(blockInstance->get_process_state()==process_state::UNPROCESSED){
 					BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline*>( blockInstance->get_awdBlock());
-					if((timeline->instance_cnt==0)&&(!timeline->get_is_scene()))
-						blockInstance->add_with_dependencies();
+					if(!timeline->is_grafic_instance){
+						if((timeline->instance_cnt==0)&&(!timeline->get_is_scene()))
+							blockInstance->add_with_dependencies();
+					}
 				}
 			}
 		}
@@ -234,8 +234,10 @@ AWDFile::process()
 						if(blockInstance->get_awdBlock()->is_category(BLOCK::category::SCENE_OBJECT)){
 							if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TIMELINE){
 								BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline*>( blockInstance->get_awdBlock());
-								if(timeline->get_is_scene())
-									blockInstance->add_with_dependencies();
+								if(!timeline->is_grafic_instance){
+									if(timeline->get_is_scene())
+										blockInstance->add_with_dependencies();
+								}
 							}
 						}
 					}

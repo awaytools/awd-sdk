@@ -44,46 +44,71 @@ namespace AWD
 			}
 		};
 		
+		struct TimelineChild_instance;
+		struct Graphic_instance
+		{
+			BLOCKS::Timeline* graphic_timeline;
+			ANIM::TimelineChild_instance* graphic_child;
+			std::vector<ANIM::TimelineChild_instance*> graphic_childs;
+			FrameCommandDisplayObject* graphic_command;
+			FrameCommandDisplayObject* current_command;
+			bool dirty_masks;//used for graphic clip merging
+			int offset_frames;
+			Graphic_instance()
+			{
+				graphic_timeline=NULL;
+				graphic_child=NULL;
+				current_command=NULL;
+				graphic_command=NULL;
+				offset_frames=0;
+				dirty_masks=true;
+			}
+			void remove_child(ANIM::TimelineChild_instance* child){
+				std::vector<ANIM::TimelineChild_instance*> new_graphic_childs;
+				for(ANIM::TimelineChild_instance* existingChild:graphic_childs){
+					if(existingChild!=child){
+						new_graphic_childs.push_back(existingChild);
+					}
+				}
+				graphic_childs.clear();
+				for(ANIM::TimelineChild_instance* existingChild:new_graphic_childs)
+					graphic_childs.push_back(existingChild);
+				new_graphic_childs.clear();
+			}
+		};
 		
 		struct TimelineChild_instance
 		{
 			ANIM::PotentialTimelineChild* child;
-			BLOCKS::Timeline* graphic_timeline;
-			FrameCommandDisplayObject* graphic_command;
-			FrameCommandDisplayObject* current_command;
-			ANIM::TimelineChild_instance* graphic_clip_origin;
 			ANIM::TimelineChild_instance* parent_child;
-			ANIM::TimelineChild_instance* insert_at_child;
-			std::vector<ANIM::TimelineChild_instance*> graphic_childs;
+			ANIM::Graphic_instance* graphic;
+			ANIM::TimelineChild_instance* parent_grafic;
+			GEOM::MATRIX2x3* current_matrix;
+			GEOM::ColorTransform* current_ct;
 			
-			bool is_masked;//used for graphic clip merging
-			bool is_mask;//used for graphic clip merging
-			bool dirty_masks;//used for graphic clip merging
-			bool graphic_instance;
-			bool dirty;//used for graphic clip merging
-			int offset_frames;
+			bool is_masked;			//used for graphic clip merging
+			bool is_mask;			//used for graphic clip merging
 			int depth;
-			int obj_id;
 			int start_frame;
 			int end_frame;
 			TimelineChild_instance()
 			{
+				current_matrix=new GEOM::MATRIX2x3();
+				current_ct=new GEOM::ColorTransform();
+				parent_grafic=NULL;
+				parent_child=NULL;
 				is_masked=false;
 				is_mask=false;
 				child=NULL;
-				graphic_timeline=NULL;
-				graphic_clip_origin=NULL;
-				parent_child=NULL;
-				insert_at_child=NULL;
-				current_command=NULL;
-				graphic_command=NULL;
-				graphic_instance=false;
-				dirty=false;
-				offset_frames=0;
+				graphic=NULL;
 				depth=0;
-				obj_id=0;
 				start_frame=1;
 				end_frame=1;
+			}
+			~TimelineChild_instance()
+			{
+				delete current_matrix;
+				delete current_ct;
 			}
 		};
 		class TimelineDepthLayer
@@ -112,11 +137,12 @@ namespace AWD
 				~TimelineDepthManager();
 
 				std::vector<TimelineDepthLayer*> depth_layers;
-
-				void remove_child(TimelineChild_instance* child);
+				bool use_as2;
+				void apply_remove_command(FrameCommandRemoveObject* remove_cmd);
 				TimelineDepthLayer* get_available_layer_after_child(TimelineChild_instance* child);
 				TimelineChild_instance* get_parent_for_graphic_clip(TimelineChild_instance* child);
 				
+				void get_children_at_frame(TYPES::UINT32 frame_nr, std::vector<TimelineChild_instance*>&);
 				void add_child_after_child(TimelineChild_instance* child, TimelineChild_instance* after_child);
 				void advance_frame(TYPES::UINT32 frame);
 				void apply_depth();

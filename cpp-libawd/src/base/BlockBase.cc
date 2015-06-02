@@ -47,6 +47,17 @@ AWDBlock::get_scene_names(std::string& scene_names_str){
 	}
 }
 
+				void set_ressource_ids(std::vector<std::string>& ids);
+				std::vector<std::string>& get_ressource_ids();
+void 
+AWDBlock::set_ressource_ids(std::vector<std::string>& ids)
+{	
+	this->ressource_ids=ids;
+}
+std::vector<std::string>
+AWDBlock::get_ressource_ids(){
+	return this->ressource_ids;
+}
 void 
 AWDBlock::add_scene_name(const std::string& scene_name){
 	for(std::string id:this->scene_names){

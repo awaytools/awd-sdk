@@ -207,6 +207,7 @@ AWDFile::process()
 			}
 		}
 	}
+	
 	// now export all library-symbols. 
 	// this are timelines that are not on the stage of any other timeline, and are no scene	
 	for(BlockInstance* blockInstance : unordered_blocks){
@@ -222,6 +223,7 @@ AWDFile::process()
 			}
 		}
 	}
+
 	// now export all scenes 
 	//if(this->settings->get_export_all()){
 		for(BlockInstance* blockInstance : unordered_blocks){
@@ -245,6 +247,7 @@ AWDFile::process()
 			//}
 		}
 	//}
+	
 	TYPES::UINT32 addr_cnt=0;
 	for(BlockInstance* blockInstance : this->block_instances){
 		blockInstance->set_addr(addr_cnt);

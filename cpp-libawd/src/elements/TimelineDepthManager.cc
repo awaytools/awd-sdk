@@ -79,10 +79,13 @@ TimelineDepthLayer::add_new_child(TimelineChild_instance* new_obj)
 
 TimelineDepthManager::TimelineDepthManager() 
 {
+	this->use_as2=true;
 }
 
 TimelineDepthManager::~TimelineDepthManager()
 {
+	for(TimelineDepthLayer* layer:this->depth_layers)
+		delete layer;
 }
 
 
@@ -95,7 +98,7 @@ TimelineDepthManager::get_parent_for_graphic_clip(TimelineChild_instance* child)
 	for(TimelineDepthLayer* layer:this->depth_layers){
 		if(found_layer>=0){
 			if(layer->is_occupied_on_frame(child->end_frame)){
-				if(layer->depth_objs.back()->graphic_clip_origin==child)
+				if(layer->depth_objs.back()->parent_grafic==child)
 					return_child=layer->depth_objs.back();
 				else
 					return return_child;
@@ -131,7 +134,7 @@ TimelineDepthManager::apply_depth()
 		if(layer->depth_objs.size()>0){
 			std::vector<TimelineChild_instance*> new_childs;
 			for(TimelineChild_instance* child:layer->depth_objs){
-				if(!child->graphic_instance){// we dont need graphic clip childs anymore
+				if(child->graphic==NULL){// we dont need graphic clip childs anymore
 					new_childs.push_back(child);
 				}
 			}
@@ -227,6 +230,17 @@ TimelineDepthManager::get_available_layer_after_child(TimelineChild_instance* ch
 }
 
 void 
+TimelineDepthManager::get_children_at_frame(TYPES::UINT32 frame_nr, std::vector<TimelineChild_instance*>& return_childs)
+{
+	for(TimelineDepthLayer* this_layer:this->depth_layers){
+		if(this_layer->depth_objs.size()>0){
+			if(this_layer->depth_objs.back()->end_frame==frame_nr){
+				return_childs.push_back(this_layer->depth_objs.back());
+			}
+		}
+	}
+}
+void 
 TimelineDepthManager::add_child_after_child(TimelineChild_instance* child, TimelineChild_instance* after_child)
 {
 	child->parent_child=after_child;
@@ -262,13 +276,15 @@ TimelineDepthManager::add_child_after_child(TimelineChild_instance* child, Timel
 }
 
 void 
-TimelineDepthManager::remove_child(TimelineChild_instance* child)
+TimelineDepthManager::apply_remove_command(FrameCommandRemoveObject* remove_cmd)
 {
-	for(TimelineDepthLayer* this_layer:this->depth_layers){
-		if(this_layer->depth_objs.back()==child){
-			this_layer->depth_objs.back()->end_frame--;
-			return;
+	if(this->use_as2){
+		for(TimelineDepthLayer* this_layer:this->depth_layers){
+			if(this_layer->depth_objs.back()==remove_cmd->child){
+				this_layer->depth_objs.back()->end_frame--;
+				return;
+			}
 		}
+		_ASSERT(0);
 	}
-	_ASSERT(0);
 }

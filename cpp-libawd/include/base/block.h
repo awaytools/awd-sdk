@@ -77,6 +77,8 @@ namespace AWD{
 				AWDBlock(BLOCK::block_type, const std::string&);
 				virtual ~AWDBlock();
 			
+				void set_ressource_ids(std::vector<std::string>& ids);
+				std::vector<std::string> get_ressource_ids();
 				int inc_id;
 				TYPES::UINT32 byte_cnt;
 				std::vector<std::string> scene_names;

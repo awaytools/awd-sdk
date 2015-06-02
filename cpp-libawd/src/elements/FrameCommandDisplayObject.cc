@@ -12,6 +12,10 @@
 #include <bitset>
 #include "files/file_writer.h"
 
+#include "Stdafx.h"
+using namespace IceCore;
+#define SORTER	RadixSort
+
 using namespace AWD;
 using namespace AWD::GEOM;
 using namespace AWD::TYPES;
@@ -21,37 +25,34 @@ using namespace AWD::SETTINGS;
 using namespace AWD::ANIM;
  
 
-FrameCommandDisplayObject::FrameCommandDisplayObject() :
-	FrameCommandBase()
+FrameCommandDisplayObject::FrameCommandDisplayObject()
 {
-
-	this->adobe_depth_change=false;
+	//this->prev_obj=NULL;
 	this->display_matrix=new GEOM::MATRIX2x3();
-	this->bkp_matrix=new GEOM::MATRIX2x3();
-	this->bkp_color_matrix=new GEOM::ColorTransform();	
 	this->color_matrix=new GEOM::ColorTransform();
 	this->hasDisplayMatrix=false;
 	this->hasColorMatrix=false;
-	this->hasDepthChange=false;
-	this->hasFilterChange=false;
 	this->hasBlendModeChange=false;
 	this->hasTargetMaskIDs=false;
 	this->hasVisiblitiyChange=false;
 	this->clip_depth=0;
-	this->target_mask_id=-2;
 	this->blendMode=0;
 	this->isMask=false;
 	this->calculated_mask=false;
-	this->child_id=0;
-	this->cur_depth=0;
 	this->visible=true;
-	this->does_something=false;
-	this->add_at_index=0;
 
 }
 
 FrameCommandDisplayObject::~FrameCommandDisplayObject()
 {	
+	
+	for(GEOM::MATRIX2x3* mtx:this->matrix_parents)
+		delete mtx;
+	this->matrix_parents.clear();
+	
+	for(GEOM::ColorTransform* ct:this->color_transform_parents)
+		delete ct;
+	this->color_transform_parents.clear();
 	delete this->display_matrix;	
 	delete this->color_matrix;	
 }
@@ -62,14 +63,6 @@ FrameCommandDisplayObject::get_hasDisplayMatrix(){
 bool
 FrameCommandDisplayObject::get_hasColorMatrix(){
 	return this->hasColorMatrix;
-}
-bool
-FrameCommandDisplayObject::get_hasDepthChange(){
-	return this->hasDepthChange;
-}
-bool
-FrameCommandDisplayObject::get_hasFilterChange(){
-	return this->hasFilterChange;
 }
 bool
 FrameCommandDisplayObject::get_hasBlendModeChange(){
@@ -91,7 +84,6 @@ FrameCommandDisplayObject::get_hasVisiblitiyChange(){
 void
 FrameCommandDisplayObject::set_display_matrix(TYPES::F64* display_matrix)
 {
-	this->does_something=true;
 	this->hasDisplayMatrix=true;
 	this->display_matrix->set(display_matrix);
 }
@@ -103,7 +95,6 @@ FrameCommandDisplayObject::get_display_matrix()
 void
 FrameCommandDisplayObject::set_color_matrix(TYPES::F64* color_matrix)
 {
-	this->does_something=true;
 	this->hasColorMatrix=true;
     this->color_matrix->set(color_matrix);
 }
@@ -120,13 +111,11 @@ FrameCommandDisplayObject::get_instanceName()
 void
 FrameCommandDisplayObject::set_instanceName(const std::string& instanceName)
 {
-	this->does_something=true;
     this->instanceName = instanceName;
 }
 void
 FrameCommandDisplayObject::set_visible(bool visible)
 {
-	this->does_something=true;
 	this->hasVisiblitiyChange=true;
 	this->visible = visible;
 }
@@ -143,13 +132,11 @@ FrameCommandDisplayObject::get_blendmode()
 void
 FrameCommandDisplayObject::set_blendmode(int blendMode)
 {
-	this->does_something=true;
 	this->blendMode=blendMode;
 }
 void
 FrameCommandDisplayObject::set_clipDepth(TYPES::UINT32 clipDepth)
 {
-	this->does_something=true;
 	this->hasTargetMaskIDs=true;
 	this->clip_depth = clipDepth;
 }
@@ -158,12 +145,23 @@ FrameCommandDisplayObject::get_clipDepth()
 {
 	return this->clip_depth;
 }
+bool
+FrameCommandDisplayObject::compare_mask_values(std::vector<TYPES::INT32> prev_mask_ids)
+{
+	if(prev_mask_ids.size()!=this->mask_ids.size())
+		return false;
+	for(int i=0; i<this->mask_ids.size(); i++){
+		if(this->mask_ids[i]!=prev_mask_ids[i])
+			return false;
+	}
+    return true;
+}
 double
 FrameCommandDisplayObject::compareColorMatrix(TYPES::F64* color_matrix)
 {
 	int countvalid=0;
 	
-	for(int i=0; i<20;i++){
+	for(int i=0; i<8;i++){
 		if(this->color_matrix->get()[i]==color_matrix[i]){
 			countvalid++;
 		}
@@ -185,7 +183,7 @@ FrameCommandDisplayObject::comparedisplaMatrix(TYPES::F64* display_matrix)
     return double(countvalid)/double(6.0);
 }
 result
-FrameCommandDisplayObject::get_command_info_specific(std::string& info)
+FrameCommandDisplayObject::get_command_info(std::string& info)
 {
 	if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD)
 		info = "	AddChild";
@@ -213,6 +211,15 @@ FrameCommandDisplayObject::get_command_info_specific(std::string& info)
 		for(int i = 0; i<6; i++){
 			info+=" "+std::to_string(mtx[i]);
 		}
+		
+		for(GEOM::MATRIX2x3* one_mtx:matrix_parents){
+			TYPES::F64* mtx = one_mtx->get();
+			info += "\n | transform: ";
+			for(int i = 0; i<6; i++){
+				info+=" "+std::to_string(mtx[i]);
+			}
+		}
+		
 	}
 	if(this->get_hasColorMatrix()){
 		GEOM::ColorTransform* thismtx = this->get_color_matrix();
@@ -236,131 +243,17 @@ FrameCommandDisplayObject::get_command_info_specific(std::string& info)
 	return AWD::result::AWD_SUCCESS;
 }
 
-int
-FrameCommandDisplayObject::update_from_prev()
-{
-	int has_update=0;
-	if(this->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD){
-		has_update++;
-	}
-	this->hasDisplayMatrix=false;
-	this->hasColorMatrix=false;
-	this->hasVisiblitiyChange=false;
-	this->hasBlendModeChange=false;
-	if(this->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE){
-		if(this->prev_frame!=NULL){
-			int error = 0;
-			// todo: update from prev frame
-		}
-	}
-	if(this->prev_frame==NULL){
-		TYPES::F64* display_m = this->display_matrix->get();
-		if((display_m[0]!=1)||(display_m[1]!=0.0)||(display_m[2]!=0.0)||(display_m[3]!=1.0)||(display_m[4]!=0.0)||(display_m[5]!=0.0))
-			this->hasDisplayMatrix=true;
-		TYPES::F64* color_m = this->color_matrix->get();
-		if((color_m[0]!=1.0)||(color_m[1]!=0.0)||(color_m[2]!=1.0)||(color_m[3]!=0.0)||(color_m[4]!=1.0)||(color_m[5]!=0.0)||(color_m[6]!=1.0)||(color_m[7]!=0.0))
-			this->hasColorMatrix=true;
-		if(this->blendMode!=0)
-			this->hasBlendModeChange=true;
-		if(!visible)
-			this->hasVisiblitiyChange=true;
-	}
-	else{
-		if((this->prev_frame->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD)||(this->prev_frame->get_command_type()==frame_command_type::FRAME_COMMAND_UPDATE)){
-			FrameCommandDisplayObject* prev_fd=(FrameCommandDisplayObject*)this->prev_frame;
-			TYPES::F64* display_m = this->display_matrix->get();
-			TYPES::F64* display_m_prev = prev_fd->display_matrix->get();
-			if((display_m[0]!=display_m_prev[0])||(display_m[1]!=display_m_prev[1])||(display_m[2]!=display_m_prev[2])||(display_m[3]!=display_m_prev[3])||(display_m[4]!=display_m_prev[4])||(display_m[5]!=display_m_prev[5]))
-				this->hasDisplayMatrix=true;
-			TYPES::F64* color_m = this->color_matrix->get();
-			TYPES::F64* color_m_prev = prev_fd->color_matrix->get();
-			if((color_m[0]!=color_m_prev[0])||(color_m[1]!=color_m_prev[1])||(color_m[2]!=color_m_prev[2])||(color_m[3]!=color_m_prev[3])||(color_m[4]!=color_m_prev[4])||(color_m[5]!=color_m_prev[5])||(color_m[6]!=color_m_prev[6])||(color_m[7]!=color_m_prev[7]))
-				this->hasColorMatrix=true;
-			if(this->blendMode!=prev_fd->get_blendmode())
-				this->hasBlendModeChange=true;
-			if(visible!=prev_fd->get_visible())
-				this->hasVisiblitiyChange=true;
-		}
-		else{
-			int error=0;// pürev command should not be other than add or update
-		}
-	}
-	if(this->hasColorMatrix)
-		has_update++;
-	if(this->hasDisplayMatrix)
-		has_update++;
-	if(this->hasVisiblitiyChange)
-		has_update++;
-	if(this->hasBlendModeChange)
-		has_update++;
-
-	return has_update;
-}
 double
-FrameCommandDisplayObject::compare_to_command_specific(FrameCommandBase* frameCommand)
+FrameCommandDisplayObject::compare_to_command(FrameCommandDisplayObject* frameCommand)
 {
-	FrameCommandDisplayObject* thisFC=(FrameCommandDisplayObject*)frameCommand;
-	if(thisFC==NULL){
-		return 0;
-	}
-	if(this->get_objectType()!=thisFC->get_objectType()){
-		return 0;
-	}
-	if(this->get_object_block()!=thisFC->get_object_block()){
-		return 0;
-	}
-	// the commands 
-	double equal=0.0;
-	int equalCnt=0;
-
 	
-	if((this->hasColorMatrix==thisFC->get_hasColorMatrix())&&(this->hasColorMatrix)){
-		equal += this->compareColorMatrix(thisFC->get_color_matrix()->get());
-	}	
-	else if((this->hasColorMatrix==thisFC->get_hasColorMatrix())&&(!this->hasColorMatrix)){
-		equal += 1;}	
-	equalCnt++;
-
-	if((this->hasDisplayMatrix==thisFC->get_hasDisplayMatrix())&&(this->hasDisplayMatrix)){
-		equal+=this->comparedisplaMatrix(thisFC->get_display_matrix()->get());
-	}
-	else if((this->hasDisplayMatrix==thisFC->get_hasDisplayMatrix())&&(!this->hasDisplayMatrix)){
-		equal+=1;}
-	equalCnt++;
-	
-	if(this->get_depth()!=thisFC->get_depth()){
-		double depth_equal = (1/abs(double(thisFC->get_depth()-double(this->get_depth()))));
-		if(depth_equal==1)
-			depth_equal=0.75;
-		equal+=depth_equal;
-	}
-	else{
-		equal+=1;
-	}
-	equalCnt++;
-	
-	if((this->hasVisiblitiyChange==thisFC->get_hasVisiblitiyChange())&&(this->hasVisiblitiyChange)){
-		if(this->get_visible()==thisFC->get_visible()){
-			equal+=1;
-		}	
-	}
-	else if((this->hasVisiblitiyChange==thisFC->get_hasVisiblitiyChange())&&(!this->hasVisiblitiyChange)){
-		equal+=1;}	
-	equalCnt++;
-
-	if(this->get_instanceName()==thisFC->get_instanceName()){
-		equal+=1;
-	}	
-	equalCnt++;
-	
-	return double(equal)/double(equalCnt);
+	return 0;
 }
 
 
 void
-FrameCommandDisplayObject::update_by_command_specific(FrameCommandBase* frameCommand)
+FrameCommandDisplayObject::update_by_command(FrameCommandDisplayObject* frameCommand)
 {
-	FrameCommandDisplayObject* thisFC=(FrameCommandDisplayObject*)frameCommand;
 	int equal=0;
 	this->set_objID(frameCommand->get_objID());
 	this->set_command_type(ANIM::frame_command_type::FRAME_COMMAND_UPDATE);
@@ -398,7 +291,7 @@ FrameCommandDisplayObject::update_by_command_specific(FrameCommandBase* frameCom
 
 
 TYPES::UINT32
-FrameCommandDisplayObject::calc_command_length_specific(SETTINGS::BlockSettings * blockSettings)
+FrameCommandDisplayObject::calc_command_length(SETTINGS::BlockSettings * blockSettings)
 {
 	int props_length=0;
 	if(this->get_command_type()!=frame_command_type::FRAME_COMMAND_REMOVE){
@@ -444,7 +337,172 @@ FrameCommandDisplayObject::calc_command_length_specific(SETTINGS::BlockSettings 
 }
 
 void
-FrameCommandDisplayObject::write_command_specific(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * blockSettings, AWDFile* awd_file)
+FrameCommandDisplayObject::finalize_command()
+{
+	/*
+	// check if we need matrix for this command
+	if(this->get_hasDisplayMatrix()){
+		if(prev_obj==NULL){
+			// check if it is identity. if not. apply
+			if(this->display_matrix->is_identity()){
+				this->hasDisplayMatrix=false;
+			}
+		}
+		else{
+			FrameCommandDisplayObject* previous_cmd=this->prev_obj;
+			if(previous_cmd->get_hasDisplayMatrix()){
+				if(this->comparedisplaMatrix(previous_cmd->get_display_matrix()->get())==1)// check if matrix has changed. if yes. apply.
+					this->hasDisplayMatrix=false;
+			}
+			else{
+				while(previous_cmd->prev_obj!=NULL){
+					if(previous_cmd->prev_obj->get_hasDisplayMatrix()){
+						if(this->comparedisplaMatrix(previous_cmd->prev_obj->get_display_matrix()->get())==1)// check if matrix has changed. if yes. apply.
+							this->hasDisplayMatrix=false;
+						break;
+					}
+					previous_cmd=previous_cmd->prev_obj;
+				}
+			}
+		}
+	}
+	else{
+		if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
+			if(prev_obj!=NULL){
+				this->hasDisplayMatrix=true;
+			}
+		}
+	}
+	
+	// check if we need colortransform for this command
+	if(this->get_hasColorMatrix()){
+		if(prev_obj==NULL){
+			// check if it is identity. if not. apply
+			if(this->color_matrix->is_identity()){
+				this->hasColorMatrix=false;
+			}
+		}
+		else{
+			FrameCommandDisplayObject* previous_cmd=this->prev_obj;
+			if(previous_cmd->get_hasColorMatrix()){
+				if(this->compareColorMatrix(previous_cmd->get_color_matrix()->get())==1)// check if matrix has changed. if yes. apply.
+					this->hasColorMatrix=false;
+			}
+			else{
+				while(previous_cmd->prev_obj!=NULL){
+					if(previous_cmd->prev_obj->get_hasColorMatrix()){
+						if(this->compareColorMatrix(previous_cmd->prev_obj->get_color_matrix()->get())==1)// check if matrix has changed. if yes. apply.
+							this->hasColorMatrix=false;
+						break;
+					}
+					previous_cmd=previous_cmd->prev_obj;
+				}
+			}
+		}
+	}
+	else{
+		if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
+			if(prev_obj!=NULL){
+				this->hasColorMatrix=true;
+			}
+		}
+	}
+	
+	// check if we need masks for this command
+	if(this->get_hasTargetMaskIDs()){
+		if(prev_obj!=NULL){
+			FrameCommandDisplayObject* previous_cmd=this->prev_obj;
+			if(previous_cmd->get_hasTargetMaskIDs()){
+				if(this->compare_mask_values(previous_cmd->mask_ids))// check if matrix has changed. if yes. apply.
+					this->hasTargetMaskIDs=false;
+			}
+			else{
+				while(previous_cmd->prev_obj!=NULL){
+					if(previous_cmd->prev_obj->get_hasTargetMaskIDs()){
+						if(this->compare_mask_values(previous_cmd->prev_obj->mask_ids))// check if matrix has changed. if yes. apply.
+							this->hasTargetMaskIDs=false;
+						break;
+					}
+					previous_cmd=previous_cmd->prev_obj;
+				}
+			}
+		}
+	}
+	*/
+}
+
+bool
+FrameCommandDisplayObject::has_active_properties()
+{
+	if(this->get_hasDisplayMatrix())
+		return true;	
+		
+	if(this->get_hasColorMatrix())
+		return true;
+	
+	if(this->get_hasBlendModeChange())
+		return true;
+	
+	if(this->get_hasVisiblitiyChange())
+		return true;
+	return false;
+	
+}
+void
+FrameCommandDisplayObject::resolve_parenting()
+{
+	
+	// write properties
+	if (this->get_hasDisplayMatrix()){
+			
+		if(this->matrix_parents.size()>0){
+			int mtx_cnt=this->matrix_parents.size()-1;
+			// matrix_parents contains list of parent matrix. last matrix in this list is the matrix of root-object
+			/*
+			// both version work same.
+			for(GEOM::MATRIX2x3* new_matrix:this->matrix_parents)
+				this->display_matrix->append(new_matrix);
+				*/
+			GEOM::MATRIX2x3* new_matrix=this->matrix_parents[mtx_cnt];
+			while(mtx_cnt--)
+				new_matrix->prepend(this->matrix_parents[mtx_cnt]);
+			new_matrix->prepend(this->display_matrix);
+			this->display_matrix->set(new_matrix->get());
+		}
+	}
+	if (this->get_hasColorMatrix()){
+		if(this->color_transform_parents.size()>0){
+			int mtx_cnt=this->color_transform_parents.size()-1;
+			// matrix_parents contains list of parent matrix. last matrix in this list is the matrix of root-object
+				
+			for(GEOM::ColorTransform* new_ct:this->color_transform_parents)
+				this->color_matrix->prepend(new_ct);
+		}
+	}
+	// sort mask values 
+	if (this->get_hasTargetMaskIDs()){
+		if(this->mask_ids.size()>0){
+			udword* InputValues_depth = new udword[ this->mask_ids.size()];
+			int cmd_cnt=0;
+			for(TYPES::INT32 one_mask_value:this->mask_ids){
+				InputValues_depth[cmd_cnt++]=one_mask_value;
+			}
+			SORTER RS;
+			const udword* Sorted = RS.Sort(InputValues_depth, this->mask_ids.size(), RADIX_SIGNED).GetRanks();
+			int sorted_cnt=this->mask_ids.size();
+			this->mask_ids.clear();
+			while(sorted_cnt--){
+				this->mask_ids.push_back(InputValues_depth[Sorted[sorted_cnt]]);
+			}
+			DELETEARRAY(InputValues_depth);
+			//DELETEARRAY(Sorted);
+		}
+	}
+	
+
+}
+void
+FrameCommandDisplayObject::write_command(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * blockSettings, AWDFile* awd_file)
 {
 	
 	fileWriter->writeUINT8(TYPES::UINT8(this->get_command_type()));
@@ -477,8 +535,10 @@ FrameCommandDisplayObject::write_command_specific(FILES::FileWriter * fileWriter
 		// write properties
 		if (this->get_hasDisplayMatrix())
 			this->display_matrix->write_to_file(fileWriter, blockSettings);
+
 		if (this->get_hasColorMatrix())
 			this->color_matrix->write_to_file(fileWriter, blockSettings);
+
 		if (this->get_hasBlendModeChange())
 			fileWriter->writeUINT8(TYPES::UINT8(this->blendMode));
 		if (this->get_hasVisiblitiyChange())
@@ -509,3 +569,47 @@ FrameCommandDisplayObject::write_command_specific(FILES::FileWriter * fileWriter
 		
     //this->command_properties->write_attributes(fileWriter, blockSettings);
 }
+
+
+void
+FrameCommandDisplayObject::set_depth(TYPES::UINT32 depth)
+{
+    this->depth = depth;
+}
+TYPES::UINT32
+FrameCommandDisplayObject::get_depth()
+{
+	return this->depth;
+}
+TYPES::UINT32
+FrameCommandDisplayObject::get_objID()
+{
+	return this->objID;
+}
+void
+FrameCommandDisplayObject::set_objID(TYPES::UINT32 objID)
+{
+    this->objID = objID;
+}
+void
+FrameCommandDisplayObject::set_object_block(BASE::AWDBlock * object_block)
+{
+    this->object_block = object_block;
+}
+BASE::AWDBlock*
+FrameCommandDisplayObject::get_object_block()
+{
+    return this->object_block;
+}
+frame_command_type
+FrameCommandDisplayObject::get_command_type()
+{
+    return this->command_type;
+}
+void
+FrameCommandDisplayObject::set_command_type(frame_command_type command_type)
+{
+    this->command_type=command_type;
+}
+
+

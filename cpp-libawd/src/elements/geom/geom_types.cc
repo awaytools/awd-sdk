@@ -81,6 +81,23 @@ MATRIX2x3::append(MATRIX2x3* mtx)
 	return result::AWD_SUCCESS;
 }
 
+bool
+MATRIX2x3::is_identity()
+{	
+	if(this->matrix_data[0]!=1)
+		return false;
+	if(this->matrix_data[1]!=0)
+		return false;
+	if(this->matrix_data[2]!=0)
+		return false;
+	if(this->matrix_data[3]!=1)
+		return false;
+	if(this->matrix_data[4]!=0)
+		return false;
+	if(this->matrix_data[5]!=0)
+		return false;
+	return true;
+}
 result
 MATRIX2x3::prepend(MATRIX2x3* mtx)
 {	
@@ -117,7 +134,7 @@ MATRIX2x3::write_to_file(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings 
 	res = fileWriter->writeNumbers(this->matrix_data, 4, settings->get_wide_matrix());
 	if(res!=result::AWD_SUCCESS)
 		return result::AWDFILE_ERROR;
-
+	
 	if (settings->get_wide_matrix()){
 		TYPES::F64 offX=TYPES::F64(this->matrix_data[4] * settings->get_scale());
 		TYPES::F64 offY=TYPES::F64(this->matrix_data[5] * settings->get_scale());
@@ -264,6 +281,28 @@ ColorTransform::set(TYPES::F64 *matrix_data)
 
 	return result::AWD_SUCCESS;
 }
+
+bool
+ColorTransform::is_identity()
+{	
+	if(this->matrix_data[0]!=1)
+		return false;
+	if(this->matrix_data[1]!=0)
+		return false;
+	if(this->matrix_data[2]!=1)
+		return false;
+	if(this->matrix_data[3]!=0)
+		return false;
+	if(this->matrix_data[4]!=1)
+		return false;
+	if(this->matrix_data[5]!=0)
+		return false;
+	if(this->matrix_data[6]!=1)
+		return false;
+	if(this->matrix_data[7]!=0)
+		return false;
+	return true;
+}
 result
 ColorTransform:: prepend(ColorTransform* mtx)
 {
@@ -298,6 +337,9 @@ ColorTransform::read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *)
 result
 ColorTransform::write_to_file(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings * settings)
 {
+	
+
+
 	fileWriter->writeFLOAT32(TYPES::F32(this->matrix_data[0]));
 	fileWriter->writeFLOAT32(TYPES::F32(this->matrix_data[2]));
 	fileWriter->writeFLOAT32(TYPES::F32(this->matrix_data[4]));

@@ -17,6 +17,8 @@ namespace AWD
 {
 	namespace BLOCKS
 	{
+		
+		typedef std::map<TYPES::UINT32, ANIM::TimelineChild_instance*>::iterator iterate_child_map;
 		class Timeline : 
 			
 			public BASE::AttrElementBase, 
@@ -29,13 +31,17 @@ namespace AWD
 				bool is_scene;
 				TYPES::UINT16 obj_id_cnt;
 				std::vector<ANIM::TimelineFrame*> frames;
+				std::vector<ANIM::TimelineFrame*> remove_frames;
 				std::string symbol_name;
 				std::map<TYPES::UINT32, ANIM::TimelineChild_instance*> timeline_childs_to_obj_id;
 				std::vector<ANIM::PotentialTimelineChildGroup*> timeline_childs;
 				std::vector<ANIM::PotentialTimelineChildGroup*> timeline_childs_one_instance;
 				std::vector<ANIM::PotentialTimelineChildGroup*> timeline_childs_multiple_instances;
 				ANIM::TimelineDepthManager* depth_manager;
-				std::vector<ANIM::PotentialTimelineChild*> timeline_sounds;
+				ANIM::FrameCommandDisplayObject * get_prev_cmd(ANIM::TimelineChild_instance* child);
+				ANIM::FrameCommandDisplayObject * get_mask_command_for_child(ANIM::TimelineChild_instance* child);
+				ANIM::FrameCommandDisplayObject * get_matrix_command_by_child(ANIM::TimelineChild_instance* child);
+				ANIM::FrameCommandDisplayObject * get_color_transform_command_by_child(ANIM::TimelineChild_instance* child);
 				
 			protected:
 				TYPES::UINT32 calc_body_length(FILES::AWDFile*, SETTINGS::BlockSettings *);
@@ -49,11 +55,11 @@ namespace AWD
 				Timeline();
 				~Timeline();
 				
+				bool is_collected;
 				bool is_finalized;
 				TYPES::UINT32 instance_cnt;
 				TYPES::UINT32 timeline_id;
-				std::vector<ANIM::TimelineFrame*> adobe_frames;
-				std::vector<ANIM::TimelineChild_instance*> graphic_clips;
+				std::vector<ANIM::Graphic_instance*> graphic_clips;
 				bool is_grafic_instance;
 				bool has_grafic_instances;
 				
@@ -71,7 +77,7 @@ namespace AWD
 				ANIM::FrameCommandDisplayObject* add_display_object_by_id(TYPES::UINT32 objectID, TYPES::UINT32 add_after_ID);
 				void remove_object_by_id(TYPES::UINT32 objectID);
 				bool test_depth_ids(TYPES::UINT32 objectID, TYPES::UINT32 add_after_ID);
-				ANIM::FrameCommandBase* get_update_command_by_id(TYPES::UINT32 obj_id);
+				ANIM::FrameCommandDisplayObject* get_update_command_by_id(TYPES::UINT32 obj_id);
 				
 				std::string& get_symbol_name();
 				void set_symbol_name(const std::string& symbol_name);

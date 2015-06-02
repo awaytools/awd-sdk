@@ -20,20 +20,20 @@ using namespace AWD::SETTINGS;
 using namespace AWD::ANIM;
  
 
-TimelineFrame::TimelineFrame() :
-    AttrElementBase()
+TimelineFrame::TimelineFrame() 
 {
 	this->startframe=0;
 	this->frame_duration=1;
-	this->command_properties=new ATTR::NumAttrList();
 }
 
 TimelineFrame::~TimelineFrame()
 {
-    delete this->command_properties;
-	for (FrameCommandBase* fc :  this->commands){
-		//delete fc;
-	}
+	for (FrameCommandDisplayObject* fc :  this->display_commands)
+		delete fc;
+	for (FrameCommandDisplayObject* fc_empty :  this->empty_commands)
+		delete fc_empty;
+	for (FrameCommandRemoveObject* fc_remove :  this->remove_commands)
+		delete fc_remove;
 }
 
 
@@ -46,16 +46,8 @@ TimelineFrame::is_empty()
 		return false;
 	if(this->labels.size()>0)
 		return false;
-	for (FrameCommandDisplayObject* fc :  this->commands){
-		if(fc->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			return false;
-		}
-		else if(fc->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE){
-			if (fc->does_something){
-				return false;
-			}
-		}
-	}
+	if(this->display_commands.size()>0)
+		return false;
 	return true;
 }
 
@@ -95,7 +87,7 @@ TimelineFrame::get_frame_code()
     return this->frame_code;
 }
 
-
+/*
 // used while recieving adobe frame commands:
 bool
 TimelineFrame::test_depth_ids(TYPES::UINT32 objectID, TYPES::UINT32 add_after_ID)
@@ -117,15 +109,17 @@ TimelineFrame::test_depth_ids(TYPES::UINT32 objectID, TYPES::UINT32 add_after_ID
 	_ASSERT(0);
 	return false;
 }
+*/
 
 void
 TimelineFrame::add_command(FrameCommandDisplayObject* newFrame)
 {
-	this->commands.push_back(newFrame);
+	this->display_commands.push_back(newFrame);
 }
 void
 TimelineFrame::remove_object_by_id(TYPES::UINT32 objectID)
 {
+	/*
 	int removedIdx = -1;
 	int idx_cnt = 0;
 	std::vector<FrameCommandDisplayObject*> old_commands;
@@ -169,27 +163,29 @@ TimelineFrame::remove_object_by_id(TYPES::UINT32 objectID)
 		}
 	}
 	else{
+	*/
 		FrameCommandRemoveObject* newFrameCommand = new FrameCommandRemoveObject();
-		newFrameCommand->set_objID(objectID);
-		newFrameCommand->remove_at_index=removedIdx;
-		newFrameCommand->set_command_type(ANIM::frame_command_type::FRAME_COMMAND_REMOVE);
+		newFrameCommand->objID=objectID;
+		//newFrameCommand->remove_at_index=removedIdx;
 		this->remove_commands.push_back(newFrameCommand);
-	}
+	//}
 }
 
 FrameCommandDisplayObject*
 TimelineFrame::add_display_object_by_id(TYPES::UINT32 objectID, TYPES::UINT32 add_after_id)
 {
+	/*
 	for (FrameCommandBase* fc :  this->commands){
 		if(fc->get_objID()==objectID){
 			_ASSERT(0);
 		}
 	}
-	
+	*/
 	FrameCommandDisplayObject* newFrameCommand = new FrameCommandDisplayObject();
 	newFrameCommand->set_command_type(ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD);
 	newFrameCommand->set_objID(objectID);
 	newFrameCommand->set_depth(add_after_id);
+	/*
 	std::vector<FrameCommandDisplayObject*> new_display_commands;
 	if(add_after_id==0){
 		newFrameCommand->add_at_index=0;
@@ -213,19 +209,23 @@ TimelineFrame::add_display_object_by_id(TYPES::UINT32 objectID, TYPES::UINT32 ad
 		}
 	}
 	this->commands=new_display_commands;
+	*/
+	this->display_commands.push_back(newFrameCommand);
 	return newFrameCommand;
 }
-
-FrameCommandBase*
+FrameCommandDisplayObject*
 TimelineFrame::get_update_command_by_id(TYPES::UINT32 objectID)
 {
-	for (FrameCommandBase* fc :  this->commands){
+	for (FrameCommandDisplayObject* fc :  this->display_commands){
 		if(fc->get_objID()==objectID){
 			return fc;
 		}
 	}
-	// this is a error!
-	return NULL;
+	FrameCommandDisplayObject* new_cmd=new FrameCommandDisplayObject();
+	new_cmd->set_command_type(frame_command_type::FRAME_COMMAND_UPDATE);
+	new_cmd->set_objID(objectID);
+	this->display_commands.push_back(new_cmd);
+	return new_cmd;
 }
 
 
@@ -234,8 +234,8 @@ TimelineFrame::get_update_command_by_id(TYPES::UINT32 objectID)
 void
 TimelineFrame::apply_add_command(FrameCommandDisplayObject* add_cmd, TimelineChild_instance* parent_child)
 {
-	
-	for (FrameCommandBase* fc :  this->commands){
+	/*
+	for (FrameCommandBase* fc :  this->display_commands){
 		if(fc->child==add_cmd->child){
 			_ASSERT(0);
 		}
@@ -245,13 +245,13 @@ TimelineFrame::apply_add_command(FrameCommandDisplayObject* add_cmd, TimelineChi
 	if(parent_child==NULL){
 		add_cmd->add_at_index=0;
 		new_display_commands.push_back(add_cmd);
-		for (FrameCommandDisplayObject* fc :  this->commands){
+		for (FrameCommandDisplayObject* fc :  this->display_commands){
 			new_display_commands.push_back(fc);
 		}
 	}
 	else{
 		int index_cnt=0;
-		for (FrameCommandDisplayObject* fc :  this->commands){
+		for (FrameCommandDisplayObject* fc :  this->display_commands){
 			new_display_commands.push_back(fc);
 			if(fc->child==parent_child){
 				add_cmd->add_at_index=index_cnt;
@@ -259,43 +259,55 @@ TimelineFrame::apply_add_command(FrameCommandDisplayObject* add_cmd, TimelineChi
 			}
 			index_cnt++;
 		}
-		if(new_display_commands.size()==this->commands.size()){
+		if(new_display_commands.size()==this->display_commands.size()){
 			_ASSERT(0);//new_display_commands.push_back(add_cmd);
 		}
 	}
-	this->commands.clear();
+	this->display_commands.clear();
 	for (FrameCommandDisplayObject* fc : new_display_commands)
-		this->commands.push_back(fc);
+		this->display_commands.push_back(fc);
 	new_display_commands.clear();
+	*/
+	this->display_commands.push_back(add_cmd);
 		
+}
+FrameCommandDisplayObject*
+TimelineFrame::get_update_command_by_child(TimelineChild_instance* child)
+{
+	for (FrameCommandDisplayObject* fc :  this->display_commands){
+		if(fc->child==child){
+			return fc;
+		}
+	}
+	return NULL;
 }
 void
 TimelineFrame::apply_update_command(FrameCommandDisplayObject* update_cmd)
 {
-	
+	/*
 	int cnt_cmd=0;
-	for (FrameCommandBase* fc :  this->commands){
+	for (FrameCommandBase* fc :  this->display_commands){
 		if(fc->child==update_cmd->child){
-			this->commands[cnt_cmd]=update_cmd;
+			this->display_commands[cnt_cmd]=update_cmd;
 			return;
 		}
 		cnt_cmd++;
 	}
-	
-	//this->commands.push_back(update_cmd);
-	_ASSERT(0); //error because no command was not found
+	*/
+	this->display_commands.push_back(update_cmd);
+	//_ASSERT(0); //error because no command was not found
 	
 }
 void
 TimelineFrame::apply_remove_command(FrameCommandRemoveObject* remove_cmd)
 {
-	
+	/*
 	int idx_cnt = 0;
 	std::vector<FrameCommandDisplayObject*> old_commands;
 	bool removed_object=false;
-	for (FrameCommandDisplayObject* fc :  this->commands){
+	for (FrameCommandDisplayObject* fc :  this->display_commands){
 		if(fc->child==remove_cmd->child){
-			remove_cmd->remove_at_index=idx_cnt;
+			remove_cmd->depth=idx_cnt;
 			delete fc;
 		}
 		else{
@@ -303,61 +315,58 @@ TimelineFrame::apply_remove_command(FrameCommandRemoveObject* remove_cmd)
 		}
 		idx_cnt++;
 	}
-	if(old_commands.size()==this->commands.size())
+	if(old_commands.size()==this->display_commands.size())
 		_ASSERT(0); // error object not found
-	this->commands.clear();
+	this->display_commands.clear();
 	for (FrameCommandDisplayObject* fc :  old_commands)
-		this->commands.push_back(fc);
-		
+		this->display_commands.push_back(fc);
+		*/
 	this->remove_commands.push_back(remove_cmd);
 }
 
+void
+TimelineFrame::finalize_commands()
+{
+	std::vector<FrameCommandDisplayObject*> new_commands;
+	for (FrameCommandDisplayObject * f : this->display_commands) 
+	{
+		f->resolve_parenting();
+		f->finalize_command();
+		if(f->has_active_properties())
+			new_commands.push_back(f);
+		else
+			this->empty_commands.push_back(f);
+	}
+	this->display_commands.clear();
+	for (FrameCommandDisplayObject * f : new_commands) 
+		this->display_commands.push_back(f);
+	new_commands.clear();
+
+}
 void
 TimelineFrame::build_final_commands()
 {
 	// filter the graphic instance commands out of the remove-commands list
 	std::vector<FrameCommandRemoveObject*> all_remove;
 	for(FrameCommandRemoveObject* removeCmd: this->remove_commands){
-		if(!removeCmd->child->graphic_instance){
-			removeCmd->child_commands.clear();
+		if(removeCmd->child->graphic==NULL){
 			all_remove.push_back(removeCmd);
 		}
 	}
 	this->remove_commands.clear();
 	for(FrameCommandRemoveObject* removeCmd: all_remove)
 		this->remove_commands.push_back(removeCmd);
-	all_remove.clear();
-	
-	// merge all remove commands into 1 command, and apply this command to the final-commands list
-	if(this->remove_commands.size()>1){
-		FrameCommandRemoveObject* new_framecommand_remove=this->remove_commands[0];
-		int cmd_cnt = 0;
-		for(FrameCommandRemoveObject* removeCmd: this->remove_commands){
-			if(cmd_cnt>0){
-				removeCmd->is_child=true;
-				new_framecommand_remove->child_commands.push_back(removeCmd);
-			}
-			cmd_cnt++;
-		}
-		this->final_commands.push_back(new_framecommand_remove);
-	}
-	else if(this->remove_commands.size()==1){
-		this->final_commands.push_back(this->remove_commands[0]);
-	}
+	all_remove.clear();	
 	
 	//	filter the graphic instance commands out of the commands list
 	std::vector<FrameCommandDisplayObject*> new_cmds;
-	for (FrameCommandDisplayObject * f : this->commands) 
+	for (FrameCommandDisplayObject * f : this->display_commands) 
 	{
-		if(!f->child->graphic_instance){
-			if((f->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD)||((f->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE)&&(f->does_something))){
-				//f->hasTargetMaskIDs=false;
-				//f->mask_childs.clear();
-				//f->mask_ids.clear();
-				f->bkp_color_matrix->set(f->get_color_matrix()->get());
-				f->bkp_matrix->set(f->get_display_matrix()->get());
-				new_cmds.push_back(f);
-			}
+		if(f->child->graphic==NULL){
+			new_cmds.push_back(f);
+		}
+		else{
+			delete f;
 		}
 	}
 	// fill the commands into the final commands, sorted by depth
@@ -369,7 +378,7 @@ TimelineFrame::build_final_commands()
 	SORTER RS;
 	const udword* Sorted = RS.Sort(InputValues_depth, new_cmds.size(), RADIX_SIGNED).GetRanks();
 	int sorted_cnt=new_cmds.size();
-	
+	this->display_commands.clear();
 	TimelineChild_instance* parent=NULL;
 	while(sorted_cnt--){
 		ANIM::FrameCommandDisplayObject* f = new_cmds[Sorted[sorted_cnt]];
@@ -377,15 +386,17 @@ TimelineFrame::build_final_commands()
 			f->child->parent_child=parent;
 		}
 		parent=f->child;
-		this->final_commands.push_back(f);
+		this->display_commands.push_back(f);
 	}
+	DELETEARRAY(InputValues_depth);
+	//DELETEARRAY(Sorted);
 }
 void
 TimelineFrame::calc_mask_ids()
 {
-	for (int i=0;i< this->commands.size();i++){
+	for (int i=0;i< this->display_commands.size();i++){
 		std::vector<TYPES::INT32> mask_ids;
-		FrameCommandDisplayObject* fd = this->commands[i];
+		FrameCommandDisplayObject* fd = this->display_commands[i];
 		if(!fd->calculated_mask){
 			fd->calculated_mask=true;
 			if(fd->get_hasTargetMaskIDs()){
@@ -397,9 +408,9 @@ TimelineFrame::calc_mask_ids()
 				fd->mask_ids.push_back(TYPES::INT32(-1));
 				fd->set_hasTargetMaskIDs(true);
 				// while loop only enters if next object will be a mask too
-				while ((this_id==mask_id)&&(i<this->commands.size()-1)){
+				while ((this_id==mask_id)&&(i<this->display_commands.size()-1)){
 					i++;
-					FrameCommandDisplayObject* fd2 = this->commands[i];
+					FrameCommandDisplayObject* fd2 = this->display_commands[i];
 					if(fd2->get_hasTargetMaskIDs()){
 						this_id=fd2->get_objID();
 						mask_id=fd2->get_clipDepth();
@@ -410,7 +421,7 @@ TimelineFrame::calc_mask_ids()
 						fd2->set_hasTargetMaskIDs(true);
 					}
 				}
-				for (FrameCommandDisplayObject * f2 : this->commands) 
+				for (FrameCommandDisplayObject * f2 : this->display_commands) 
 				{
 					int this_id2=f2->get_objID();
 					if((this_id2>this_id)&&(this_id2<=mask_id)){
@@ -431,15 +442,14 @@ TimelineFrame::calc_mask_ids()
 result
 TimelineFrame::get_frame_info(std::vector<std::string>& infos)
 {	
-	//infos.push_back("input  commands:");
-	/*for (FrameCommandBase * f : this->commands) 
-	{
-		std::string this_string;
-		f->get_command_info(this_string);
-		infos.push_back("		"+this_string);
-	}*/
 	infos.push_back("	commands:");
-	for (FrameCommandBase * f : this->final_commands) 
+	if(this->remove_commands.size()>0){
+		std::string remove_infos = "		remove objects at depth: ";
+		for (FrameCommandRemoveObject * f_remove : this->remove_commands) 
+			remove_infos+=std::to_string(f_remove->child->depth)+"|";
+		infos.push_back(remove_infos);
+	}
+	for (FrameCommandDisplayObject * f : this->display_commands) 
 	{
 		std::string this_string;
 		f->get_command_info(this_string);
@@ -463,7 +473,12 @@ TimelineFrame::calc_frame_length(BlockSettings * blockSettings)
 	}
 	
 	len += sizeof(TYPES::UINT16);
-	for (FrameCommandBase* f : this->final_commands){
+	if(this->remove_commands.size()>0){
+		len+=sizeof(TYPES::UINT8);//cmdID;
+		len+=sizeof(TYPES::UINT16);//number remove objs;
+		len+=this->remove_commands.size()*sizeof(TYPES::UINT16);//number remove objs;
+	}
+	for (FrameCommandDisplayObject* f : this->display_commands){
 		len+=f->calc_command_length(blockSettings);
 	}
 
@@ -473,7 +488,7 @@ TimelineFrame::calc_frame_length(BlockSettings * blockSettings)
 	
     len += sizeof(TYPES::UINT32) +  TYPES::UINT32(this->frame_code.size()); 
 
-    len += this->calc_attr_length(false,true, blockSettings); 
+    len += sizeof(TYPES::UINT32); //properties
     
 	return len;
 }
@@ -481,7 +496,7 @@ TimelineFrame::calc_frame_length(BlockSettings * blockSettings)
 void
 TimelineFrame::clear_commands()
 {
-	this->commands.clear();
+	this->display_commands.clear();
 }
 void
 TimelineFrame::write_frame(FILES::FileWriter * fileWriter, BlockSettings * blockSettings, AWDFile* awd_file)
@@ -492,13 +507,22 @@ TimelineFrame::write_frame(FILES::FileWriter * fileWriter, BlockSettings * block
 	{
 		fileWriter->writeSTRING(s,  FILES::write_string_with::LENGTH_AS_UINT16);
 	}
-	fileWriter->writeUINT16(TYPES::UINT16(this->final_commands.size()));// num of commands	
+	TYPES::UINT16 num_cmd = TYPES::UINT16(this->display_commands.size());
+	if(this->remove_commands.size()>0)
+		num_cmd++;
+	fileWriter->writeUINT16(TYPES::UINT16(num_cmd));// num of commands	
 	
-	for (FrameCommandBase* f : this->final_commands) 
+	if(this->remove_commands.size()>0){
+		fileWriter->writeUINT8(TYPES::UINT8(frame_command_type::FRAME_COMMAND_REMOVE));// num of commands	
+		fileWriter->writeUINT16(TYPES::UINT16(this->remove_commands.size()));
+		for (FrameCommandRemoveObject * f_remove : this->remove_commands) 
+			fileWriter->writeINT16(TYPES::UINT16(f_remove->child->depth));
+	}
+	for (FrameCommandDisplayObject* f : this->display_commands) 
 	{
 		f->write_command(fileWriter, blockSettings, awd_file);
 	}
 
 	fileWriter->writeSTRING(this->get_frame_code(),  FILES::write_string_with::LENGTH_AS_UINT32);// frame code	
-	this->user_attributes->write_attributes(fileWriter, blockSettings);
+	fileWriter->writeUINT32(TYPES::UINT32(0));
 }

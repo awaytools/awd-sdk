@@ -9,6 +9,18 @@
 #include "base/state_element_base.h"
 #include "files/awd_file.h"
 
+
+#ifdef _WIN32
+#include "Windows.h"
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
+#include <sys/types.h>
+#include <sys/timeb.h>
+#else
+#include <sys/time.h>
+#endif
+
 using namespace AWD;
 using namespace AWD::TYPES;
 using namespace AWD::FILES;
@@ -25,6 +37,16 @@ AWDProject::AWDProject(project_type new_project_type, const std::string& initial
 	// initial NULL-pointer so deconstructor knows what to delete.
 	this->name_space = NULL;
 	this->active_file = NULL;
+	this->clock=std::clock();
+#ifdef _WIN32
+	//this->current_time=t.elapsed();
+#else
+	
+	timeval time;
+	gettimeofday(&time, NULL);
+	this->current_time=(time.tv_sec * 1000) + (time.tv_usec / 1000);
+#endif
+	
 
 	/// \todo: fuck it
 	// check if the path contains a directory
@@ -92,17 +114,33 @@ TYPES::state AWDProject::validate_state()
 }
 
 // PUBLIC:
-
-
-result
-AWDProject::get_blocks_for_external_ids()
+int
+AWDProject::get_time_since_last_call()
 {
-	result res = result::AWD_SUCCESS;
-	if (this->all_blocks.find(BLOCK::block_type::TIMELINE) == this->all_blocks.end())
-		return result::AWD_ERROR;
+	double return_time= std::clock() - this->clock;
+	this->clock = std::clock();
+	return (return_time / (double)(CLOCKS_PER_SEC / 1000));
+#ifdef _WIN32
+	//double new_time=t.elapsed();
+	//this->current_time = new_time-this->current_time;
+	/*
+	SYSTEMTIME time;
+	GetSystemTime(&time);
+	LPFILETIME lpFileTime;
+	GetSystemTimeAsFileTime(lpFileTime);
+	lpFileTime->
+	return_time = millis - this->current_time;
+	this->current_time=millis;
+	*/
+#else
 	
-	this->clear_external_ids();
-	return res;
+	timeval time;
+	gettimeofday(&time, NULL);
+	int millis = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+	return_time = millis - this->current_time;
+	this->current_time=millis;
+#endif
+	return return_time;
 }
 
 
@@ -137,6 +175,26 @@ AWDProject::get_file_for_path(const std::string& path, AWDFile**  awdFile){
 	return result::AWD_SUCCESS;
 }
 
+
+result
+AWDProject::exchange_timeline_by_name(BLOCKS::Timeline* timeline_new)
+{
+	if (this->all_blocks.find(BLOCK::block_type::TIMELINE) == this->all_blocks.end())
+		return result::AWD_ERROR;
+	
+	int cnt=0;
+	for(AWDBlock* one_awd_block : this->all_blocks[BLOCK::block_type::TIMELINE]){
+		BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline* >(one_awd_block);
+		if(timeline->get_symbol_name()==timeline_new->get_symbol_name()){
+			for(std::string one_id:timeline->get_ressource_ids())
+				timeline_new->add_res_id(one_id);
+			delete timeline;
+			this->all_blocks[BLOCK::block_type::TIMELINE][cnt]=timeline_new;
+		}
+		cnt++;
+	}
+	return result::AWD_SUCCESS;
+}
 result
 AWDProject::finalize_timelines()
 {
@@ -224,7 +282,6 @@ AWDProject::add_library_block(BASE::AWDBlock* awd_block)
 	return result::AWD_SUCCESS;
 
 }
-
 result 
 AWDProject::add_block(BASE::AWDBlock* awd_block, BLOCK::BlockInstance** blockInstance)
 {
@@ -321,9 +378,6 @@ AWDProject::get_default_material_by_color(TYPES::COLOR this_color, bool create_i
 BLOCKS::Timeline*
 AWDProject::get_timeline_by_symbol_name(const std::string& symbol_name)
 {
-	if (this->all_blocks.find(block_type::TIMELINE) == this->all_blocks.end()){
-		return NULL;
-	}
 	for(AWDBlock* block : this->all_blocks[block_type::TIMELINE]){
 		BLOCKS::Timeline* this_timeline=reinterpret_cast<BLOCKS::Timeline*>(block);
 		if(this_timeline!=NULL){
@@ -332,6 +386,11 @@ AWDProject::get_timeline_by_symbol_name(const std::string& symbol_name)
 			}
 		}
 	}
+	/*BLOCKS::Timeline* new_timeline = new BLOCKS::Timeline();
+	new_timeline->set_symbol_name(symbol_name);
+	this->add_block(new_timeline);
+	return new_timeline;
+	*/
 	return NULL;
 }
 
@@ -391,6 +450,8 @@ AWDProject::get_block_by_name_and_type(const std::string& name, BLOCK::block_typ
 AWDBlock*
 AWDProject::get_block_by_external_id_shared(const std::string& externalID)
 {
+	// 1 block can have multiple ressource ids (externalIDs) assigned.
+	// this happens for example for geometry that is used multiple times.
 	for(blocktype_type iterator = this->all_blocks.begin(); iterator !=  this->all_blocks.end(); iterator++) {
 		if(iterator->second.size()>0){
 			for(AWDBlock* awd_block : iterator->second){
@@ -426,7 +487,7 @@ AWDProject::get_block_by_external_id_and_type_shared(const std::string& external
 			return NULL;
 	}
 	for(AWDBlock* block : this->all_blocks[blocktype]){
-		if(block->has_res_id(externalID)){			
+		if(block->has_res_id(externalID)){
 			return block;
 		}
 	}

@@ -25,6 +25,7 @@ Timeline::Timeline(const std::string& name):
     BASE::AttrElementBase()
 {
 	depth_manager = new TimelineDepthManager();
+	this->is_collected=false;
 	this->is_scene=false;
 	this->fps=0.0;
 	this->is_finalized=false;
@@ -39,6 +40,7 @@ Timeline::Timeline():
     BASE::AttrElementBase()
 {
 	depth_manager = new TimelineDepthManager();
+	this->is_collected=false;
 	this->instance_cnt=0;
 	this->is_scene=false;
 	this->is_finalized=false;
@@ -52,15 +54,28 @@ Timeline::Timeline():
 Timeline::~Timeline()
 {
 	for (TimelineFrame * f : this->frames) 
-	{
 		delete f;
-	}
+	this->frames.clear();
+	for (TimelineFrame * f : this->remove_frames) 
+		delete f;
+	this->remove_frames.clear();
 	
-	for(PotentialTimelineChildGroup* child_group: this->timeline_childs){		
+	for(PotentialTimelineChildGroup* child_group: this->timeline_childs){
 		for(PotentialTimelineChild* child: child_group->childs)
 			delete child;
+		child_group->childs.clear();
 		delete child_group;
 	}
+	this->timeline_childs.clear();
+
+	for(Graphic_instance* graphic: this->graphic_clips)
+		delete graphic;
+	this->graphic_clips.clear();
+	
+	for(iterate_child_map iterator = timeline_childs_to_obj_id.begin(); iterator != timeline_childs_to_obj_id.end(); iterator++) 
+		delete iterator->second;
+	timeline_childs_to_obj_id.clear();
+	
 	delete depth_manager;
 }
 
@@ -87,6 +102,7 @@ Timeline:: get_frame()
 {
 	return this->frames.back();
 }
+
 std::vector<TimelineFrame*>&
 Timeline::get_frames()
 {
@@ -128,49 +144,39 @@ Timeline::set_fps(TYPES::F64 fps)
 void
 Timeline::add_adobe_frame(TimelineFrame* newFrame)
 {
-	if(this->adobe_frames.size()>0){
-		for(FrameCommandBase* existingCMD : this->adobe_frames.back()->commands){
-			FrameCommandDisplayObject* newFrameCommand = new FrameCommandDisplayObject();
-			newFrameCommand->set_objID(existingCMD->get_objID());
-			newFrameCommand->set_depth(existingCMD->get_depth());
-			newFrameCommand->child=existingCMD->child;
-			newFrameCommand->set_command_type(ANIM::frame_command_type::FRAME_COMMAND_UPDATE);
-			newFrame->add_command(newFrameCommand);
-		}
-	}
 	newFrame->startframe=this->current_frame;
-	this->adobe_frames.push_back(newFrame);
 	this->current_frame++;
+	this->frames.push_back(newFrame);
 }
 
-FrameCommandBase*
+FrameCommandDisplayObject*
 Timeline::get_update_command_by_id(TYPES::UINT32 objectID)
 {
-	return this->adobe_frames.back()->get_update_command_by_id(objectID);
+	return this->frames.back()->get_update_command_by_id(objectID);
 }
 
 void
 Timeline::remove_object_by_id(TYPES::UINT32 obj_id)
 {
-	this->adobe_frames.back()->remove_object_by_id(obj_id);
+	this->frames.back()->remove_object_by_id(obj_id);
 }
 
 FrameCommandDisplayObject*
 Timeline::add_display_object_by_id(TYPES::UINT32 objectID, TYPES::UINT32 add_after_id)
 {
 	
-	AWD::ANIM::FrameCommandDisplayObject* frameCommand=(AWD::ANIM::FrameCommandDisplayObject*)this->adobe_frames.back()->add_display_object_by_id(objectID, add_after_id);
+	AWD::ANIM::FrameCommandDisplayObject* frameCommand=(AWD::ANIM::FrameCommandDisplayObject*)this->frames.back()->add_display_object_by_id(objectID, add_after_id);
 	frameCommand->set_depth(add_after_id);
-	frameCommand->does_something;
 	return frameCommand;
 }
 
+/*
 bool
 Timeline::test_depth_ids(TYPES::UINT32 objectID, TYPES::UINT32 add_after_ID)
 {
-	return this->adobe_frames.back()->test_depth_ids(objectID, add_after_ID);
+	return this->frames.back()->test_depth_ids(objectID, add_after_ID);
 }
-
+*/
 
 // used while finalizing the commands:
 
@@ -179,20 +185,6 @@ Timeline::test_depth_ids(TYPES::UINT32 objectID, TYPES::UINT32 add_after_ID)
 void
 Timeline::add_frame(TimelineFrame* newFrame)
 {
-	
-	if(this->frames.size()>0){
-		for(FrameCommandBase* existingCMD : this->frames.back()->commands){
-			FrameCommandDisplayObject* existingCMDDP = reinterpret_cast<FrameCommandDisplayObject*> (existingCMD);
-			FrameCommandDisplayObject* newFrameCommand = new FrameCommandDisplayObject();
-			newFrameCommand->set_objID(existingCMD->get_objID());
-			newFrameCommand->set_depth(existingCMD->get_depth());
-			newFrameCommand->child=existingCMD->child;
-			newFrameCommand->bkp_matrix->set(existingCMDDP->bkp_matrix->get());
-			newFrameCommand->bkp_color_matrix->set(existingCMDDP->bkp_color_matrix->get());
-			newFrameCommand->set_command_type(ANIM::frame_command_type::FRAME_COMMAND_UPDATE);
-			newFrame->add_command(newFrameCommand);
-		}
-	}
 	this->frames.push_back(newFrame);
 }
 
@@ -254,7 +246,7 @@ Timeline::advance_frame(TimelineFrame* frame)
 	//	check if any of the alive graphic-instances provides a keyframe for the current frame.
 	//	set all visible graphic-instances to dirty = true.
 	bool has_graphic_keyframes=false;
-	for(TimelineChild_instance* graphic_clip : graphic_clips){
+	for(ANIM::Graphic_instance* graphic_clip : graphic_clips){
 		Timeline* timeline = reinterpret_cast<Timeline*>(graphic_clip->graphic_timeline);
 		if(timeline->has_frame_at(this->current_frame-graphic_clip->offset_frames)){
 			has_graphic_keyframes=true;
@@ -272,9 +264,21 @@ Timeline::advance_frame(TimelineFrame* frame)
 		this->frames.back()->set_frame_duration(this->frames.back()->get_frame_duration()+1);
 		return;
 	}
-	// if we havnt returned, we need to create a keyframe for this frame
-	// create a new keyframe
-	TimelineFrame* final_frame = new TimelineFrame();
+	TimelineFrame* final_frame;
+	std::vector<FrameCommandDisplayObject*> input_display_commands;
+	std::vector<FrameCommandRemoveObject*> input_remove_commands;
+	// if we have a input frame, we will resuse it.
+	if(frame){
+		final_frame=frame;
+		for(FrameCommandRemoveObject* removeCmd: frame->remove_commands)
+			input_remove_commands.push_back(removeCmd);
+		frame->remove_commands.clear();
+		for(FrameCommandDisplayObject* dispalyCmd: frame->display_commands)
+			input_display_commands.push_back(dispalyCmd);
+		frame->display_commands.clear();
+	}
+	else		
+		final_frame=new TimelineFrame();
 	
 	final_frame->set_frame_duration(1);				//	duration will be extendet if empty frames follow
 	final_frame->startframe=this->current_frame;	//	keep track of startframe for debug purpose
@@ -284,67 +288,55 @@ Timeline::advance_frame(TimelineFrame* frame)
 	
 	TimelineChild_instance* current_child=NULL;
 	TimelineFrame* clip_frame=NULL;
-	std::vector<FrameCommandRemoveObject*> new_remove_cmds;
-	std::vector<TimelineChild_instance* > new_graphic_clips;
 	TimelineChild_instance* parent_child = NULL;
 	AWDBlock* current_block = NULL;
 	BLOCKS::Timeline* child_timeline = NULL;
 	// EVAL REMOVE COMMANDS FOR FRAME:
-	if(frame){
-		// copy stuff over from the frame
-		final_frame->set_frame_code(frame->get_frame_code());
-		for(std::string onelabel:frame->get_labels())
-			final_frame->add_label(ANIM::frame_label_type::AWD_FRAME_LABEL_NAME, onelabel);
-
-		// apply remove commands
-		for(FrameCommandRemoveObject* removeCmd: frame->remove_commands){
-			if(timeline_childs_to_obj_id.find(removeCmd->get_objID())==timeline_childs_to_obj_id.end())
-				error_vec[0]=1;// ERROR BECAUSE OBJECT NOT FOUND.
-			
-			current_child = timeline_childs_to_obj_id[removeCmd->get_objID()];
-			current_child->child->used=false;
-			removeCmd->child=current_child;
-			if(current_child->graphic_instance){
-				// Add Remove_commands for all the childs that are present on the stage, and was added for this graphic clip
-				new_remove_cmds.clear();
-				for(FrameCommandDisplayObject* gc_cmd:final_frame->commands){
-					if(gc_cmd->child->graphic_clip_origin==current_child){
-						FrameCommandRemoveObject* new_gc_remove_command=new FrameCommandRemoveObject();
-						new_gc_remove_command->child=gc_cmd->child;
-						gc_cmd->child->child->used=false;
-						new_remove_cmds.push_back(new_gc_remove_command);
-					}
-				}
-				for(FrameCommandRemoveObject* gc_cmd:new_remove_cmds){
-					final_frame->apply_remove_command(gc_cmd);
-					this->depth_manager->remove_child(gc_cmd->child);
-				}
-				new_remove_cmds.clear();
-
-				// remove the graphic clip from the graphic-clip-list
-				if(graphic_clips.size()>1){
-					new_graphic_clips.clear();
-					for(TimelineChild_instance* old_graphic_clip : this->graphic_clips){
-						if(old_graphic_clip!=current_child)
-							new_graphic_clips.push_back(old_graphic_clip);
-					}
-					this->graphic_clips.clear();
-					for(TimelineChild_instance* old_graphic_clip : new_graphic_clips)
-						this->graphic_clips.push_back(old_graphic_clip);
-					new_graphic_clips.clear();
-				}
-				else{
-					graphic_clips.clear();
-				}
-
+	for(FrameCommandRemoveObject* removeCmd: input_remove_commands){
+		if(timeline_childs_to_obj_id.find(removeCmd->objID)==timeline_childs_to_obj_id.end())
+			error_vec[0]=1;// ERROR BECAUSE OBJECT NOT FOUND.
+		
+		current_child = timeline_childs_to_obj_id[removeCmd->objID];
+		current_child->child->used=false;
+		removeCmd->child=current_child;
+		
+		if(current_child->graphic!=NULL){
+			// Add Remove_commands for all the childs that are present on the stage, and was added for this graphic clip
+			for(TimelineChild_instance* grafic_child:current_child->graphic->graphic_childs){
+				FrameCommandRemoveObject* new_gc_remove_command=new FrameCommandRemoveObject();
+				new_gc_remove_command->child=grafic_child;
+				grafic_child->child->used=false;
+				final_frame->apply_remove_command(new_gc_remove_command);
+				this->depth_manager->apply_remove_command(new_gc_remove_command);
 			}
-			final_frame->apply_remove_command(removeCmd);
-			this->depth_manager->remove_child(current_child);
+			// remove the graphic clip from the graphic-clip-list
+			if(graphic_clips.size()>1){
+				std::vector<Graphic_instance* > new_graphic_clips;
+				for(Graphic_instance* old_graphic_clip : this->graphic_clips){
+					if(old_graphic_clip!=current_child->graphic)
+						new_graphic_clips.push_back(old_graphic_clip);
+					else
+						delete old_graphic_clip;
+					
+				}
+				this->graphic_clips.clear();
+				for(Graphic_instance* old_graphic_clip : new_graphic_clips)
+					this->graphic_clips.push_back(old_graphic_clip);
+				new_graphic_clips.clear();
+			}
+			else{
+				graphic_clips.clear();
+			}
+
 		}
+		
+		final_frame->apply_remove_command(removeCmd);
+		this->depth_manager->apply_remove_command(removeCmd);
 	}
+	
 	// EVAL REMOVE COMMANDS FOR ACTIV GRAPHIC CLIPS:
 	if(has_graphic_keyframes){
-		for(TimelineChild_instance* graphic_clip : graphic_clips){
+		for(Graphic_instance* graphic_clip : graphic_clips){
 			if(graphic_clip->graphic_timeline->has_frame_at(this->current_frame-graphic_clip->offset_frames)){
 				clip_frame = graphic_clip->graphic_timeline->get_frame_at(this->current_frame-graphic_clip->offset_frames);
 				if(clip_frame==NULL)
@@ -354,198 +346,244 @@ Timeline::advance_frame(TimelineFrame* frame)
 				for(FrameCommandRemoveObject* removeCmd2: clip_frame->remove_commands){
 					removeCmd2->child->child->used=false;
 					final_frame->apply_remove_command(removeCmd2);
-					this->depth_manager->remove_child(removeCmd2->child);
+					this->depth_manager->apply_remove_command(removeCmd2);
+					graphic_clip->remove_child(removeCmd2->child);
 				}
+				clip_frame->remove_commands.clear();
 			}
 		}
 	}
+	
 	// EVAL COMMANDS FOR FRAME:
-	if(frame){
-		// apply the add commands to the new frame.
-		for(FrameCommandDisplayObject* display_cmd: frame->commands){
-			if(display_cmd->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD){
-				current_block = display_cmd->get_object_block();// create a new child-instance for this object
-				current_child = new TimelineChild_instance();
-				current_child->obj_id=display_cmd->get_objID();
-				current_child->start_frame=this->current_frame;
-				current_child->end_frame=this->current_frame;
-				if(display_cmd->get_hasTargetMaskIDs()){
-					if(!((display_cmd->mask_ids.size()==1)&&(display_cmd->mask_ids[0]==-1)))
-						current_child->is_masked=true;
-					else
-						current_child->is_mask=true;
-				}
-
-				current_child->child=this->get_child_for_block(current_block);
-					
-				timeline_childs_to_obj_id[display_cmd->get_objID()]=current_child;
-				
-				display_cmd->child=current_child;
-
-				// check if the object is a timeline, and if so, make sure it is finalized (recursion), and check if it is a graphic instance 
-				if(current_block->get_type()==BLOCK::block_type::TIMELINE){
-					child_timeline=reinterpret_cast<BLOCKS::Timeline*>(current_block);
-					// make sure that the timeline has been finalized itself
-					child_timeline->finalize();
-					if(child_timeline->is_grafic_instance){
-						// this is a graphic instance.
-						current_child->graphic_timeline=child_timeline;
-						current_child->graphic_instance=true;
-						current_child->graphic_command=display_cmd;
-						current_child->offset_frames=current_frame-1;
-						current_child->graphic_command=display_cmd;
-						current_child->current_command=display_cmd;
-						this->graphic_clips.push_back(current_child);
-					}
-				}
-				// get the parent object, using the obj-id
-				parent_child = NULL;
-				if(display_cmd->get_depth()!=0)
-					parent_child=timeline_childs_to_obj_id[display_cmd->get_depth()];
-				if(parent_child!=NULL){
-					if(parent_child->graphic_instance)
-						parent_child=this->depth_manager->get_parent_for_graphic_clip(parent_child);
-				}
-
-				// insert the object
-				final_frame->apply_add_command(display_cmd, parent_child);
-				this->depth_manager->add_child_after_child(current_child, parent_child);
-
+	for(FrameCommandDisplayObject* display_cmd: input_display_commands){
+		if(display_cmd->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD){
+			current_block = display_cmd->get_object_block();// create a new child-instance for this object
+			current_child = new TimelineChild_instance();
+			current_child->start_frame=this->current_frame;
+			current_child->end_frame=this->current_frame;
+			if(display_cmd->get_hasTargetMaskIDs()){
+				if(!((display_cmd->mask_ids.size()==1)&&(display_cmd->mask_ids[0]==-1)))
+					current_child->is_masked=true;
+				else
+					current_child->is_mask=true;
 			}
-			else if((display_cmd->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE)&&(display_cmd->does_something)){
-				if(timeline_childs_to_obj_id.find(display_cmd->get_objID())==timeline_childs_to_obj_id.end())
-					error_vec[0]=1;// ERROR NO OBJECT RETIREVED
-				current_child = timeline_childs_to_obj_id[display_cmd->get_objID()];
-				display_cmd->child=current_child;
-				final_frame->apply_update_command(display_cmd);
-				if(current_child->graphic_instance){
-					current_child->current_command=display_cmd;
-					if(display_cmd->get_hasDisplayMatrix())
-						current_child->graphic_command->set_display_matrix(display_cmd->get_display_matrix()->get());
-					if(display_cmd->get_hasColorMatrix())
-						current_child->graphic_command->set_color_matrix(display_cmd->get_color_matrix()->get());
-					if(display_cmd->get_hasTargetMaskIDs())
-						current_child->graphic_command->mask_ids=display_cmd->mask_ids;
+
+			current_child->child=this->get_child_for_block(current_block);
+					
+			timeline_childs_to_obj_id[display_cmd->get_objID()]=current_child;
+				
+			display_cmd->child=current_child;
+
+			// check if the object is a timeline, and if so, make sure it is finalized (recursion), and check if it is a graphic instance 
+			if(current_block->get_type()==BLOCK::block_type::TIMELINE){
+				child_timeline=reinterpret_cast<BLOCKS::Timeline*>(current_block);
+				// make sure that the timeline has been finalized itself
+				child_timeline->finalize();
+				
+				if(child_timeline->is_grafic_instance){
+					
+					// this is a graphic instance.
+					Graphic_instance* new_graphic_clip = new Graphic_instance();
+					new_graphic_clip->graphic_timeline=child_timeline;
+					new_graphic_clip->graphic_command=display_cmd;
+					new_graphic_clip->offset_frames=current_frame-1;
+					new_graphic_clip->graphic_command=display_cmd;
+					new_graphic_clip->current_command=display_cmd;
+					new_graphic_clip->graphic_child=current_child;
+					current_child->graphic=new_graphic_clip;
+					this->graphic_clips.push_back(new_graphic_clip);
+					
 				}
+			}
+			// get the parent object, using the obj-id
+			parent_child = NULL;
+			if(display_cmd->get_depth()!=0)
+				parent_child=timeline_childs_to_obj_id[display_cmd->get_depth()];
+			if(parent_child!=NULL){
+				if(parent_child->graphic!=NULL)
+					parent_child=this->depth_manager->get_parent_for_graphic_clip(parent_child);
+			}
+			// insert the object
+			final_frame->apply_add_command(display_cmd, parent_child);
+			this->depth_manager->add_child_after_child(current_child, parent_child);
+		}
+		else if(display_cmd->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE){
+			if(timeline_childs_to_obj_id.find(display_cmd->get_objID())==timeline_childs_to_obj_id.end())
+				error_vec[0]=1;// ERROR NO OBJECT RETIREVED
+			current_child = timeline_childs_to_obj_id[display_cmd->get_objID()];
+			display_cmd->child=current_child;
+			final_frame->apply_update_command(display_cmd);
+			
+			if(current_child->graphic!=NULL){
+				current_child->graphic->current_command=display_cmd;
+				if(display_cmd->get_hasDisplayMatrix())
+					current_child->graphic->graphic_command->set_display_matrix(display_cmd->get_display_matrix()->get());
+				if(display_cmd->get_hasColorMatrix())
+					current_child->graphic->graphic_command->set_color_matrix(display_cmd->get_color_matrix()->get());
+				if(display_cmd->get_hasTargetMaskIDs())
+					current_child->graphic->graphic_command->mask_ids=display_cmd->mask_ids;
 			}
 		}
 	}
 
+
+	
 	// EVAL COMMANDS FOR ACTIV GRAPHIC CLIPS:
-	for(TimelineChild_instance* graphic_clip : graphic_clips){
+	for(Graphic_instance* graphic_clip : graphic_clips){
 		if(graphic_clip->graphic_timeline->has_frame_at(this->current_frame - graphic_clip->offset_frames)){
 			TimelineFrame* clip_frame = graphic_clip->graphic_timeline->get_frame_at(this->current_frame - graphic_clip->offset_frames);
 			if(clip_frame==NULL)
 				error_vec[0]=1;// ERROR NO FRAME
-			for(FrameCommandBase* base_cmd: clip_frame->final_commands){
-				if(base_cmd->get_command_type()==frame_command_type::FRAME_COMMAND_REMOVE)
-					continue;
-				FrameCommandDisplayObject* dp_cmd=reinterpret_cast<FrameCommandDisplayObject*>(base_cmd);
+			for(FrameCommandDisplayObject* dp_cmd: clip_frame->display_commands){
 				if(dp_cmd->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
 					dp_cmd->child->child=this->get_child_for_block(dp_cmd->get_object_block());
-					dp_cmd->child->graphic_clip_origin=graphic_clip;
+					dp_cmd->child->parent_grafic=graphic_clip->graphic_child;
 					dp_cmd->child->start_frame=this->current_frame;
 					dp_cmd->child->end_frame=this->current_frame;
 					
-					if(graphic_clip->is_mask){
+					if(graphic_clip->graphic_child->is_mask){
 						dp_cmd->hasTargetMaskIDs=true;
 						dp_cmd->mask_ids.clear();
 						dp_cmd->mask_ids.push_back(-1);
 					}
 					graphic_clip->dirty_masks=true;
-					parent_child=graphic_clip;
+					parent_child=graphic_clip->graphic_child;
 					if(dp_cmd->child->parent_child!=NULL)
 						parent_child=dp_cmd->child->parent_child;
 					final_frame->apply_add_command(dp_cmd, parent_child);
 					this->depth_manager->add_child_after_child(dp_cmd->child, parent_child);
+					graphic_clip->graphic_childs.push_back(dp_cmd->child);
 				}
 				else
 					final_frame->apply_update_command(dp_cmd);
 			}
+			clip_frame->display_commands.clear();
 		}
-		// collect all childs of this graphic instance. needed for masking
-		graphic_clip->graphic_childs.clear();
-		for(FrameCommandDisplayObject* display_cmd:final_frame->commands){
-			if(display_cmd->child->graphic_clip_origin==graphic_clip)
-				graphic_clip->graphic_childs.push_back(display_cmd->child);
-		}
-
 	}
-
-	TimelineChild_instance* graphic_clip=NULL;
+	Graphic_instance* graphic_clip=NULL;
 	FrameCommandDisplayObject* parent_command=NULL;
+	
+	// makeing sure all existing object have correct update commands available:
 
-	// we need to apply the updated properties onto all objects that are present for this frame.
-
-	for(FrameCommandDisplayObject* display_cmd:final_frame->commands){
-
-		if(display_cmd->child->graphic_instance){
-			// this command will be removed later. no need to dio anything
+	std::vector<TimelineChild_instance*> existing_childs;
+	depth_manager->get_children_at_frame(this->current_frame, existing_childs);
+	for(TimelineChild_instance* existing_child:existing_childs){
+		if(existing_child->graphic!=NULL){
+			// this object is a graphic instance. we only need to take care of its childs.
 			continue;
 		}
-		if(display_cmd->child->graphic_clip_origin==NULL){
-			// this is a normal object. we just need to take care of masking
-			// if the object is a mask, it will already have the "-1" assigned.			
-			if(display_cmd->child->is_masked){
-				
+		if(existing_child->parent_grafic==NULL){
+			// this is a normal object. we only need to take care of masking
+			// if the object is a mask, it will already have the "-1" assigned.
+			if(existing_child->is_masked){
 				bool mask_dirty=false;
+				// get the last active command for this child, that is affecting the masks
+				FrameCommandDisplayObject* mask_command = get_mask_command_for_child(existing_child);
 				// we need to get all childs for the mask-id. if the child is a graphic instance, we get all its childs instead.
 				std::vector<TimelineChild_instance*> new_mask_childs;
-				for(int m_id : display_cmd->mask_ids){
+				for(int m_id : mask_command->mask_ids){
 					if(timeline_childs_to_obj_id.find(m_id)==timeline_childs_to_obj_id.end())
 						_ASSERT(0);
 					TimelineChild_instance* mask_child = timeline_childs_to_obj_id[m_id];
-					if(mask_child->graphic_instance){
-						if(mask_child->dirty_masks)
+					if(mask_child->graphic!=NULL){
+						if(mask_child->graphic->dirty_masks)
 							mask_dirty=true;
-						for(TimelineChild_instance* gc_mask_child:mask_child->graphic_childs)
+						for(TimelineChild_instance* gc_mask_child:mask_child->graphic->graphic_childs)
 							new_mask_childs.push_back(gc_mask_child);
 					}
 					else
 						new_mask_childs.push_back(mask_child);
 				}
-				if((display_cmd->get_hasTargetMaskIDs())||(mask_dirty)){
-					display_cmd->hasTargetMaskIDs=true;
-					display_cmd->mask_childs.clear();
+				FrameCommandDisplayObject* child_command = final_frame->get_update_command_by_child(existing_child);
+				if(((child_command!=NULL)&&(child_command->get_hasTargetMaskIDs()))||(mask_dirty)){
+					if(child_command==NULL){
+						child_command=new FrameCommandDisplayObject();
+						child_command->set_command_type(frame_command_type::FRAME_COMMAND_UPDATE);
+						child_command->child = existing_child;
+						final_frame->add_command(child_command);
+					}
+					child_command->hasTargetMaskIDs=true;
+					child_command->mask_childs.clear();
 					for(TimelineChild_instance* m_child : new_mask_childs)
-						display_cmd->mask_childs.push_back(m_child);
+						child_command->mask_childs.push_back(m_child);
 				}
 				new_mask_childs.clear();
-				
 			}
 			continue;
 		}
-		graphic_clip = display_cmd->child->graphic_clip_origin;
-		parent_command = graphic_clip->current_command;
-
-		// if this command does nothing, and we have no parent command for this frame, we dont need to do anything.
-		if((!display_cmd->does_something)&&(parent_command==NULL))
-			continue;
-
-		if((display_cmd->get_hasDisplayMatrix())||(graphic_clip->graphic_command->get_hasDisplayMatrix())||((parent_command!=NULL)&&(parent_command->get_hasDisplayMatrix()))){
-			GEOM::MATRIX2x3* parent_mtx = graphic_clip->graphic_command->get_display_matrix();
-			if((parent_command!=NULL)&&(parent_command->get_hasDisplayMatrix()))
-				parent_mtx=parent_command->get_display_matrix();
-			// reset the display matrix to its original state
-			display_cmd->set_display_matrix(display_cmd->bkp_matrix->get());
-			// multiply the matrix. append works for 99%, prepend for 5% ...
-			display_cmd->get_display_matrix()->append(parent_mtx);
-		}
-		if((display_cmd->get_hasColorMatrix())||(graphic_clip->graphic_command->get_hasColorMatrix())||((parent_command!=NULL)&&(parent_command->get_hasColorMatrix()))){
-			GEOM::ColorTransform* parent_color_trans = graphic_clip->graphic_command->get_color_matrix();
-			if((parent_command!=NULL)&&(parent_command->get_hasColorMatrix()))
-				parent_color_trans=parent_command->get_color_matrix();
-			// reset the color transform to its original state
-			display_cmd->set_color_matrix(display_cmd->bkp_color_matrix->get());
-			// prepend the parent transform. seem to work
-			display_cmd->get_color_matrix()->prepend(parent_color_trans);
-		}
+		// if we make it here, child is a child of a graphic clip. skip it (will be processed in next step).
 	}
 	
-	// take care of graphic clip masking
-	for(TimelineChild_instance* graphic_clip : graphic_clips){
-		// we only need to do this for graphic clips that had any childs added.
-		if(graphic_clip->is_masked){
+	// take care of update commands for childs inserted for graphic clips
+	for(Graphic_instance* graphic_clip : graphic_clips){
+		
+		for(TimelineChild_instance* gc_child:graphic_clip->graphic_childs){
+			FrameCommandDisplayObject* child_command = final_frame->get_update_command_by_child(gc_child);
+			if((child_command==NULL)&&(graphic_clip->current_command==NULL))
+				continue;// no need for any update
+			bool new_command=false;
+			bool has_any_effect=false;
+			if(child_command==NULL){
+				new_command=true;
+				child_command=new FrameCommandDisplayObject();
+				child_command->set_command_type(frame_command_type::FRAME_COMMAND_UPDATE);
+				child_command->child = gc_child;
+			}
+			if((child_command->get_hasDisplayMatrix())||(graphic_clip->graphic_command->get_hasDisplayMatrix())||((graphic_clip->current_command!=NULL)&&(graphic_clip->current_command->get_hasDisplayMatrix()))){
+				if(!child_command->get_hasDisplayMatrix()){
+					FrameCommandDisplayObject* matrix_command = get_matrix_command_by_child(gc_child);
+					if(matrix_command!=NULL){
+						child_command->set_display_matrix(matrix_command->get_display_matrix()->get());
+						child_command->matrix_parents.clear();
+						for (GEOM::MATRIX2x3* parent_mtx:matrix_command->matrix_parents){
+							if(parent_mtx!=matrix_command->matrix_parents.back()){
+								GEOM::MATRIX2x3* new_mtx = new GEOM::MATRIX2x3(parent_mtx->get());
+								child_command->matrix_parents.push_back(new_mtx);
+							}
+						}
+					}else{
+						child_command->set_display_matrix(child_command->get_display_matrix()->get());
+					}
+				}
+				GEOM::MATRIX2x3* parent_mtx = graphic_clip->graphic_command->get_display_matrix();
+				if((graphic_clip->current_command!=NULL)&&(graphic_clip->current_command->get_hasDisplayMatrix()))
+					parent_mtx=graphic_clip->current_command->get_display_matrix();
+				child_command->matrix_parents.push_back(new GEOM::MATRIX2x3(parent_mtx->get()));
+				has_any_effect=true;
+			}
+			if(((child_command!=NULL)&&(child_command->get_hasColorMatrix()))||(graphic_clip->graphic_command->get_hasColorMatrix())||((graphic_clip->current_command!=NULL)&&(graphic_clip->current_command->get_hasColorMatrix()))){
+				if(!child_command->get_hasColorMatrix()){
+					FrameCommandDisplayObject* color_command = get_color_transform_command_by_child(gc_child);
+					if(color_command!=NULL){
+						child_command->set_color_matrix(color_command->get_color_matrix()->get());
+						child_command->color_transform_parents.clear();
+						for (GEOM::ColorTransform* parent_mtx:color_command->color_transform_parents){
+							if(parent_mtx!=color_command->color_transform_parents.back()){
+								GEOM::ColorTransform* new_mtx = new GEOM::ColorTransform(parent_mtx->get());
+								child_command->color_transform_parents.push_back(new_mtx);
+							}
+						}
+					}else{
+						child_command->set_color_matrix(child_command->get_color_matrix()->get());
+					}
+				}
+				GEOM::ColorTransform* parent_color_trans = graphic_clip->graphic_command->get_color_matrix();
+				if((graphic_clip->current_command!=NULL)&&(graphic_clip->current_command->get_hasColorMatrix()))
+					parent_color_trans=graphic_clip->current_command->get_color_matrix();
+				// prepend the parent transform. seem to work
+				child_command->color_transform_parents.push_back(new GEOM::ColorTransform(parent_color_trans->get()));
+				has_any_effect=true;
+			}	
+			if((has_any_effect)&&(new_command))
+				final_frame->add_command(child_command);
+			else if ((!has_any_effect)&&(new_command))
+				delete child_command;
+			//TODO: take care of blendmodes and visiblility here
+		}
+
+		
+		// check the masking for masked graphic clips.
+		if(graphic_clip->graphic_child->is_masked){
 			bool mask_dirty=false;
 			// we need to get all childs for the mask-id. if the child is a graphic instance, we get all its childs instead.
 			std::vector<TimelineChild_instance*> new_mask_childs;
@@ -553,33 +591,112 @@ Timeline::advance_frame(TimelineFrame* frame)
 				if(timeline_childs_to_obj_id.find(m_id)==timeline_childs_to_obj_id.end())
 					_ASSERT(0);
 				TimelineChild_instance* mask_child = timeline_childs_to_obj_id[m_id];
-				if(mask_child->graphic_instance){
-					if(mask_child->dirty_masks)
+				if(mask_child->graphic!=NULL){
+					if(mask_child->graphic->dirty_masks)
 						mask_dirty=true;
-					for(TimelineChild_instance* gc_mask_child:mask_child->graphic_childs)
+					for(TimelineChild_instance* gc_mask_child:mask_child->graphic->graphic_childs)
 						new_mask_childs.push_back(gc_mask_child);
 				}
 				else
 					new_mask_childs.push_back(mask_child);
 			}
 			if((graphic_clip->dirty_masks)||(mask_dirty)){
-				for(FrameCommandDisplayObject* display_cmd:final_frame->commands){
-					// todo: check if this update is needed (are same masks already assigned to objects)
-					if(display_cmd->child->graphic_clip_origin==graphic_clip){
-						display_cmd->hasTargetMaskIDs=true;
-						display_cmd->mask_childs.clear();
+				for(TimelineChild_instance* gc_child:graphic_clip->graphic_childs){
+					FrameCommandDisplayObject* child_command = final_frame->get_update_command_by_child(gc_child);
+					bool apply_masks=true;
+					bool new_command=false;
+					if(child_command==NULL){
+						new_command=true;
+						child_command=new FrameCommandDisplayObject();
+						child_command->set_command_type(frame_command_type::FRAME_COMMAND_UPDATE);
+						child_command->child = gc_child;
+					}
+					if(!(child_command->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD)){
+						apply_masks=false;
+						FrameCommandDisplayObject* mask_command = get_mask_command_for_child(gc_child);
+						if(mask_command==NULL)
+							apply_masks=true;
+						else{
+							// todo: compare the 2 lists of mask-childs to check if the masks need update
+							apply_masks=true;
+						}
+					}
+					if(apply_masks){
+						if(new_command)
+							final_frame->add_command(child_command);
+						child_command->hasTargetMaskIDs=true;
+						child_command->mask_childs.clear();
 						for(TimelineChild_instance* m_child : new_mask_childs)
-							display_cmd->mask_childs.push_back(m_child);
+							child_command->mask_childs.push_back(m_child);
+					}
+					else{
+						if(new_command)
+							delete child_command;
 					}
 				}
 			}
 			new_mask_childs.clear();
 		}
+		;
+		for(FrameCommandDisplayObject* display_cmd:final_frame->display_commands){
+			if(display_cmd->child->graphic==NULL)
+				display_cmd->prev_obj = this->get_prev_cmd(display_cmd->child);
+		}
 	}
 	
 }
 
-
+FrameCommandDisplayObject*
+Timeline::get_prev_cmd(TimelineChild_instance* child)
+{
+	if(this->frames.size()==1)
+		return NULL;
+	int frame_cnt=this->frames.size()-1;
+	FrameCommandDisplayObject* fcm=NULL;
+	while(frame_cnt--){
+		fcm = this->frames[frame_cnt]->get_update_command_by_child(child);
+		if(fcm!=NULL)
+			return fcm;
+	}
+	return NULL;
+}
+	
+FrameCommandDisplayObject*
+Timeline::get_matrix_command_by_child(TimelineChild_instance* child)
+{
+	int frame_cnt=this->frames.size();
+	FrameCommandDisplayObject* fcm=NULL;
+	while(frame_cnt--){
+		fcm = this->frames[frame_cnt]->get_update_command_by_child(child);
+		if((fcm!=NULL)&&(fcm->get_hasDisplayMatrix()))
+			return fcm;
+	}
+	return NULL;
+}
+FrameCommandDisplayObject*
+Timeline::get_color_transform_command_by_child(TimelineChild_instance* child)
+{
+	int frame_cnt=this->frames.size();
+	FrameCommandDisplayObject* fcm=NULL;
+	while(frame_cnt--){
+		fcm = this->frames[frame_cnt]->get_update_command_by_child(child);
+		if((fcm!=NULL)&&(fcm->get_hasColorMatrix()))
+			return fcm;
+	}
+	return NULL;
+}
+FrameCommandDisplayObject*
+Timeline::get_mask_command_for_child(TimelineChild_instance* child)
+{
+	int frame_cnt=this->frames.size();
+	FrameCommandDisplayObject* fcm=NULL;
+	while(frame_cnt--){
+		fcm = this->frames[frame_cnt]->get_update_command_by_child(child);
+		if((fcm!=NULL)&&(fcm->get_hasTargetMaskIDs()))
+			return fcm;
+	}
+	return NULL;
+}
 /** \brief Finalizes the timeline. This will recurivly call finalize on all timeline-childs
 * After we recieved all Adobe-frameCommands, we play 1 time through the timeline, to set depthmanager, and merge graphic clips
 */
@@ -594,7 +711,7 @@ Timeline::finalize()
 	// first, remove all empty frames (no commands / no label / no framecode)
 	std::vector<TimelineFrame*> newFramesList;
 	TimelineFrame* lastTimeLineFrame=NULL;
-	for (TimelineFrame * f : this->adobe_frames) 
+	for (TimelineFrame * f : this->frames) 
 	{
 		// a frame is not empty, if it has commands, script, labels, or if it is the first frame
 		if((!f->is_empty())||(lastTimeLineFrame==NULL)){
@@ -606,10 +723,6 @@ Timeline::finalize()
 			delete f;
 		}
 	}
-	this->adobe_frames.clear();
-	for (TimelineFrame * f : newFramesList) 
-		this->adobe_frames.push_back(f);
-
 	//clear out the frames, the valid frames are now stored in "newFramesList"
 	this->frames.clear();
 
@@ -626,38 +739,25 @@ Timeline::finalize()
 	for (TimelineFrame * f : newFramesList){
 		
 		int start_frame=this->current_frame;
+		int frame_duration=f->get_frame_duration();
 		advance_frame(f);
 		this->current_frame++;
-		while (this->current_frame<(start_frame+f->get_frame_duration()))
+		while (this->current_frame<(start_frame+frame_duration))
 		{
 			advance_frame(NULL);
 			this->current_frame++;
 		}
 	}
 	
+	// only needed for as2 depth. todo: implement the option
 	depth_manager->apply_depth();
-
+	
+	//	this removes the graphic instance-commands. 
+	//	for as2 it also orders the commands by depth.
+	//	for as3 commands must not be reordered, otherwise they will no longer execute correctly
 	for (TimelineFrame * f : this->frames) 
 		f->build_final_commands();
-		/*
-		int cnt_objs = f->display_objects.size();
-		while(cnt_objs--){
-			ANIM::TimelineChild_instance* tlchild_inst = f->display_objects[cnt_objs];
-			if(tlchild_inst->depth_obj==NULL){
-				continue;
-			}
-			else{
-				tlchild_inst->depth=tlchild_inst->depth_obj->depth;
-				if(tlchild_inst->cmd!=NULL){
-					tlchild_inst->cmd->cur_depth=tlchild_inst->depth;
-					f->final_commands.push_back(tlchild_inst->cmd);
-				}
-				else{
-					bool thisIsError=true;// or is it not. there are object that migth be on timeline but have no command
-				}
-			}
-		}
-		*/
+
 	// remove the graphic instances from the potential child list
 	std::vector<ANIM::PotentialTimelineChildGroup* > new_timeline_childs;
 	for(ANIM::PotentialTimelineChildGroup* child_group: this->timeline_childs){
@@ -695,11 +795,11 @@ Timeline::finalize()
 			this->timeline_childs_multiple_instances.push_back(child_group);
 		}
 	}
-
-	// after we have set the ids on the child-insatnces, we now can convert mask-ids from adobe-obj-id to child-id
+	
+	// masking - get id for mask-childs
 	for (TimelineFrame * f : this->frames) 
 	{
-		for(FrameCommandDisplayObject* fd: f->commands){
+		for(FrameCommandDisplayObject* fd: f->display_commands){
 			if(fd->get_hasTargetMaskIDs()){
 				if((fd->mask_ids.size()==1)&&(fd->mask_ids[0]==-1)){
 				}
@@ -716,14 +816,6 @@ Timeline::finalize()
 			}
 		}
 	}
-	// create a list of PotentialTimelineChild that are used by this timeline.
-	// each PotentialTimelineChild stores a reference to a awd-block
-	//	this->create_timeline_childs();
-
-	// finalizes the commands, so that we only store needed properties
-	// also takes care of resetting object-props when neccessary (when resuing objects)
-	//for (TimelineFrame * f : this->frames) 
-	//	f->finalize_object_states();
 	
 	return result::AWD_SUCCESS;
 }
@@ -779,7 +871,7 @@ Timeline::calc_body_length(AWDFile* awd_file, BlockSettings *curBlockSettings)
     len += this->timeline_childs_multiple_instances.size()*(sizeof(TYPES::UINT32)+sizeof(TYPES::UINT16));// num of potential childs
 	
     len += sizeof(TYPES::UINT16);// num of potential sounds
-    len += this->timeline_sounds.size()*sizeof(TYPES::UINT32);// num of potential sounds
+    len += 0*sizeof(TYPES::UINT32);// num of potential sounds
 
     len += sizeof(TYPES::UINT16);// num of frames
 	for (TimelineFrame * f : this->frames) 
@@ -817,9 +909,9 @@ Timeline::get_frames_info(std::vector<std::string>& infos)
 		}
 		infos.push_back(layer_info);
 	}	
+	
 	int frame_cnt=0;
 	int fcnt1=0;
-	int fcnt2=0;
 	bool keepgoing=true;
 	while(keepgoing){
 		frame_cnt++;
@@ -830,32 +922,7 @@ Timeline::get_frames_info(std::vector<std::string>& infos)
 		}
 		if(fcnt1>=this->frames.size())
 			keepgoing=false;
-		/*
-		if(this->adobe_frames[fcnt2]->startframe==frame_cnt){
-			infos.push_back("Adobe Frame "+std::to_string(this->adobe_frames[fcnt2]->startframe)+" duration = "+std::to_string(this->adobe_frames[fcnt2]->get_frame_duration()));
-			this->adobe_frames[fcnt2]->get_frame_info(infos);
-			infos.push_back("	remove:");
-			for (FrameCommandBase * f : this->adobe_frames[fcnt2]->remove_commands) 
-			{
-				std::string this_string;
-				f->get_command_info(this_string);
-				infos.push_back("		"+this_string);
-			}
-			infos.push_back("	commands:");
-			for (FrameCommandBase * f : this->adobe_frames[fcnt2]->commands) 
-			{
-				FrameCommandDisplayObject* fd = reinterpret_cast<FrameCommandDisplayObject*>(f);
-				if(fd->does_something){
-					std::string this_string;
-					f->get_command_info(this_string);
-					infos.push_back("		"+this_string);
-				}
-			}
-			fcnt2++;
-		}
-		if(fcnt2>=this->adobe_frames.size())
-			keepgoing=false;
-			*/
+		
 	}
 	return AWD::result::AWD_SUCCESS;
 }
@@ -866,9 +933,28 @@ Timeline::collect_dependencies(FILES::AWDFile* target_file, BLOCK::instance_type
 	// all timelines need to be finalized before collecting dependencies
 	// we do not automaticcally call the finalize here, because it need to be called before collecting dependencies, 
 	// reason for that is, that finalizing timelines will merge some timelines (graphic instances), so its easier to keep this in 2 sepperate steps 
-	if(!this->is_finalized){
+	if(!this->is_finalized)
 		return result::AWD_ERROR;
+	
+	std::vector<TimelineFrame*> final_frames;
+	std::vector<TimelineFrame*> remove_frames;
+	TimelineFrame* prev_frame=NULL;
+	for (TimelineFrame * f : this->frames) 
+	{
+		f->finalize_commands();
+		if((f->is_empty())&&(prev_frame!=NULL)){
+			prev_frame->set_frame_duration(prev_frame->get_frame_duration()+f->get_frame_duration());
+			this->remove_frames.push_back(f);
+			continue;
+		}
+		prev_frame=f;
+		final_frames.push_back(f);
 	}
+	this->frames.clear();
+	for (TimelineFrame * f : final_frames)
+		this->frames.push_back(f);
+	final_frames.clear();
+	
 	// we have a list of dependencies that needs to appear in awd-file before this timeline
 	for(PotentialTimelineChildGroup* child: this->timeline_childs)
 		child->awd_block->add_with_dependencies(target_file, instance_type);
@@ -902,14 +988,15 @@ Timeline::write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings *cu
 		fileWriter->writeUINT16(child->childs.size());
 	}
 
-	fileWriter->writeUINT16(TYPES::UINT16(this->timeline_sounds.size()));
+	fileWriter->writeUINT16(TYPES::UINT16(0));
+	/*
 	for(PotentialTimelineChild* sound: this->timeline_sounds){
 		TYPES::UINT32 block_addr=0;
 		if (sound->awd_block != NULL)
 			sound->awd_block->get_block_addr(awd_file, block_addr);
 		fileWriter->writeUINT32(block_addr);
 	}
-
+	*/
 	fileWriter->writeUINT16(TYPES::UINT16(this->frames.size()));// num of frames	
 	for (TimelineFrame * f : this->frames) 
 	{

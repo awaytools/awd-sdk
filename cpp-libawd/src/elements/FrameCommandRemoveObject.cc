@@ -19,33 +19,18 @@ using namespace AWD::BLOCK;
 using namespace AWD::SETTINGS;
 using namespace AWD::ANIM;
  
-FrameCommandRemoveObject::FrameCommandRemoveObject() :
-FrameCommandBase()
-{ 
-	this->set_command_type(frame_command_type::FRAME_COMMAND_REMOVE);
-	this->remove_at_index=0;
-    
+FrameCommandRemoveObject::FrameCommandRemoveObject() 
+{
+	this->depth=0;
+	this->objID=0;
+	this->child=NULL;
 }
 
 FrameCommandRemoveObject::~FrameCommandRemoveObject()
 {
 }
-result
-FrameCommandRemoveObject::get_command_info_specific(std::string& info)
-{
-	info = "	Remove objects at depth : ";
-	info += std::to_string(this->child->depth)+" | ";//+" name: "+this->child->awd_block->get_name()+"\n";
-	if(this->child_commands.size()>0){
-		for(FrameCommandBase* child_cmd:this->child_commands){
-			info += std::to_string(child_cmd->child->depth)+" | ";//+" name: "+child_cmd->child->awd_block->get_name()+"\n";
-		}
-	}
-	return AWD::result::AWD_SUCCESS;
-}
 
-
-
-
+/*
 double
 FrameCommandRemoveObject::compare_to_command_specific(FrameCommandBase* frameCommand)
 {
@@ -99,3 +84,4 @@ FrameCommandRemoveObject::write_command_specific(FILES::FileWriter * fileWriter,
 	
     //this->command_properties->write_attributes(fileWriter, blockSettings);
 }
+*/

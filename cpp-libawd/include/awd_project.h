@@ -5,7 +5,6 @@
 #include <vector>
 #include <map>
 
-
 #include "base/block.h"
 #include "base/state_element_base.h"
 
@@ -45,9 +44,13 @@
 #include "blocks/uv_pose.h"
 #include "blocks/vertex_anim_clip.h"
 #include "blocks/vertex_pose.h"
+#include <iostream>
 
-#include "utils/util.h"
+#ifdef _WIN32
+#include <ctime>
+#endif
 //#include "utils/libAWD.h"
+
 
 
 /** \namespace AWD
@@ -76,6 +79,8 @@ namespace AWD
 			BLOCKS::Namespace * name_space;			/// < This name_space_block should contain all names_spaces used on all AWDfile. It acts as name_space-library and is not added to the block-list.
 			SETTINGS::Settings * settings;			/// < the settings for this project. They might be shared or copied for the files. Files that share settings do not need to delete them in deconstructor.
 			FILES::AWDFile* active_file;			/// < the file that is currently active for this project.	
+			double current_time;
+			std::clock_t clock;
 			
 		protected:
 			TYPES::state validate_state();
@@ -102,13 +107,13 @@ namespace AWD
 			*/
 			result open();
 			
+			
 			/**
 			* \brief Framecommands might generated using ressource-ids for referencing the objects instead of connected them directly to the objects AWDBlocks.\n
 			* In this case, this function must be called before export.
 			* @return result 
 			*/
-			result get_blocks_for_external_ids();
-
+			int get_time_since_last_call();
 			/**
 			* \brief Get the statistic of the AWDProject.
 			*	@param[out] statistics_str The string that should get the statistics copied into it.
@@ -133,8 +138,10 @@ namespace AWD
 			* 
 			*	@resultAWD::result
 			*/
-			result export_file();	
-			()
+			result export_file();
+			
+			result exchange_timeline_by_name(BLOCKS::Timeline*);	
+			
 			result finalize_timelines();	
 			/**
 			* \brief Imports the active-file. This should result in a AWDFile that is fully processed and ready to export again.

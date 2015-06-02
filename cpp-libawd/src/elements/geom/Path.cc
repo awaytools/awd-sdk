@@ -49,8 +49,8 @@ Path::Path()
 Path::~Path()
 {
 	if(this->delete_segs){
-		//for(PathSegment* one_seg:this->path_segments)
-		//	delete one_seg;
+		for(PathSegment* one_seg:this->path_segments)
+			delete one_seg;
 	}
 	free(polyX);
 	free(polyY);

@@ -12,17 +12,14 @@ namespace AWD
 {
 	namespace ANIM
 	{
-		class TimelineFrame :
-			public BASE::AttrElementBase
+		class TimelineFrame
 		{
-		protected:
+			private:
 				std::string frame_code;
 				TYPES::UINT32 frame_duration;
 				std::vector<frame_label_type> label_types;
 				std::vector<std::string> labels;
-
-				ATTR::NumAttrList * command_properties;
-
+				
 			public:
 				TimelineFrame();
 				~TimelineFrame();
@@ -30,25 +27,26 @@ namespace AWD
 				TYPES::UINT32 startframe;
 				void set_frame_duration(TYPES::UINT32);
 				TYPES::UINT32 get_frame_duration();
-		
-				std::vector<ANIM::FrameCommandDisplayObject*> commands;
-				std::vector<ANIM::FrameCommandBase*> sound_commands;
+
+				std::vector<ANIM::FrameCommandDisplayObject*> display_commands;				
+				std::vector<ANIM::FrameCommandDisplayObject*> empty_commands;// needed to delete unused commands. we cannot delete when sorting out, because we need to keep prev-object chain intakt
 				std::vector<ANIM::FrameCommandRemoveObject*> remove_commands;
-				std::vector<ANIM::FrameCommandRemoveObject*> remove_sounds_commands;
-				std::vector<ANIM::FrameCommandBase*> final_commands;
 
 				// used while recieving commands from adobe:
 				FrameCommandDisplayObject* add_display_object_by_id(TYPES::UINT32 objectID, TYPES::UINT32 add_after_ID);
-				FrameCommandBase* get_update_command_by_id(TYPES::UINT32 obj_id);
+				FrameCommandDisplayObject* get_update_command_by_id(TYPES::UINT32 obj_id);
 				void remove_object_by_id(TYPES::UINT32 objectID);
-				bool test_depth_ids(TYPES::UINT32 objectID, TYPES::UINT32 add_after_ID);
+				//bool test_depth_ids(TYPES::UINT32 objectID, TYPES::UINT32 add_after_ID);
 				
 				// used while finalizing the command data:
 				void apply_add_command(FrameCommandDisplayObject*, TimelineChild_instance*);
 				void apply_update_command(FrameCommandDisplayObject*);
+
+				FrameCommandDisplayObject* get_update_command_by_child(TimelineChild_instance* child);
 				void apply_remove_command(FrameCommandRemoveObject*);
 				void build_final_commands();
 				void calc_mask_ids();
+				void finalize_commands();
 
 
 				void set_frame_code(const std::string&);

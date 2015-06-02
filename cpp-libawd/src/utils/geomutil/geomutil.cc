@@ -821,6 +821,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 		}
 		geom->add_message(new_message2, message_type::STATUS_MESSAGE);
 		*/
+		DELETEARRAY(InputValues_regions);
 
 		int original_region_cnt = region_cnt;
 		region_cnt=0;
@@ -853,6 +854,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 				one_region_group->redirect->merge_group_into(one_region_group);
 
 		}
+		//DELETEARRAY(Sorted);
 
 		// at this point we have lists of filled_regions that we know might intersect.
 		// we could further check bounding boxes etc, but i think this might be good enough.
@@ -1100,6 +1102,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 			}
 		}
 		DELETEARRAY(InputValues_segments);
+		//DELETEARRAY(Sorted);
 
 	}
 	//if(all_intersecting_segs.size()>0)

@@ -339,7 +339,7 @@ FrameCommandDisplayObject::calc_command_length(SETTINGS::BlockSettings * blockSe
 void
 FrameCommandDisplayObject::finalize_command()
 {
-	/*
+	
 	// check if we need matrix for this command
 	if(this->get_hasDisplayMatrix()){
 		if(prev_obj==NULL){
@@ -428,12 +428,15 @@ FrameCommandDisplayObject::finalize_command()
 			}
 		}
 	}
-	*/
+	
 }
 
 bool
 FrameCommandDisplayObject::has_active_properties()
 {
+	if(this->command_type==frame_command_type::FRAME_COMMAND_ADD_CHILD)
+		return true;	
+
 	if(this->get_hasDisplayMatrix())
 		return true;	
 		
@@ -445,6 +448,13 @@ FrameCommandDisplayObject::has_active_properties()
 	
 	if(this->get_hasVisiblitiyChange())
 		return true;
+
+	if(this->instanceName!="")
+		return true;
+
+	if(this->hasTargetMaskIDs)
+		return true;
+
 	return false;
 	
 }
@@ -454,20 +464,26 @@ FrameCommandDisplayObject::resolve_parenting()
 	
 	// write properties
 	if (this->get_hasDisplayMatrix()){
-			
 		if(this->matrix_parents.size()>0){
-			int mtx_cnt=this->matrix_parents.size()-1;
-			// matrix_parents contains list of parent matrix. last matrix in this list is the matrix of root-object
+			// matrix_parents contains list of parent matrices. 
+			// the last matrix in the list is the matrix of root-object
+			// both version give same results
+
 			/*
-			// both version work same.
+			// version1: starting at bottom, working way up to the root object
 			for(GEOM::MATRIX2x3* new_matrix:this->matrix_parents)
 				this->display_matrix->append(new_matrix);
-				*/
+			// end version1
+			*/
+
+			// version2: traverse hirarchy top to bottom
+			int mtx_cnt=this->matrix_parents.size()-1;
 			GEOM::MATRIX2x3* new_matrix=this->matrix_parents[mtx_cnt];
 			while(mtx_cnt--)
 				new_matrix->prepend(this->matrix_parents[mtx_cnt]);
 			new_matrix->prepend(this->display_matrix);
 			this->display_matrix->set(new_matrix->get());
+			// end version2
 		}
 	}
 	if (this->get_hasColorMatrix()){

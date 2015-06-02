@@ -27,7 +27,7 @@ using namespace AWD::ANIM;
 
 FrameCommandDisplayObject::FrameCommandDisplayObject()
 {
-	//this->prev_obj=NULL;
+	this->prev_obj=NULL;
 	this->display_matrix=new GEOM::MATRIX2x3();
 	this->color_matrix=new GEOM::ColorTransform();
 	this->hasDisplayMatrix=false;
@@ -167,13 +167,12 @@ FrameCommandDisplayObject::compareColorMatrix(TYPES::F64* color_matrix)
 		}
 	}
 	
-    return countvalid/20;
+    return countvalid/8;
 }
 double
 FrameCommandDisplayObject::comparedisplaMatrix(TYPES::F64* display_matrix)
 {
 	int countvalid=0;
-	
 	for(int i=0; i<6;i++){
 		if(this->display_matrix->get()[i]==display_matrix[i]){
 			countvalid++;
@@ -342,7 +341,7 @@ FrameCommandDisplayObject::finalize_command()
 	
 	// check if we need matrix for this command
 	if(this->get_hasDisplayMatrix()){
-		if(prev_obj==NULL){
+		if(this->prev_obj==NULL){
 			// check if it is identity. if not. apply
 			if(this->display_matrix->is_identity()){
 				this->hasDisplayMatrix=false;
@@ -368,7 +367,7 @@ FrameCommandDisplayObject::finalize_command()
 	}
 	else{
 		if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			if(prev_obj!=NULL){
+			if(this->prev_obj!=NULL){
 				this->hasDisplayMatrix=true;
 			}
 		}
@@ -376,7 +375,7 @@ FrameCommandDisplayObject::finalize_command()
 	
 	// check if we need colortransform for this command
 	if(this->get_hasColorMatrix()){
-		if(prev_obj==NULL){
+		if(this->prev_obj==NULL){
 			// check if it is identity. if not. apply
 			if(this->color_matrix->is_identity()){
 				this->hasColorMatrix=false;
@@ -463,18 +462,19 @@ FrameCommandDisplayObject::resolve_parenting()
 {
 	
 	// write properties
+	//if(false){
 	if (this->get_hasDisplayMatrix()){
 		if(this->matrix_parents.size()>0){
 			// matrix_parents contains list of parent matrices. 
 			// the last matrix in the list is the matrix of root-object
 			// both version give same results
 
-			/*
+			
 			// version1: starting at bottom, working way up to the root object
 			for(GEOM::MATRIX2x3* new_matrix:this->matrix_parents)
 				this->display_matrix->append(new_matrix);
 			// end version1
-			*/
+			/*
 
 			// version2: traverse hirarchy top to bottom
 			int mtx_cnt=this->matrix_parents.size()-1;
@@ -483,6 +483,7 @@ FrameCommandDisplayObject::resolve_parenting()
 				new_matrix->prepend(this->matrix_parents[mtx_cnt]);
 			new_matrix->prepend(this->display_matrix);
 			this->display_matrix->set(new_matrix->get());
+			*/
 			// end version2
 		}
 	}

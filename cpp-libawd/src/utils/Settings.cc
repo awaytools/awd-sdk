@@ -94,49 +94,62 @@ VertexNormalsSettings::get_normal_threshold()
 BlockSettings::BlockSettings(bool create_default_streams):
 	VertexNormalsSettings()
 {
-		this->radial_gradient_size=512;
-		this->sound_file_extension="keep";
-		this->embbed_audio=true;
-		this->embbed_textures=true;
-		this->compression = compression::UNCOMPRESSED;
-		this->wideMatrix=false;
-		this->wideGeom=false;
-		this->wideProps=false;
-		this->wideAttributes=false;
-		this->scale=1.0;
-		this->fps=25;
-		this->block_header_flag=0;
-		this->exterior_threshold=0.0;
-		this->exterior_threshold_for_fonts=0.0;
-		this->exterior_threshold_for_strokes=0.0;
-		this->flipYaxis=false;
-		this->flipXaxis=false;
-		this->export_framescripts=false;
+	this->radial_gradient_size=512;
+	this->sound_file_extension="keep";
+	this->embbed_audio=true;
+	this->embbed_textures=true;
+	this->compression = compression::UNCOMPRESSED;
+	this->wideMatrix=false;
+	this->wideGeom=false;
+	this->wideProps=false;
+	this->wideAttributes=false;
+	this->scale=1.0;
+	this->fps=25;
+	this->block_header_flag=0;
+	this->exterior_threshold=0.0;
+	this->exterior_threshold_for_fonts=0.0;
+	this->exterior_threshold_for_strokes=0.0;
+	this->flipYaxis=false;
+	this->flipXaxis=false;
+	this->export_framescripts=false;
 	if(create_default_streams){
+		create_streams(false, true);
+	}
+}
 
-		// define streams for triangle. this is the same for 2d and 3d verts
+BlockSettings::~BlockSettings()
+{
+}
+
+void
+BlockSettings::create_streams(bool tri_indices, bool uvs)
+{
+	this->stream_recipes.clear();
+	// define streams for triangle. this is the same for 2d and 3d verts
+	if(tri_indices){
 		std::vector<GEOM::DataStreamAttrDesc> triangle_attrs;
 		GEOM::DataStreamAttrDesc triangle_attr_indicies = DataStreamAttrDesc(data_stream_attr_type::VERTEX_INDICIES, data_types::UINT16, 3, storage_precision_category::UNDEFINED_STORAGE_PRECISION, true, true, true, false, "");
 		triangle_attrs.push_back(triangle_attr_indicies);
-
 		this->stream_recipes.push_back(new DataStreamRecipe(stream_type::TRIANGLES,	stream_target::TRIANGLE_STREAM, triangle_attrs));
 		
-		// define streams for combined vertex stuff 2d:
+	}
+	// define streams for combined vertex stuff 2d:
+	std::vector<GEOM::DataStreamAttrDesc> vertex2D_attributes;
 
-		std::vector<GEOM::DataStreamAttrDesc> vertex2D_attributes;
+	GEOM::DataStreamAttrDesc attribute_desc_position2d = DataStreamAttrDesc(data_stream_attr_type::POSITION2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+	vertex2D_attributes.push_back(attribute_desc_position2d);
 
-		GEOM::DataStreamAttrDesc attribute_desc_position2d = DataStreamAttrDesc(data_stream_attr_type::POSITION2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-		vertex2D_attributes.push_back(attribute_desc_position2d);
-
-		GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-		vertex2D_attributes.push_back(attribute_desc_curve_data);
+	GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+	vertex2D_attributes.push_back(attribute_desc_curve_data);
 		
+	if(uvs){
 		GEOM::DataStreamAttrDesc attribute_desc_uv2d_data = DataStreamAttrDesc(data_stream_attr_type::UV_2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
 		vertex2D_attributes.push_back(attribute_desc_uv2d_data);
-		//GEOM::DataStreamAttrDesc attribute_desc_color = DataStreamAttrDesc(data_stream_attr_type::COLOR, data_types::VECTOR4x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-		//vertex2D_attributes.push_back(attribute_desc_color);
+			//GEOM::DataStreamAttrDesc attribute_desc_color = DataStreamAttrDesc(data_stream_attr_type::COLOR, data_types::VECTOR4x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+			//vertex2D_attributes.push_back(attribute_desc_color);
+	}
 
-		this->stream_recipes.push_back(new DataStreamRecipe(stream_type::ALLVERTDATA2D__9F,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+	this->stream_recipes.push_back(new DataStreamRecipe(stream_type::ALLVERTDATA2D__9F,	stream_target::VERTEX_STREAM, vertex2D_attributes));
 		
 		/*
 
@@ -151,12 +164,6 @@ BlockSettings::BlockSettings(bool create_default_streams):
 		this->stream_recipes.push_back(new DataStreamRecipe(stream_type::JOINT_INDICES,stream_target::VERTEX, data_types::UINT16));
 
 		*/
-		
-	}
-}
-
-BlockSettings::~BlockSettings()
-{
 }
 
 bool

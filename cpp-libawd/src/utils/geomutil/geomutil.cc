@@ -1089,15 +1089,15 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 				if((seg_1->bit_id_y & seg_2->bit_id_y)==0)
 					continue;
 				// if the segments are neighbours, we do not consider them intersecting. maybe we should (?)
-				if((seg_1 == seg_2->get_next())||(seg_1 == seg_2->get_last()))
-					continue;
+				//if((seg_1 == seg_2->get_next())||(seg_1 == seg_2->get_last()))
+				//	continue;
 				if((seg_1->get_edgeType() == edge_type::OUTTER_EDGE)&&(seg_2->get_edgeType() == edge_type::OUTTER_EDGE ))
 					continue;
 				// if segments do not intersect on bounding box, they do not intersect at all 	
 				if(!bounds_intersect(seg_1->min_x, seg_1->max_x, seg_1->min_y, seg_1->max_y, seg_2->min_x, seg_2->max_x, seg_2->min_y, seg_2->max_y))
 					continue;
 
-				all_intersecting_segs.push_back(seg_1);				
+				all_intersecting_segs.push_back(seg_1);
 				all_intersecting_segs.push_back(seg_2);
 			}
 		}
@@ -1251,6 +1251,9 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 
 		
 		GEOM::SubGeom* new_subgeom = new SubGeom(subgeom_settings);
+		if(filled_region->get_type()==filled_region_type::GENERATED_FONT_OUTLINES){
+			new_subgeom->get_settings()->create_streams(false, false);
+		}
 
 		BLOCKS::Material* this_mat = reinterpret_cast<BLOCKS::Material*>(filled_region->get_material());
 

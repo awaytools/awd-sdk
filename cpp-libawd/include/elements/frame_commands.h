@@ -101,6 +101,7 @@ namespace AWD
 
 				TimelineChild_instance* child;
 				
+				bool has_update_properties();
 				bool has_active_properties();
 				AWD::result get_command_info(std::string& info);
 				void set_object_block(BASE::AWDBlock *);

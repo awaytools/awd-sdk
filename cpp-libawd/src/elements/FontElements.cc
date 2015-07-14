@@ -178,6 +178,7 @@ result FontShape::write_body(FILES::FileWriter* fileWriter, SETTINGS::BlockSetti
 FontStyle::FontStyle(const std::string& name) 
 {
 	this->style_size=0.0;
+	this->whitespace_size=0.0;
 	this->style_name=name;
 }
 
@@ -194,13 +195,17 @@ void FontStyle::set_style_size(int style_size)
 {
 	this->style_size=style_size;
 }
+void FontStyle::set_whitespace_size(int whitespace_size) 
+{
+	this->whitespace_size=whitespace_size;
+}
 typedef std::map<int, FontShape*>::iterator it_type;
 std::vector<FontShape*> FontStyle::get_ungenerated_chars()
 {
 	std::vector<FontShape*> returner;
 	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {
 		// iterator->first = key
-		if(!iterator->second->has_shape_data()){	
+		if((!iterator->second->has_shape_data())){
 			returner.push_back(iterator->second);
 		}
 	}
@@ -217,8 +222,8 @@ void FontStyle::delete_fontShape(int char_code){
 }
 FontShape* FontStyle::get_fontShape(int char_code) 
 {
-	// we do not need any geometry for "\r" "\n" " "
-	if((char_code==32)||(char_code==10)||(char_code==13)){
+	// we do not need any geometry for "\r" "\n"
+	if((char_code==10)||(char_code==13)){
 		return NULL;
 	}
 	if(shapesmap.find(char_code) == shapesmap.end())
@@ -237,6 +242,7 @@ TYPES::UINT32 FontStyle::calc_body_length(SETTINGS::BlockSettings* settings)
 	
 	len += sizeof(TYPES::UINT16) + this->get_style_name().size(); //name
     len += sizeof(TYPES::UINT32); //size;
+    len += sizeof(TYPES::UINT32); //white-space-size;
     len += sizeof(TYPES::UINT32); //char_count;
 	
 	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {
@@ -251,6 +257,7 @@ result FontStyle::write_body(FILES::FileWriter* fileWriter, SETTINGS::BlockSetti
 {
 	fileWriter->writeSTRING(this->get_style_name(), FILES::write_string_with::LENGTH_AS_UINT16);	
 	fileWriter->writeUINT32(this->style_size);
+	fileWriter->writeUINT32(this->whitespace_size);
 	fileWriter->writeUINT32(this->shapesmap.size());//charcount
 	
 	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {

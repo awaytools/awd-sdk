@@ -302,7 +302,8 @@ namespace AWD
 		enum class write_string_with {
 			NO_LENGTH_VALUE=0,		///< Read / Write no length-indicator
 			LENGTH_AS_UINT16=1,		///< Read/Write the length as AWD::TYPES::UINT16
-			LENGTH_AS_UINT32=2		///< Read/Write the length as AWD::TYPES::UINT32
+			LENGTH_AS_UINT32=2,		///< Read/Write the length as AWD::TYPES::UINT32
+			LENGTH_AS_UINT8=3		///< Read/Write the length as AWD::TYPES::UINT32
 		};
 	}
 	namespace MATERIAL{
@@ -714,6 +715,7 @@ namespace AWD
 			FRAME_COMMAND_UPDATE,
 			AWD_FRAME_COMMAND_SOUND,
 			AWD_FRAME_COMMAND_SOUND_MULTIPLE,
+			FRAME_COMMAND_ADD_BUTTON_CHILD,
 			AWD_FRAME_COMMAND_OBJECT_EXISTS,
 		};
 

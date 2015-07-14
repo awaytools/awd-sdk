@@ -2,7 +2,7 @@
 #include "utils/awd_types.h"
 #include "base/attr.h"
 #include "utils/settings.h"
-
+#include "blocks/timeline.h"
 #include "Stdafx.h"
 
 
@@ -24,6 +24,7 @@ TimelineFrame::TimelineFrame()
 {
 	this->startframe=0;
 	this->frame_duration=1;
+	this->isFullConstruct=false;
 }
 
 TimelineFrame::~TimelineFrame()
@@ -383,9 +384,14 @@ TimelineFrame::build_final_commands()
 	while(sorted_cnt--){
 		ANIM::FrameCommandDisplayObject* f = new_cmds[Sorted[sorted_cnt]];
 		if(f->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			f->child->parent_child=parent;
+			if(f->child->child->awd_block->get_type()==BLOCK::block_type::TIMELINE){
+				BLOCKS::Timeline* thistimeline = reinterpret_cast<BLOCKS::Timeline*>(f->child->child->awd_block);
+				if(thistimeline->isButton)
+					f->set_command_type(ANIM::frame_command_type::FRAME_COMMAND_ADD_BUTTON_CHILD);
+			}
 		}
-		parent=f->child;
+		//parent=f->child;
+		f->child->parent_grafic=NULL;
 		this->display_commands.push_back(f);
 	}
 	DELETEARRAY(InputValues_depth);

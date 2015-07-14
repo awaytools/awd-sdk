@@ -138,11 +138,16 @@ namespace AWD
 				MATRIX2x3(TYPES::F64* matrix_data);
 				MATRIX2x3();
 				~MATRIX2x3();
+				bool hasPosition;
+				bool hasOther;
 				result read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *);
 				result write_to_file(FILES::FileWriter*, SETTINGS::BlockSettings *);
 				result prepend(MATRIX2x3*);
 				bool is_identity();
+				TYPES::UINT8 get_save_type();
 				result append(MATRIX2x3*);
+				void fill_into_list(std::vector<TYPES::F32>& input_list);
+				void toString(std::string& output_str);
 				result set(TYPES::F64* matrix_data);
 				TYPES::F64* get();
 
@@ -181,7 +186,9 @@ namespace AWD
 				result read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *);
 				result write_to_file(FILES::FileWriter*, SETTINGS::BlockSettings *);
 				result set(TYPES::F64* matrix_data);
+				void fill_into_list(std::vector<TYPES::F32>& input_list);
 				bool is_identity();
+				void toString(std::string& output_str);
 				result prepend(ColorTransform* matrix_data);
 				TYPES::F64* get();
 

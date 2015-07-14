@@ -216,11 +216,11 @@ PathSegment::get_test_point()
 	if(this->test_point_dirty){
 		double tmpPointx=this->startPoint.x + (( this->endPoint.x - this->startPoint.x)/2);
 		double tmpPointy=this->startPoint.y + (( this->endPoint.y - this->startPoint.y)/2);
-		double tmpPointx2=(( this->controlPoint.x - tmpPointx)/100);
-		double tmpPointy2=(( this->controlPoint.y - tmpPointy)/100);
+		double tmpPointx2=( this->controlPoint.x - tmpPointx);
+		double tmpPointy2=( this->controlPoint.y - tmpPointy);
 		double length = sqrt((tmpPointx2*tmpPointx2)+(tmpPointy2*tmpPointy2));
-		this->test_point.x=tmpPointx + ((tmpPointx2/length) * 2);
-		this->test_point.y=tmpPointy + ((tmpPointy2/length) * 2);
+		this->test_point.x=tmpPointx + ((tmpPointx2/double(length)) * 0.01);
+		this->test_point.y=tmpPointy + ((tmpPointy2/double(length)) * 0.01);
 	}
 	
 	this->test_point_dirty=false;
@@ -261,9 +261,9 @@ PathSegment::subdividePath(SETTINGS::Settings* settings)
 	std::vector<PathSegment*> newPath;
 	PathSegment* newSeg;
 	get_subdivided_path();
-	state=edge_state::MAX_SUBDIVISION;
+	//state=edge_state::MAX_SUBDIVISION;
 	for(PathSegment* pathSeg: this->subdividedPath){
-		if(pathSeg->get_state()==edge_state::SUBDIVIDED){			
+		if(pathSeg->get_state()==edge_state::SUBDIVIDED){
 			std::vector<double> newPoints;
 			GEOM::subdivideCurve(pathSeg->get_startPoint().x, pathSeg->get_startPoint().y, pathSeg->get_controlPoint().x, pathSeg->get_controlPoint().y,  pathSeg->get_endPoint().x,  pathSeg->get_endPoint().y, newPoints);					
 		
@@ -278,7 +278,7 @@ PathSegment::subdividePath(SETTINGS::Settings* settings)
 			if(pathSeg->get_curviness() <= settings->get_curve_threshold())
 				pathSeg->set_state(edge_state::MAX_SUBDIVISION);
 			else
-				pathSeg->set_state(edge_state::SUBDIVIDED);
+				pathSeg->set_state(edge_state::TEST_INTERSECTING);
 			
 
 			newSeg = new PathSegment();
@@ -291,7 +291,7 @@ PathSegment::subdividePath(SETTINGS::Settings* settings)
 			if(newSeg->get_curviness() <= settings->get_curve_threshold())
 				newSeg->set_state(edge_state::MAX_SUBDIVISION);
 			else
-				newSeg->set_state(edge_state::SUBDIVIDED);
+				newSeg->set_state(edge_state::TEST_INTERSECTING);
 				
 		}
 		else{

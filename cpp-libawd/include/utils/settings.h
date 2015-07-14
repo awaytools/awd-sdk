@@ -105,7 +105,8 @@ namespace AWD
 				void set_embbed_audio(bool);
 				bool get_embbed_textures();
 				void set_embbed_textures(bool);
-
+				
+				void create_streams(bool tri_indices, bool uvs);
 				bool get_use_compression_per_block();
 				bool get_wide_matrix();
 				void set_wide_matrix(bool);

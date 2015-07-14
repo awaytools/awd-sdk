@@ -173,11 +173,22 @@ double
 FrameCommandDisplayObject::comparedisplaMatrix(TYPES::F64* display_matrix)
 {
 	int countvalid=0;
-	for(int i=0; i<6;i++){
+	for(int i=0; i<4;i++){
 		if(this->display_matrix->get()[i]==display_matrix[i]){
 			countvalid++;
 		}
 	}
+	if(countvalid==4)
+		this->display_matrix->hasOther=false;
+	int countPos=0;
+	for(int i=4; i<6;i++){
+		if(this->display_matrix->get()[i]==display_matrix[i]){
+			countvalid++;
+			countPos++;
+		}
+	}
+	if(countPos==2)
+		this->display_matrix->hasPosition=false;
 	
     return double(countvalid)/double(6.0);
 }
@@ -188,6 +199,9 @@ FrameCommandDisplayObject::get_command_info(std::string& info)
 		info = "	AddChild";
 	else if(this->get_command_type()==frame_command_type::FRAME_COMMAND_UPDATE)
 		info = "	Update";
+	else if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_BUTTON_CHILD)
+		info = "	AddButton";
+
 
 	if(this->child!=NULL)
 		info += " | child-name: "+this->child->child->awd_block->get_name()+" | child-id: "+std::to_string(this->child->child->id)+" | depth: "+std::to_string(this->child->depth);
@@ -205,19 +219,21 @@ FrameCommandDisplayObject::get_command_info(std::string& info)
 
 	if(this->get_hasDisplayMatrix()){
 		GEOM::MATRIX2x3* thismtx = this->get_display_matrix();
-		TYPES::F64* mtx = thismtx->get();
-		info += " | transform: ";
-		for(int i = 0; i<6; i++){
-			info+=" "+std::to_string(mtx[i]);
+		if(thismtx->get_save_type()!=0){
+			TYPES::F64* mtx = thismtx->get();
+			info += " | transform: "+std::to_string(thismtx->get_save_type())+" / ";
+			for(int i = 0; i<6; i++){
+				info+=" "+std::to_string(mtx[i]);
+			}
 		}
-		
+		/*
 		for(GEOM::MATRIX2x3* one_mtx:matrix_parents){
 			TYPES::F64* mtx = one_mtx->get();
 			info += "\n | transform: ";
 			for(int i = 0; i<6; i++){
 				info+=" "+std::to_string(mtx[i]);
 			}
-		}
+		}*/
 		
 	}
 	if(this->get_hasColorMatrix()){
@@ -293,45 +309,41 @@ TYPES::UINT32
 FrameCommandDisplayObject::calc_command_length(SETTINGS::BlockSettings * blockSettings)
 {
 	int props_length=0;
-	if(this->get_command_type()!=frame_command_type::FRAME_COMMAND_REMOVE){
+	if(this->get_hasDisplayMatrix()){
+		props_length+=sizeof(TYPES::F32)*6;
+	}
 		
-		if(this->get_hasDisplayMatrix()){
-			props_length+=sizeof(TYPES::F32)*6;
-		}
-		
-		if(this->get_hasColorMatrix()){
-			props_length+=sizeof(TYPES::F32)*4;
-			props_length+=sizeof(TYPES::INT16)*4;
-		}
+	if(this->get_hasColorMatrix()){
+		props_length+=sizeof(TYPES::F32)*4;
+		props_length+=sizeof(TYPES::INT16)*4;
+	}
 
-		if(this->get_hasBlendModeChange()){
-			props_length+=sizeof(TYPES::UINT8);
-		}
-		if(this->get_hasVisiblitiyChange()){
-			props_length+=sizeof(TYPES::UINT8);
-		}
+	if(this->get_hasBlendModeChange()){
+		props_length+=sizeof(TYPES::UINT8);
+	}
+	if(this->get_hasVisiblitiyChange()){
+		props_length+=sizeof(TYPES::UINT8);
+	}
 		
-	}		
+
 
     int len = sizeof(TYPES::UINT8); // command_type
-	if((this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD)||(this->get_command_type()==frame_command_type::FRAME_COMMAND_UPDATE)){
-		len+=sizeof(TYPES::UINT16);// objectID
-		if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			len+=sizeof(TYPES::INT16);// depth
-			if(this->get_instanceName().size()!=0){
-				props_length +=sizeof(TYPES::UINT16);// length instance_name
-				props_length += TYPES::UINT16(this->get_instanceName().size());//
-			}
-		}	
-		if(this->mask_ids.size()>0){
-			props_length+=sizeof(TYPES::UINT16);//mask_ids
-			props_length+=sizeof(TYPES::UINT16)*this->mask_ids.size();//mask_ids
+	len+=sizeof(TYPES::UINT16);// objectID
+	if(this->get_command_type()!=frame_command_type::FRAME_COMMAND_UPDATE){
+		len+=sizeof(TYPES::INT16);// depth
+		if(this->get_instanceName().size()!=0){
+			props_length +=sizeof(TYPES::UINT16);// length instance_name
+			props_length += TYPES::UINT16(this->get_instanceName().size());//
 		}
-		len+=sizeof(TYPES::UINT16);		// props_flag
-		len+=props_length;				// props_length
-		//len += this->command_properties->calc_length(blockSettings); 
-
+	}	
+	if(this->mask_ids.size()>0){
+		props_length+=sizeof(TYPES::UINT16);//mask_ids
+		props_length+=sizeof(TYPES::UINT16)*this->mask_ids.size();//mask_ids
 	}
+	len+=sizeof(TYPES::UINT16);		// props_flag
+	len+=props_length;				// props_length
+	//len += this->command_properties->calc_length(blockSettings); 
+
     return len;
 }
 
@@ -365,13 +377,6 @@ FrameCommandDisplayObject::finalize_command()
 			}
 		}
 	}
-	else{
-		if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			if(this->prev_obj!=NULL){
-				this->hasDisplayMatrix=true;
-			}
-		}
-	}
 	
 	// check if we need colortransform for this command
 	if(this->get_hasColorMatrix()){
@@ -399,13 +404,7 @@ FrameCommandDisplayObject::finalize_command()
 			}
 		}
 	}
-	else{
-		if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			if(prev_obj!=NULL){
-				this->hasColorMatrix=true;
-			}
-		}
-	}
+
 	
 	// check if we need masks for this command
 	if(this->get_hasTargetMaskIDs()){
@@ -431,9 +430,34 @@ FrameCommandDisplayObject::finalize_command()
 }
 
 bool
+FrameCommandDisplayObject::has_update_properties()
+{
+
+	if(this->get_hasDisplayMatrix())
+		return true;	
+		
+	if(this->get_hasColorMatrix())
+		return true;
+	
+	if(this->get_hasBlendModeChange())
+		return true;
+	
+	if(this->get_hasVisiblitiyChange())
+		return true;
+
+	if(this->instanceName!="")
+		return true;
+
+	if(this->hasTargetMaskIDs)
+		return true;
+
+	return false;
+	
+}
+bool
 FrameCommandDisplayObject::has_active_properties()
 {
-	if(this->command_type==frame_command_type::FRAME_COMMAND_ADD_CHILD)
+	if(this->command_type!=frame_command_type::FRAME_COMMAND_UPDATE)
 		return true;	
 
 	if(this->get_hasDisplayMatrix())
@@ -521,56 +545,52 @@ FrameCommandDisplayObject::resolve_parenting()
 void
 FrameCommandDisplayObject::write_command(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * blockSettings, AWDFile* awd_file)
 {
-	
+
 	fileWriter->writeUINT8(TYPES::UINT8(this->get_command_type()));
-	if((this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD)||(this->get_command_type()==frame_command_type::FRAME_COMMAND_UPDATE)){
+	std::bitset<16> props_flag(0);
+	fileWriter->writeUINT16(this->child->child->id);
+	if(this->get_command_type()!=frame_command_type::FRAME_COMMAND_UPDATE){
+		fileWriter->writeINT16(this->child->depth);
+		if(this->instanceName.size()>0)
+			props_flag.set(6, true);
+	}
+	//this->command_properties->write_attributes(fileWriter, blockSettings);	
+
+	// calculate and write flag for properties
+	if (this->get_hasDisplayMatrix())
+		props_flag.set(0, true);
+	if (this->get_hasColorMatrix())
+		props_flag.set(2, true);
+	if (this->get_hasBlendModeChange())
+		props_flag.set(4, true);
+	if (this->get_hasVisiblitiyChange())
+		props_flag.set(5, true);
 		
-		std::bitset<16> props_flag(0);
-		fileWriter->writeUINT16(this->child->child->id);
-		if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			fileWriter->writeINT16(this->child->depth);
-			if(this->instanceName.size()>0)
-				props_flag.set(6, true);
+	if(this->mask_ids.size()>0)
+		props_flag.set(7, true);
+		
+	fileWriter->writeUINT16(TYPES::UINT16(props_flag.to_ulong()));
+		
+	// write properties
+	if (this->get_hasDisplayMatrix())
+		this->display_matrix->write_to_file(fileWriter, blockSettings);
+
+	if (this->get_hasColorMatrix())
+		this->color_matrix->write_to_file(fileWriter, blockSettings);
+
+	if (this->get_hasBlendModeChange())
+		fileWriter->writeUINT8(TYPES::UINT8(this->blendMode));
+	if (this->get_hasVisiblitiyChange())
+		fileWriter->writeBOOL(this->visible);		
+	if(this->get_command_type()!=frame_command_type::FRAME_COMMAND_UPDATE){
+		if(this->instanceName.size()>0)
+			fileWriter->writeSTRING(instanceName, FILES::write_string_with::LENGTH_AS_UINT16);
+	}		
+	if(this->mask_ids.size()>0){
+		fileWriter->writeUINT16(TYPES::UINT16(this->mask_ids.size()));
+		for(TYPES::UINT32 mask_id: this->mask_ids){
+			fileWriter->writeINT16(TYPES::INT16(mask_id));
 		}
-		//this->command_properties->write_attributes(fileWriter, blockSettings);	
-
-		// calculate and write flag for properties
-		if (this->get_hasDisplayMatrix())
-			props_flag.set(0, true);
-		if (this->get_hasColorMatrix())
-			props_flag.set(2, true);
-		if (this->get_hasBlendModeChange())
-			props_flag.set(4, true);
-		if (this->get_hasVisiblitiyChange())
-			props_flag.set(5, true);
-		
-		if(this->mask_ids.size()>0)
-			props_flag.set(7, true);
-		
-		fileWriter->writeUINT16(TYPES::UINT16(props_flag.to_ulong()));
-		
-		// write properties
-		if (this->get_hasDisplayMatrix())
-			this->display_matrix->write_to_file(fileWriter, blockSettings);
-
-		if (this->get_hasColorMatrix())
-			this->color_matrix->write_to_file(fileWriter, blockSettings);
-
-		if (this->get_hasBlendModeChange())
-			fileWriter->writeUINT8(TYPES::UINT8(this->blendMode));
-		if (this->get_hasVisiblitiyChange())
-			fileWriter->writeBOOL(this->visible);		
-		if(this->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			if(this->instanceName.size()>0)
-				fileWriter->writeSTRING(instanceName, FILES::write_string_with::LENGTH_AS_UINT16);
-		}		
-		if(this->mask_ids.size()>0){
-			fileWriter->writeUINT16(TYPES::UINT16(this->mask_ids.size()));
-			for(TYPES::UINT32 mask_id: this->mask_ids){
-				fileWriter->writeINT16(TYPES::INT16(mask_id));
-			}
-		}
-		
 	}
 	/*
 	else if(this->get_command_type()==frame_command_type::AWD_FRAME_COMMAND_SOUND){

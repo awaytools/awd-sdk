@@ -26,6 +26,7 @@ Timeline::Timeline(const std::string& name):
 {
 	depth_manager = new TimelineDepthManager();
 	this->is_collected=false;
+	this->isButton=false;
 	this->is_scene=false;
 	this->fps=0.0;
 	this->is_finalized=false;
@@ -41,6 +42,7 @@ Timeline::Timeline():
 {
 	depth_manager = new TimelineDepthManager();
 	this->is_collected=false;
+	this->isButton=false;
 	this->instance_cnt=0;
 	this->is_scene=false;
 	this->is_finalized=false;
@@ -235,6 +237,247 @@ Timeline::get_child_for_block(BASE::AWDBlock* awd_block)
 	return newChild;
 }
 
+void 
+Timeline::create_timeline_streams()
+{
+	this->frame_durations.clear();
+
+	
+	this->remove_child_stream.clear();
+	this->add_child_stream.clear();
+	this->frame_scripts_stream.clear();
+	
+	this->update_child_stream.clear();
+
+	
+	
+	this->property_type_stream.clear();
+	this->property_index_stream.clear();
+
+	this->properties_stream_int.clear();
+	this->properties_stream_strings.clear();
+
+	
+
+	this->labels.clear();
+	this->label_indices.clear();
+	
+	std::map<std::string, TYPES::UINT16> map_matrix_idx;
+	std::map<std::string, TYPES::UINT16> map_colortransform_idx;
+	std::map<std::string, TYPES::UINT16> map_mask_ids;
+	std::map<std::string, TYPES::UINT16> map_instancenames;
+	std::vector<bool> new_vec;
+	TYPES::INT16 session_cnt = 0;
+	TYPES::UINT16 frame_cnt = 0;
+	for (TimelineFrame * f : this->frames) 
+	{
+		this->frame_durations.push_back(f->get_frame_duration());
+		this->frame_command_index.push_back(this->command_index_stream.size());
+		
+		for(std::string one_label:f->get_labels()){
+			this->labels.push_back(one_label);
+			this->label_indices.push_back(frame_cnt);
+		}
+			
+		
+		if (f->get_frame_code()!=""){
+			this->frame_scripts_stream.push_back(f->get_frame_code());
+			this->frame_scripts_indices.push_back(frame_cnt);
+		}
+		
+		TYPES::UINT32 command_cnt = 0;
+		TYPES::UINT8 command_recipe_flag=0;
+		TYPES::UINT32 start_index = this->remove_child_stream.size();
+		
+		if(f->isFullConstruct){
+			command_recipe_flag |= 0x01;
+			command_cnt=0;
+		}
+		else{
+			for(FrameCommandRemoveObject* removecmd : f->remove_commands)
+			{
+				this->remove_child_stream.push_back(removecmd->child->depth);
+				command_cnt++;
+			}
+		}
+		//command_cnt
+		if(command_cnt>0){
+			command_recipe_flag |= 0x02;
+			this->command_length_stream.push_back(command_cnt);// just to keep in sync
+			this->command_index_stream.push_back(start_index);// just to keep in sync
+			
+		}
+		
+		command_cnt = 0;
+		start_index = this->add_child_stream.size()/2;	
+		for(FrameCommandDisplayObject* displaycmd : f->display_commands){
+			if((displaycmd->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD)||(displaycmd->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_BUTTON_CHILD))
+			{
+				this->add_child_stream.push_back(displaycmd->child->child->id);
+				this->add_child_stream.push_back(displaycmd->child->depth);
+				//this->add_child_stream.push_back(session_cnt++);
+
+				// if this is a textelement, we use the awd-block name as instance name
+				if(displaycmd->child->child->awd_block->get_type()==block_type::TEXT_ELEMENT){
+					if(displaycmd->child->child->awd_block->get_name()!=""){
+						displaycmd->set_instanceName(displaycmd->child->child->awd_block->get_name());
+					}
+				}
+				command_cnt++;
+			}
+		}
+		if(command_cnt>0){
+			command_recipe_flag |= 0x04;
+			this->command_length_stream.push_back(command_cnt);// just to keep in sync
+			this->command_index_stream.push_back(start_index);// just to keep in sync
+		}
+		
+		command_cnt = 0;
+		start_index = this->update_child_stream.size();	
+		for(FrameCommandDisplayObject* displaycmd : f->display_commands){
+			if(displaycmd->has_update_properties()){
+				
+				this->update_child_stream.push_back(displaycmd->child->child->id);
+				this->update_child_props_indices_stream.push_back(this->property_type_stream.size());
+				
+				TYPES::INT16 num_updated_props = 0;
+
+				if(displaycmd->get_hasDisplayMatrix()){
+					int this_save_type=displaycmd->get_display_matrix()->get_save_type();
+					if(this_save_type!=0){
+						num_updated_props++;
+						this->property_type_stream.push_back(this_save_type);
+						std::string matrix_str;
+						displaycmd->get_display_matrix()->toString(matrix_str);
+						if(map_matrix_idx.find(matrix_str)!=map_matrix_idx.end()){
+							this->property_index_stream.push_back(map_matrix_idx[matrix_str]);
+						}
+						else{
+							if(this_save_type==1){
+								this->property_index_stream.push_back(this->properties_stream_f32_mtx.size()/6);
+								map_matrix_idx[matrix_str]=this->properties_stream_f32_mtx.size()/6;
+								displaycmd->get_display_matrix()->fill_into_list(this->properties_stream_f32_mtx);
+							}
+							else if(this_save_type==11){
+								this->property_index_stream.push_back(this->properties_stream_f32_mtx_scale.size()/4);
+								map_matrix_idx[matrix_str]=this->properties_stream_f32_mtx_scale.size()/4;
+								displaycmd->get_display_matrix()->fill_into_list(this->properties_stream_f32_mtx_scale);
+							}
+							else if(this_save_type==12){
+								this->property_index_stream.push_back(this->properties_stream_f32_mtx_pos.size()/2);
+								map_matrix_idx[matrix_str]=this->properties_stream_f32_mtx_pos.size()/2;
+								displaycmd->get_display_matrix()->fill_into_list(this->properties_stream_f32_mtx_pos);
+							}
+						}
+					}
+				}
+				if(displaycmd->get_hasColorMatrix()){
+					num_updated_props++;
+					this->property_type_stream.push_back(2);
+					std::string color_str;
+					displaycmd->get_color_matrix()->toString(color_str);
+					if(map_colortransform_idx.find(color_str)!=map_colortransform_idx.end()){
+						this->property_index_stream.push_back(map_colortransform_idx[color_str]);
+					}
+					else{
+						//if(this->properties_stream_f32.size()>65536) new_vec[3]=false;
+						this->property_index_stream.push_back(this->properties_stream_f32_ct.size()/8);
+						map_colortransform_idx[color_str]=this->properties_stream_f32_ct.size()/8;
+						displaycmd->get_color_matrix()->fill_into_list(this->properties_stream_f32_ct);
+					}
+				}
+				if(displaycmd->get_hasTargetMaskIDs()){
+					num_updated_props++;
+					this->property_type_stream.push_back(3);
+					std::string mask_str = "";
+					std::vector<int> mask_ids = displaycmd->mask_ids;
+					for(int one_mask: mask_ids){
+						mask_str+=std::to_string(one_mask);
+					}
+					if(map_mask_ids.find(mask_str)!=map_mask_ids.end()){
+						this->property_index_stream.push_back(map_mask_ids[mask_str]);
+					}
+					else{
+						this->property_index_stream.push_back(this->properties_stream_int.size());
+						map_mask_ids[mask_str]=this->properties_stream_int.size();
+						this->properties_stream_int.push_back(displaycmd->mask_ids.size());
+						for(int one_mask: mask_ids){
+							this->properties_stream_int.push_back(one_mask+1);
+						}
+					}
+				}
+
+				if(displaycmd->get_instanceName()!=""){
+					num_updated_props++;
+					// we have 2 objects that can have instance names: movieclip instances, and button-instances
+					if(displaycmd->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_BUTTON_CHILD){
+						this->property_type_stream.push_back(5);
+					}
+					else{
+						this->property_type_stream.push_back(4);
+					}
+					if(map_instancenames.find(displaycmd->get_instanceName())!=map_instancenames.end()){
+						this->property_index_stream.push_back(map_instancenames[displaycmd->get_instanceName()]);
+					}
+					else{
+						if(this->properties_stream_strings.size()>65536) new_vec[3]=false;
+						this->property_index_stream.push_back(this->properties_stream_strings.size());
+						map_instancenames[displaycmd->get_instanceName()]=this->properties_stream_strings.size();
+						this->properties_stream_strings.push_back(displaycmd->get_instanceName());
+					}
+				}
+
+				if(displaycmd->get_hasVisiblitiyChange()){
+					num_updated_props++;
+					this->property_type_stream.push_back(6);
+					if(displaycmd->get_visible())
+						this->property_index_stream.push_back(1);
+					else
+						this->property_index_stream.push_back(0);
+
+				}
+				command_cnt++;
+				this->update_child_props_length_array.push_back(num_updated_props);
+			}
+		}
+		if(command_cnt>0){
+			command_recipe_flag |= 0x08;
+			this->command_length_stream.push_back(command_cnt);// just to keep in sync
+			this->command_index_stream.push_back(start_index);// just to keep in sync
+		}
+		
+
+		this->frame_recipe.push_back(command_recipe_flag);
+		frame_cnt++;
+
+	}
+	// there must exists at least 1 keyframe, so keyframestreams are not optional
+	this->all_int_vecs.push_back(this->frame_durations);//0
+	this->all_int_vecs.push_back(this->frame_command_index);//1
+	this->all_int_vecs.push_back(this->frame_recipe);//2
+	
+	// there must exists at least 1 command, so command_streams are not optional
+	this->all_int_vecs.push_back(this->command_length_stream);//3
+	this->all_int_vecs.push_back(this->command_index_stream);//4
+	
+	// there must exists at least 1 addchildcommand, so add_child_stream are not optional
+	this->all_int_vecs.push_back(this->add_child_stream);//5
+	
+	// the rest is optional
+	this->all_optional_int_vecs.push_back(this->remove_child_stream);//6
+	this->all_optional_int_vecs.push_back(this->update_child_stream);//7
+	this->all_optional_int_vecs.push_back(this->update_child_props_indices_stream);//8
+	this->all_optional_int_vecs.push_back(this->update_child_props_length_array);//9
+	this->all_optional_int_vecs.push_back(this->property_type_stream);//10
+	this->all_optional_int_vecs.push_back(this->property_index_stream);//11
+	this->all_optional_int_vecs.push_back(this->properties_stream_int);//12
+	
+	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_mtx_scale);//0
+	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_mtx_pos);//1
+	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_mtx);//2
+	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_ct);//3
+	
+}
 
 /** \brief Advance the playhead to the next frame.
 * After we recieved all Adobe-frameCommands, we play through the timeline, to set depthmanager, and merge graphic clips
@@ -353,6 +596,10 @@ Timeline::advance_frame(TimelineFrame* frame)
 			}
 		}
 	}
+	std::vector<TimelineChild_instance*> active_childs;
+	this->depth_manager->get_children_at_frame(this->current_frame, active_childs);
+	if(active_childs.size()==0)
+		final_frame->isFullConstruct=true;
 	
 	// EVAL COMMANDS FOR FRAME:
 	for(FrameCommandDisplayObject* display_cmd: input_display_commands){
@@ -448,8 +695,9 @@ Timeline::advance_frame(TimelineFrame* frame)
 					}
 					graphic_clip->dirty_masks=true;
 					parent_child=graphic_clip->graphic_child;
-					if(dp_cmd->child->parent_child!=NULL)
+					if(dp_cmd->child->parent_child!=NULL){
 						parent_child=dp_cmd->child->parent_child;
+					}
 					final_frame->apply_add_command(dp_cmd, parent_child);
 					this->depth_manager->add_child_after_child(dp_cmd->child, parent_child);
 					graphic_clip->graphic_childs.push_back(dp_cmd->child);
@@ -871,13 +1119,79 @@ Timeline::calc_body_length(AWDFile* awd_file, BlockSettings *curBlockSettings)
     len += this->timeline_childs_multiple_instances.size()*(sizeof(TYPES::UINT32)+sizeof(TYPES::UINT16));// num of potential childs
 	
     len += sizeof(TYPES::UINT16);// num of potential sounds
-    len += 0*sizeof(TYPES::UINT32);// num of potential sounds
+    //len += 0*sizeof(TYPES::UINT32);// num of potential sounds
 
-    len += sizeof(TYPES::UINT16);// num of frames
-	for (TimelineFrame * f : this->frames) 
-	{
-		len+=f->calc_frame_length(curBlockSettings);
+	
+	len += sizeof(TYPES::UINT8);// stream_count
+	for(std::vector<TYPES::UINT32> one_int_vec : all_int_vecs){
+		len += sizeof(TYPES::UINT8);// stream data type			
+		len += sizeof(TYPES::UINT32);
+		TYPES::UINT8 storage_precision=1;
+		for(TYPES::UINT32 one_int: one_int_vec){
+			if(one_int > std::numeric_limits<unsigned short int>::max()){
+				storage_precision=4;
+				break;
+			}
+			if((storage_precision==1)&&(one_int > std::numeric_limits<unsigned char>::max())){
+				storage_precision=2;
+			}
+		}
+		len += one_int_vec.size() * storage_precision;
 	}
+	for(std::vector<TYPES::UINT32> one_int_vec : all_optional_int_vecs){
+		if(one_int_vec.size()>0){
+			len += sizeof(TYPES::UINT8);// stream_type 
+			len += sizeof(TYPES::UINT8);// stream data type			
+			len += sizeof(TYPES::UINT32);
+			TYPES::UINT8 storage_precision=1;
+			for(TYPES::UINT32 one_int: one_int_vec){
+				if(one_int > std::numeric_limits<unsigned short int>::max()){
+					storage_precision=4;
+					break;
+				}
+				if((storage_precision==1)&&(one_int > std::numeric_limits<unsigned char>::max())){
+					storage_precision=2;
+				}
+			}
+			 len += one_int_vec.size() * storage_precision;
+		}
+	}
+	
+	len += sizeof(TYPES::UINT8);// stream_count
+	for(std::vector<TYPES::F32> one_int_vec : all_optional_f32_vecs){
+		if(one_int_vec.size()>0){
+			len += sizeof(TYPES::UINT8);// stream_type 
+			len += sizeof(TYPES::UINT32);
+			len += one_int_vec.size() * sizeof(TYPES::F32);
+		}
+	}
+	
+	if(this->labels.size()>0){
+		len += sizeof(TYPES::UINT8);// stream_type 
+		len += sizeof(TYPES::UINT16);
+		for(std::string onestring : this->labels){
+			len += sizeof(TYPES::UINT16) +  TYPES::UINT16(onestring.size()) + sizeof(TYPES::UINT16);//name
+		}
+	}
+	
+	if(this->properties_stream_strings.size()>0){
+		len += sizeof(TYPES::UINT8);// stream_type 
+		len += sizeof(TYPES::UINT16);
+		for(std::string onestring : this->properties_stream_strings){
+			len += sizeof(TYPES::UINT16) +  TYPES::UINT16(onestring.size());//name
+		}
+	}
+	
+	if(this->frame_scripts_stream.size()>0){
+		len += sizeof(TYPES::UINT8);// stream_type
+		len += sizeof(TYPES::UINT16);
+		for(std::string onestring : this->frame_scripts_stream){
+			len += sizeof(TYPES::UINT32) + TYPES::UINT32(onestring.size()) + sizeof(TYPES::UINT16);//name
+		}
+	}
+		
+	
+	
     len += this->calc_attr_length(true,true, curBlockSettings);
 	
     return len;
@@ -959,6 +1273,8 @@ Timeline::collect_dependencies(FILES::AWDFile* target_file, BLOCK::instance_type
 	for(PotentialTimelineChildGroup* child: this->timeline_childs)
 		child->awd_block->add_with_dependencies(target_file, instance_type);
 
+	this->create_timeline_streams();
+
 	return result::AWD_SUCCESS;
 }
 
@@ -997,11 +1313,88 @@ Timeline::write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings *cu
 		fileWriter->writeUINT32(block_addr);
 	}
 	*/
-	fileWriter->writeUINT16(TYPES::UINT16(this->frames.size()));// num of frames	
-	for (TimelineFrame * f : this->frames) 
-	{
-		f->write_frame(fileWriter, curBlockSettings, awd_file);
+
+	// new way (using streams)
+
+	TYPES::UINT8 stream_cnt=0;
+	for(std::vector<TYPES::UINT32> one_int_vec : all_int_vecs){
+		stream_cnt++;		
 	}
+	for(std::vector<TYPES::UINT32> one_int_vec : all_optional_int_vecs){
+		if(one_int_vec.size()>0){
+			stream_cnt++;
+		}
+	}
+	fileWriter->writeUINT8(stream_cnt);
+	stream_cnt=0;
+	for(std::vector<TYPES::UINT32> one_int_vec : all_int_vecs){
+		fileWriter->writeUINTSasSmallestData(one_int_vec);
+		stream_cnt++;
+	}
+	for(std::vector<TYPES::UINT32> one_int_vec : all_optional_int_vecs){
+		if(one_int_vec.size()>0){
+			fileWriter->writeUINT8(stream_cnt);
+			fileWriter->writeUINTSasSmallestData(one_int_vec);
+		}
+		stream_cnt++;
+	}
+
+	stream_cnt=0;
+	for(std::vector<TYPES::F32> one_int_vec : all_optional_f32_vecs){
+		if(one_int_vec.size()>0){
+			stream_cnt++;
+		}
+	}
+	if(this->labels.size()>0){
+		stream_cnt++;
+	}
+	if(this->properties_stream_strings.size()>0){
+		stream_cnt++;
+	}
+	if(this->frame_scripts_stream.size()>0){
+		stream_cnt++;
+	}
+	fileWriter->writeUINT8(stream_cnt);
+	stream_cnt=0;
+	for(std::vector<TYPES::F32> one_int_vec : all_optional_f32_vecs){
+		if(one_int_vec.size()>0){
+			fileWriter->writeUINT8(stream_cnt);
+			fileWriter->writeUINT32(one_int_vec.size()*sizeof(TYPES::F32));
+			fileWriter->writeFLOAT32multi(&one_int_vec[0], one_int_vec.size());
+		}
+		stream_cnt++;
+	}
+	
+	if(this->labels.size()>0){
+		fileWriter->writeUINT8(stream_cnt);
+		fileWriter->writeUINT16(this->labels.size());
+		int counter = 0;
+		for(std::string onestring : this->labels){
+			fileWriter->writeSTRING(onestring, FILES::write_string_with::LENGTH_AS_UINT16);// name
+			fileWriter->writeUINT16(this->label_indices[counter++]);
+		}
+	}	
+	stream_cnt++;
+	
+	if(this->properties_stream_strings.size()>0){
+		fileWriter->writeUINT8(stream_cnt);
+		fileWriter->writeUINT16(this->properties_stream_strings.size());
+		for(std::string onestring : this->properties_stream_strings){
+			fileWriter->writeSTRING(onestring, FILES::write_string_with::LENGTH_AS_UINT16);// name	
+		}	
+	}
+	stream_cnt++;
+	
+	if(this->frame_scripts_stream.size()>0){
+		fileWriter->writeUINT8(stream_cnt);
+		fileWriter->writeUINT16(this->frame_scripts_stream.size());
+		int counter = 0;
+		for(std::string onestring : this->frame_scripts_stream){
+			fileWriter->writeUINT16(this->frame_scripts_indices[counter++]);
+			fileWriter->writeSTRING(onestring, FILES::write_string_with::LENGTH_AS_UINT32);// name	
+		}
+	}
+	
 	
     this->properties->write_attributes(fileWriter, curBlockSettings);
     this->user_attributes->write_attributes(fileWriter, curBlockSettings);

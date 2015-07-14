@@ -68,6 +68,40 @@ FileWriter::writeBOOL(bool val)
 }
 
 result
+FileWriter::writeUINTSasSmallestData(std::vector<TYPES::UINT32> value_32)
+{
+	TYPES::UINT8 storage_precision = 1; //1: UINT8 2:UINT16 3:UINT32
+	std::vector<TYPES::UINT16> value_16;
+	std::vector<TYPES::UINT8> value_8;
+	for(TYPES::UINT32 one_int: value_32){
+		if(one_int > std::numeric_limits<unsigned short int>::max()){
+			storage_precision=4;
+			break;
+		}
+		if((storage_precision==1)&&(one_int > std::numeric_limits<unsigned char>::max())){
+			storage_precision=2;
+		}
+		value_16.push_back(TYPES::UINT16(one_int));
+		value_8.push_back(TYPES::UINT8(one_int));
+	}
+	this->writeUINT8(storage_precision);
+	if(storage_precision==1){
+		this->writeUINT32(value_8.size());
+		this->writeUINT8multi(&value_8[0], value_8.size());
+	}
+	else if(storage_precision==2){
+		this->writeUINT32(value_16.size() * 2);
+		this->writeUINT16multi(&value_16[0], value_16.size());
+	}
+	else{
+		this->writeUINT32(value_32.size() * 4);
+		this->writeUINT32multi(&value_32[0], value_32.size());
+	}
+
+
+	return result::AWD_SUCCESS;
+}
+result
 FileWriter::writeINT8(TYPES::INT8 val)
 {
 	if(!fwrite(reinterpret_cast<const char*>(&val), sizeof(TYPES::INT8), 1, this->file))
@@ -77,6 +111,14 @@ FileWriter::writeINT8(TYPES::INT8 val)
 }
 
 result
+FileWriter::writeINT8multi(TYPES::INT8* val, int length)
+{
+	if(!fwrite(reinterpret_cast<const char*>(val), sizeof(TYPES::INT8), length, this->file))
+		return result::WRITE_ERROR;
+	fflush (this->file);
+	return result::AWD_SUCCESS;
+}
+result
 FileWriter::writeUINT8(TYPES::UINT8 val)
 {
 	if(!fwrite(reinterpret_cast<const char*>(&val), sizeof(TYPES::UINT8), 1, this->file))
@@ -85,6 +127,14 @@ FileWriter::writeUINT8(TYPES::UINT8 val)
 	return result::AWD_SUCCESS;
 }
 
+result
+FileWriter::writeUINT8multi(TYPES::UINT8* val, int length)
+{
+	if(!fwrite(reinterpret_cast<const char*>(val), sizeof(TYPES::UINT8), length, this->file))
+		return result::WRITE_ERROR;
+	fflush (this->file);
+	return result::AWD_SUCCESS;
+}
 result
 FileWriter::writeINT16(TYPES::INT16 val)
 {
@@ -102,6 +152,14 @@ FileWriter::writeINT16(TYPES::INT16 val)
 }
 
 result
+FileWriter::writeINT16multi(TYPES::INT16* val, int length)
+{
+	if(!fwrite(reinterpret_cast<const char*>(val), sizeof(TYPES::INT16), length, this->file))
+		return result::WRITE_ERROR;
+	fflush (this->file);
+	return result::AWD_SUCCESS;
+}
+result
 FileWriter::writeUINT16(TYPES::UINT16 val)
 {
 	if(this->swapBytes){
@@ -116,19 +174,35 @@ FileWriter::writeUINT16(TYPES::UINT16 val)
 	fflush (this->file);
 	return result::AWD_SUCCESS;
 }
+result
+FileWriter::writeUINT16multi(TYPES::UINT16* val, int length)
+{
+	if(!fwrite(reinterpret_cast<const char*>(val), sizeof(TYPES::UINT16), length, this->file))
+		return result::WRITE_ERROR;
+	fflush (this->file);
+	return result::AWD_SUCCESS;
+}
 
 result
 FileWriter::writeINT32(TYPES::INT32 val)
 {
 	if(this->swapBytes){
 		TYPES::INT32 swaptVal=swapui32(val);
-		if(!fwrite(reinterpret_cast<const char*>(&swaptVal), sizeof(TYPES::UINT32), 1, this->file))
+		if(!fwrite(reinterpret_cast<const char*>(&swaptVal), sizeof(TYPES::INT32), 1, this->file))
 			return result::WRITE_ERROR;
 	}
 	else{
-		if(!fwrite(reinterpret_cast<const char*>(&val), sizeof(TYPES::UINT32), 1, this->file))
+		if(!fwrite(reinterpret_cast<const char*>(&val), sizeof(TYPES::INT32), 1, this->file))
 			return result::WRITE_ERROR;
 	}
+	fflush (this->file);
+	return result::AWD_SUCCESS;
+}
+result
+FileWriter::writeINT32multi(TYPES::INT32* val, int length)
+{
+	if(!fwrite(reinterpret_cast<const char*>(val), sizeof(TYPES::INT32), length, this->file))
+		return result::WRITE_ERROR;
 	fflush (this->file);
 	return result::AWD_SUCCESS;
 }
@@ -148,6 +222,14 @@ FileWriter::writeUINT32(TYPES::UINT32 val)
 	fflush (this->file);
 	return result::AWD_SUCCESS;
 }
+result
+FileWriter::writeUINT32multi(TYPES::UINT32* val, int length)
+{
+	if(!fwrite(reinterpret_cast<const char*>(val), sizeof(TYPES::UINT32), length, this->file))
+		return result::WRITE_ERROR;
+	fflush (this->file);
+	return result::AWD_SUCCESS;
+}
 
 result
 FileWriter::writeBytes(TYPES::UINT8* val, int length)
@@ -158,14 +240,6 @@ FileWriter::writeBytes(TYPES::UINT8* val, int length)
 	return result::AWD_SUCCESS;
 }
 
-result
-FileWriter::writeUINT16multi(TYPES::UINT16* val, int length)
-{
-	if(!fwrite(reinterpret_cast<const char*>(val), sizeof(TYPES::UINT16), length, this->file))
-		return result::WRITE_ERROR;
-	fflush (this->file);
-	return result::AWD_SUCCESS;
-}
 
 result
 FileWriter::writeFLOAT32(TYPES::F32 val)
@@ -247,6 +321,11 @@ result
 FileWriter::writeSTRING(std::string& s, write_string_with writeLength)
 {
 	unsigned int N((unsigned int)s.size());
+	if(writeLength==write_string_with::LENGTH_AS_UINT8){
+		TYPES::UINT8 awduint8=TYPES::UINT8(N);
+		if(!fwrite(&awduint8,sizeof(TYPES::UINT8), 1 ,this->file))
+			return result::WRITE_ERROR;
+	}
 	if(writeLength==write_string_with::LENGTH_AS_UINT16){
 		TYPES::UINT16 awduint16=TYPES::UINT16(N);
 		if(!fwrite(&awduint16,sizeof(TYPES::UINT16), 1 ,this->file))

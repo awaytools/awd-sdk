@@ -52,6 +52,7 @@ namespace AWD
 			private:
 				std::string style_name;
 				double style_size;
+				double whitespace_size;
 				std::map<int, FontShape*> shapesmap;
 				std::vector<FontShape*> shapes;
 
@@ -60,6 +61,7 @@ namespace AWD
 				~FontStyle();
 				std::vector<FontShape*> get_ungenerated_chars();
 				void set_style_size(int);
+				void set_whitespace_size(int);
 				void delete_fontShape(int char_code);
 				std::string& get_style_name();
 				FontShape* get_fontShape(int);

@@ -18,16 +18,29 @@ MATRIX2x3::MATRIX2x3(TYPES::F64 *mtx)
 {
 	this->matrix_data = (TYPES::F64*)malloc(6 * sizeof(TYPES::F64));
 	set(mtx);
+	this->hasOther=true;
+	this->hasPosition=true;
 }
 MATRIX2x3::MATRIX2x3()
 {
 	this->matrix_data = (TYPES::F64*)malloc(6 * sizeof(TYPES::F64));
 	set(NULL);
+	this->hasOther=true;
+	this->hasPosition=true;
 }
-
 MATRIX2x3::~MATRIX2x3()
 {
 	free(this->matrix_data);
+}
+TYPES::UINT8 
+MATRIX2x3::get_save_type(){
+	if((this->hasPosition)&&(this->hasOther))
+		return 1;
+	if((!this->hasPosition)&&(this->hasOther))
+		return 11;
+	if((this->hasPosition)&&(!this->hasOther))
+		return 12;
+	return 0;
 }
 TYPES::F64* 
 MATRIX2x3::get(){
@@ -56,6 +69,29 @@ result
 MATRIX2x3::read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *)
 {
 	return result::AWD_SUCCESS;
+}
+
+void 
+MATRIX2x3::fill_into_list(std::vector<TYPES::F32>& input_list){
+	if(this->hasOther){
+		for(int cnt=0; cnt<4; cnt++)
+			input_list.push_back(this->matrix_data[cnt]);
+	}
+	if(this->hasPosition){
+		for(int cnt=4; cnt<6; cnt++)
+			input_list.push_back(this->matrix_data[cnt]);
+	}
+}
+void 
+MATRIX2x3::toString(std::string& output_str){
+	if(this->hasOther){
+		for(int cnt=0; cnt<4; cnt++)
+			output_str+=std::to_string(this->matrix_data[cnt]);
+	}
+	if(this->hasPosition){
+		for(int cnt=4; cnt<6; cnt++)
+			output_str+=std::to_string(this->matrix_data[cnt]);
+	}
 }
 result
 MATRIX2x3::append(MATRIX2x3* mtx)
@@ -254,6 +290,24 @@ ColorTransform::ColorTransform()
 ColorTransform::~ColorTransform()
 {
 	free(this->matrix_data);
+}
+
+
+void 
+ColorTransform::fill_into_list(std::vector<TYPES::F32>& input_list){
+	input_list.push_back(TYPES::F32(this->matrix_data[0]));
+	input_list.push_back(TYPES::F32(this->matrix_data[2]));
+	input_list.push_back(TYPES::F32(this->matrix_data[4]));
+	input_list.push_back(TYPES::F32(this->matrix_data[6]));
+	input_list.push_back(TYPES::INT16(this->matrix_data[1]));
+	input_list.push_back(TYPES::INT16(this->matrix_data[3]));
+	input_list.push_back(TYPES::INT16(this->matrix_data[5]));
+	input_list.push_back(TYPES::INT16(this->matrix_data[7]));
+}
+void 
+ColorTransform::toString(std::string& output_str){
+	for(int cnt=0; cnt<8; cnt++)
+		output_str+=std::to_string(this->matrix_data[cnt]);
 }
 
 TYPES::F64* 

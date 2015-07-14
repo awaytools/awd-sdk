@@ -100,8 +100,6 @@ TimelineDepthManager::get_parent_for_graphic_clip(TimelineChild_instance* child)
 			if(layer->is_occupied_on_frame(child->end_frame)){
 				if(layer->depth_objs.back()->parent_grafic==child)
 					return_child=layer->depth_objs.back();
-				else
-					return return_child;
 			}
 		}
 		if(layer->depth_objs.size()>0){
@@ -128,7 +126,6 @@ TimelineDepthManager::apply_depth()
 {
 	
 	TimelineChild_instance* parent = NULL;
-	
 	std::vector<TimelineDepthLayer*> new_layers;
 	for(TimelineDepthLayer* layer:this->depth_layers){
 		if(layer->depth_objs.size()>0){
@@ -136,6 +133,17 @@ TimelineDepthManager::apply_depth()
 			for(TimelineChild_instance* child:layer->depth_objs){
 				if(child->graphic==NULL){// we dont need graphic clip childs anymore
 					new_childs.push_back(child);
+				}
+				else{
+					for(TimelineDepthLayer* layer2:this->depth_layers){
+						if(layer2->depth_objs.size()>0){
+							for(TimelineChild_instance* child2:layer2->depth_objs){
+								if(child2->parent_child==child){
+									//child2->parent_child=child->parent_child;
+								}
+							}
+						}
+					}
 				}
 			}
 			if(new_childs.size()!=layer->depth_objs.size()){
@@ -148,7 +156,7 @@ TimelineDepthManager::apply_depth()
 				new_layers.push_back(layer);
 		}
 	}
-
+	
 	/*
 	// first we want to make sure that we dont waste depth space.
 	// e.g. in AS2 the depth for every object should be as small as possible.
@@ -174,12 +182,14 @@ TimelineDepthManager::apply_depth()
 		new_depth_obj.clear();
 	}
 	*/
-
+	
 	this->depth_layers.clear();
 	for(TimelineDepthLayer* one_layer: new_layers)
 		this->depth_layers.push_back(one_layer);
+	
+	this->reconnect_timeline_objs();
 
-	int cnt_obj=-16383 + ((this->depth_layers.size()-1)*3);
+	int cnt_obj= ((this->depth_layers.size()-1)*3);
 	for(TimelineDepthLayer* this_layer:this->depth_layers){
 		this_layer->apply_depth(cnt_obj);
 		cnt_obj-=3;
@@ -187,6 +197,29 @@ TimelineDepthManager::apply_depth()
 
 }
 
+TimelineChild_instance* 
+TimelineDepthManager::find_parent(TimelineChild_instance* child)
+{
+
+	int layer_cnt=-1;
+	for(TimelineDepthLayer* layer:this->depth_layers){
+		layer_cnt++;
+		for(TimelineChild_instance* child2:layer->depth_objs){
+			if(layer->depth_objs.back()==child){
+				if((child2->start_frame<=child->start_frame)&&(child2->end_frame>=child->start_frame))
+					break;
+			}
+		}
+	}
+	while(layer_cnt--){
+		TimelineDepthLayer* layer=this->depth_layers[layer_cnt];
+		for(TimelineChild_instance* child2:layer->depth_objs){
+			if((child2->start_frame<=child->start_frame)&&(child2->end_frame>=child->start_frame))
+				return child2;
+		}
+	}
+	return NULL;
+}
 TimelineDepthLayer* 
 TimelineDepthManager::get_available_layer_after_child(TimelineChild_instance* child)
 {
@@ -223,12 +256,42 @@ TimelineDepthManager::get_available_layer_after_child(TimelineChild_instance* ch
 	if(found_layer<0)
 		_ASSERT(0);
 	//	_ASSERT(0); //error because parent child not found;
-	// the child was the last found 
 	TimelineDepthLayer* new_layer = new TimelineDepthLayer();
 	this->depth_layers.push_back(new_layer);
 	return new_layer;
 }
 
+
+void 
+TimelineDepthManager::reconnect_timeline_objs()
+{
+	int max_framenr = 0;
+	for(TimelineDepthLayer* this_layer:this->depth_layers){
+		if(this_layer->depth_objs.size()>0){
+			for(TimelineChild_instance* child2:this_layer->depth_objs){
+				if(child2->start_frame>=max_framenr){
+					max_framenr=child2->start_frame;
+				}
+			}
+		}
+	}
+	int cnt=0;
+	for(cnt=0; cnt<=max_framenr; cnt++){
+		TimelineChild_instance* parent = NULL;
+		for(TimelineDepthLayer* this_layer:this->depth_layers){
+			if(this_layer->depth_objs.size()>0){
+				for(TimelineChild_instance* child2:this_layer->depth_objs){
+					if(child2->start_frame==cnt){
+						child2->parent_child=parent;
+					}
+					if((child2->start_frame<=cnt)&&(child2->end_frame>=cnt)){
+						parent=child2;
+					}
+				}
+			}
+		}
+	}
+}
 void 
 TimelineDepthManager::get_children_at_frame(TYPES::UINT32 frame_nr, std::vector<TimelineChild_instance*>& return_childs)
 {
@@ -247,7 +310,7 @@ TimelineDepthManager::add_child_after_child(TimelineChild_instance* child, Timel
 	if(this->depth_layers.size()==0){
 		// no layer exists. simple. create one. add child. exit
 		if(after_child!=NULL)
-			_ASSERT(0);// error because if no laye4r exist, we can not find a child.
+			_ASSERT(0);// error because if no layer exist, we can not find a child.
 		TimelineDepthLayer* new_layer = new TimelineDepthLayer();
 		new_layer->add_new_child(child);
 		this->depth_layers.push_back(new_layer);

@@ -24,6 +24,7 @@ namespace AWD
 				TimelineFrame();
 				~TimelineFrame();
 		
+				bool isFullConstruct;
 				TYPES::UINT32 startframe;
 				void set_frame_duration(TYPES::UINT32);
 				TYPES::UINT32 get_frame_duration();

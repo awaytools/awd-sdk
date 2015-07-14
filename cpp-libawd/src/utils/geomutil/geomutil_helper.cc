@@ -24,7 +24,7 @@ GEOM::resolve_line_curve_intersection(PathSegment* curve, PathSegment* line, SET
 	bool isResolved=false;
 	int iterCnt=0;
 	for(PathSegment* subSeg:curve->get_subdivided_path()){
-		if(subSeg->get_state()!=edge_state::MAX_SUBDIVISION)				
+		if(subSeg->get_state()!=edge_state::MAX_SUBDIVISION)
 			subSeg->set_state(edge_state::TEST_INTERSECTING);
 	}
 	VECTOR2D startpoint=line->get_startPoint();
@@ -87,11 +87,11 @@ GEOM::resolve_curve_curve_intersection(PathSegment* curve, PathSegment* curve_2,
 	bool isResolved=false;
 	int iterCnt=0;
 	for(PathSegment* subSeg:curve->get_subdivided_path()){
-		if(subSeg->get_state()!=edge_state::MAX_SUBDIVISION)				
+		if(subSeg->get_state()!=edge_state::MAX_SUBDIVISION)
 			subSeg->set_state(edge_state::TEST_INTERSECTING);
 	}
 	for(PathSegment* subSeg:curve_2->get_subdivided_path()){
-		if(subSeg->get_state()!=edge_state::MAX_SUBDIVISION)				
+		if(subSeg->get_state()!=edge_state::MAX_SUBDIVISION)
 			subSeg->set_state(edge_state::TEST_INTERSECTING);
 	}
 	VECTOR2D startpoint_curve;

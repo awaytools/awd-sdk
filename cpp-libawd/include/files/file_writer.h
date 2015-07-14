@@ -37,19 +37,25 @@ namespace AWD
 
 				FILE* get_file();
 				
+				result writeUINTSasSmallestData(std::vector<TYPES::UINT32>);
 				result writeINT8(TYPES::INT8);
+				result writeINT8multi(TYPES::INT8* val, int length);
 				result writeUINT8(TYPES::UINT8);
+				result writeUINT8multi(TYPES::UINT8* val, int length);
 				result writeINT16(TYPES::INT16);
+				result writeINT16multi(TYPES::INT16* val, int length);
 				result writeUINT16(TYPES::UINT16);
+				result writeUINT16multi(TYPES::UINT16* val, int length);
 				result writeINT32(TYPES::INT32);
+				result writeINT32multi(TYPES::INT32* val, int length);
 				result writeUINT32(TYPES::UINT32);
+				result writeUINT32multi(TYPES::UINT32* val, int length);
 				result writeFLOAT32(TYPES::F32);
+				result writeFLOAT32multi(TYPES::F32* val, int length);
 				result writeFLOAT64(TYPES::F64);
+				result writeFLOAT64multi(TYPES::F64* val, int length);
 				result writeBytes(TYPES::UINT8* val, int length);
 				result writeSTRING(std::string& s, FILES::write_string_with output_style);
-				result writeFLOAT32multi(TYPES::F32* val, int length);
-				result writeFLOAT64multi(TYPES::F64* val, int length);
-				result writeUINT16multi(TYPES::UINT16* val, int length);
 				result writeNumbers(TYPES::F64* val, int length,bool savePrecision);
 
 				/**

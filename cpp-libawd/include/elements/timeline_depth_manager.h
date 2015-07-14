@@ -142,8 +142,10 @@ namespace AWD
 				TimelineDepthLayer* get_available_layer_after_child(TimelineChild_instance* child);
 				TimelineChild_instance* get_parent_for_graphic_clip(TimelineChild_instance* child);
 				
+				void reconnect_timeline_objs();
 				void get_children_at_frame(TYPES::UINT32 frame_nr, std::vector<TimelineChild_instance*>&);
 				void add_child_after_child(TimelineChild_instance* child, TimelineChild_instance* after_child);
+				TimelineChild_instance* find_parent(TimelineChild_instance* child);
 				void advance_frame(TYPES::UINT32 frame);
 				void apply_depth();
 		};

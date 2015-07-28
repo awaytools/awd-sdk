@@ -1015,13 +1015,13 @@ Timeline::finalize()
 	// remove the graphic instances from the potential child list
 	std::vector<ANIM::PotentialTimelineChildGroup* > new_timeline_childs;
 	for(ANIM::PotentialTimelineChildGroup* child_group: this->timeline_childs){
-		bool export=true;
+		bool export_this=true;
 		if(child_group->awd_block->get_type()==BLOCK::block_type::TIMELINE){
 			Timeline* this_timeline=reinterpret_cast<Timeline*>(child_group->awd_block);
 			if(this_timeline->is_grafic_instance)
-				export=false;
+				export_this=false;
 		}
-		if(export){
+		if(export_this){
 			new_timeline_childs.push_back(child_group);
 		}
 	}

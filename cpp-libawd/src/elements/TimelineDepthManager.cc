@@ -116,8 +116,6 @@ TimelineDepthManager::get_parent_for_graphic_clip(TimelineChild_instance* child)
 
 		layer_cnt++;
 	}
-	if(found_layer<0)
-		_ASSERT(0);
 	return return_child;
 }
 void
@@ -208,8 +206,8 @@ TimelineDepthManager::merge_graphic_timeline(TimelineDepthManager* graphic_depth
 	graphic_depth_man->owns_layers=false;
 	int insert_add_index=0;
 	if(this->depth_layers.size()==0){
-		if(after_child!=NULL)
-			_ASSERT(0);// error because if no layer exist, we can not find a child.
+		//if(after_child!=NULL)
+		//	_ASSERT(0);// error because if no layer exist, we can not find a child.
 	}
 	if(after_child!=NULL){
 		if(after_child->graphic!=NULL){
@@ -333,8 +331,6 @@ TimelineDepthManager::get_available_layer_after_child(TimelineChild_instance* ch
 
 		layer_cnt++;
 	}
-	if(found_layer<0)
-		_ASSERT(0);
 	//	_ASSERT(0); //error because parent child not found;
 	TimelineDepthLayer* new_layer = new TimelineDepthLayer();
 	this->depth_layers.push_back(new_layer);
@@ -467,8 +463,6 @@ TimelineDepthManager::add_child_after_child(TimelineChild_instance* child, Timel
 	child->parent_child=after_child;
 	if(this->depth_layers.size()==0){
 		// no layer exists. simple. create one. add child. exit
-		if(after_child!=NULL)
-			_ASSERT(0);// error because if no layer exist, we can not find a child.
 		TimelineDepthLayer* new_layer = new TimelineDepthLayer();
 		new_layer->add_new_child(child);
 		this->depth_layers.push_back(new_layer);
@@ -506,6 +500,5 @@ TimelineDepthManager::apply_remove_command(FrameCommandRemoveObject* remove_cmd)
 				return;
 			}
 		}
-		_ASSERT(0);
 	}
 }

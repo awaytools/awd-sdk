@@ -362,23 +362,23 @@ ColorTransform:: prepend(ColorTransform* mtx)
 {
 	TYPES::F64* mtx2=mtx->get();
 	
-	TYPES::F64 mr =  mtx2[0];
-	TYPES::F64 or =  mtx2[1];
-	TYPES::F64 mg =  mtx2[2];
-	TYPES::F64 og =  mtx2[3];
-	TYPES::F64 mb =  mtx2[4];
-	TYPES::F64 ob =  mtx2[5];
-	TYPES::F64 ma =  mtx2[6];
-	TYPES::F64 oa =  mtx2[7];
+	TYPES::F64 m_r =  mtx2[0];
+	TYPES::F64 o_r =  mtx2[1];
+	TYPES::F64 m_g =  mtx2[2];
+	TYPES::F64 o_g =  mtx2[3];
+	TYPES::F64 m_b =  mtx2[4];
+	TYPES::F64 o_b =  mtx2[5];
+	TYPES::F64 m_a =  mtx2[6];
+	TYPES::F64 o_a =  mtx2[7];
 	
-	this->matrix_data[0]= mr * this->matrix_data[0];
-	this->matrix_data[1]= or +  (this->matrix_data[1] * mr);
-	this->matrix_data[2]= mg * this->matrix_data[2];
-	this->matrix_data[3]= og +  (this->matrix_data[3] * mg);
-	this->matrix_data[4]= mb * this->matrix_data[4];
-	this->matrix_data[5]= ob +  (this->matrix_data[5] * mb);
-	this->matrix_data[6]= ma * this->matrix_data[6];
-	this->matrix_data[7]= oa +  (this->matrix_data[7] * ma);
+	this->matrix_data[0]= m_r * this->matrix_data[0];
+	this->matrix_data[1]= o_r +  (this->matrix_data[1] * m_r);
+	this->matrix_data[2]= m_g * this->matrix_data[2];
+	this->matrix_data[3]= o_g +  (this->matrix_data[3] * m_g);
+	this->matrix_data[4]= m_b * this->matrix_data[4];
+	this->matrix_data[5]= o_b +  (this->matrix_data[5] * m_b);
+	this->matrix_data[6]= m_a * this->matrix_data[6];
+	this->matrix_data[7]= o_a +  (this->matrix_data[7] * m_a);
 
 	return result::AWD_SUCCESS;
 }

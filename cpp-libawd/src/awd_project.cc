@@ -120,27 +120,6 @@ AWDProject::get_time_since_last_call()
 	double return_time= std::clock() - this->clock;
 	this->clock = std::clock();
 	return (return_time / (double)(CLOCKS_PER_SEC / 1000));
-#ifdef _WIN32
-	//double new_time=t.elapsed();
-	//this->current_time = new_time-this->current_time;
-	/*
-	SYSTEMTIME time;
-	GetSystemTime(&time);
-	LPFILETIME lpFileTime;
-	GetSystemTimeAsFileTime(lpFileTime);
-	lpFileTime->
-	return_time = millis - this->current_time;
-	this->current_time=millis;
-	*/
-#else
-	
-	timeval time;
-	gettimeofday(&time, NULL);
-	int millis = (time.tv_sec * 1000) + (time.tv_usec / 1000);
-	return_time = millis - this->current_time;
-	this->current_time=millis;
-#endif
-	return return_time;
 }
 
 

@@ -377,7 +377,7 @@ FrameCommandDisplayObject::finalize_command()
 			}
 		}
 	}
-	
+	/*
 	// check if we need colortransform for this command
 	if(this->get_hasColorMatrix()){
 		if(this->prev_obj==NULL){
@@ -403,7 +403,7 @@ FrameCommandDisplayObject::finalize_command()
 				}
 			}
 		}
-	}
+	}*/
 
 	
 	// check if we need masks for this command
@@ -526,14 +526,14 @@ FrameCommandDisplayObject::resolve_parenting()
 			udword* InputValues_depth = new udword[ this->mask_ids.size()];
 			int cmd_cnt=0;
 			for(TYPES::INT32 one_mask_value:this->mask_ids){
-				InputValues_depth[cmd_cnt++]=one_mask_value;
+				InputValues_depth[cmd_cnt++]=one_mask_value+1;
 			}
 			SORTER RS;
-			const udword* Sorted = RS.Sort(InputValues_depth, this->mask_ids.size(), RADIX_SIGNED).GetRanks();
+			const udword* Sorted = RS.Sort(InputValues_depth, this->mask_ids.size(), RADIX_UNSIGNED).GetRanks();
 			int sorted_cnt=this->mask_ids.size();
 			this->mask_ids.clear();
 			while(sorted_cnt--){
-				this->mask_ids.push_back(InputValues_depth[Sorted[sorted_cnt]]);
+				this->mask_ids.push_back(InputValues_depth[Sorted[sorted_cnt]]-1);
 			}
 			DELETEARRAY(InputValues_depth);
 			//DELETEARRAY(Sorted);

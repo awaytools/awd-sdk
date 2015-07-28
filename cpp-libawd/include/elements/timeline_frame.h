@@ -30,7 +30,6 @@ namespace AWD
 				TYPES::UINT32 get_frame_duration();
 
 				std::vector<ANIM::FrameCommandDisplayObject*> display_commands;				
-				std::vector<ANIM::FrameCommandDisplayObject*> empty_commands;// needed to delete unused commands. we cannot delete when sorting out, because we need to keep prev-object chain intakt
 				std::vector<ANIM::FrameCommandRemoveObject*> remove_commands;
 
 				// used while recieving commands from adobe:

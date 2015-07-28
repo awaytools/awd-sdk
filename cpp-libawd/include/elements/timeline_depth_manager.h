@@ -45,10 +45,12 @@ namespace AWD
 		};
 		
 		struct TimelineChild_instance;
+		class TimelineDepthLayer;
 		struct Graphic_instance
 		{
 			BLOCKS::Timeline* graphic_timeline;
 			ANIM::TimelineChild_instance* graphic_child;
+			ANIM::TimelineDepthLayer* insert_layer;
 			std::vector<ANIM::TimelineChild_instance*> graphic_childs;
 			FrameCommandDisplayObject* graphic_command;
 			FrameCommandDisplayObject* current_command;
@@ -56,6 +58,7 @@ namespace AWD
 			int offset_frames;
 			Graphic_instance()
 			{
+				insert_layer=NULL;
 				graphic_timeline=NULL;
 				graphic_child=NULL;
 				current_command=NULL;
@@ -120,6 +123,7 @@ namespace AWD
 				std::vector<TimelineChild_instance*> depth_objs;
 				int depth;
 				bool in_use;
+				bool is_graphic_layer;
 
 				void add_new_child(TimelineChild_instance* child);
 				void advance_frame(TYPES::UINT32 frame);
@@ -138,10 +142,15 @@ namespace AWD
 
 				std::vector<TimelineDepthLayer*> depth_layers;
 				bool use_as2;
+				bool owns_layers;
 				void apply_remove_command(FrameCommandRemoveObject* remove_cmd);
+				 
+				TYPES::UINT32 get_insertion_index(TimelineChild_instance* child);
 				TimelineDepthLayer* get_available_layer_after_child(TimelineChild_instance* child);
 				TimelineChild_instance* get_parent_for_graphic_clip(TimelineChild_instance* child);
-				
+
+				void add_child_after_layer(TimelineChild_instance* child, TimelineDepthLayer* after_layer);
+				TimelineDepthLayer* merge_graphic_timeline(TimelineDepthManager* graphic_depth_man, TYPES::UINT32 start_frame, TimelineChild_instance* after_child);
 				void reconnect_timeline_objs();
 				void get_children_at_frame(TYPES::UINT32 frame_nr, std::vector<TimelineChild_instance*>&);
 				void add_child_after_child(TimelineChild_instance* child, TimelineChild_instance* after_child);

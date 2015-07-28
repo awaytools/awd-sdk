@@ -775,8 +775,12 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 			x_int = get_bit16(minx_int, maxx_int);
 			// create a 16bit value descriping the occupied area on y-axis (e.g. bounds of min = 4 and max = 8  looks like this: 0000111100000000)
 			y_int = get_bit16(miny_int, maxy_int);
-			// merge both 16bit values into a 32bit value (e.g. 0001111111110000 + 0000111100000000 = 00011111111100000000111100000000)
-			combined_int = (TYPES::UINT32(x_int) << 16) | y_int;
+			// merge both 16bit values into a 32bit value (e.g. 0001111111110000 + 0000111100000000 = 00011111111100000000111100000000)#ifdef _WIN32
+#ifdef _WIN32
+			combined_int = (((TYPES::UINT32) x_int) << 16) | y_int;
+#else
+			combined_int = (((TYPES::UINT32) y_int) << 16) | x_int;
+#endif
 
 			// create the BitGridCell.
 			FilledRegionGroup* region_bit = new FilledRegionGroup();
@@ -1035,7 +1039,11 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 					// create a 16bit value descriping the occupied area on y-axis (e.g. bounds of min = 4 and max = 8  looks like this: 0000111100000000)
 					y_int = get_bit16(miny_int, maxy_int);
 					// merge both 16bit values into a 32bit value (e.g. 0001111111110000 + 0000111100000000 = 00011111111100000000111100000000)
+#ifdef _WIN32
 					combined_int = (((TYPES::UINT32) x_int) << 16) | y_int;
+#else
+					combined_int = (((TYPES::UINT32) y_int) << 16) | x_int;
+#endif
 					
 					pathSeg->bit_id_x=x_int;
 					pathSeg->bit_id_y=y_int;

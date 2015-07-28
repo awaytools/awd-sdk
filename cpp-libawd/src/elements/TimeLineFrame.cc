@@ -31,8 +31,6 @@ TimelineFrame::~TimelineFrame()
 {
 	for (FrameCommandDisplayObject* fc :  this->display_commands)
 		delete fc;
-	for (FrameCommandDisplayObject* fc_empty :  this->empty_commands)
-		delete fc_empty;
 	for (FrameCommandRemoveObject* fc_remove :  this->remove_commands)
 		delete fc_remove;
 }
@@ -336,7 +334,7 @@ TimelineFrame::finalize_commands()
 		if(f->has_active_properties())
 			new_commands.push_back(f);
 		else
-			this->empty_commands.push_back(f);
+			delete f;
 	}
 	this->display_commands.clear();
 	for (FrameCommandDisplayObject * f : new_commands) 
@@ -377,7 +375,7 @@ TimelineFrame::build_final_commands()
 		InputValues_depth[cmd_cnt++]=(f_cmd->child->depth);
 	}
 	SORTER RS;
-	const udword* Sorted = RS.Sort(InputValues_depth, new_cmds.size(), RADIX_SIGNED).GetRanks();
+	const udword* Sorted = RS.Sort(InputValues_depth, new_cmds.size(), RADIX_UNSIGNED).GetRanks();
 	int sorted_cnt=new_cmds.size();
 	this->display_commands.clear();
 	TimelineChild_instance* parent=NULL;
@@ -390,7 +388,7 @@ TimelineFrame::build_final_commands()
 					f->set_command_type(ANIM::frame_command_type::FRAME_COMMAND_ADD_BUTTON_CHILD);
 			}
 		}
-		//parent=f->child;
+		//parent=f->child
 		f->child->parent_grafic=NULL;
 		this->display_commands.push_back(f);
 	}

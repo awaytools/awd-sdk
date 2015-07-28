@@ -311,7 +311,7 @@ Timeline::create_timeline_streams()
 		command_cnt = 0;
 		start_index = this->add_child_stream.size()/2;	
 		for(FrameCommandDisplayObject* displaycmd : f->display_commands){
-			if((displaycmd->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD)||(displaycmd->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_BUTTON_CHILD))
+			if(displaycmd->get_command_type()!=frame_command_type::FRAME_COMMAND_UPDATE)
 			{
 				this->add_child_stream.push_back(displaycmd->child->child->id);
 				this->add_child_stream.push_back(displaycmd->child->depth);
@@ -420,7 +420,6 @@ Timeline::create_timeline_streams()
 						this->property_index_stream.push_back(map_instancenames[displaycmd->get_instanceName()]);
 					}
 					else{
-						if(this->properties_stream_strings.size()>65536) new_vec[3]=false;
 						this->property_index_stream.push_back(this->properties_stream_strings.size());
 						map_instancenames[displaycmd->get_instanceName()]=this->properties_stream_strings.size();
 						this->properties_stream_strings.push_back(displaycmd->get_instanceName());
@@ -472,10 +471,10 @@ Timeline::create_timeline_streams()
 	this->all_optional_int_vecs.push_back(this->property_index_stream);//11
 	this->all_optional_int_vecs.push_back(this->properties_stream_int);//12
 	
-	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_mtx_scale);//0
-	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_mtx_pos);//1
-	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_mtx);//2
-	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_ct);//3
+	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_mtx_scale);//13
+	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_mtx_pos);//14
+	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_mtx);//15
+	this->all_optional_f32_vecs.push_back(this->properties_stream_f32_ct);//16
 	
 }
 
@@ -485,7 +484,6 @@ Timeline::create_timeline_streams()
 void 
 Timeline::advance_frame(TimelineFrame* frame)
 {
-	std::vector<int> error_vec;// assert doesnt work for flashpro in release mode. so i just try to access a element in this vec whenever a error should trow
 	//	check if any of the alive graphic-instances provides a keyframe for the current frame.
 	//	set all visible graphic-instances to dirty = true.
 	bool has_graphic_keyframes=false;
@@ -498,7 +496,8 @@ Timeline::advance_frame(TimelineFrame* frame)
 		graphic_clip->current_command=NULL;
 	}
 
-	//	no matter what, the depthmanager must advance 1 frame., this will set endFrame for all active childs to this->current_frame
+	//	no matter what, the depthmanager must advance 1 frame.
+	//	this will set the last child on each layer of the depth_manager to end_frame = this->current_frame
 	this->depth_manager->advance_frame(this->current_frame);
 
 	// no keyframe is available for this frame (neither for timeline nor for any of the graphic instances that are alive)
@@ -507,10 +506,14 @@ Timeline::advance_frame(TimelineFrame* frame)
 		this->frames.back()->set_frame_duration(this->frames.back()->get_frame_duration()+1);
 		return;
 	}
+
+	// if we got here, we definitv have to create a keyframe for this frame
+	
+	// if we have a input frame, we will resuse it (extract the commands, and clear its command lists) 
+	// if we have no 
 	TimelineFrame* final_frame;
 	std::vector<FrameCommandDisplayObject*> input_display_commands;
 	std::vector<FrameCommandRemoveObject*> input_remove_commands;
-	// if we have a input frame, we will resuse it.
 	if(frame){
 		final_frame=frame;
 		for(FrameCommandRemoveObject* removeCmd: frame->remove_commands)
@@ -536,8 +539,6 @@ Timeline::advance_frame(TimelineFrame* frame)
 	BLOCKS::Timeline* child_timeline = NULL;
 	// EVAL REMOVE COMMANDS FOR FRAME:
 	for(FrameCommandRemoveObject* removeCmd: input_remove_commands){
-		if(timeline_childs_to_obj_id.find(removeCmd->objID)==timeline_childs_to_obj_id.end())
-			error_vec[0]=1;// ERROR BECAUSE OBJECT NOT FOUND.
 		
 		current_child = timeline_childs_to_obj_id[removeCmd->objID];
 		current_child->child->used=false;
@@ -570,11 +571,11 @@ Timeline::advance_frame(TimelineFrame* frame)
 			else{
 				graphic_clips.clear();
 			}
-
 		}
-		
-		final_frame->apply_remove_command(removeCmd);
-		this->depth_manager->apply_remove_command(removeCmd);
+		else{
+			final_frame->apply_remove_command(removeCmd);
+			this->depth_manager->apply_remove_command(removeCmd);
+		}
 	}
 	
 	// EVAL REMOVE COMMANDS FOR ACTIV GRAPHIC CLIPS:
@@ -582,28 +583,29 @@ Timeline::advance_frame(TimelineFrame* frame)
 		for(Graphic_instance* graphic_clip : graphic_clips){
 			if(graphic_clip->graphic_timeline->has_frame_at(this->current_frame-graphic_clip->offset_frames)){
 				clip_frame = graphic_clip->graphic_timeline->get_frame_at(this->current_frame-graphic_clip->offset_frames);
-				if(clip_frame==NULL)
-					error_vec[0]=1;// ERROR NO FRAME RETRIEVED
+
 				// copy stuff over from the frame
 				final_frame->set_frame_code(clip_frame->get_frame_code());
 				for(FrameCommandRemoveObject* removeCmd2: clip_frame->remove_commands){
 					removeCmd2->child->child->used=false;
 					final_frame->apply_remove_command(removeCmd2);
-					this->depth_manager->apply_remove_command(removeCmd2);
+					//this->depth_manager->apply_remove_command(removeCmd2);
 					graphic_clip->remove_child(removeCmd2->child);
 				}
 				clip_frame->remove_commands.clear();
 			}
 		}
 	}
+	final_frame->isFullConstruct=false;
 	std::vector<TimelineChild_instance*> active_childs;
 	this->depth_manager->get_children_at_frame(this->current_frame, active_childs);
-	if(active_childs.size()==0)
+	if(active_childs.size()==0){
 		final_frame->isFullConstruct=true;
+	}
 	
 	// EVAL COMMANDS FOR FRAME:
 	for(FrameCommandDisplayObject* display_cmd: input_display_commands){
-		if(display_cmd->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD){
+		if(display_cmd->get_command_type()!=ANIM::frame_command_type::FRAME_COMMAND_UPDATE){
 			current_block = display_cmd->get_object_block();// create a new child-instance for this object
 			current_child = new TimelineChild_instance();
 			current_child->start_frame=this->current_frame;
@@ -620,7 +622,12 @@ Timeline::advance_frame(TimelineFrame* frame)
 			timeline_childs_to_obj_id[display_cmd->get_objID()]=current_child;
 				
 			display_cmd->child=current_child;
+			
+			parent_child = NULL;
+			if(display_cmd->get_depth()!=0)
+				parent_child=timeline_childs_to_obj_id[display_cmd->get_depth()];
 
+			bool isgrafic=false;
 			// check if the object is a timeline, and if so, make sure it is finalized (recursion), and check if it is a graphic instance 
 			if(current_block->get_type()==BLOCK::block_type::TIMELINE){
 				child_timeline=reinterpret_cast<BLOCKS::Timeline*>(current_block);
@@ -628,7 +635,7 @@ Timeline::advance_frame(TimelineFrame* frame)
 				child_timeline->finalize();
 				
 				if(child_timeline->is_grafic_instance){
-					
+					isgrafic=true;
 					// this is a graphic instance.
 					Graphic_instance* new_graphic_clip = new Graphic_instance();
 					new_graphic_clip->graphic_timeline=child_timeline;
@@ -638,25 +645,30 @@ Timeline::advance_frame(TimelineFrame* frame)
 					new_graphic_clip->current_command=display_cmd;
 					new_graphic_clip->graphic_child=current_child;
 					current_child->graphic=new_graphic_clip;
+					new_graphic_clip->insert_layer=this->depth_manager->merge_graphic_timeline(child_timeline->depth_manager, this->current_frame, parent_child); 
 					this->graphic_clips.push_back(new_graphic_clip);
 					
 				}
 			}
-			// get the parent object, using the obj-id
-			parent_child = NULL;
-			if(display_cmd->get_depth()!=0)
-				parent_child=timeline_childs_to_obj_id[display_cmd->get_depth()];
-			if(parent_child!=NULL){
-				if(parent_child->graphic!=NULL)
-					parent_child=this->depth_manager->get_parent_for_graphic_clip(parent_child);
+			if(!isgrafic){
+				// get the parent object, using the obj-id
+				if(parent_child!=NULL){
+					if(parent_child->graphic!=NULL){
+						this->depth_manager->add_child_after_layer(current_child, parent_child->graphic->insert_layer);
+					}
+					else{
+						this->depth_manager->add_child_after_child(current_child, parent_child);
+					}
+				}
+				else{
+					this->depth_manager->add_child_after_child(current_child, parent_child);
+					
+				}
+				final_frame->apply_add_command(display_cmd, parent_child);
 			}
-			// insert the object
-			final_frame->apply_add_command(display_cmd, parent_child);
-			this->depth_manager->add_child_after_child(current_child, parent_child);
 		}
 		else if(display_cmd->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_UPDATE){
-			if(timeline_childs_to_obj_id.find(display_cmd->get_objID())==timeline_childs_to_obj_id.end())
-				error_vec[0]=1;// ERROR NO OBJECT RETIREVED
+
 			current_child = timeline_childs_to_obj_id[display_cmd->get_objID()];
 			display_cmd->child=current_child;
 			final_frame->apply_update_command(display_cmd);
@@ -679,14 +691,12 @@ Timeline::advance_frame(TimelineFrame* frame)
 	for(Graphic_instance* graphic_clip : graphic_clips){
 		if(graphic_clip->graphic_timeline->has_frame_at(this->current_frame - graphic_clip->offset_frames)){
 			TimelineFrame* clip_frame = graphic_clip->graphic_timeline->get_frame_at(this->current_frame - graphic_clip->offset_frames);
-			if(clip_frame==NULL)
-				error_vec[0]=1;// ERROR NO FRAME
 			for(FrameCommandDisplayObject* dp_cmd: clip_frame->display_commands){
-				if(dp_cmd->get_command_type()==frame_command_type::FRAME_COMMAND_ADD_CHILD){
+				if(dp_cmd->get_command_type()!=frame_command_type::FRAME_COMMAND_UPDATE){
 					dp_cmd->child->child=this->get_child_for_block(dp_cmd->get_object_block());
 					dp_cmd->child->parent_grafic=graphic_clip->graphic_child;
-					dp_cmd->child->start_frame=this->current_frame;
-					dp_cmd->child->end_frame=this->current_frame;
+					//dp_cmd->child->start_frame=this->current_frame;
+					//dp_cmd->child->end_frame=this->current_frame;
 					
 					if(graphic_clip->graphic_child->is_mask){
 						dp_cmd->hasTargetMaskIDs=true;
@@ -694,12 +704,12 @@ Timeline::advance_frame(TimelineFrame* frame)
 						dp_cmd->mask_ids.push_back(-1);
 					}
 					graphic_clip->dirty_masks=true;
-					parent_child=graphic_clip->graphic_child;
+					/*parent_child=graphic_clip->graphic_child;
 					if(dp_cmd->child->parent_child!=NULL){
 						parent_child=dp_cmd->child->parent_child;
-					}
+					}*/
 					final_frame->apply_add_command(dp_cmd, parent_child);
-					this->depth_manager->add_child_after_child(dp_cmd->child, parent_child);
+					//this->depth_manager->add_child_after_child(dp_cmd->child, parent_child);
 					graphic_clip->graphic_childs.push_back(dp_cmd->child);
 				}
 				else
@@ -713,6 +723,7 @@ Timeline::advance_frame(TimelineFrame* frame)
 	
 	// makeing sure all existing object have correct update commands available:
 
+	// get a list of active childs from the depth-manager
 	std::vector<TimelineChild_instance*> existing_childs;
 	depth_manager->get_children_at_frame(this->current_frame, existing_childs);
 	for(TimelineChild_instance* existing_child:existing_childs){
@@ -730,8 +741,6 @@ Timeline::advance_frame(TimelineFrame* frame)
 				// we need to get all childs for the mask-id. if the child is a graphic instance, we get all its childs instead.
 				std::vector<TimelineChild_instance*> new_mask_childs;
 				for(int m_id : mask_command->mask_ids){
-					if(timeline_childs_to_obj_id.find(m_id)==timeline_childs_to_obj_id.end())
-						_ASSERT(0);
 					TimelineChild_instance* mask_child = timeline_childs_to_obj_id[m_id];
 					if(mask_child->graphic!=NULL){
 						if(mask_child->graphic->dirty_masks)
@@ -836,8 +845,6 @@ Timeline::advance_frame(TimelineFrame* frame)
 			// we need to get all childs for the mask-id. if the child is a graphic instance, we get all its childs instead.
 			std::vector<TimelineChild_instance*> new_mask_childs;
 			for(int m_id : graphic_clip->graphic_command->mask_ids){
-				if(timeline_childs_to_obj_id.find(m_id)==timeline_childs_to_obj_id.end())
-					_ASSERT(0);
 				TimelineChild_instance* mask_child = timeline_childs_to_obj_id[m_id];
 				if(mask_child->graphic!=NULL){
 					if(mask_child->graphic->dirty_masks)
@@ -885,11 +892,10 @@ Timeline::advance_frame(TimelineFrame* frame)
 			}
 			new_mask_childs.clear();
 		}
-		;
-		for(FrameCommandDisplayObject* display_cmd:final_frame->display_commands){
-			if(display_cmd->child->graphic==NULL)
-				display_cmd->prev_obj = this->get_prev_cmd(display_cmd->child);
-		}
+	}
+	for(FrameCommandDisplayObject* display_cmd:final_frame->display_commands){
+		if(display_cmd->child->graphic==NULL)
+			display_cmd->prev_obj = this->get_prev_cmd(display_cmd->child);
 	}
 	
 }
@@ -1182,11 +1188,13 @@ Timeline::calc_body_length(AWDFile* awd_file, BlockSettings *curBlockSettings)
 		}
 	}
 	
-	if(this->frame_scripts_stream.size()>0){
-		len += sizeof(TYPES::UINT8);// stream_type
-		len += sizeof(TYPES::UINT16);
-		for(std::string onestring : this->frame_scripts_stream){
-			len += sizeof(TYPES::UINT32) + TYPES::UINT32(onestring.size()) + sizeof(TYPES::UINT16);//name
+	if(curBlockSettings->get_export_framescripts()){
+		if(this->frame_scripts_stream.size()>0){
+			len += sizeof(TYPES::UINT8);// stream_type
+			len += sizeof(TYPES::UINT16);
+			for(std::string onestring : this->frame_scripts_stream){
+				len += sizeof(TYPES::UINT32) + TYPES::UINT32(onestring.size()) + sizeof(TYPES::UINT16);//name
+			}
 		}
 	}
 		
@@ -1201,6 +1209,47 @@ Timeline::calc_body_length(AWDFile* awd_file, BlockSettings *curBlockSettings)
 result
 Timeline::get_frames_info(std::vector<std::string>& infos)
 {
+	
+	int cnt = 0;
+	for(std::vector<TYPES::UINT32> one_int_vec : all_int_vecs){
+		std::string layer_info="	"+std::to_string(cnt)+"	'"+std::to_string(one_int_vec.size()); 
+		cnt++;
+		infos.push_back(layer_info);
+	}
+	for(std::vector<TYPES::UINT32> one_int_vec : all_optional_int_vecs){
+		if(one_int_vec.size()>0){
+			std::string layer_info="	"+std::to_string(cnt)+"	'"+std::to_string(one_int_vec.size()); 
+			infos.push_back(layer_info);
+		}
+		cnt++;
+	}
+	
+	for(std::vector<TYPES::F32> one_int_vec : all_optional_f32_vecs){
+		if(one_int_vec.size()>0){
+			std::string layer_info="	"+std::to_string(cnt)+"	'"+std::to_string(one_int_vec.size()); 
+			infos.push_back(layer_info);
+		}
+		cnt++;
+	}
+	
+	if(this->labels.size()>0){
+		std::string layer_info="	labels: "+std::to_string(this->labels.size()); 
+		infos.push_back(layer_info);
+	}
+	
+	if(this->properties_stream_strings.size()>0){
+		std::string layer_info="	strings (names): "+std::to_string(this->properties_stream_strings.size()); 
+		infos.push_back(layer_info);
+	}
+	
+	if(this->frame_scripts_stream.size()>0){
+		std::string layer_info="	scripts: "+std::to_string(this->frame_scripts_stream.size()); 
+		infos.push_back(layer_info);
+	}
+		
+	
+	
+	
 	int framecnt = 0;
 	infos.push_back("Potential timeline childs: "+std::to_string(this->timeline_childs.size()));
 	for(PotentialTimelineChildGroup* child: this->timeline_childs){
@@ -1238,6 +1287,7 @@ Timeline::get_frames_info(std::vector<std::string>& infos)
 			keepgoing=false;
 		
 	}
+	
 	return AWD::result::AWD_SUCCESS;
 }
 
@@ -1385,13 +1435,15 @@ Timeline::write_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings *cu
 	}
 	stream_cnt++;
 	
-	if(this->frame_scripts_stream.size()>0){
-		fileWriter->writeUINT8(stream_cnt);
-		fileWriter->writeUINT16(this->frame_scripts_stream.size());
-		int counter = 0;
-		for(std::string onestring : this->frame_scripts_stream){
-			fileWriter->writeUINT16(this->frame_scripts_indices[counter++]);
-			fileWriter->writeSTRING(onestring, FILES::write_string_with::LENGTH_AS_UINT32);// name	
+	if(curBlockSettings->get_export_framescripts()){
+		if(this->frame_scripts_stream.size()>0){
+			fileWriter->writeUINT8(stream_cnt);
+			fileWriter->writeUINT16(this->frame_scripts_stream.size());
+			int counter = 0;
+			for(std::string onestring : this->frame_scripts_stream){
+				fileWriter->writeUINT16(this->frame_scripts_indices[counter++]);
+				fileWriter->writeSTRING(onestring, FILES::write_string_with::LENGTH_AS_UINT32);// name	
+			}
 		}
 	}
 	

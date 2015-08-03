@@ -241,12 +241,10 @@ TimelineDepthManager::merge_graphic_timeline(TimelineDepthManager* graphic_depth
 			this->depth_layers.push_back(old_layer_start);
 		old_layers_start.clear();
 	}
-	if(frame_offset>0)
-		frame_offset--;
 	for(TimelineDepthLayer* graphic_layer:graphic_depth_man->depth_layers){
 		for(TimelineChild_instance* child:graphic_layer->depth_objs){
-			child->start_frame+=frame_offset;
-			child->end_frame+=frame_offset;
+			child->start_frame=-1;
+			child->end_frame=-1;
 		}
 		graphic_layer->is_graphic_layer=true;
 		this->depth_layers.push_back(graphic_layer);

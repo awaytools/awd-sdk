@@ -596,6 +596,14 @@ Timeline::advance_frame(TimelineFrame* frame)
 			}
 		}
 	}
+	// take care of update commands for childs inserted for graphic clips
+	for(Graphic_instance* graphic_clip : graphic_clips){
+		
+		for(TimelineChild_instance* gc_child:graphic_clip->graphic_childs){
+			
+			gc_child->end_frame=this->current_frame;
+		}
+	}
 	final_frame->isFullConstruct=false;
 	std::vector<TimelineChild_instance*> active_childs;
 	this->depth_manager->get_children_at_frame(this->current_frame, active_childs);
@@ -684,7 +692,7 @@ Timeline::advance_frame(TimelineFrame* frame)
 			}
 		}
 	}
-
+	
 
 	
 	// EVAL COMMANDS FOR ACTIV GRAPHIC CLIPS:
@@ -695,8 +703,7 @@ Timeline::advance_frame(TimelineFrame* frame)
 				if(dp_cmd->get_command_type()!=frame_command_type::FRAME_COMMAND_UPDATE){
 					dp_cmd->child->child=this->get_child_for_block(dp_cmd->get_object_block());
 					dp_cmd->child->parent_grafic=graphic_clip->graphic_child;
-					//dp_cmd->child->start_frame=this->current_frame;
-					//dp_cmd->child->end_frame=this->current_frame;
+					dp_cmd->child->start_frame=this->current_frame;
 					
 					if(graphic_clip->graphic_child->is_mask){
 						dp_cmd->hasTargetMaskIDs=true;
@@ -775,6 +782,7 @@ Timeline::advance_frame(TimelineFrame* frame)
 	for(Graphic_instance* graphic_clip : graphic_clips){
 		
 		for(TimelineChild_instance* gc_child:graphic_clip->graphic_childs){
+			
 			FrameCommandDisplayObject* child_command = final_frame->get_update_command_by_child(gc_child);
 			if((child_command==NULL)&&(graphic_clip->current_command==NULL))
 				continue;// no need for any update
@@ -1279,7 +1287,9 @@ Timeline::get_frames_info(std::vector<std::string>& infos)
 	while(keepgoing){
 		frame_cnt++;
 		if(this->frames[fcnt1]->startframe==frame_cnt){
+			infos.push_back("Frame "+std::to_string(this->frames[fcnt1]->startframe)+" full construct = "+std::to_string(this->frames[fcnt1]->isFullConstruct));
 			infos.push_back("Frame "+std::to_string(this->frames[fcnt1]->startframe)+" duration = "+std::to_string(this->frames[fcnt1]->get_frame_duration()));
+
 			this->frames[fcnt1]->get_frame_info(infos);
 			fcnt1++;
 		}

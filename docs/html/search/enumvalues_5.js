@@ -11,11 +11,14 @@ var searchData=
   ['filereader_5ferror_5fopening_5ffile',['FILEREADER_ERROR_OPENING_FILE',['../namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4eafd3450d88b8a87acab776f2e38e6cd07',1,'AWD']]],
   ['filereader_5ferror_5freading_5fbytes',['FILEREADER_ERROR_READING_BYTES',['../namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4eab34fd96460c1cfb66c8e4c4707e9891d',1,'AWD']]],
   ['filereader_5ferror_5fsetting_5fpos',['FILEREADER_ERROR_SETTING_POS',['../namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4ea7c0ab0b3288d6aa5877700c8e9a836bb',1,'AWD']]],
-  ['fill_5fconverted_5ffrom_5fstroke',['FILL_CONVERTED_FROM_STROKE',['../namespace_a_w_d_1_1_t_y_p_e_s.html#a0d4d9f3cd58ee4105a554ab5c25b5667a87aa6200fd35c88dfc43bc0f7a31a142',1,'AWD::TYPES']]],
+  ['fill_5fconverted_5ffrom_5fstroke',['FILL_CONVERTED_FROM_STROKE',['../namespace_a_w_d_1_1_t_y_p_e_s.html#a681163f9785c24e6a06b37c3e63b673aa87aa6200fd35c88dfc43bc0f7a31a142',1,'AWD::TYPES']]],
   ['float32',['FLOAT32',['../namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85aa967d280b5c16d95f2947647dd2ca6cc2',1,'AWD::TYPES']]],
   ['float64',['FLOAT64',['../namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85aa139882c654db8a57f7c3092de1dd0b02',1,'AWD::TYPES']]],
-  ['font',['FONT',['../namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a4aaf23261cd3bd2064183cf1b53f1023',1,'AWD::BLOCK']]],
+  ['font',['FONT',['../namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae3062ef7b7d298e13dabddf488e816dc',1,'AWD::BLOCK']]],
   ['force_5ffilesize',['FORCE_FILESIZE',['../namespace_a_w_d_1_1_t_y_p_e_s.html#a3adbe1e64aa6d4da8b122c9d2f6ef17da8ae581733f0770dcc9391fbf8b5ec1e3',1,'AWD::TYPES']]],
   ['force_5fprecision',['FORCE_PRECISION',['../namespace_a_w_d_1_1_t_y_p_e_s.html#a3adbe1e64aa6d4da8b122c9d2f6ef17da3fcf4524b8d0cf9ae54d5e298812e7c6',1,'AWD::TYPES']]],
-  ['format',['FORMAT',['../namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a47c8929b6152d540597c758853ff95a2',1,'AWD::BLOCK']]]
+  ['frame_5fcommand_5fadd_5fbutton_5fchild',['FRAME_COMMAND_ADD_BUTTON_CHILD',['../namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7ae5344bd68f19c05c61d2b8aecfecb500',1,'AWD::ANIM']]],
+  ['frame_5fcommand_5fadd_5fchild',['FRAME_COMMAND_ADD_CHILD',['../namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a8bee6b4e70c68e5d62ec3bf4f4025ec4',1,'AWD::ANIM']]],
+  ['frame_5fcommand_5fremove',['FRAME_COMMAND_REMOVE',['../namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a4c383fff636a75cca0a43f4242fc2029',1,'AWD::ANIM']]],
+  ['frame_5fcommand_5fupdate',['FRAME_COMMAND_UPDATE',['../namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a213a0ff88eb90d3a2f823c1f34a2de01',1,'AWD::ANIM']]]
 ];

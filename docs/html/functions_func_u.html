@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -81,6 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>All</span></a></li>
       <li class="current"><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -106,6 +109,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions_func_u.html#index_u"><span>u</span></a></li>
       <li><a href="functions_func_v.html#index_v"><span>v</span></a></li>
       <li><a href="functions_func_w.html#index_w"><span>w</span></a></li>
+      <li><a href="functions_func_x.html#index_x"><span>x</span></a></li>
       <li><a href="functions_func_~.html#index_~"><span>~</span></a></li>
     </ul>
   </div>
@@ -129,7 +133,7 @@ $(document).ready(function(){initNavTree('functions_func_u.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -143,11 +147,34 @@ $(document).ready(function(){initNavTree('functions_func_u.html','');});
 
 <h3><a class="anchor" id="index_u"></a>- u -</h3><ul>
 <li>update_by_command()
-: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_frame_command_base.html#a954665a1f073240ea3d8c4ee9c265a5e">AWD::ANIM::FrameCommandBase</a>
-, <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html#a89ee4dad9fba292f15f0a871f6bd05c9">AWD::ANIM::FrameCommandDisplayObject</a>
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html#a888a432071370dc404d7a2ae45c87679">AWD::ANIM::FrameCommandDisplayObject</a>
 </li>
 <li>update_value()
-: <a class="el" href="class_a_w_d_1_1_a_t_t_r_1_1_num_attr.html#adc47a851befa4af23d97d176db9b6140">AWD::ATTR::NumAttr</a>
+: <a class="el" href="class_a_w_d_1_1_a_t_t_r_1_1_num_attr.html#a5c68cc5c8374ff216953280897eee3a8">AWD::ATTR::NumAttr</a>
+</li>
+<li>updateAttribute()
+: <a class="el" href="group__xml_update.html#gadfbd017929a40d6584350e7f3652fcbd">XMLNode</a>
+</li>
+<li>updateAttribute_WOSD()
+: <a class="el" href="group__xml_w_o_s_d.html#ga33cd934820a069cb42acd904d88170d2">XMLNode</a>
+</li>
+<li>updateClear()
+: <a class="el" href="group__xml_update.html#ga6b48e123943ea53272f6d4be33ca6d04">XMLNode</a>
+</li>
+<li>updateClear_WOSD()
+: <a class="el" href="group__xml_w_o_s_d.html#ga78712972d283700f8bd24d1e83ea7c55">XMLNode</a>
+</li>
+<li>updateName()
+: <a class="el" href="group__xml_update.html#gae08b643a2b87a77bad3c70eb57ea3043">XMLNode</a>
+</li>
+<li>updateName_WOSD()
+: <a class="el" href="group__xml_w_o_s_d.html#ga5f35571651c6b629f5c8e5d02942a1c7">XMLNode</a>
+</li>
+<li>updateText()
+: <a class="el" href="group__xml_update.html#gaad04ffd86ca67253bbc81f941608f8d2">XMLNode</a>
+</li>
+<li>updateText_WOSD()
+: <a class="el" href="group__xml_w_o_s_d.html#ga8809eddad474e8bd7ad5f57aea7c77ac">XMLNode</a>
 </li>
 <li>use_property()
 : <a class="el" href="class_a_w_d_1_1_a_t_t_r_1_1_num_attr.html#ab9f28afbc11e4a738deda138281bdebe">AWD::ATTR::NumAttr</a>
@@ -158,8 +185,14 @@ $(document).ready(function(){initNavTree('functions_func_u.html','');});
 <li>UserAttrList()
 : <a class="el" href="class_a_w_d_1_1_a_t_t_r_1_1_user_attr_list.html#a0ff1345dd019183fd4d80158329b57dd">AWD::ATTR::UserAttrList</a>
 </li>
+<li>utf16_word()
+: <a class="el" href="classutf8_1_1invalid__utf16.html#a514a11e2df0c73edd4afcccc89317c4b">utf8::invalid_utf16</a>
+</li>
+<li>utf8_octet()
+: <a class="el" href="classutf8_1_1invalid__utf8.html#ab5f53ce0be75c4eeee078f471ce40a7b">utf8::invalid_utf8</a>
+</li>
 <li>UVAnimationClip()
-: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_animation_clip.html#a75861e6daffedceae76fb087b607d696">AWD::BLOCKS::UVAnimationClip</a>
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_animation_clip.html#ad422208b750f573da2a0961c4b43ec9e">AWD::BLOCKS::UVAnimationClip</a>
 </li>
 <li>UVPose()
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_pose.html#a2fd1bbc13bf384d280b191a86fc46dfd">AWD::BLOCKS::UVPose</a>
@@ -170,7 +203,7 @@ $(document).ready(function(){initNavTree('functions_func_u.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:30 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:45 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

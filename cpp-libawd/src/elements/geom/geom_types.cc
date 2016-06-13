@@ -3,6 +3,7 @@
 #include "utils/awd_types.h"
 #include "base/attr.h"
 #include "utils/settings.h"
+#include "utils/util.h"
 
 #include "files/file_writer.h"
 
@@ -86,11 +87,11 @@ void
 MATRIX2x3::toString(std::string& output_str){
 	if(this->hasOther){
 		for(int cnt=0; cnt<4; cnt++)
-			output_str+=std::to_string(this->matrix_data[cnt]);
+			output_str+="#"+FILES::num_to_string(this->matrix_data[cnt]);
 	}
 	if(this->hasPosition){
 		for(int cnt=4; cnt<6; cnt++)
-			output_str+=std::to_string(this->matrix_data[cnt]);
+			output_str+="#"+FILES::num_to_string(this->matrix_data[cnt]);
 	}
 }
 result
@@ -117,6 +118,24 @@ MATRIX2x3::append(MATRIX2x3* mtx)
 	return result::AWD_SUCCESS;
 }
 
+bool
+MATRIX2x3::compare(MATRIX2x3* comp)
+{	
+	TYPES::F64* comp_mtx=comp->get();
+	if(this->matrix_data[0]!=comp_mtx[0])
+		return false;
+	if(this->matrix_data[1]!=comp_mtx[1])
+		return false;
+	if(this->matrix_data[2]!=comp_mtx[2])
+		return false;
+	if(this->matrix_data[3]!=comp_mtx[3])
+		return false;
+	if(this->matrix_data[4]!=comp_mtx[4])
+		return false;
+	if(this->matrix_data[5]!=comp_mtx[5])
+		return false;
+	return true;
+}
 bool
 MATRIX2x3::is_identity()
 {	
@@ -307,7 +326,7 @@ ColorTransform::fill_into_list(std::vector<TYPES::F32>& input_list){
 void 
 ColorTransform::toString(std::string& output_str){
 	for(int cnt=0; cnt<8; cnt++)
-		output_str+=std::to_string(this->matrix_data[cnt]);
+		output_str+=FILES::num_to_string(this->matrix_data[cnt]);
 }
 
 TYPES::F64* 

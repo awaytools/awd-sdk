@@ -9,6 +9,7 @@
 #include <math.h>
 #include <string>
 #include "utils/awd_types.h"
+#include "utils/util.h"
 #include "blocks/geometry.h"
 #include "elements/geom_elements.h"
 #include "awd_project.h"
@@ -23,10 +24,13 @@
 #define MTX44_SIZE(wide) (wide? (16*sizeof(TYPES::F64)):(16*sizeof(TYPES::F32)))
 #define MTX54_SIZE(wide) (wide? (20*sizeof(TYPES::F64)):(20*sizeof(TYPES::F32)))
 
+
+
 namespace AWD
 {
 	    
 	result create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string&);
+	result create_TextureAtlasfor_timelines_refactor(AWDProject* awd_project, const std::string&);
 	
 	inline TYPES::UINT16 get_bit16(int start, int end){	
 		TYPES::UINT16 int_min = 1 << start;
@@ -43,6 +47,13 @@ namespace AWD
 	*/
 	AWD::result get_string_for_result(AWD::result result, std::string& outString);
 	
+    
+    namespace FILES
+    {
+        std::string num_to_string(double input);
+        std::string int_to_string(int input);
+    }
+    
 	namespace BLOCK
 	{
 			/**
@@ -157,13 +168,13 @@ namespace AWD
 		{
 			string_out="";
 			if(x1>x2)
-				string_out+=std::to_string(x1)+"#"+std::to_string(x2)+"#";
+                string_out+=FILES::num_to_string(x1)+"#"+FILES::num_to_string(x2)+"#";
 			else
-				string_out+=std::to_string(x2)+"#"+std::to_string(x1)+"#";
+				string_out+=FILES::num_to_string(x2)+"#"+FILES::num_to_string(x1)+"#";
 			if(y1>y2)
-				string_out+=std::to_string(y1)+"#"+std::to_string(y2)+"#";
+				string_out+=FILES::num_to_string(y1)+"#"+FILES::num_to_string(y2)+"#";
 			else
-				string_out+=std::to_string(y2)+"#"+std::to_string(y1)+"#";
+				string_out+=FILES::num_to_string(y2)+"#"+FILES::num_to_string(y1)+"#";
 			return result::AWD_SUCCESS;
 		}
 
@@ -274,7 +285,7 @@ namespace AWD
 		TYPES::COLOR create_color_from_ints(TYPES::UINT32 red, TYPES::UINT32 green, TYPES::UINT32 blue, TYPES::UINT32 alpha);
 	}
 	namespace FILES
-	{
+    {
 		
 		/**
 		*\brief Makes sure the preview-files are modified and copied;
@@ -282,7 +293,8 @@ namespace AWD
 		result open_preview(FILES::AWDFile* output_file, std::string& preview_file, std::vector<std::string> change_ids, std::vector<std::string> change_values, std::string& open_path, bool append_name);
 		
 		result copy_files_from_directory(std::string& source_dir, std::string& target_dir, const std::string& exclude_filename);
-
+		
+		std::string RemoveSpecialCharacters(std::string str);
 
 		result string_find_and_replace(std::string& str, const std::string& oldStr, const std::string& newStr);
 		/**
@@ -290,6 +302,8 @@ namespace AWD
 		*/
 		result copy_file(const std::string& initialFilePath, const std::string& outputFilePath);
 		
+        
+        
 		/**
 		*\brief Create a TYPES::COLOR from 4 x TYPES::UINT32;
 		*/
@@ -325,6 +339,7 @@ namespace AWD
 		*/
 		result extract_path_without_file_extension(const std::string& path, std::string& path_no_ext);
 				
+		bool file_exists(const std::string& path);
 		/**
 		*\brief Swap the bytes of a TYPES::UINT16
 		*/

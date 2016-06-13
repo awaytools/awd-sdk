@@ -201,6 +201,11 @@ void GetColorsFromRgbInt ( int nRGBVal, float& r, float& g, float& b, float& a) 
 result 
 AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string& name)
 {
+	return result::AWD_SUCCESS;
+}
+result 
+AWD::create_TextureAtlasfor_timelines_refactor(AWDProject* awd_project, const std::string& name)
+{
 	int maxTexSize=8192;
 	int minSize=4;
 	
@@ -212,6 +217,7 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 	bool has_radial_gradients=false;
 	bool has_linear_gradients=false;
 	bool has_texture_atlas=false;
+	bool has_alpha_texture_atlas=false;
 	bool has_bitmaps_atlas=false;
 	for(AWDBlock* one_block:all_materials){
 		BLOCKS::Material* this_mat = reinterpret_cast<BLOCKS::Material*>(one_block);
@@ -219,7 +225,10 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 			if(this_mat->get_material_type()==MATERIAL::type::SOLID_COLOR_MATERIAL){
 				this_mat->set_state(state::INVALID);
 				pixelCount++;
-				has_texture_atlas=true;
+				if(this_mat->needsAlphaTex)
+					has_alpha_texture_atlas=true;
+				else
+					has_texture_atlas=true;
 			}
 			else if(this_mat->get_material_type()==MATERIAL::type::LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL){
 				this_mat->set_state(state::INVALID);
@@ -227,10 +236,22 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 					width=256;
 				pixelCount+=256;
 				has_linear_gradients=true;
-				has_texture_atlas=true;
+				if(this_mat->needsAlphaTex)
+					has_alpha_texture_atlas=true;
+				else
+					has_texture_atlas=true;
 			}
 			else if(this_mat->get_material_type()==MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL){
+				this_mat->set_state(state::INVALID);
 				has_radial_gradients=true;
+				has_linear_gradients=true;
+				if(width<256)
+					width=256;
+				pixelCount+=256;
+				if(this_mat->needsAlphaTex)
+					has_alpha_texture_atlas=true;
+				else
+					has_texture_atlas=true;
 			}
 			else if(this_mat->get_material_type()==MATERIAL::type::SOLID_TEXTUREATLAS_MATERIAL){
 				has_bitmaps_atlas=true;
@@ -245,6 +266,7 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 		}
 	}
 	
+	/*
 	
 	if(has_radial_gradients){
 		int colorposition = 0;
@@ -338,6 +360,116 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 			}
 		}
 	}
+	*/
+	BLOCKS::BitmapTexture* newtextureAlpha=NULL;
+	if(has_alpha_texture_atlas){
+		while ((width*width)<pixelCount)
+			width=width*2;
+
+		if(width>maxTexSize){
+			// todo: we cannot create one texture_atlas for all materials. 
+			// start with the biggest material (in pixel-size)
+			// get the timelines thats using this.
+			// collect all materials that are connected (e.g. used by same shape / child timelines)
+			// if textureatlas is full, create a new one and continue.
+			// take care that each geometry  uses only 1 texture (e.g. als subgeos of 1 geometry need to use same texture)
+			return result::AWD_ERROR;
+		}
+	
+		std::string url_final=awd_project->get_settings()->get_texture_directory()+ name + "_textureAtlasAlpha.png";
+		std::string rel_url="./"+awd_project->get_settings()->get_texture_directory_name()+ name + "_textureAtlasAlpha.png";
+		newtextureAlpha = reinterpret_cast<BLOCKS::BitmapTexture*>(awd_project->get_block_by_name_and_type(url_final, BLOCK::block_type::BITMAP_TEXTURE, true));
+		newtextureAlpha->set_input_url(url_final);
+		newtextureAlpha->set_url(rel_url);
+		newtextureAlpha->add_scene_name("TextureatlasAlpha");
+		newtextureAlpha->set_name(name + "_textureAtlasAlpha");
+		if(awd_project->get_settings()->get_bool(SETTINGS::bool_settings::EmbbedTextures)){
+			newtextureAlpha->set_storage_type(BLOCK::storage_type::EMBEDDED);
+		}
+		else{
+			newtextureAlpha->set_storage_type(BLOCK::storage_type::EXTERNAL);
+		}
+		int colorposition = 0;
+		std::vector<unsigned char> image;
+		image.resize(width * width * 4);
+		int radial_cnt = 0;
+		int width_radial=256;
+		double offset_half_pixel = double(0.5)/double(width); // used to move uv half a pixel to the right. otherwise we have end up on pixel-borders	
+		int gradients_per_row=floor(double(width)/double(256));
+		int gradients_per_row_cnt=0;
+		int row_cnt=0;
+		for(AWDBlock* one_block:all_materials){
+			BLOCKS::Material* this_mat = reinterpret_cast<BLOCKS::Material*>(one_block);
+			if(this_mat!=NULL){
+				if((this_mat->get_material_type()==MATERIAL::type::LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL)||(this_mat->get_material_type()==MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL)){
+					if(this_mat->needsAlphaTex){
+						this_mat->set_texture(newtextureAlpha);
+						if(this_mat->gradient_colors.size()<2){
+							//this is a error;
+							return result::AWD_SUCCESS;
+						}
+						double v_value = double(colorposition)/double(width);
+						double v_value_int=0;
+						this_mat->texture_u = modf(v_value, &v_value_int) + offset_half_pixel;
+						this_mat->texture_v = double(v_value_int)/double(width) + offset_half_pixel;
+						for(int i=0; i<256; i++){
+							GEOM::VECTOR4D new_color=this_mat->get_interpolated_color(i);
+							image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))] =  new_color.x;
+							image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))+ 1] = new_color.y;
+							image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))+ 2] = new_color.z;
+							image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))+ 3] = new_color.w;
+							colorposition++;
+
+						}
+						double v_value2 = double(colorposition-1)/double(width);
+						double v_value_int2=0;
+						this_mat->texture_u_max = modf(v_value2, &v_value_int2) + offset_half_pixel;
+						this_mat->texture_v_max = double(v_value_int2)/double(width) + offset_half_pixel;
+					
+						gradients_per_row_cnt++;
+						if(gradients_per_row_cnt>=gradients_per_row){
+							row_cnt++;
+							gradients_per_row_cnt=0;
+						}
+					}
+				}
+			}
+		}
+		offset_half_pixel = double(0.5)/double(width); // used to move uv half a pixel to the right. otherwise we have end up on pixel-borders
+		for(AWDBlock* one_block:all_materials){
+			BLOCKS::Material* this_mat = reinterpret_cast<BLOCKS::Material*>(one_block);
+			if(this_mat!=NULL){
+				if(this_mat->get_material_type()==MATERIAL::type::SOLID_COLOR_MATERIAL){
+					if(this_mat->needsAlphaTex){
+						this_mat->set_texture(newtextureAlpha);
+						if(this_mat->get_color()==0xff000000){
+							image[4 * colorposition] =		0;//(unsigned int)this_mat->get_color_components().x;
+							image[4 * colorposition + 1] =  0;//(unsigned int)this_mat->get_color_components().y;
+							image[4 * colorposition + 2] =  0;//(unsigned int)this_mat->get_color_components().z;
+							image[4 * colorposition + 3] =  255;//(unsigned int)this_mat->get_color_components().w;
+						}
+						else{
+							image[4 * colorposition] =		(unsigned int)this_mat->get_color_components().x;
+							image[4 * colorposition + 1] =  (unsigned int)this_mat->get_color_components().y;
+							image[4 * colorposition + 2] =  (unsigned int)this_mat->get_color_components().z;
+							image[4 * colorposition + 3] =  (unsigned int)this_mat->get_color_components().w;
+						}
+						double v_value = double(colorposition)/double(width);
+						double v_value_int=0;
+						this_mat->texture_u = modf(v_value, &v_value_int) + offset_half_pixel;
+						this_mat->texture_v = double(v_value_int)/double(width) + offset_half_pixel;
+						colorposition++;
+					}
+				}
+			}
+		}
+		unsigned error = lodepng::encode(url_final, image, width, width);
+		if(error!=0){
+			return result::AWD_ERROR;
+		}
+	}
+
+
 	BLOCKS::BitmapTexture* newtexture=NULL;
 	if(has_texture_atlas){
 		while ((width*width)<pixelCount)
@@ -360,7 +492,7 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 		newtexture->set_url(rel_url);
 		newtexture->add_scene_name("Textureatlas");
 		newtexture->set_name(name + "_textureAtlas");
-		if(awd_project->get_settings()->get_embbed_textures()){
+		if(awd_project->get_settings()->get_bool(SETTINGS::bool_settings::EmbbedTextures)){
 			newtexture->set_storage_type(BLOCK::storage_type::EMBEDDED);
 		}
 		else{
@@ -378,34 +510,36 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 		for(AWDBlock* one_block:all_materials){
 			BLOCKS::Material* this_mat = reinterpret_cast<BLOCKS::Material*>(one_block);
 			if(this_mat!=NULL){
-				if(this_mat->get_material_type()==MATERIAL::type::LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL){
-					this_mat->set_texture(newtexture);
-					if(this_mat->gradient_colors.size()<2){
-						//this is a error;
-						return result::AWD_SUCCESS;
-					}
-					double v_value = double(colorposition)/double(width);
-					double v_value_int=0;
-					this_mat->texture_u = modf(v_value, &v_value_int) + offset_half_pixel;
-					this_mat->texture_v = double(v_value_int)/double(width) + offset_half_pixel;
-					for(int i=0; i<256; i++){
-						GEOM::VECTOR4D new_color=this_mat->get_interpolated_color(i);
-						image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))] =  new_color.x;
-						image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))+ 1] = new_color.y;
-						image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))+ 2] = new_color.z;
-						image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))+ 3] = new_color.w;
-						colorposition++;
+				if((this_mat->get_material_type()==MATERIAL::type::LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL)||(this_mat->get_material_type()==MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL)){
+					if(!this_mat->needsAlphaTex){
+						this_mat->set_texture(newtexture);
+						if(this_mat->gradient_colors.size()<2){
+							//this is a error;
+							return result::AWD_SUCCESS;
+						}
+						double v_value = double(colorposition)/double(width);
+						double v_value_int=0;
+						this_mat->texture_u = modf(v_value, &v_value_int) + offset_half_pixel;
+						this_mat->texture_v = double(v_value_int)/double(width) + offset_half_pixel;
+						for(int i=0; i<256; i++){
+							GEOM::VECTOR4D new_color=this_mat->get_interpolated_color(i);
+							image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))] =  new_color.x;
+							image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))+ 1] = new_color.y;
+							image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))+ 2] = new_color.z;
+							image[4 * (i+(row_cnt*width)+(gradients_per_row_cnt*256))+ 3] = new_color.w;
+							colorposition++;
 
-					}
-					double v_value2 = double(colorposition-1)/double(width);
-					double v_value_int2=0;
-					this_mat->texture_u_max = modf(v_value2, &v_value_int2) + offset_half_pixel;
-					this_mat->texture_v_max = double(v_value_int2)/double(width) + offset_half_pixel;
+						}
+						double v_value2 = double(colorposition-1)/double(width);
+						double v_value_int2=0;
+						this_mat->texture_u_max = modf(v_value2, &v_value_int2) + offset_half_pixel;
+						this_mat->texture_v_max = double(v_value_int2)/double(width) + offset_half_pixel;
 					
-					gradients_per_row_cnt++;
-					if(gradients_per_row_cnt>=gradients_per_row){
-						row_cnt++;
-						gradients_per_row_cnt=0;
+						gradients_per_row_cnt++;
+						if(gradients_per_row_cnt>=gradients_per_row){
+							row_cnt++;
+							gradients_per_row_cnt=0;
+						}
 					}
 				}
 			}
@@ -414,25 +548,27 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 		for(AWDBlock* one_block:all_materials){
 			BLOCKS::Material* this_mat = reinterpret_cast<BLOCKS::Material*>(one_block);
 			if(this_mat!=NULL){
-				if(this_mat->get_material_type()==MATERIAL::type::SOLID_COLOR_MATERIAL){
-					this_mat->set_texture(newtexture);
-					if(this_mat->get_color()==0xff000000){
-						image[4 * colorposition] =		(unsigned int)this_mat->get_color_components().x+1;
-						image[4 * colorposition + 1] =  (unsigned int)this_mat->get_color_components().y+1;
-						image[4 * colorposition + 2] =  (unsigned int)this_mat->get_color_components().z+1;
-						image[4 * colorposition + 3] =  (unsigned int)this_mat->get_color_components().w;
+				if(this_mat->get_material_type()==MATERIAL::type::SOLID_COLOR_MATERIAL){					
+					if(!this_mat->needsAlphaTex){
+						this_mat->set_texture(newtexture);
+						if(this_mat->get_color()==0xff000000){
+							image[4 * colorposition] =		0;//(unsigned int)this_mat->get_color_components().x;
+							image[4 * colorposition + 1] =  0;//(unsigned int)this_mat->get_color_components().y;
+							image[4 * colorposition + 2] =  0;//(unsigned int)this_mat->get_color_components().z;
+							image[4 * colorposition + 3] =  255;//(unsigned int)this_mat->get_color_components().w;
+						}
+						else{
+							image[4 * colorposition] =		(unsigned int)this_mat->get_color_components().x;
+							image[4 * colorposition + 1] =  (unsigned int)this_mat->get_color_components().y;
+							image[4 * colorposition + 2] =  (unsigned int)this_mat->get_color_components().z;
+							image[4 * colorposition + 3] =  (unsigned int)this_mat->get_color_components().w;
+						}
+						double v_value = double(colorposition)/double(width);
+						double v_value_int=0;
+						this_mat->texture_u = modf(v_value, &v_value_int) + offset_half_pixel;
+						this_mat->texture_v = double(v_value_int)/double(width) + offset_half_pixel;
+						colorposition++;
 					}
-					else{
-						image[4 * colorposition] =		(unsigned int)this_mat->get_color_components().x;
-						image[4 * colorposition + 1] =  (unsigned int)this_mat->get_color_components().y;
-						image[4 * colorposition + 2] =  (unsigned int)this_mat->get_color_components().z;
-						image[4 * colorposition + 3] =  (unsigned int)this_mat->get_color_components().w;
-					}
-					double v_value = double(colorposition)/double(width);
-					double v_value_int=0;
-					this_mat->texture_u = modf(v_value, &v_value_int) + offset_half_pixel;
-					this_mat->texture_v = double(v_value_int)/double(width) + offset_half_pixel;
-					colorposition++;
 				}
 			}
 		}
@@ -448,20 +584,54 @@ AWD::create_TextureAtlasfor_timelines(AWDProject* awd_project, const std::string
 		new_fill_material->set_texture(newtexture);
 	else
 		new_fill_material->set_state(TYPES::state::INVALID);
-
 	new_fill_material->set_material_type(MATERIAL::type::SOLID_COLOR_MATERIAL);
+
+	BLOCKS::Material* new_fill_material_linear=new_fill_material; //reinterpret_cast<BLOCKS::Material*>(awd_project->get_block_by_name_and_type("TextureAtlas_linear_gradients_mat",  BLOCK::block_type::SIMPLE_MATERIAL, true));
+	
+	BLOCKS::Material* new_fill_material_alpha=reinterpret_cast<BLOCKS::Material*>(awd_project->get_block_by_name_and_type("TextureAtlas_colors_mat_alpha",  BLOCK::block_type::SIMPLE_MATERIAL, true));
+	new_fill_material_alpha->add_scene_name("TextureatlasAlpha");
+	new_fill_material_alpha->needsAlphaTex=true;
+	if(newtextureAlpha!=NULL)
+		new_fill_material_alpha->set_texture(newtextureAlpha);
+	else
+		new_fill_material_alpha->set_state(TYPES::state::INVALID);
+	new_fill_material_alpha->set_material_type(MATERIAL::type::SOLID_COLOR_MATERIAL);
+
+	BLOCKS::Material* new_fill_material_radial=reinterpret_cast<BLOCKS::Material*>(awd_project->get_block_by_name_and_type("TextureAtlas_radial_gradients_mat",  BLOCK::block_type::SIMPLE_MATERIAL, true));
+	new_fill_material_radial->add_scene_name("Textureatlas");
+	if(newtexture!=NULL)
+		new_fill_material_radial->set_texture(newtexture);
+	else
+		new_fill_material_radial->set_state(TYPES::state::INVALID);
+	if(!has_radial_gradients){
+		new_fill_material_radial->set_state(TYPES::state::INVALID);
+	}
+	new_fill_material_radial->set_material_type(MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL);
+	
+	BLOCKS::Material* new_fill_material_radial_alpha=reinterpret_cast<BLOCKS::Material*>(awd_project->get_block_by_name_and_type("TextureAtlas_radial_gradients_mat_alpha",  BLOCK::block_type::SIMPLE_MATERIAL, true));
+	new_fill_material_radial_alpha->add_scene_name("TextureatlasAlpha");
+	new_fill_material_radial_alpha->needsAlphaTex=true;
+	if(newtextureAlpha!=NULL)
+		new_fill_material_radial_alpha->set_texture(newtextureAlpha);
+	else
+		new_fill_material_radial_alpha->set_state(TYPES::state::INVALID);
+	if(!has_radial_gradients){
+		new_fill_material_radial_alpha->set_state(TYPES::state::INVALID);
+	}
+	new_fill_material_radial_alpha->set_material_type(MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL);
+
 	std::vector<AWDBlock*> all_geometries;
 	awd_project->get_blocks_by_type(all_geometries, BLOCK::block_type::TRI_GEOM);
 
 	for(AWDBlock* one_block:all_geometries){
 		BLOCKS::Geometry* this_geom = reinterpret_cast<BLOCKS::Geometry*>(one_block);
 		if(this_geom!=NULL){
-			this_geom->merge_for_textureatlas(new_fill_material);
+			this_geom->merge_for_textureatlas(new_fill_material, new_fill_material_alpha, new_fill_material_radial, new_fill_material_radial_alpha);
 		}
 	}
 
 	std::vector<AWDBlock*> all_text_formats;
-	awd_project->get_blocks_by_type(all_text_formats, BLOCK::block_type::FORMAT);
+	awd_project->get_blocks_by_type(all_text_formats, BLOCK::block_type::TEXT_FORMAT);
 	for(AWDBlock* one_block:all_text_formats){
 		BLOCKS::TextFormat* this_format = reinterpret_cast<BLOCKS::TextFormat*>(one_block);
 		if(this_format!=NULL){

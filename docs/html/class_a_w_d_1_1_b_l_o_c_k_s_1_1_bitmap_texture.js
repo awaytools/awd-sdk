@@ -3,7 +3,7 @@ var class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture =
     [ "BitmapTexture", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html#a4fe1e7edebc404b3adab0fde4914b2ca", null ],
     [ "BitmapTexture", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html#a8c9f72d601d691a5ea1f45c215b5c516", null ],
     [ "~BitmapTexture", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html#a6878f313ee3620924d9e87b519b041a5", null ],
-    [ "calc_body_length", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html#a3626c80fc0784d4692c44a4919717b3d", null ],
+    [ "calc_body_length", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html#ab50c9d19c4f9c514c51eb42248d4f034", null ],
     [ "collect_dependencies", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html#a713f9d4c619b8309313d984fb917f597", null ],
     [ "get_height", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html#ab6f4ee6e799c51447ae53fb25951be5a", null ],
     [ "get_uvAnimSourceId", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html#a4f7ffd53c7d2104f11da1887da27135a", null ],

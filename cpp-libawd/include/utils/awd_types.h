@@ -243,6 +243,7 @@ namespace AWD
 			MTX4x3,					///< Derived Numberic Value		- 48 / 96	bytes (depents on storage precision) - Matrix4x3 
 			MTX4x4,					///< Derived Numberic Value		- 64 / 128	bytes (depents on storage precision) - Matrix4x4 
 			MTX5x4,					///< Derived Numberic Value		- 64 / 128	bytes (depents on storage precision) - Matrix4x4 
+			VECTORINT3x1,				///< Derived Numberic Value		- 12 / 24	bytes (depents on storage precision) - Vector3x1
 		};
 		
 		/** \enum message_type
@@ -529,6 +530,7 @@ namespace AWD
 			CURVE_DATA_2D=10,	
 			VERTEX_INDICIES=11,	
 			UV_2D=12,	
+			CURVE_DATA_2D_INT=13,	
 		};
 
 		/** \enum stream_type
@@ -545,11 +547,16 @@ namespace AWD
 			SUVS=8,				///< The UV for the vertices			
 			ALLVERTDATA3D_13F=9,		///< The Combined Vertices Data		
 			ALLVERTDATA2D__9F=10,		///< The Combined Vertices Data	
+			ALLVERTDATA2D__5F=11,		///< The Combined Vertices Data	
+			ALLVERTDATA2D__2F3B=12,		///< The Combined Vertices Data	
+			CONCANETEDSTREAM_2F3B=13,		///< The Combined Vertices Data	
+			/*
 			POINTS=11,		///< The Combined Vertices Data	
 			INTERIOR_TRIANGLES=12,		///< The index data for faces
 			EXTERIOR_TRIANGLES=13,		///< The index data for faces
 			CONCAVE_TRIANGLES=14,		///< The index data for faces
 			CONVEX_TRIANGLES=15,		///< The index data for faces
+			*/
 		};
 	}
 	
@@ -588,6 +595,7 @@ namespace AWD
 			MESH_INSTANCE=23,		///< AWD::BLOCKS::Mesh
 			MESH_INSTANCE_2=24,		///< AWD::BLOCKS::Mesh library block
 			BILLBOARD=25,			///< AWD::BLOCKS::Billboard
+			CONCANETEDSTREAM=26,			///< AWD::BLOCKS::Billboard
 
 			SKYBOX=31,				///< AWD::BLOCKS::SkyBox
 
@@ -623,10 +631,10 @@ namespace AWD
 
 			UV_ANIM=121,			///< AWD::BLOCKS::UVAnimationClip
 			
-			TIMELINE=133,
+			MOVIECLIP=133,
 			TEXT_ELEMENT=134,
 			FONT=135,
-			FORMAT=136,
+			TEXT_FORMAT=136,
 
 			// Misc
 			NAMESPACES=251,			///< AWD::BLOCKS::NameSpace containing multiple NameSpace
@@ -699,6 +707,13 @@ namespace AWD
            };
 	}
 	namespace ANIM{
+		enum class mask_type {
+			NONE=0,	///< Undefined type of animation
+			MASK=1,		///< SkeletonAnimation (Geometry is controlled by a skeleton) 
+			MASKED=2,		///< VertexAnimation (Geometry have animated vertex-attributes)
+			MASK_CHILD=3,			///< UVAnimation (Animation of the UV-transform of a SubMesh)
+			MASKED_CHILD=4,			///< UVAnimation (Animation of the UV-transform of a SubMesh)
+		};
 		/** \enum anim_type
 		 * \brief Types for AWDAnimation
 		 */
@@ -727,6 +742,31 @@ namespace AWD
 		};
 	}
 	namespace SETTINGS{
+		enum class bool_settings{
+			OpenPreview,
+			CopyRuntime,
+			PrintExportLog,
+			PrintExportLogTimelines,
+			ExportTimelines,
+			IncludeInvisibleTimelineLayer,
+			ExportFrameScript,
+			ExternalScripts,
+			ExportGeometries,
+			ExportShapesInDebugMode,
+			ExportFonts,
+			ExportLibFonts,
+			EmbbedAllChars,
+			ExportBitmaps,
+			ForceTextureOverwrite,
+			EmbbedTextures,
+			ExportLibBitmaps,
+			ExportSounds,
+			ForceSoundOverwrite,
+			EmbbedSounds,
+			ExportLibSounds,
+			ExportTimelineSounds,
+			CreateAudioMap
+		};
 		/** \enum compression
 		 * \brief Types of compression.
 		 */

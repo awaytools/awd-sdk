@@ -4,7 +4,7 @@ var class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose =
     [ "VertexPose", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose.html#acd5fa71af01a21d794a60cf372535c3f", null ],
     [ "~VertexPose", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose.html#a9a7bd79c8d88f534d6392b6d984ca71e", null ],
     [ "add_sub_mesh", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose.html#ac4470393eab8718844ce6c859061704c", null ],
-    [ "calc_body_length", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose.html#aa8202826f7f3db92cd90324643132f12", null ],
+    [ "calc_body_length", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose.html#a1975da5158ed96b89b3e03d4a2284987", null ],
     [ "collect_dependencies", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose.html#a16f4e47d03089765b812e3c972df8b4d", null ],
     [ "get_num_subs", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose.html#a18147a37852a65c1aaefe375df87340c", null ],
     [ "get_sub_at", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose.html#a9c1b42a848c285c98824ff21091b6508", null ],

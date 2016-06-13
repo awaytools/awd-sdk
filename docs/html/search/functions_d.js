@@ -1,9 +1,14 @@
 var searchData=
 [
-  ['objectcontainer3d',['ObjectContainer3D',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_object_container3_d.html#a07ccd8ee0e74433d432753c2783378ca',1,'AWD::BLOCKS::ObjectContainer3D::ObjectContainer3D(const std::string &amp;)'],['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_object_container3_d.html#ad60e99e3a23ed525218e5211f5896167',1,'AWD::BLOCKS::ObjectContainer3D::ObjectContainer3D(const std::string &amp;, TYPES::F64 *)'],['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_object_container3_d.html#a7b6d5efac30eae54d46cd401ab9c7f82',1,'AWD::BLOCKS::ObjectContainer3D::ObjectContainer3D()']]],
-  ['open',['open',['../class_a_w_d_1_1_a_w_d_project.html#a3a743a6ca69483dbaa85788f123eb8ef',1,'AWD::AWDProject::open()'],['../class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a1e9d6bcb067b542ff5ba325170f22f7f',1,'AWD::FILES::AWDFile::open()']]],
-  ['open_5ffile',['open_file',['../class_a_w_d_1_1_f_i_l_e_s_1_1_file_reader.html#a5f41e16e1d098e495e7197705255ddcd',1,'AWD::FILES::FileReader::open_file()'],['../class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#a45402fc3916d13f7ea23404b42bea3ed',1,'AWD::FILES::FileWriter::open_file()']]],
-  ['open_5fpreview',['open_preview',['../class_a_w_d_1_1_a_w_d_project.html#a9f6bc2a2df0c6b76eb20166937c9d24b',1,'AWD::AWDProject::open_preview()'],['../namespace_a_w_d_1_1_f_i_l_e_s.html#a73837bad3ddec233d3c9d004c6f10ad3',1,'AWD::FILES::open_preview()']]],
-  ['opendir',['opendir',['../dirent_8h.html#ae7302925fc2f556fe0bbb2f97e488d45',1,'opendir(const char *):&#160;Dirent.cpp'],['../_dirent_8cpp.html#a1632d8c06c14f295c6d9407b7fec67af',1,'opendir(const char *name):&#160;Dirent.cpp']]],
-  ['override_5fencoder_5fmetadata',['override_encoder_metadata',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_meta_data.html#a2cde37a69f52b3ad0ea88d3e1ece0641',1,'AWD::BLOCKS::MetaData']]]
+  ['namespace',['Namespace',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_namespace.html#aa20db3ceb5de593cf1fbf0700e4a5e71',1,'AWD::BLOCKS::Namespace']]],
+  ['namespace_5fstruct',['NameSpace_struct',['../struct_a_w_d_1_1_t_y_p_e_s_1_1_name_space__struct.html#ac9dc97832d5dcd742c67fcbcfcf3c1b3',1,'AWD::TYPES::NameSpace_struct']]],
+  ['nattribute',['nAttribute',['../group__navigate.html#ga9561f62b9ed1fa653fe9135c4f16a41d',1,'XMLNode']]],
+  ['nchildnode',['nChildNode',['../group__navigate.html#ga8e52198f258167cd796dae21f1ffc352',1,'XMLNode::nChildNode(XMLCSTR name) const '],['../group__navigate.html#ga65aad0220b231b1bf5cd5c69d7c5de41',1,'XMLNode::nChildNode() const ']]],
+  ['nclear',['nClear',['../group__navigate.html#ga87d34f1ba1ba7d49e8aeacc63548dead',1,'XMLNode']]],
+  ['nelement',['nElement',['../group__navigate.html#ga8e9538deb9144dcab39b3a510a8202f1',1,'XMLNode']]],
+  ['next',['next',['../namespaceutf8.html#afc093dfde66a6f52cb4a5caefe0e580d',1,'utf8::next()'],['../namespaceutf8_1_1unchecked.html#ac5932c0cbb2498a111d53d26fd82f260',1,'utf8::unchecked::next()']]],
+  ['ntext',['nText',['../group__navigate.html#ga22e7e7cf8f173a1ec3ec3d6ff60819d9',1,'XMLNode']]],
+  ['num_5fto_5fstring',['num_to_string',['../namespace_a_w_d_1_1_f_i_l_e_s.html#a57541f4e431fd662090f521ad2f25d60',1,'AWD::FILES']]],
+  ['numattr',['NumAttr',['../class_a_w_d_1_1_a_t_t_r_1_1_num_attr.html#add3dfa7d42289dddde12aa138057a7d7',1,'AWD::ATTR::NumAttr']]],
+  ['numattrlist',['NumAttrList',['../class_a_w_d_1_1_a_t_t_r_1_1_num_attr_list.html#ab066a7e0cb509c0e2b917036eed29302',1,'AWD::ATTR::NumAttrList']]]
 ];

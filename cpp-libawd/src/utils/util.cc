@@ -61,6 +61,13 @@ using namespace AWD::BASE;
 using namespace AWD::SETTINGS;
 using namespace AWD::MATERIAL;
 
+std::string FILES::num_to_string(double input){
+    return std::to_string(input);
+}
+std::string FILES::int_to_string(int input){
+    return std::to_string(input);
+}
+
 
 result
 BLOCK::get_block_address_for_file(BASE::AWDBlock* awdBlock, FILES::AWDFile* file, TYPES::UINT32& output_address)
@@ -109,7 +116,7 @@ BLOCK::get_asset_type_as_string(BLOCK::block_type blocktype, std::string& type_s
 		case BLOCK::block_type::FONT:
 			type_str="FONT";
 			break;
-		case BLOCK::block_type::FORMAT:
+		case BLOCK::block_type::TEXT_FORMAT:
 			type_str="FORMAT";
 			break;
 		case BLOCK::block_type::TRI_GEOM:
@@ -166,7 +173,7 @@ BLOCK::get_asset_type_as_string(BLOCK::block_type blocktype, std::string& type_s
 		case BLOCK::block_type::TEXTURE_PROJECTOR:
 			type_str="TEXTURE_PROJECTOR";
 			break;
-		case BLOCK::block_type::TIMELINE:
+		case BLOCK::block_type::MOVIECLIP:
 			type_str="TIMELINE";
 			break;
 		case BLOCK::block_type::UV_ANIM:
@@ -216,7 +223,7 @@ BLOCK::create_block_for_block_type(BASE::AWDBlock** awdBlock, BLOCK::block_type 
 		case BLOCK::block_type::FONT:
 			*awdBlock = new BLOCKS::Font();
 			break;
-		case BLOCK::block_type::FORMAT:
+		case BLOCK::block_type::TEXT_FORMAT:
 			*awdBlock = new BLOCKS::TextFormat();
 			break;
 		case BLOCK::block_type::TRI_GEOM:
@@ -273,8 +280,8 @@ BLOCK::create_block_for_block_type(BASE::AWDBlock** awdBlock, BLOCK::block_type 
 		case BLOCK::block_type::TEXTURE_PROJECTOR:
 			*awdBlock = new BLOCKS::TextureProjector();
 			break;
-		case BLOCK::block_type::TIMELINE:
-			*awdBlock = new BLOCKS::Timeline();
+		case BLOCK::block_type::MOVIECLIP:
+			*awdBlock = new BLOCKS::MovieClip();
 			break;
 		case BLOCK::block_type::UV_ANIM:
 			*awdBlock = new BLOCKS::UVAnimationClip();
@@ -321,8 +328,17 @@ FILES::string_find_and_replace(std::string& str, const std::string& oldStr, cons
   return result::AWD_SUCCESS;
 }
 
+//#include <regex>
+std::string 
+FILES::RemoveSpecialCharacters(std::string str) {
+    /*const std::regex special_chars("[^A-Za-z0-9\\s]");
 
-
+    std::stringstream result;
+    std::regex_replace(std::ostrea
+     m_iterator<char>(result), str.begin(), str.end(), special_chars, "_");
+     */
+	return str;//result.str();
+}
 result 
 FILES::copy_files_from_directory(std::string& source_dir, std::string& target_dir, const std::string& exclude_filename)
 {
@@ -548,7 +564,7 @@ FILES::open_preview(FILES::AWDFile* output_file, std::string& preview_file, std:
 #endif
 #else
 		std::string output = "http://localhost:";
-		output += std::to_string(config.port);
+		output += FILES::int_to_string(config.port);
 		output += "/";
 		output += output_filename;
 		output += ".html";
@@ -663,6 +679,13 @@ FILES::extract_path_without_file_extension(const std::string& path, std::string&
 	return result::AWD_SUCCESS;
 }
 
+bool
+FILES::file_exists(const std::string& path)
+{
+	struct stat buffer;   
+	return (stat (path.c_str(), &buffer) == 0); 
+}
+
 result 
 FILES::validate_directory_path(const std::string& path)
 {
@@ -761,6 +784,10 @@ TYPES::get_data_type_size(data_types type, bool storage_precision)
 
 		case data_types::VECTOR2x1:
 			elem_size = VEC2_SIZE(storage_precision);
+			break;
+
+		case data_types::VECTORINT3x1:
+			elem_size = 4; //4xbyte
 			break;
 
 		case data_types::VECTOR3x1:

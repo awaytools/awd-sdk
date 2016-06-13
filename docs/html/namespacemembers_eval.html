@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -84,6 +84,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="namespacemembers_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
+  <div id="navrow4" class="tabs3">
+    <ul class="tablist">
+      <li><a href="#index_a"><span>a</span></a></li>
+      <li><a href="#index_b"><span>b</span></a></li>
+      <li><a href="#index_c"><span>c</span></a></li>
+      <li><a href="#index_e"><span>e</span></a></li>
+      <li><a href="#index_f"><span>f</span></a></li>
+      <li><a href="#index_i"><span>i</span></a></li>
+      <li><a href="#index_l"><span>l</span></a></li>
+      <li><a href="#index_m"><span>m</span></a></li>
+      <li><a href="#index_n"><span>n</span></a></li>
+      <li><a href="#index_o"><span>o</span></a></li>
+      <li><a href="#index_p"><span>p</span></a></li>
+      <li><a href="#index_s"><span>s</span></a></li>
+      <li><a href="#index_t"><span>t</span></a></li>
+      <li><a href="#index_u"><span>u</span></a></li>
+      <li class="current"><a href="#index_v"><span>v</span></a></li>
+    </ul>
+  </div>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -104,7 +123,7 @@ $(document).ready(function(){initNavTree('namespacemembers_eval.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -114,18 +133,199 @@ $(document).ready(function(){initNavTree('namespacemembers_eval.html','');});
 </div>
 
 <div class="contents">
-&#160;<ul>
-<li>AWD_FRAME_LABEL_ANCOR
-: <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ab038e845fc4be8fb1128f7b5b6ba3813a1df8a5071aa517a6a62fbe59f1be0880">AWD::ANIM</a>
+&#160;
+
+<h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
+<li>ANIMATION_SET
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77af0ceaed206692c0b6631def22be9c615">AWD::BLOCK</a>
 </li>
-<li>AWD_FRAME_LABEL_COMMENT
-: <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ab038e845fc4be8fb1128f7b5b6ba3813a0eda86910ca6389c6b4d5876d9d9a521">AWD::ANIM</a>
+<li>ANIMATOR
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac2a5dbf12f7cc01d278f543b9a93f2da">AWD::BLOCK</a>
 </li>
-<li>AWD_FRAME_LABEL_NAME
-: <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ab038e845fc4be8fb1128f7b5b6ba3813ad8e13b02d7e5b44ba2fe2b98264b0ed3">AWD::ANIM</a>
+</ul>
+
+
+<h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
+<li>BILLBOARD
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9910af7dc7a76f6615ad9e1e947b2f34">AWD::BLOCK</a>
 </li>
-<li>AWD_FRAME_LABEL_NONE
-: <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ab038e845fc4be8fb1128f7b5b6ba3813a11740b7de2454db856c758564cbf2ddd">AWD::ANIM</a>
+<li>BITMAP_TEXTURE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77af73c041bbd2d215a18ff6673f7025078">AWD::BLOCK</a>
+</li>
+<li>BSP_TREE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8d83f55225eb08fbbf0092012a208531">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
+<li>CAMERA
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7ecb3bd525a857c3c352016358703818">AWD::BLOCK</a>
+</li>
+<li>COMMAND
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a465ff0952d50d0815f7ee6fa4866e267">AWD::BLOCK</a>
+</li>
+<li>CONTAINER
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77afed11749346fd4ecea31fe14323200d7">AWD::BLOCK</a>
+</li>
+<li>CUBE_TEXTURE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a71c8d8200de65e93e14ef36673d0e3c2">AWD::BLOCK</a>
+</li>
+<li>CUBE_TEXTURE_ATF
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2d37c56e1b96d92103ba76be641ee26a">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_e"></a>- e -</h3><ul>
+<li>EFFECT_METHOD
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2af581bdbe7f1a65d94fbefc631b9735">AWD::BLOCK</a>
+</li>
+<li>EXTERNAL_RESSOURCE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9574dd12654610d57d977474a5ba80f5">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
+<li>FONT
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae3062ef7b7d298e13dabddf488e816dc">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
+<li>INCOMPLETE_SEQUENCE
+: <a class="el" href="namespaceutf8_1_1internal.html#a9e96c2bc98b37e336b787a281090392ca801d6c0832b752af83313437d469fd61">utf8::internal</a>
+</li>
+<li>INVALID_CODE_POINT
+: <a class="el" href="namespaceutf8_1_1internal.html#a9e96c2bc98b37e336b787a281090392cae1b822aaa2f2dd64022d156f2ad7a124">utf8::internal</a>
+</li>
+<li>INVALID_LEAD
+: <a class="el" href="namespaceutf8_1_1internal.html#a9e96c2bc98b37e336b787a281090392ca2fdf8f88c5821b535231fff7ceb5685b">utf8::internal</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_l"></a>- l -</h3><ul>
+<li>LIGHT
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aece03b903bf41262832316cd5af05f03">AWD::BLOCK</a>
+</li>
+<li>LIGHTPICKER
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae7b4fbbc7de0c2511699a7ac08077ed7">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
+<li>MESH_INSTANCE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77acc5ecf259822f9e51ab8c362dbcc599f">AWD::BLOCK</a>
+</li>
+<li>MESH_INSTANCE_2
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aff71be4be34696b90436a4bd448a2b5f">AWD::BLOCK</a>
+</li>
+<li>METADATA
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a6102ac66dbafae76fceae9ac021a2c19">AWD::BLOCK</a>
+</li>
+<li>MOVIECLIP
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8903547db7f57e0702b14a74f30ca4e8">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
+<li>NAMESPACE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a350563b29cb73b89395eebaf5b213b02">AWD::BLOCK</a>
+</li>
+<li>NAMESPACES
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a4b2cd48b312cc6f44a4385165a35bd22">AWD::BLOCK</a>
+</li>
+<li>NOT_ENOUGH_ROOM
+: <a class="el" href="namespaceutf8_1_1internal.html#a9e96c2bc98b37e336b787a281090392ca1ddc981ca5c01d90621a399a8d2b5e4d">utf8::internal</a>
+</li>
+<li>NULL_REF
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a3fdee9da3782e56f3e9ec6c4269662ff">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
+<li>OCT_TREE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7d27af6c410f3578ec19f565f20c10ea">AWD::BLOCK</a>
+</li>
+<li>OVERLONG_SEQUENCE
+: <a class="el" href="namespaceutf8_1_1internal.html#a9e96c2bc98b37e336b787a281090392cadfbc27c9650075ddf3212c812a87c7bc">utf8::internal</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
+<li>PRIM_GEOM
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a55d4d724c63112aafa270707cde91459">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
+<li>SCENE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77af666b1261061cbf988c00b86e9c9fe6f">AWD::BLOCK</a>
+</li>
+<li>SHADOW_METHOD
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa74a6bd520e170ae524251c61f7bb666">AWD::BLOCK</a>
+</li>
+<li>SIMPLE_MATERIAL
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2e404633c66e1c8e041c6a777027374b">AWD::BLOCK</a>
+</li>
+<li>SKELETON
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7266b33a16668dec1a0f8ab4200ae5f0">AWD::BLOCK</a>
+</li>
+<li>SKELETON_ANIM
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a609ed80a221aafeba2da29904084986b">AWD::BLOCK</a>
+</li>
+<li>SKELETON_POSE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a34f8b75a1390e56a551ac621e268284b">AWD::BLOCK</a>
+</li>
+<li>SKYBOX
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa5621456bb9aacb54fac59528fb53e00">AWD::BLOCK</a>
+</li>
+<li>SOUND_SOURCE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8226af7a9283d77313c6a9a31983247a">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
+<li>TEXT_ELEMENT
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a5d3b46688bd7e89adfdbbfb5937ccb39">AWD::BLOCK</a>
+</li>
+<li>TEXT_FORMAT
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9a5f07c347aebeb2db52ef5adfc08e2c">AWD::BLOCK</a>
+</li>
+<li>TEXTURE_PROJECTOR
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2c36a256acb72d237fd056608ea894e7">AWD::BLOCK</a>
+</li>
+<li>TRI_GEOM
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aacb9c9e00d1a113bbd04cfd9264d0fb0">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_u"></a>- u -</h3><ul>
+<li>UTF8_OK
+: <a class="el" href="namespaceutf8_1_1internal.html#a9e96c2bc98b37e336b787a281090392cad78f273249a92b4424527731908b00cc">utf8::internal</a>
+</li>
+<li>UV_ANIM
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae03bc6cfee8d4de3f56532caa17f5b9a">AWD::BLOCK</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_v"></a>- v -</h3><ul>
+<li>VERTEX_ANIM
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a37f9cd2e5c77962b22017228298e812d">AWD::BLOCK</a>
+</li>
+<li>VERTEX_POSE
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa4cc2b78b45739b4df84c3aca33f9440">AWD::BLOCK</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -133,7 +333,7 @@ $(document).ready(function(){initNavTree('namespacemembers_eval.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Wed Jan 21 2015 04:30:42 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:44 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

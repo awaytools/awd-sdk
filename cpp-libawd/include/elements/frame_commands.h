@@ -60,14 +60,20 @@ namespace AWD
 			public:
 				FrameCommandDisplayObject();
 				~FrameCommandDisplayObject();
-
-				bool compare_mask_values(std::vector<TYPES::INT32> prev_mask_ids);
+				
+				std::vector< std::vector<ANIM::TimelineChild_instance*> > mask_child_levels;
+				ANIM::mask_type mask;
+				bool reset_masks;
+				bool compare_mask_values(std::vector<std::vector<ANIM::TimelineChild_instance* > > prev_mask_childs);
 				void finalize_command();
 				void resolve_parenting();
 				double compareColorMatrix(TYPES::F64* color_matrix);
-				double comparedisplaMatrix(TYPES::F64* display_matrix);
+				double compareDisplayMatrix(TYPES::F64* display_matrix);
 				
 				bool calculated_mask;
+
+				void set_mask_childs(std::vector<ANIM::TimelineChild_instance*> mask_childs);
+				void add_mask_childs(std::vector<ANIM::TimelineChild_instance*> mask_childs);
 
 				bool get_hasDisplayMatrix();
 				bool get_hasColorMatrix();

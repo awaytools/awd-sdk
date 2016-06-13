@@ -35,7 +35,6 @@ namespace AWD
 				bool split_faces;
 				int originalPointCnt;
 				unsigned int num_subs;
-				std::vector<GEOM::SubGeom *> subGeometries;
 				std::vector<BASE::AWDBlock *> meshInstances;
 				std::vector<GEOM::Triangle*> awdTriangles;
 				std::vector<GEOM::Vertex3D*> awdVertices;
@@ -70,18 +69,25 @@ namespace AWD
 				Geometry(bool);
 				Geometry();
 				~Geometry();
-				
+				static int subgeomcnt;
+				std::vector<GEOM::SubGeom *> subGeometries;
 				void add_res_id_geom(const std::string&, GEOM::MATRIX2x3*);
 				GEOM::MATRIX2x3* has_res_id_geom(const std::string&);
 				void clear_res_ids_geom();
 				result add_filled_region(GEOM::FilledRegion* filled_regions);
 				
-				
+				result merge_stream(GEOM::SubGeom* project);
+
+				result write_uvs(FILES::FileWriter *, SETTINGS::BlockSettings *, FILES::AWDFile*);
+				TYPES::UINT32 get_uv_bytesize(FILES::AWDFile*, SETTINGS::BlockSettings *);
+
 				result merge_subgeos();
-				result merge_for_textureatlas(BLOCKS::Material* );
+				result merge_for_textureatlas(BLOCKS::Material*, BLOCKS::Material*, BLOCKS::Material*, BLOCKS::Material* );
 				void clear_mesh_inst_list();
 
 				TYPES::UINT32 get_num_subs();
+
+				void set_addr_on_subgeom(FILES::AWDFile* file);
 
 				GEOM::SubGeom *get_sub_at(TYPES::UINT32);
 

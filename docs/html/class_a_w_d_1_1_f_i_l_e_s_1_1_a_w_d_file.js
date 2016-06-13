@@ -12,6 +12,7 @@ var class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file =
     [ "get_default_namespace_id", "class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a576ddbb656f5919dd807580db553f6c1", null ],
     [ "get_settings", "class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a8fa9ade3246b053ffae77e5184b2d152", null ],
     [ "get_statistics", "class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#ab20de5b7e9ecea7340b8f6f798f731e4", null ],
+    [ "get_statistics_for_type", "class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#ac9b16aa07ac64813d43deec6afbb4883", null ],
     [ "get_url", "class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a4f9daf9df658c5353df2fc5366b1edd4", null ],
     [ "open", "class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a1e9d6bcb067b542ff5ba325170f22f7f", null ],
     [ "process", "class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a7adadcb2018fb150408bd2b35a8f8116", null ],

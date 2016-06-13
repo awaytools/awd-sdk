@@ -20,6 +20,5 @@ var index =
     ] ],
     [ "Coding conventions for cpp-libawd", "libawd_coding_conventions.html", null ],
     [ "Using libawd", "libawd_usage.html", "libawd_usage" ],
-    [ "AWD 3.0 Specifications", "awd_specs.html", "awd_specs" ],
-    [ "AWD 3.0 Specifications alpha", "awd_specs_alpha.html", null ]
+    [ "AWD 3.0 Specifications", "awd_specs.html", "awd_specs" ]
 ];

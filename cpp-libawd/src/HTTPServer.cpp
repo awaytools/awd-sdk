@@ -1,5 +1,6 @@
 #include "HTTPServer.h"
 #include "Utils.h"
+#include "utils/util.h"
 
 #include <time.h>
 namespace AWD
@@ -43,7 +44,7 @@ namespace AWD
         std::string portStr;
         mg_callbacks callbacks;
 
-		portStr = std::to_string(m_config.port);
+		portStr = FILES::int_to_string(m_config.port);
 
         const char *options[] = {
             "document_root", m_config.root.c_str(),

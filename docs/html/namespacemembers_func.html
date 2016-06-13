@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -81,17 +81,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="namespacemembers_vars.html"><span>Variables</span></a></li>
       <li><a href="namespacemembers_type.html"><span>Typedefs</span></a></li>
       <li><a href="namespacemembers_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="namespacemembers_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
     <ul class="tablist">
       <li><a href="#index_a"><span>a</span></a></li>
+      <li><a href="#index_b"><span>b</span></a></li>
       <li><a href="#index_c"><span>c</span></a></li>
+      <li><a href="#index_d"><span>d</span></a></li>
       <li><a href="#index_e"><span>e</span></a></li>
+      <li><a href="#index_f"><span>f</span></a></li>
       <li><a href="#index_g"><span>g</span></a></li>
       <li><a href="#index_i"><span>i</span></a></li>
+      <li><a href="#index_l"><span>l</span></a></li>
+      <li><a href="#index_m"><span>m</span></a></li>
+      <li><a href="#index_n"><span>n</span></a></li>
       <li><a href="#index_o"><span>o</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
+      <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_u"><span>u</span></a></li>
       <li><a href="#index_v"><span>v</span></a></li>
@@ -118,7 +126,7 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -131,6 +139,14 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 &#160;
 
 <h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
+<li>advance()
+: <a class="el" href="namespaceutf8.html#a411eec0d2919810bb26966be242c1e9e">utf8</a>
+, <a class="el" href="namespaceutf8_1_1unchecked.html#a66ea3b93a81a8f961e7a1700d13efc57">utf8::unchecked</a>
+</li>
+<li>append()
+: <a class="el" href="namespaceutf8.html#a3827e78596fc38cfdebd721e9c45c901">utf8</a>
+, <a class="el" href="namespaceutf8_1_1unchecked.html#acab3a56b1772ed871f36757883d63788">utf8::unchecked</a>
+</li>
 <li>append_stream_attr_to_stream()
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a062cf316e1e6622ecc1854bc44d1da8d">AWD::GEOM</a>
 </li>
@@ -139,6 +155,13 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 </li>
 <li>append_vertex_attr_to_stream()
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a45c9769ee61dc2b684023e6791a1bf16">AWD::GEOM</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
+<li>bounds_intersect()
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a61650f1d1a5f254bac180250a10a690d">AWD::GEOM</a>
 </li>
 </ul>
 
@@ -159,6 +182,23 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 <li>create_color_from_ints()
 : <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a080f651cdeab529b9262177b590dab91">AWD::TYPES</a>
 </li>
+<li>create_TextureAtlasfor_timelines()
+: <a class="el" href="namespace_a_w_d.html#a520d7c23ff2357fdc5ba865e78113e1f">AWD</a>
+</li>
+<li>create_TextureAtlasfor_timelines_refactor()
+: <a class="el" href="namespace_a_w_d.html#aa4222a34c9ec905875793fc82ee5d0b1">AWD</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_d"></a>- d -</h3><ul>
+<li>distance()
+: <a class="el" href="namespaceutf8.html#ac2cd6005bab859b32fb7bb1cb999795d">utf8</a>
+, <a class="el" href="namespaceutf8_1_1unchecked.html#a033fb7223533ef6d9c92ae7c38f57138">utf8::unchecked</a>
+</li>
+<li>distance_point_to_line()
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#af4dc70e7f789b2750efaaebfaa147f1e">AWD::GEOM</a>
+</li>
 </ul>
 
 
@@ -178,7 +218,23 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 </ul>
 
 
+<h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
+<li>file_exists()
+: <a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#af1bcf58c56de7765eb7d8a05e52ff48c">AWD::FILES</a>
+</li>
+<li>find_invalid()
+: <a class="el" href="namespaceutf8.html#ae29721faca762865e83ffea06605acc5">utf8</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_g"></a>- g -</h3><ul>
+<li>get_asset_type_as_string()
+: <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#abe8ff69160aa7375bc95bd9976f9e938">AWD::BLOCK</a>
+</li>
+<li>get_bit16()
+: <a class="el" href="namespace_a_w_d.html#add7adb51bcdd64297764afc2d7f3ad09">AWD</a>
+</li>
 <li>get_block_address_for_file()
 : <a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#a45548f95d6771f95b9ba1241779c4f14">AWD::BLOCK</a>
 </li>
@@ -190,6 +246,18 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 </li>
 <li>get_edge_string()
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a624a84fae2cd6b467b9439b0af452cc1">AWD::GEOM</a>
+</li>
+<li>get_sequence_1()
+: <a class="el" href="namespaceutf8_1_1internal.html#a6e5df73716136aec55e8fcf3309038b6">utf8::internal</a>
+</li>
+<li>get_sequence_2()
+: <a class="el" href="namespaceutf8_1_1internal.html#a9d641b9546be985f9f0fd4955ac42a24">utf8::internal</a>
+</li>
+<li>get_sequence_3()
+: <a class="el" href="namespaceutf8_1_1internal.html#ac1809a1fb3fa6983d64a0d3a39646008">utf8::internal</a>
+</li>
+<li>get_sequence_4()
+: <a class="el" href="namespaceutf8_1_1internal.html#ad1958e7c6746ba6b1fbb0d81b88b346c">utf8::internal</a>
 </li>
 <li>get_single_val_data_type_size()
 : <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#af66708a089335c709bc1caf13033b309">AWD::TYPES</a>
@@ -204,8 +272,72 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 
 
 <h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
+<li>increase_safely()
+: <a class="el" href="namespaceutf8_1_1internal.html#a369641e705a3d7c91eb160868a6705f7">utf8::internal</a>
+</li>
+<li>int_to_string()
+: <a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#ab1cc77e9f0268a1cd62048ca1f33c6b4">AWD::FILES</a>
+</li>
+<li>is_bom()
+: <a class="el" href="namespaceutf8.html#aed9555bcddc0fd46296bf4e5642229ed">utf8</a>
+</li>
+<li>is_code_point_valid()
+: <a class="el" href="namespaceutf8_1_1internal.html#a97b553137aaeda6e8ca6f8d46f78fd79">utf8::internal</a>
+</li>
 <li>is_data_type_floats()
 : <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a0cd6496ec5ed13e7d8e551535dad091a">AWD::TYPES</a>
+</li>
+<li>is_lead_surrogate()
+: <a class="el" href="namespaceutf8_1_1internal.html#a1a4095fb207096e04f94f21eb23d2723">utf8::internal</a>
+</li>
+<li>is_overlong_sequence()
+: <a class="el" href="namespaceutf8_1_1internal.html#a3160f6f24dff465f64f83cb0e66995c6">utf8::internal</a>
+</li>
+<li>is_surrogate()
+: <a class="el" href="namespaceutf8_1_1internal.html#a31a185a6bc8b9bf454191a8a95a93595">utf8::internal</a>
+</li>
+<li>is_trail()
+: <a class="el" href="namespaceutf8_1_1internal.html#ab4820484159ba613b4901476ceb24516">utf8::internal</a>
+</li>
+<li>is_trail_surrogate()
+: <a class="el" href="namespaceutf8_1_1internal.html#a295b2873fce985213937e5f1193fcb13">utf8::internal</a>
+</li>
+<li>is_valid()
+: <a class="el" href="namespaceutf8.html#add2dbec3d058aa66500ec4f97cc8174b">utf8</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_l"></a>- l -</h3><ul>
+<li>line_intersect()
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a9ea7ccd6619a6ffbb30c98b255ea3e34">AWD::GEOM</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
+<li>mask16()
+: <a class="el" href="namespaceutf8_1_1internal.html#ab1e3c2fe2296ac185993a183d1bd0678">utf8::internal</a>
+</li>
+<li>mask8()
+: <a class="el" href="namespaceutf8_1_1internal.html#adf6e0469e279b9562aa461b4c3c1e7e4">utf8::internal</a>
+</li>
+<li>maximum()
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#add6458fca2841896ea0afcb79271e626">AWD::GEOM</a>
+</li>
+<li>minimum()
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a3a9d22fa3f2143c5d8b2a0af804b687c">AWD::GEOM</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
+<li>next()
+: <a class="el" href="namespaceutf8.html#afc093dfde66a6f52cb4a5caefe0e580d">utf8</a>
+, <a class="el" href="namespaceutf8_1_1unchecked.html#ac5932c0cbb2498a111d53d26fd82f260">utf8::unchecked</a>
+</li>
+<li>num_to_string()
+: <a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#a57541f4e431fd662090f521ad2f25d60">AWD::FILES</a>
 </li>
 </ul>
 
@@ -218,14 +350,29 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 
 
 <h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
+<li>peek_next()
+: <a class="el" href="namespaceutf8.html#a42451db4241d57afe46e61f6a966ee8d">utf8</a>
+, <a class="el" href="namespaceutf8_1_1unchecked.html#aaf5ddbe24f8dbb83390e2d33d75b9ea1">utf8::unchecked</a>
+</li>
 <li>PointInPath()
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#afe05c73b8cbc7776ace75619a47ae145">AWD::GEOM</a>
+</li>
+<li>PointInTri()
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ad5ffa7edda7929a3448dbd0d329b3cfa">AWD::GEOM</a>
+</li>
+<li>previous()
+: <a class="el" href="namespaceutf8.html#aedaf9315740d4f25b43c188b02b5bcd0">utf8</a>
+, <a class="el" href="namespaceutf8_1_1unchecked.html#a454cdd8f6b6771bd0425be1ccd94f788">utf8::unchecked</a>
+</li>
+<li>prior()
+: <a class="el" href="namespaceutf8.html#a9a599fdd8a16ce65e3e72192db9d499b">utf8</a>
+, <a class="el" href="namespaceutf8_1_1unchecked.html#ad2c0e4b9693713ac18ee543e214b3ef9">utf8::unchecked</a>
 </li>
 <li>ProcessMeshGeometry()
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a5c8a18382d0bf3c857c44411dc436acb">AWD::GEOM</a>
 </li>
 <li>ProcessShapeGeometry()
-: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#abd567aff18741d42cddc830866ebb2a8">AWD::GEOM</a>
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#afd971a860f8a2f2c5ec91d9d715608fc">AWD::GEOM</a>
 </li>
 <li>ProcessSubGeometry()
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a812e57e7c3fc222f2c135fc7134aaf1d">AWD::GEOM</a>
@@ -233,7 +380,32 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 </ul>
 
 
+<h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
+<li>RemoveSpecialCharacters()
+: <a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#ad6aceb9d39d66587449df5d2461284bf">AWD::FILES</a>
+</li>
+<li>replace_invalid()
+: <a class="el" href="namespaceutf8.html#a07dcd36a2185e5c9f0b19dd88859cd6c">utf8</a>
+</li>
+<li>resolve_curve_curve_intersection()
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#acd17918e713ba3b4b271a5a1d94b3e17">AWD::GEOM</a>
+</li>
+<li>resolve_line_curve_intersection()
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ac0063b9391564499092cedebf0eb5642">AWD::GEOM</a>
+</li>
+<li>ResolvePathIntersections()
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a14ac27831aed1b493b61c6edca1cb48f">AWD::GEOM</a>
+</li>
+</ul>
+
+
 <h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
+<li>sequence_length()
+: <a class="el" href="namespaceutf8_1_1internal.html#adb347cc81d32ebb0fd22d849f7bff5ea">utf8::internal</a>
+</li>
+<li>starts_with_bom()
+: <a class="el" href="namespaceutf8.html#a498c8e7d7a6fd92d4672ef05661dc783">utf8</a>
+</li>
 <li>string_find_and_replace()
 : <a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#a88e4bc53211c7465d60c69cae1895885">AWD::FILES</a>
 </li>
@@ -259,12 +431,34 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 <li>update_simplified_path()
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ab3d19d17302c9b3e50776aa62a7710d7">AWD::GEOM</a>
 </li>
+<li>utf16to8()
+: <a class="el" href="namespaceutf8_1_1unchecked.html#adfbd29a875d0aafeeaae511dc1aa5d77">utf8::unchecked</a>
+, <a class="el" href="namespaceutf8.html#acb68503442bd2e797e8fc8a960f54cf8">utf8</a>
+</li>
+<li>utf32to8()
+: <a class="el" href="namespaceutf8_1_1unchecked.html#af4edb29ad18a1f389ac968a93629e9fb">utf8::unchecked</a>
+, <a class="el" href="namespaceutf8.html#a4a1157ef2f85d4bc8366dbbea20dcb48">utf8</a>
+</li>
+<li>utf8to16()
+: <a class="el" href="namespaceutf8_1_1unchecked.html#ae323b9faa6a47cb8d0aeaea44c1787eb">utf8::unchecked</a>
+, <a class="el" href="namespaceutf8.html#a6404050074139c367a42f0a911779903">utf8</a>
+</li>
+<li>utf8to32()
+: <a class="el" href="namespaceutf8_1_1unchecked.html#aa4b554922a06a7487118982ff41da590">utf8::unchecked</a>
+, <a class="el" href="namespaceutf8.html#a8020ed399788dca779663adf061ed718">utf8</a>
+</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_v"></a>- v -</h3><ul>
+<li>validate_directory_path()
+: <a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#ad7fb0aad955f89b763fdfaa11d573e17">AWD::FILES</a>
+</li>
 <li>validate_file_path()
 : <a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#a2ff9f2982432cd26785f59a8c56b2dbe">AWD::FILES</a>
+</li>
+<li>validate_next()
+: <a class="el" href="namespaceutf8_1_1internal.html#abe95547575fcc81911e381df03f8ebfe">utf8::internal</a>
 </li>
 </ul>
 
@@ -285,7 +479,7 @@ $(document).ready(function(){initNavTree('namespacemembers_func.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:29 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:43 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

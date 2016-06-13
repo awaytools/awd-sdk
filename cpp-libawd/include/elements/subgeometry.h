@@ -35,6 +35,9 @@ namespace AWD
 				*/
 				SubGeomInternal();
 				~SubGeomInternal();
+				bool isMerged;
+				TYPES::UINT32 startIDX;
+				TYPES::UINT32 vertCnt;
 				
 				result modify_font_char(double size);
 				std::vector<GEOM::Triangle*> exterior_triangles;
@@ -67,7 +70,6 @@ namespace AWD
 			private:
 				std::vector<GEOM::SubGeomInternal*> sub_geoms;
 				SETTINGS::BlockSettings* settings;
-				TYPES::UINT32 tri_cnt;
 				TYPES::F64 max_x;
 				TYPES::F64 max_y;
 				TYPES::F64 min_x;
@@ -82,11 +84,22 @@ namespace AWD
 				SubGeom(SETTINGS::BlockSettings *);
 				~SubGeom();
 				
+				GEOM::SubGeom* target_subgeom;
+				bool isMerged;
+				TYPES::UINT32 merged_address;
+				TYPES::UINT32 startIDX;
+				TYPES::UINT32 vertCnt;
+				TYPES::UINT32 tri_cnt;
+
+				MATERIAL::type mat_type;
 				GEOM::MATRIX2x3* uv_transform;
 				/**
 				*\brief Get the name.
 				*/
 				std::string& get_name();
+
+				GEOM::VECTOR2D* uv_tl;
+				GEOM::VECTOR2D* uv_br;
 
 				/**
 				*\brief Set the name.
@@ -97,6 +110,8 @@ namespace AWD
 				BASE::AWDBlock* material_block;
 				TYPES::UINT32 allowed_tris;
 				result merge_subgeo(SubGeom*);
+				result merge_stream(GEOM::SubGeom* project);
+				result add_merged_stream_tri(GEOM::edge_type edge_type, GEOM::Vertex2D v1, GEOM::Vertex2D v2, GEOM::Vertex2D v3);
 				result set_uvs();
 				TYPES::UINT32 get_tri_cnt_for_type(GEOM::edge_type edge_type);
 				TYPES::UINT32 get_tri_cnt();

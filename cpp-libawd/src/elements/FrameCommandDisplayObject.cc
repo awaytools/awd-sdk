@@ -8,6 +8,7 @@
 #include "blocks/mesh_library.h"
 #include "blocks/text_element.h"
 #include "utils/awd_properties.h"
+#include "utils/util.h"
 
 #include <bitset>
 #include "files/file_writer.h"
@@ -40,6 +41,8 @@ FrameCommandDisplayObject::FrameCommandDisplayObject()
 	this->isMask=false;
 	this->calculated_mask=false;
 	this->visible=true;
+	this->reset_masks=false;
+	this->mask=ANIM::mask_type::NONE;
 
 }
 
@@ -53,7 +56,7 @@ FrameCommandDisplayObject::~FrameCommandDisplayObject()
 	for(GEOM::ColorTransform* ct:this->color_transform_parents)
 		delete ct;
 	this->color_transform_parents.clear();
-	delete this->display_matrix;	
+	delete this->display_matrix;
 	delete this->color_matrix;	
 }
 bool
@@ -76,16 +79,24 @@ void
 FrameCommandDisplayObject::set_hasTargetMaskIDs(bool hasTargetMaskIDs){
 	this->hasTargetMaskIDs=hasTargetMaskIDs;
 }
+void
+FrameCommandDisplayObject::set_mask_childs(std::vector<ANIM::TimelineChild_instance*> mask_childs){
+	this->mask_childs=mask_childs;
+}
+void
+FrameCommandDisplayObject::add_mask_childs(std::vector<ANIM::TimelineChild_instance*> mask_childs){
+	this->mask_child_levels.push_back(mask_childs);
+}
 
 bool
 FrameCommandDisplayObject::get_hasVisiblitiyChange(){
 	return this->hasVisiblitiyChange;
 }
 void
-FrameCommandDisplayObject::set_display_matrix(TYPES::F64* display_matrix)
+FrameCommandDisplayObject::set_display_matrix(TYPES::F64* this_display_matrix)
 {
 	this->hasDisplayMatrix=true;
-	this->display_matrix->set(display_matrix);
+	this->display_matrix->set(this_display_matrix);
 }
 GEOM::MATRIX2x3*
 FrameCommandDisplayObject::get_display_matrix()
@@ -132,6 +143,7 @@ FrameCommandDisplayObject::get_blendmode()
 void
 FrameCommandDisplayObject::set_blendmode(int blendMode)
 {
+	this->hasBlendModeChange=true;
 	this->blendMode=blendMode;
 }
 void
@@ -146,13 +158,18 @@ FrameCommandDisplayObject::get_clipDepth()
 	return this->clip_depth;
 }
 bool
-FrameCommandDisplayObject::compare_mask_values(std::vector<TYPES::INT32> prev_mask_ids)
+FrameCommandDisplayObject::compare_mask_values(std::vector<std::vector<ANIM::TimelineChild_instance* > > prev_mask_ids)
 {
-	if(prev_mask_ids.size()!=this->mask_ids.size())
+	if(prev_mask_ids.size()!=this->mask_child_levels.size())
 		return false;
-	for(int i=0; i<this->mask_ids.size(); i++){
-		if(this->mask_ids[i]!=prev_mask_ids[i])
+	for(int i=0; i<this->mask_child_levels.size(); i++){
+		// if the lists contain same objects, they are also in same order.
+		if(prev_mask_ids[i].size()!=this->mask_child_levels[i].size())
 			return false;
+		for(int k=0; k<this->mask_child_levels[i].size(); k++){
+			if(prev_mask_ids[i][k]!=this->mask_child_levels[i][k])
+				return false;
+		}
 	}
     return true;
 }
@@ -170,8 +187,9 @@ FrameCommandDisplayObject::compareColorMatrix(TYPES::F64* color_matrix)
     return countvalid/8;
 }
 double
-FrameCommandDisplayObject::comparedisplaMatrix(TYPES::F64* display_matrix)
+FrameCommandDisplayObject::compareDisplayMatrix(TYPES::F64* display_matrix)
 {
+    
 	int countvalid=0;
 	for(int i=0; i<4;i++){
 		if(this->display_matrix->get()[i]==display_matrix[i]){
@@ -179,7 +197,8 @@ FrameCommandDisplayObject::comparedisplaMatrix(TYPES::F64* display_matrix)
 		}
 	}
 	if(countvalid==4)
-		this->display_matrix->hasOther=false;
+        this->display_matrix->hasOther=false;
+    //this->display_matrix->hasOther=true;
 	int countPos=0;
 	for(int i=4; i<6;i++){
 		if(this->display_matrix->get()[i]==display_matrix[i]){
@@ -188,7 +207,8 @@ FrameCommandDisplayObject::comparedisplaMatrix(TYPES::F64* display_matrix)
 		}
 	}
 	if(countPos==2)
-		this->display_matrix->hasPosition=false;
+        this->display_matrix->hasPosition=false;
+    //this->display_matrix->hasPosition=true;
 	
     return double(countvalid)/double(6.0);
 }
@@ -204,16 +224,25 @@ FrameCommandDisplayObject::get_command_info(std::string& info)
 
 
 	if(this->child!=NULL)
-		info += " | child-name: "+this->child->child->awd_block->get_name()+" | child-id: "+std::to_string(this->child->child->id)+" | depth: "+std::to_string(this->child->depth);
+		info += " | child-name: "+this->child->child->awd_block->get_name()+"| session= "+FILES::int_to_string(this->child->sessionID)+" | child-id: "+FILES::int_to_string(this->child->child->id)+" | depth: "+FILES::int_to_string(this->child->depth);
 	else{
-		info += " | obj_id: "+std::to_string(this->get_objID())+" | child-id: "+std::to_string(this->child->child->id)+" | depth: "+std::to_string(this->child->depth);
+		info += " | obj_id: "+FILES::int_to_string(this->get_objID())+" | child-id: "+FILES::int_to_string(this->child->child->id)+" | depth: "+FILES::int_to_string(this->child->depth);
 	
 	}
-	if(this->get_hasTargetMaskIDs()){
-		info +=" | mask-id: ";
-		for(int one_mask_id:this->mask_ids)
-			info+=std::to_string(one_mask_id)+"|"; 
-	}
+	//if(this->get_hasTargetMaskIDs()){
+		if(this->mask==ANIM::mask_type::MASK){
+			info +=" | IS MASK";
+		}
+		else if(this->mask==ANIM::mask_type::MASKED){
+			int test=0;
+			for(std::vector<TimelineChild_instance*> one_level:this->mask_child_levels){
+				info+=" | masks "+FILES::int_to_string(test)+": ";
+				test++;
+				for(TimelineChild_instance* one_mask_child:one_level)
+					info+="child ID ="+FILES::int_to_string(one_mask_child->child->id)+" session= "+FILES::int_to_string(one_mask_child->sessionID)+" |";
+			}
+		}
+	//}
 	if(this->get_instanceName().size()>0)
 		info += " | inst-name: '"+this->get_instanceName()+"'"; 
 
@@ -221,19 +250,19 @@ FrameCommandDisplayObject::get_command_info(std::string& info)
 		GEOM::MATRIX2x3* thismtx = this->get_display_matrix();
 		if(thismtx->get_save_type()!=0){
 			TYPES::F64* mtx = thismtx->get();
-			info += " | transform: "+std::to_string(thismtx->get_save_type())+" / ";
+			info += " | transform: "+FILES::int_to_string(thismtx->get_save_type())+" / ";
 			for(int i = 0; i<6; i++){
-				info+=" "+std::to_string(mtx[i]);
+				info+=" "+FILES::num_to_string(mtx[i]);
 			}
 		}
-		/*
+		
 		for(GEOM::MATRIX2x3* one_mtx:matrix_parents){
 			TYPES::F64* mtx = one_mtx->get();
 			info += "\n | transform: ";
 			for(int i = 0; i<6; i++){
-				info+=" "+std::to_string(mtx[i]);
+				info+=" "+FILES::num_to_string(mtx[i]);
 			}
-		}*/
+		}
 		
 	}
 	if(this->get_hasColorMatrix()){
@@ -241,7 +270,7 @@ FrameCommandDisplayObject::get_command_info(std::string& info)
 		TYPES::F64* mtx = thismtx->get();
 		info += " | color-transform: ";
 		for(int i = 0; i<8; i++){
-			info+=" "+std::to_string(mtx[i]);
+			info+=" "+FILES::num_to_string(mtx[i]);
 		}
 	}
 	if(this->get_hasVisiblitiyChange()){
@@ -251,7 +280,7 @@ FrameCommandDisplayObject::get_command_info(std::string& info)
 			info += " | visible: false";
 	}
 	if(this->get_hasBlendModeChange()){
-		info += " | blendmode: "+ std::to_string(this->get_blendmode());
+		info += " | blendmode: "+ FILES::int_to_string(this->get_blendmode());
 	}
 	
 
@@ -352,24 +381,28 @@ FrameCommandDisplayObject::finalize_command()
 {
 	
 	// check if we need matrix for this command
+    
 	if(this->get_hasDisplayMatrix()){
 		if(this->prev_obj==NULL){
-			// check if it is identity. if not. apply
 			if(this->display_matrix->is_identity()){
 				this->hasDisplayMatrix=false;
 			}
 		}
 		else{
 			FrameCommandDisplayObject* previous_cmd=this->prev_obj;
-			if(previous_cmd->get_hasDisplayMatrix()){
-				if(this->comparedisplaMatrix(previous_cmd->get_display_matrix()->get())==1)// check if matrix has changed. if yes. apply.
-					this->hasDisplayMatrix=false;
+            if(previous_cmd->get_hasDisplayMatrix()){
+                if(this->compareDisplayMatrix(previous_cmd->get_display_matrix()->get())==1){
+                    // check if matrix has changed. if not, disable mtx for this command
+                    this->hasDisplayMatrix=false;
+                }
 			}
 			else{
 				while(previous_cmd->prev_obj!=NULL){
 					if(previous_cmd->prev_obj->get_hasDisplayMatrix()){
-						if(this->comparedisplaMatrix(previous_cmd->prev_obj->get_display_matrix()->get())==1)// check if matrix has changed. if yes. apply.
-							this->hasDisplayMatrix=false;
+                        if(this->compareDisplayMatrix(previous_cmd->prev_obj->get_display_matrix()->get())==1){
+                            // check if matrix has changed. if not, disable mtx for this command
+                            this->hasDisplayMatrix=false;
+                        }
 						break;
 					}
 					previous_cmd=previous_cmd->prev_obj;
@@ -377,7 +410,8 @@ FrameCommandDisplayObject::finalize_command()
 			}
 		}
 	}
-	/*
+    
+	
 	// check if we need colortransform for this command
 	if(this->get_hasColorMatrix()){
 		if(this->prev_obj==NULL){
@@ -395,7 +429,7 @@ FrameCommandDisplayObject::finalize_command()
 			else{
 				while(previous_cmd->prev_obj!=NULL){
 					if(previous_cmd->prev_obj->get_hasColorMatrix()){
-						if(this->compareColorMatrix(previous_cmd->prev_obj->get_color_matrix()->get())==1)// check if matrix has changed. if yes. apply.
+						if(this->compareColorMatrix(previous_cmd->prev_obj->get_color_matrix()->get())==1)
 							this->hasColorMatrix=false;
 						break;
 					}
@@ -403,27 +437,52 @@ FrameCommandDisplayObject::finalize_command()
 				}
 			}
 		}
-	}*/
-
+	}
 	
-	// check if we need masks for this command
-	if(this->get_hasTargetMaskIDs()){
-		if(prev_obj!=NULL){
+	this->hasTargetMaskIDs=false;
+	if(this->mask==ANIM::mask_type::MASK){
+		this->hasTargetMaskIDs=true;
+		if(this->prev_obj!=NULL){
 			FrameCommandDisplayObject* previous_cmd=this->prev_obj;
-			if(previous_cmd->get_hasTargetMaskIDs()){
-				if(this->compare_mask_values(previous_cmd->mask_ids))// check if matrix has changed. if yes. apply.
-					this->hasTargetMaskIDs=false;
+			if(previous_cmd->mask==ANIM::mask_type::MASK){
+				this->hasTargetMaskIDs=false;
 			}
 			else{
 				while(previous_cmd->prev_obj!=NULL){
-					if(previous_cmd->prev_obj->get_hasTargetMaskIDs()){
-						if(this->compare_mask_values(previous_cmd->prev_obj->mask_ids))// check if matrix has changed. if yes. apply.
-							this->hasTargetMaskIDs=false;
+					if(previous_cmd->prev_obj->mask==ANIM::mask_type::MASK){
+						this->hasTargetMaskIDs=false;
 						break;
 					}
 					previous_cmd=previous_cmd->prev_obj;
 				}
 			}
+		}
+	}	
+	else if(this->mask==ANIM::mask_type::MASKED){
+		this->hasTargetMaskIDs=true;
+		if(this->prev_obj!=NULL){
+			FrameCommandDisplayObject* previous_cmd=this->prev_obj;
+			if(this->prev_obj->mask==ANIM::mask_type::MASKED){
+				if(this->compare_mask_values(previous_cmd->mask_child_levels))
+					this->hasTargetMaskIDs=false;
+			}
+			else{
+				while(previous_cmd->prev_obj!=NULL){
+					if(previous_cmd->prev_obj->mask==ANIM::mask_type::MASKED){
+						if(this->compare_mask_values(previous_cmd->prev_obj->mask_child_levels)){
+							this->hasTargetMaskIDs=false;
+						}
+						break;
+					}
+					previous_cmd=previous_cmd->prev_obj;
+				}
+			}
+		}
+	}
+	if(this->prev_obj!=NULL){
+		if(this->prev_obj->mask==ANIM::mask_type::MASKED){
+			//if(this->mask==ANIM::mask_type::NONE)
+			//	this->reset_masks=true;
 		}
 	}
 	
@@ -521,6 +580,7 @@ FrameCommandDisplayObject::resolve_parenting()
 		}
 	}
 	// sort mask values 
+	/*
 	if (this->get_hasTargetMaskIDs()){
 		if(this->mask_ids.size()>0){
 			udword* InputValues_depth = new udword[ this->mask_ids.size()];
@@ -539,6 +599,7 @@ FrameCommandDisplayObject::resolve_parenting()
 			//DELETEARRAY(Sorted);
 		}
 	}
+	*/
 	
 
 }
@@ -648,5 +709,4 @@ FrameCommandDisplayObject::set_command_type(frame_command_type command_type)
 {
     this->command_type=command_type;
 }
-
 

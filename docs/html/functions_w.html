@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -81,6 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -133,7 +136,7 @@ $(document).ready(function(){initNavTree('functions_w.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -151,6 +154,15 @@ $(document).ready(function(){initNavTree('functions_w.html','');});
 </li>
 <li>warnings_cnt
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_state_element_base.html#a9e5860643d0dd26e0feca3900dc0021c">AWD::BASE::StateElementBase</a>
+</li>
+<li>what()
+: <a class="el" href="classutf8_1_1invalid__code__point.html#ada45ed42142e57e7e1693bbac6985dce">utf8::invalid_code_point</a>
+, <a class="el" href="classutf8_1_1invalid__utf16.html#a70fd20978a50030a2f364e0da08346f6">utf8::invalid_utf16</a>
+, <a class="el" href="classutf8_1_1invalid__utf8.html#ae142c084e0a6ded9c186d09879d97036">utf8::invalid_utf8</a>
+, <a class="el" href="classutf8_1_1not__enough__room.html#a368f7b33dc7d66e12576f55991c77676">utf8::not_enough_room</a>
+</li>
+<li>whitespace_size
+: <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_font_style.html#af478b0b6158208cc6ec932ff3cb8fbc8">AWD::FONT::FontStyle</a>
 </li>
 <li>wideAttributes
 : <a class="el" href="class_a_w_d_1_1_s_e_t_t_i_n_g_s_1_1_block_settings.html#aa4200c286aa5d1b44ccd0cbf3a123d17">AWD::SETTINGS::BlockSettings</a>
@@ -181,6 +193,7 @@ $(document).ready(function(){initNavTree('functions_w.html','');});
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_animation_set.html#affb822d61c8d22773a6a368064e7e6e3">AWD::BLOCKS::AnimationSet</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_animator.html#a2615d2c601d4ee0380a8ce2a3c8d7206">AWD::BLOCKS::Animator</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_audio.html#ab0b0f7ba5994726ba959f663a97ba579">AWD::BLOCKS::Audio</a>
+, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_billboard.html#a3a9374664b31f8a9f3d12f22524ad359">AWD::BLOCKS::Billboard</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html#af0f2945cf03b655d52cf0af522fea237">AWD::BLOCKS::BitmapTexture</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_camera.html#a34315e6266ac2bccf1390db4f63f53f3">AWD::BLOCKS::Camera</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_command_block.html#ac116c458130249380d4327de472375ef">AWD::BLOCKS::CommandBlock</a>
@@ -192,7 +205,9 @@ $(document).ready(function(){initNavTree('functions_w.html','');});
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_light_picker.html#a753aa452a78e29d512b945ff88012fb4">AWD::BLOCKS::LightPicker</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_material.html#afec453dee5b30440072c0d891aa066bd">AWD::BLOCKS::Material</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh.html#a375782f9bebcd0c5eee3992ac673835a">AWD::BLOCKS::Mesh</a>
+, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh_library.html#a1d35152382b334cb0a71eb23f3d73a7c">AWD::BLOCKS::MeshLibrary</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_meta_data.html#ad00e5dacd55b672c48d6c62abddbdd73">AWD::BLOCKS::MetaData</a>
+, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a07793ee78cdd5a074300aea967a384ca">AWD::BLOCKS::MovieClip</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_namespace.html#af62744329577e9035a750221993349ce">AWD::BLOCKS::Namespace</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_object_container3_d.html#a47a2b4f20fc50d05ac1540b39b7b3762">AWD::BLOCKS::ObjectContainer3D</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_primitive.html#a224eba35c5aa448ab28ac6a61c539273">AWD::BLOCKS::Primitive</a>
@@ -205,28 +220,26 @@ $(document).ready(function(){initNavTree('functions_w.html','');});
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_element.html#aa3396f9ffa8cf64f535717a9ac05c0d7">AWD::BLOCKS::TextElement</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_format.html#a68e88d27210b6311c7d7174ecd5f0beb">AWD::BLOCKS::TextFormat</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_texture_projector.html#a4e78132ecf57136272caf0d3da7fe8b1">AWD::BLOCKS::TextureProjector</a>
-, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_timeline.html#a486c95909a81857e9e51f0bdd14e0eef">AWD::BLOCKS::Timeline</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_animation_clip.html#a3f1167086ea903010b5585fdd19b9d90">AWD::BLOCKS::UVAnimationClip</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_pose.html#a35ceeae0811687d23e348d4e8e16d5fe">AWD::BLOCKS::UVPose</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#abf1009accc4940c036e2ad88e597547c">AWD::BLOCKS::VertexAnimationClip</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_pose.html#ad042907d2bc5d4c58164c8d3dcd3c4cc">AWD::BLOCKS::VertexPose</a>
-, <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_font_shape.html#a134e8d0d73877aa671e4fe46e4a2e8b9">AWD::FONT::FontShape</a>
+, <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_font_shape.html#a1745998fa0e335b6ef4afb3843603e40">AWD::FONT::FontShape</a>
 , <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_font_style.html#a680aa7018bb761911fa2c1a7b6252683">AWD::FONT::FontStyle</a>
-, <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_paragraph.html#a84087eea32fd78d447356a19128be297">AWD::FONT::Paragraph</a>
-, <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_text_run.html#abfe20ed6c6d46528dafbdc60a377cf2e">AWD::FONT::TextRun</a>
+, <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_paragraph.html#aab9f9d1a2329e38a2c8d8a252369b60c">AWD::FONT::Paragraph</a>
+, <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_text_run.html#a536fa97e4b30ce584f6aa3416a71da96">AWD::FONT::TextRun</a>
 </li>
 <li>write_bytes()
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_data_block_base.html#a86c3dadd9df1237c0ed759b190a48129">AWD::BASE::DataBlockBase</a>
 </li>
 <li>write_command()
-: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_frame_command_base.html#a6e903d9bad1f3e826f860892acdbacd9">AWD::ANIM::FrameCommandBase</a>
-, <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html#aef1b21935c0915d8076d4557ac47619b">AWD::ANIM::FrameCommandDisplayObject</a>
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html#a3aa639d6444febca0e62b4746ae817dc">AWD::ANIM::FrameCommandDisplayObject</a>
 </li>
 <li>write_data()
 : <a class="el" href="class_a_w_d_1_1_a_t_t_r_1_1_attr_base.html#a848f4c32e1996573ad6b62070215150f">AWD::ATTR::AttrBase</a>
 </li>
 <li>write_frame()
-: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#a5b2bea21cd57b716af22972f7f5b9170">AWD::ANIM::TimelineFrame</a>
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#aad93d33a6bb68686bc7b98b04ce4ea22">AWD::ANIM::TimelineFrame</a>
 , <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_animation_frame_base.html#a2179151bcaa108c0f80af6f4313d2ce2">AWD::BASE::AnimationFrameBase</a>
 </li>
 <li>write_joint()
@@ -251,15 +264,18 @@ $(document).ready(function(){initNavTree('functions_w.html','');});
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#aafa4732e78571d19d010f62c32240b9c">AWD::FILES::AWDFile</a>
 </li>
 <li>write_to_file()
-: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x2x3.html#aa0f3635df924d60e66c70de2566cd90a">AWD::GEOM::MATRIX2x3</a>
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_color_transform.html#a1e93a00261f41b58d65bc54e2f94e964">AWD::GEOM::ColorTransform</a>
+, <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x2x3.html#aa0f3635df924d60e66c70de2566cd90a">AWD::GEOM::MATRIX2x3</a>
 , <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x4x3.html#a524a5acea3e9a656a9552bc820caf1a0">AWD::GEOM::MATRIX4x3</a>
-, <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x4x5.html#a7ba02047291500adc5fe40967dafc463">AWD::GEOM::MATRIX4x5</a>
 </li>
 <li>write_triangle_stream()
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom.html#a9ee7b0cae98eadfe88ccd9cd02c6cd21">AWD::GEOM::SubGeom</a>
 </li>
 <li>write_user_attr()
 : <a class="el" href="class_a_w_d_1_1_a_t_t_r_1_1_user_attr.html#a9b8c686f3851643e729363d64cc42ac4">AWD::ATTR::UserAttr</a>
+</li>
+<li>write_uvs()
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#a53c5a5de44fbe79e7a314fa071a1eb4e">AWD::BLOCKS::Geometry</a>
 </li>
 <li>write_vertex_stream()
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom.html#abcf275fed1b1dc7518c4b8750520f28a">AWD::GEOM::SubGeom</a>
@@ -285,17 +301,29 @@ $(document).ready(function(){initNavTree('functions_w.html','');});
 <li>writeINT16()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#abb96ef49728bf3f8da6fc8924201fceb">AWD::FILES::FileWriter</a>
 </li>
+<li>writeINT16multi()
+: <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#a5fde3ec8a240c4cef2e6d1553356d878">AWD::FILES::FileWriter</a>
+</li>
 <li>writeINT32()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#a94925f89268765e84e49c77003185777">AWD::FILES::FileWriter</a>
 </li>
+<li>writeINT32multi()
+: <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#a44a7ede92fc139e713e750266dd99022">AWD::FILES::FileWriter</a>
+</li>
 <li>writeINT8()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#af0aa97e861702c3c1593fdf1dab43115">AWD::FILES::FileWriter</a>
+</li>
+<li>writeINT8multi()
+: <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#ac6602eaf2f6f5e2467aad4c2b8292a11">AWD::FILES::FileWriter</a>
 </li>
 <li>writeNumbers()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#af370711b192bf5291848cddc518e4a4e">AWD::FILES::FileWriter</a>
 </li>
 <li>writeSTRING()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#a6a92678678cb8822d90cda89805ef7ad">AWD::FILES::FileWriter</a>
+</li>
+<li>writeToFile()
+: <a class="el" href="group__conversions.html#gab8d92d057c0072cc195b1935b2f53d80">XMLNode</a>
 </li>
 <li>writeUINT16()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#aa1b89a93a6edff885905d2149c0fbc25">AWD::FILES::FileWriter</a>
@@ -306,8 +334,17 @@ $(document).ready(function(){initNavTree('functions_w.html','');});
 <li>writeUINT32()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#ab2659e3233bbe2a55b3b46c2270ca11c">AWD::FILES::FileWriter</a>
 </li>
+<li>writeUINT32multi()
+: <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#a8af93ab7eac7707824189bbe8d0c1f17">AWD::FILES::FileWriter</a>
+</li>
 <li>writeUINT8()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#afb5f637c4c63a9336789295d4cb523f9">AWD::FILES::FileWriter</a>
+</li>
+<li>writeUINT8multi()
+: <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#aa2ead9a2d6b716832a35c3c9414dffbc">AWD::FILES::FileWriter</a>
+</li>
+<li>writeUINTSasSmallestData()
+: <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#a202c4c544d3b30e20d75a811b3a22448">AWD::FILES::FileWriter</a>
 </li>
 <li>writeUnion()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html#a9e3275aefaca64862908e36c9c827e01">AWD::FILES::FileWriter</a>
@@ -318,7 +355,7 @@ $(document).ready(function(){initNavTree('functions_w.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:29 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:45 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

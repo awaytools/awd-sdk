@@ -143,15 +143,13 @@ var awd_specs =
           [ "Animator-Type", "awd_specs_2.html#awd_pt2_animator_type", null ],
           [ "UV Animation Frame", "awd_specs_2.html#awd_pt2_uvanim_frame", null ]
         ] ],
-        [ "TimeLine", "awd_specs_2.html#awd_pt2_14_7", [
-          [ "AWDTimeLineFrame", "awd_specs_2.html#awd_pt2_14_7_1", null ]
-        ] ],
-        [ "AWDFrameCommand", "awd_specs_2.html#awd_pt2_14_8", [
-          [ "Remove Object Command", "awd_specs_2.html#awd_pt2_14_8_1", null ],
-          [ "Add Sound Command", "awd_specs_2.html#awd_pt2_add_sound_command", null ],
-          [ "Update Object Command", "awd_specs_2.html#awd_pt2_14_8_3", null ],
-          [ "Update Object Command -  header", "awd_specs_2.html#awd_pt2_14_8_34", null ],
-          [ "Update Object Command -  Body", "awd_specs_2.html#awd_pt2_14_8_35", null ]
+        [ "MovieClip", "awd_specs_2.html#awd_pt2_14_7", [
+          [ "Movieclip Stream Int", "awd_specs_2.html#awd_pt2_mc_stream_int", null ],
+          [ "Movieclip Stream Int Optional", "awd_specs_2.html#awd_pt2_mc_stream_int_opt", null ],
+          [ "Movieclip Stream Int Types", "awd_specs_2.html#awd_pt2_mc_stream_int_types", null ],
+          [ "Movieclip Stream Various", "awd_specs_2.html#awd_pt2_mc_stream_various", null ],
+          [ "Movieclip Stream Various Types", "awd_specs_2.html#awd_pt2_mc_stream_various_types", null ],
+          [ "MovieClip-properties", "awd_specs_2.html#awd_pt2_mc_properties", null ]
         ] ]
       ] ],
       [ "Sound Blocks", "awd_specs_2.html#awd_pt2_15", [

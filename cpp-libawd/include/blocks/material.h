@@ -87,6 +87,7 @@ namespace AWD
 				Material();
 				~Material();
 				TYPES::INT32 focalPoint;
+				bool needsAlphaTex;
 				GEOM::VECTOR4D get_interpolated_color(TYPES::UINT32);
 				MATERIAL::GradientSpread gradient_spread;
 				std::vector<TYPES::UINT32> gradient_positions;

@@ -4,7 +4,7 @@ var class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip =
     [ "VertexAnimationClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#a65c919a55ac7e3ead14831b2e43ab2f0", null ],
     [ "~VertexAnimationClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#a20178f3a85c8d294620e4bc1b208ea74", null ],
     [ "append_duration_to_last_frame", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#ab1a775c743fcb4e96c46618d421b8aa8", null ],
-    [ "calc_body_length", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#af46da8235769affbdb84740bbc582795", null ],
+    [ "calc_body_length", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#a80cb27f4c1b0b1b7925201ec7f47857a", null ],
     [ "collect_dependencies", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#afa86a5fa7fb16f7aee6a64a7c251c01e", null ],
     [ "create_pose_blocks", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#adc6fbc3ebf61242073264d6a592833d4", null ],
     [ "get_last_frame_geo", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#a55ddf81ddbcc4941f3ce9c532a7c25a1", null ],

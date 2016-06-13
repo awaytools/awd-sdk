@@ -39,6 +39,7 @@ namespace AWD
 			public:
 				FontShape();
 				~FontShape();
+				double advanceValue;
 				int get_charCode();
 				void set_charCode(int);
 				bool has_shape_data();
@@ -52,19 +53,24 @@ namespace AWD
 			private:
 				std::string style_name;
 				double style_size;
+				double ascent;
+				double descent;
 				double whitespace_size;
-				std::map<int, FontShape*> shapesmap;
 				std::vector<FontShape*> shapes;
 
 			public:
 				FontStyle(const std::string&);
 				~FontStyle();
+				std::map<int, FontShape*> shapesmap;
 				std::vector<FontShape*> get_ungenerated_chars();
 				void set_style_size(int);
+				void set_ascent(double);
+				void set_descent(double);
 				void set_whitespace_size(int);
 				void delete_fontShape(int char_code);
 				std::string& get_style_name();
 				FontShape* get_fontShape(int);
+				void get_fontshapes_from(FontStyle* font_shape);
 				TYPES::UINT32 calc_body_length(SETTINGS::BlockSettings *);
 				result write_body(FILES::FileWriter*, SETTINGS::BlockSettings *);
 		};

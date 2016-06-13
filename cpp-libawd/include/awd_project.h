@@ -31,6 +31,7 @@
 #include "blocks/objectcontainer.h"
 #include "blocks/primitive.h"
 #include "blocks/scene.h"
+#include "blocks/ConcanetedStream.h"
 #include "blocks/shadows.h"
 #include "blocks/skeleton.h"
 #include "blocks/skeleton_anim_clip.h"
@@ -39,7 +40,7 @@
 #include "blocks/texture_projector.h"
 #include "blocks/text_element.h"
 #include "blocks/text_format.h"
-#include "blocks/timeline.h"
+#include "blocks/movieclip.h"
 #include "blocks/uv_anim_clip.h"
 #include "blocks/uv_pose.h"
 #include "blocks/vertex_anim_clip.h"
@@ -107,7 +108,7 @@ namespace AWD
 			*/
 			result open();
 			
-			
+			BLOCKS::Geometry* shared_geom;
 			/**
 			* \brief Framecommands might generated using ressource-ids for referencing the objects instead of connected them directly to the objects AWDBlocks.\n
 			* In this case, this function must be called before export.
@@ -140,8 +141,10 @@ namespace AWD
 			*/
 			result export_file();
 			
-			result exchange_timeline_by_name(BLOCKS::Timeline*);	
+			result exchange_timeline_by_name(BLOCKS::MovieClip*);	
 			
+			result create_merged_streams();
+
 			result finalize_timelines();	
 			/**
 			* \brief Imports the active-file. This should result in a AWDFile that is fully processed and ready to export again.
@@ -210,7 +213,7 @@ namespace AWD
 			*/
 			BASE::AWDBlock* get_block_by_name_and_type(const std::string& name, BLOCK::block_type,  bool create_if_not_exists);
 			
-			BLOCKS::Timeline* get_timeline_by_symbol_name(const std::string& name);
+			BLOCKS::MovieClip* get_timeline_by_symbol_name(const std::string& name);
 			BASE::AWDBlock* get_block_by_external_object_and_type(void* extern_obj, BLOCK::block_type blocktype, bool create_if_not_exists);
 			/**
 			* \brief Get Material for a color 

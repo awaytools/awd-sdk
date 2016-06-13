@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['keep_5fparsing',['keep_parsing',['../class_a_w_d_1_1_f_i_l_e_s_1_1_file_reader.html#a415ef3587b4d7c7af4e9f150191a12ac',1,'AWD::FILES::FileReader']]],
-  ['key',['key',['../class_a_w_d_1_1_a_t_t_r_1_1_user_attr.html#a9bf994eda76e7c9c6097b216c1f3b1ab',1,'AWD::ATTR::UserAttr::key()'],['../class_a_w_d_1_1_a_t_t_r_1_1_num_attr.html#a7a067da70d145d120c7a3d1f76596157',1,'AWD::ATTR::NumAttr::key()']]],
-  ['key_5flen',['key_len',['../class_a_w_d_1_1_a_t_t_r_1_1_user_attr.html#a8254155e9dc55c7feb2ba0b6a7d66966',1,'AWD::ATTR::UserAttr']]]
+  ['joint_5findices',['JOINT_INDICES',['../namespace_a_w_d_1_1_g_e_o_m.html#abad69a6000c7aad1e19393199de13057a86fb98bc0ce0595f45c43cbb7cec4d69',1,'AWD::GEOM']]],
+  ['joint_5findicies',['JOINT_INDICIES',['../namespace_a_w_d_1_1_g_e_o_m.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a6d51fad8ce34d52f4e7e6270f57a3f88',1,'AWD::GEOM']]],
+  ['joint_5ftransforms',['joint_transforms',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton_pose.html#a4ac7944449ef709f79ad49cef70844c7',1,'AWD::BLOCKS::SkeletonPose']]],
+  ['joint_5fweigths',['JOINT_WEIGTHS',['../namespace_a_w_d_1_1_g_e_o_m.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a104f8608770dfca757d959f37547edbf',1,'AWD::GEOM']]],
+  ['joints_5fper_5fvert',['joints_per_vert',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#ac7028db085e60b74ee7b26bafcb685f5',1,'AWD::BLOCKS::Skeleton']]]
 ];

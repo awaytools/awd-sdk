@@ -46,6 +46,7 @@ namespace AWD
 				void apply_remove_command(FrameCommandRemoveObject*);
 				void build_final_commands();
 				void calc_mask_ids();
+				void create_mask_layers();
 				void finalize_commands();
 
 

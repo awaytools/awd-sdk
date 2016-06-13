@@ -11,12 +11,17 @@ using namespace AWD::SETTINGS;
 
 SubGeomInternal::SubGeomInternal() 
 {
+	this->isMerged=false;
+	this->startIDX = 0;
+	this->vertCnt = 0;
 }
 
 SubGeomInternal::~SubGeomInternal()
 {  
-	for(GeomStreamElementBase* vert : this->vertices)        
-		delete vert;
+	if(!this->isMerged){
+		for(GeomStreamElementBase* vert : this->vertices)        
+			delete vert;
+	}
 	for(Triangle* tri : this->triangles)
 		delete tri;	
 }

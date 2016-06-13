@@ -70,6 +70,10 @@ MeshLibrary::calc_body_length(AWDFile* awd_file, BlockSettings * settings)
 	length += sizeof(BADDR);//geom address
 	length += sizeof(TYPES::UINT16);//num submeshes
 	length += TYPES::UINT32(this->materials.size() * sizeof(BADDR));//material addresses
+
+	length += sizeof(TYPES::UINT16);//length of suacctual subgeoms
+	BLOCKS::Geometry* thisGeom = reinterpret_cast<BLOCKS::Geometry*> (this->geom);
+	length += thisGeom->get_uv_bytesize(awd_file, settings);
 	length += this->calc_attr_length(true, true, settings);
 	return length;
 }
@@ -106,6 +110,9 @@ MeshLibrary::write_body(FileWriter * fileWriter, BlockSettings *settings,AWDFile
 		fileWriter->writeUINT32(block_addr_mat);
 	}
 	
+	BLOCKS::Geometry* thisGeom = reinterpret_cast<BLOCKS::Geometry*> (this->geom);
+	thisGeom->write_uvs(fileWriter, settings, file);
+
 	this->properties->write_attributes(fileWriter, settings);
 	this->user_attributes->write_attributes(fileWriter, settings);
 	

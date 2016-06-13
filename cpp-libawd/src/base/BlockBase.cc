@@ -88,6 +88,7 @@ void
 AWDBlock::clear_res_ids()
 {
 	this->ressource_ids.clear();
+	//this->external_id="";
 }
 
 TYPES::state 

@@ -1816,123 +1816,99 @@ Offset		|		 Size			|		 Type			|		 Description
 
 
 
-\subsection awd_pt2_14_7 TimeLine
+\subsection awd_pt2_14_7 MovieClip
 
-No already existing Block to compare to.
-A Timeline is what a MovieClip is called in FlashUI. 
-It consists of a number of frames. Each Frame containsa number of frame-commands.
+A MovieClip (mc) is a object that conains a timeline.
+A timeline consists of a number of frames. 
 The frame-commands are used to put display-objects into the scenegraph.
 A timeline can be added to another timeline, using these commands.
 
 
-Offset    |Size     |Type                     |Description
-----------|---------|-------------------------|--------------------------------------
-0		  |11		|BlockHeader			  |\ref awd_pt2_9_1
-11        |variable |VarString                |Name
-variable  |1        |bool                     |IsScene (isRoot)
-variable  |1        |uint8                    |SceneID (if we have multiple scenes)
-variable  |1        |uint16                   |Number of Frames
-variable  |variable |List of AWDTimeLineFrame |All the TimeLine Frames
-variable  |variable |NumAttrList              |Timeline-properties
-variable  |variable |UserAttrList             |User Attributes
+Offset    |Size     |Type									|Description
+----------|---------|-------------------------				|--------------------------------------
+0		  |11		|BlockHeader							|\ref awd_pt2_9_1
+11        |variable |VarString								|Name
+variable  |1        |uint16									|Number of Potential Children that are only used once on timeline
+variable  |variable |List of BlockAddr						|BlockAdress for each potential children
+variable  |1        |uint16									|Number of Potential Children that might be used 2 times at the same frame
+variable  |variable |List of BlockAddr + UINT16				|BlockAdress for each potential children + the number of instances that are using this potential child at same time
+variable  |1        |uint16									|Number of Potential Sounds
+variable  |variable |List of BlockAddr						|BlockAdress for each potential Sound
+variable  |1        |uint8									|Number of \ref awd_pt2_mc_stream_int + \ref awd_pt2_mc_stream_int_opt
+variable  |1        |list of \ref awd_pt2_mc_stream_int		|always six non-optional streams. the typs of these streams is the index e.g. this streams have types 0-5
+variable  |1        |list of \ref awd_pt2_mc_stream_int_opt	|non optional streams. they need to read in the addional streamtype
+variable  |1        |uint8									|Number of \ref awd_pt2_mc_stream_various
+variable  |1        |list of \ref awd_pt2_mc_stream_various	|\ref awd_pt2_mc_stream_various
+variable  |variable |NumAttrList							|MovieClip-properties
+variable  |variable |UserAttrList							|User Attributes
+
+\subsubsection awd_pt2_mc_stream_int Movieclip Stream Int
+
+Offset    |Size     |Type						|Description
+----------|---------|---------------------------|--------------------------------------
+variable  |1        |uint8						|datatype (int8 / int16 / int32)
+variable  |1        |uint32						|size of stream
+variable  |1        |uint8 / uint16 / uint32	|stream data
 
 
-\subsubsection awd_pt2_14_7_1 AWDTimeLineFrame
+\subsubsection awd_pt2_mc_stream_int_opt Movieclip Stream Int Optional
 
-Each Frame has a duration, so on import we can count the durations up to total duration.
+Wraps around the \ref awd_pt2_mc_stream_int to add a type to it
 
-Offset    |Size                 |Type							|Description
-----------|---------------------|-----------------------------	|---------------------------------
-0         |4                    |Float32						|Frame Duration
-0         |2                    |uint16							|number of Frame-labels - the next 2 properties are parsed for each frame-label
-variable  |2  					|uint8 							|Frame Identifier-type (type of frame label)
-variable  |variable             |VarString						|Frame Identifier (Frame label
-variable  |1                    |uint16							|Number of AWDFrameCommand
-variable  |variable             |List of Frame-Command-Blocks	|Frame Command-blocks
-variable  |4                    |uint32							|Length of code-string
-variable  |Length of code-string|String							|The frame-script (js-code)
-variable  |variable             |UserAttrList					|User Attributes
+Offset    |Size     |Type						|Description
+----------|---------|-------------------------	|--------------------------------------
+variable  |1        |uint8						|\ref awd_pt2_mc_stream_int_types
+variable  |1        |\ref awd_pt2_mc_stream_int | 
 
+\subsubsection awd_pt2_mc_stream_int_types Movieclip Stream Int Types
 
-\subsection awd_pt2_14_8 AWDFrameCommand
+ID		|Description
+--------|--------------------------------------
+0		|keyframe_durations
+1		|frame_command_indices
+2		|frame_recipe
+3		|command_length_stream
+4		|command_index_stream
+5		|add_child_stream
+6		|remove_child_stream
+7		|update_child_stream
+8		|update_child_props_indices_stream
+9		|update_child_props_length_stream
+10		|property_type_stream
+11		|property_index_stream
+12		|properties_stream_int
 
-Adobes Frame-Generator provides us with FrameCommands for all the different properties that we might want to update on a object.\n
-This means, that we might have multiple Commands for the same object and the same frame.\n
-For AWD we will merge the commands, so we only will ever have 1 command per frame and object.\n
-The types of AWD-frameCommands are:
+timelineDataStreamsVarious
 
-ID	|	FrameCommand-Name              
-----|------------
-0	|Update Object 
-1	|Remove Object 
-2	|Update Sound 
-
-\subsubsection awd_pt2_14_8_1 Remove Object Command
-
-Offset  |Size					|Type				|Description							| Default
---------|---------------------	|-------------------|-----------------------------			|-----------
-1		|4						|uint32				|The ObjectID of the object to remove   |0 (ERROR)
-
-\subsubsection awd_pt2_add_sound_command Add Sound Command
-
-The Add Sound Command is s asepperate Command, because the properties for a this command are very different than the properties for the commands that affect other type of objects.
-
-Offset  |Size					|Type				|Description										| Default
---------|---------------------	|-------------------|-----------------------------						|-----------
-1		|4						|uint32				|The ObjectID that should be applied to the Sound   |0 (ERROR)
-1		|4						|uint32				|The Ressource (AWD) ID of the Sound to add			|0 (ERROR)	
+\subsubsection awd_pt2_mc_stream_various Movieclip Stream Various
 
 
-\todo Sound-properties like Loop, should be added here
+Offset    |Size     |Type						|Description
+----------|---------|-------------------------	|--------------------------------------
+variable  |1        |uint8						|\ref awd_pt2_mc_stream_various_types
+variable  |1        |uint32						|size of stream
+variable  |1        |uint8 / uint16 / uint32	|variable stream content
+
+\subsubsection awd_pt2_mc_stream_various_types Movieclip Stream Various Types
+
+id		|Description					|	interpret data as
+--------|-------------------------------|--------------------
+0		|mtx_scale						|TYPES::F32
+1		|mtx_pos						|TYPES::F32
+2		|mtx_all						|TYPES::F32
+3		|colortransforms				|TYPES::F32
+4		|framelabels					|TYPES::UINT16 (label count) - for labelcount: VarString (name) + TYPES::UINT16 (frameindex)
+5		|string properties				|TYPES::UINT16 (string count)- for stringcount: TYPES::UINT16 (string-length) + string-length*TYPES::UINT8(text)
+6		|script_stream					|TYPES::UINT16 (script count)- for scriptcount:TYPES::UINT16 (frameindex) + TYPES::UINT32 (script-length) + script-length*TYPES::UINT8(text)
 
 
-\subsubsection awd_pt2_14_8_3 Update Object Command
+\subsubsection awd_pt2_mc_properties MovieClip-properties
 
-The UpdateObject command includes all the other commands that adobe outputs. \n
-We first read a list of bool, to decide what properties of the objects should be updated. \n
-The first of the bool decides whether we are updating an existing item, or if we want to add a new item to the timelines-display list. \n
-
-Offset  |Size               |Type							|Description
---------|-------------------|-----------------------------	|-------------------------
-0		|9					|Update Object Command Header	|defines what is expected as body
-9		|2					|Update Object Command Body		|the variable body of the Command
-
-\subsubsection awd_pt2_14_8_34 FrameCommand-ObjectProperties bitflag 
-Offset    |Type           |Name					|Description
-----------|---------------|--------------		|---------------------------------
-0         |boolean		  |addOrUpdate			|new = 0 / update = 1
-1         |boolean        |updateDisplayMatrix  |no-displaymatrix = 0 / displaymatrix  = 1
-2         |boolean        |updateColorMatrix    |no-colormatrix = 0 / colormatrix  = 1
-3         |boolean        |changeDepth          |no-depth-change = 0 / depth-change  = 1
-4         |boolean        |changeFilter         |no-filter-change = 0 / filter-change  = 1
-5		  |boolean        |changeVisibility     |no-visible-change = 0 / visibility-change  = 1
-6         |boolean		  |changeBlendMode      |no-blendmode = 0 / blendmode  = 1
-7		  |boolean		  |updateMaskDepth		|no-maskDepth= 0 / maskDepth= 1
-...		  |boolean		  |not used yet			|might be used later.
-15		  |boolean		  |read addinonal		|if we get to a point that 16 bit are not enough to descripe all properties, we can activate a adional properties list
-
-
-\subsubsection awd_pt2_14_8_35 Update Object Command -  Body
-
-Offset    |Size     |Type							|Description									|Parse if
-----------|---------|-----------------------------	|------------									|---------------------
-0         |4		|uint32							|Object ID - This is not depentant on any boolean (objectID must always be included). It is either the ID that is assigned to the new object, or the ID of the already existing object, that should be updated| always
-4         |4		|Blockaddr						|The AWD-ID of the object to add or update.		|addOrUpdate=false
-variable  |24       |6 x float32                    |DisplayMatrix2x3								|updateDisplayMatrix
-variable  |24       |20 x float32                   |ColorMatrix4x5									|updateColorMatrix
-variable  |4        |uint32							|Depth of the Clip								|changeDepth       
-variable  |TODO     |TODO							|TODO:specs for filter							|changeFilter
-variable  |1        |boolean						|Visible state of object						|changeVisibility
-variable  |variable |varString						|The instance-name of the new object.			|setInstanceName 
-variable  |1		|uint8							|BlendMode										|changeBlendMode
-variable  |1		|uint32							|The depth of clip-mask. 0=not used as mask		|updateMaskDepth
-variable  |2		| uint16						|Number of subshapes							|This should always be parsed, but should be 0 if the object found at objectID / ressourceID is not a shape
-variable  |variable	|list of BlockAddr				|The awd-ID to the fill-object for each subMesh	|If number of subshapes is > 0
-
-
->	Claus suggested to get rid of the object-id, because we could use the objects-depth instead.
->	I think in AWD this is not possible, because we rely heavily on that the objectID is correct for a object for all FrameCommands for this timeline, \n
->	even if changing the object depth.
+ID		| Size	|Type		|Name			|Description 
+--------|-------|-----------|---------------|-----------
+1		|4		|Float		|FPS			|The fps of the movieclip. not used yet, because we use global fps right now
+2		|1		|UINT8		|Script-Type	|The type of script, for now we only support AS2
+3		|2		|uint16		|sceneID		|The sceneID. if no sceneID is present, the id is considered 0 (= no scene)
 
 
 
@@ -1947,17 +1923,6 @@ They only differ in their Block-Type, and in the type of properties they can hav
 
 As with textures, the sound can be present in the file as embed data, or as URL.\n
 In either way, the parser will stop parsing the current AWD, hand the sound-data over to the Parsing-system, and wait until processing has finished.\n 
-
-#####Sound-properties
-
-ID		| Size	|Type		|Name			|Description 
---------|-------|-----------|---------------|-----------
-TODO	|TODO	|TODO		|TODO			|TODO
-
-\todo The sound-properties are defined in the \ref awd_pt2_add_sound_command, so we should not need to store any properties on the sound-block.
-
-
-
 
 
 
@@ -1998,7 +1963,7 @@ variable  |variable				|UserAttrList				|User Attributes
 Offset		|Size					|Type               |Description 
 ----------	|---------------------	|-------------------|------------
 0			|variable				|varString			|Font-style as string (e.g. "regular"/ "bold" / etc...)
-variable	|1						|uint32				|Number of \ref awd_pt2_font_shape for this FontStyle (is uint32 enough???)
+variable	|1						|uint32				|Number of \ref awd_pt2_font_shape for this FontStyle
 variable	|variable				|List of FontShapes |List of \ref awd_pt2_font_shape for this FontStyle
 
 \subsubsection awd_pt2_font_shape FontShape

@@ -65,6 +65,9 @@ AWDProject::AWDProject(project_type new_project_type, const std::string& initial
 	}
 
 	this->settings=new SETTINGS::Settings(root_directory, generator_name, generator_version);
+	this->shared_geom = new BLOCKS::Geometry();
+	GEOM::SubGeom* new_subgeom = new GEOM::SubGeom(this->settings);
+	this->shared_geom->add_subgeo(new_subgeom);
 	
 	res = this->get_file_for_path(initial_path, &this->active_file);
 	if(res!=result::AWD_SUCCESS){
@@ -75,6 +78,7 @@ AWDProject::AWDProject(project_type new_project_type, const std::string& initial
 		}
 		this->add_message("AWDProject (constructor): No AWDFile was created", TYPES::message_type::WARNING_MESSAGE);
 	}
+	this->add_block(this->shared_geom);
 	
 }	
 
@@ -88,6 +92,7 @@ AWDProject::~AWDProject()
 		delete awd_file;
 	if(this->name_space!=NULL)
 		delete this->name_space;
+	//delete this->shared_geom; // aloready disposed, because its part of the blocklist
 }
 
 // OVERWRITE STATEELEMENTBASE:
@@ -156,19 +161,19 @@ AWDProject::get_file_for_path(const std::string& path, AWDFile**  awdFile){
 
 
 result
-AWDProject::exchange_timeline_by_name(BLOCKS::Timeline* timeline_new)
+AWDProject::exchange_timeline_by_name(BLOCKS::MovieClip* timeline_new)
 {
-	if (this->all_blocks.find(BLOCK::block_type::TIMELINE) == this->all_blocks.end())
+	if (this->all_blocks.find(BLOCK::block_type::MOVIECLIP) == this->all_blocks.end())
 		return result::AWD_ERROR;
 	
 	int cnt=0;
-	for(AWDBlock* one_awd_block : this->all_blocks[BLOCK::block_type::TIMELINE]){
-		BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline* >(one_awd_block);
+	for(AWDBlock* one_awd_block : this->all_blocks[BLOCK::block_type::MOVIECLIP]){
+		BLOCKS::MovieClip* timeline = reinterpret_cast<BLOCKS::MovieClip* >(one_awd_block);
 		if(timeline->get_symbol_name()==timeline_new->get_symbol_name()){
 			for(std::string one_id:timeline->get_ressource_ids())
 				timeline_new->add_res_id(one_id);
 			delete timeline;
-			this->all_blocks[BLOCK::block_type::TIMELINE][cnt]=timeline_new;
+			this->all_blocks[BLOCK::block_type::MOVIECLIP][cnt]=timeline_new;
 		}
 		cnt++;
 	}
@@ -177,12 +182,24 @@ AWDProject::exchange_timeline_by_name(BLOCKS::Timeline* timeline_new)
 result
 AWDProject::finalize_timelines()
 {
-	if (this->all_blocks.find(BLOCK::block_type::TIMELINE) == this->all_blocks.end())
+	if (this->all_blocks.find(BLOCK::block_type::MOVIECLIP) == this->all_blocks.end())
 		return result::AWD_ERROR;
 	
-	for(AWDBlock* one_awd_block : this->all_blocks[BLOCK::block_type::TIMELINE]){
-		BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline* >(one_awd_block);
+	for(AWDBlock* one_awd_block : this->all_blocks[BLOCK::block_type::MOVIECLIP]){
+		BLOCKS::MovieClip* timeline = reinterpret_cast<BLOCKS::MovieClip* >(one_awd_block);
 		timeline->finalize();
+	}
+	return result::AWD_SUCCESS;
+}
+result
+AWDProject::create_merged_streams()
+{
+	GEOM::SubGeom* this_subgeom=this->shared_geom->get_sub_at(0);
+	std::string output_str2;
+	this_subgeom->get_internal_id(output_str2);
+	for(AWDBlock* one_awd_block : this->all_blocks[BLOCK::block_type::TRI_GEOM]){
+		BLOCKS::Geometry* geom = reinterpret_cast<BLOCKS::Geometry* >(one_awd_block);
+		geom->merge_stream(this_subgeom);
 	}
 	return result::AWD_SUCCESS;
 }
@@ -226,8 +243,8 @@ AWDProject::get_statistics(std::vector<std::string>& output_list)
 	int block_cnt=0;
 	for(blocktype_type iterator = this->all_blocks.begin(); iterator !=  this->all_blocks.end(); iterator++)
 		block_cnt += iterator->second.size();
-	stat_str+="	   Total AWDBlock count =	"+std::to_string(block_cnt)+"\n";
-	stat_str+="	   Total AWDFiles count =	"+std::to_string(this->files.size())+"\n\n";
+	stat_str+="	   Total AWDBlock count =	"+FILES::int_to_string(block_cnt)+"\n";
+	stat_str+="	   Total AWDFiles count =	"+FILES::int_to_string(this->files.size())+"\n\n";
 	
 	output_list.push_back(stat_str);
 
@@ -249,7 +266,7 @@ AWDProject::add_library_block(BASE::AWDBlock* awd_block)
 		this->all_blocks[awd_block->get_type()].push_back(awd_block);
 	}
 	if(awd_block->is_category(BLOCK::category::SCENE_OBJECT)){
-		if(awd_block->get_type()!=BLOCK::block_type::TIMELINE){
+		if(awd_block->get_type()!=BLOCK::block_type::MOVIECLIP){
 			SceneBlockBase* scene_block = reinterpret_cast<SceneBlockBase*>(awd_block);
 			if(scene_block!=NULL){
 				for(AWDBlock* child : scene_block->get_children()){
@@ -304,6 +321,9 @@ AWDProject::clear_external_ids(){
 					BLOCKS::Geometry* this_geom = reinterpret_cast<BLOCKS::Geometry* >(awd_block);
 					this_geom->clear_res_ids_geom();
 				}
+				if(awd_block->get_type()==block_type::TEXT_ELEMENT){
+					awd_block->set_external_id("");
+				}
 			}
 		}
 	}
@@ -354,18 +374,18 @@ AWDProject::get_default_material_by_color(TYPES::COLOR this_color, bool create_i
 
 	
 		
-BLOCKS::Timeline*
+BLOCKS::MovieClip*
 AWDProject::get_timeline_by_symbol_name(const std::string& symbol_name)
 {
-	for(AWDBlock* block : this->all_blocks[block_type::TIMELINE]){
-		BLOCKS::Timeline* this_timeline=reinterpret_cast<BLOCKS::Timeline*>(block);
+	for(AWDBlock* block : this->all_blocks[block_type::MOVIECLIP]){
+		BLOCKS::MovieClip* this_timeline=reinterpret_cast<BLOCKS::MovieClip*>(block);
 		if(this_timeline!=NULL){
 			if(this_timeline->get_symbol_name()==symbol_name){	
 				return this_timeline;
 			}
 		}
 	}
-	/*BLOCKS::Timeline* new_timeline = new BLOCKS::Timeline();
+	/*BLOCKS::MovieClip* new_timeline = new BLOCKS::MovieClip();
 	new_timeline->set_symbol_name(symbol_name);
 	this->add_block(new_timeline);
 	return new_timeline;

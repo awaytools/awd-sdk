@@ -50,6 +50,7 @@ namespace AWD
 				AWDFile(AWDProject* awd_project, const std::string& url, bool own_settings=false);
 				~AWDFile(); 
 					
+				result get_statistics_for_type(BLOCK::block_type block_type, std::vector<std::string>& output_list);
 				/**
 				* \brief Get the statistic of the AWDProject.
 				*	@param[out] statistics_str The string that should get the statistics copied into it.

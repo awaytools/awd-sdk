@@ -1,5 +1,6 @@
 var hierarchy =
 [
+    [ "ALLXMLClearTag", "struct_a_l_l_x_m_l_clear_tag.html", null ],
     [ "AWD::BASE::AnimationClipBase", "class_a_w_d_1_1_b_a_s_e_1_1_animation_clip_base.html", [
       [ "AWD::BLOCKS::SkeletonAnimationClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton_animation_clip.html", null ],
       [ "AWD::BLOCKS::UVAnimationClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_animation_clip.html", null ],
@@ -16,7 +17,6 @@ var hierarchy =
     ] ],
     [ "AWD::BASE::AttrElementBase", "class_a_w_d_1_1_b_a_s_e_1_1_attr_element_base.html", [
       [ "AWD::ANIM::SkeletonJoint", "class_a_w_d_1_1_a_n_i_m_1_1_skeleton_joint.html", null ],
-      [ "AWD::ANIM::TimelineFrame", "class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html", null ],
       [ "AWD::BASE::SceneBlockBase", "class_a_w_d_1_1_b_a_s_e_1_1_scene_block_base.html", [
         [ "AWD::BLOCKS::Camera", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_camera.html", null ],
         [ "AWD::BLOCKS::CommandBlock", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_command_block.html", null ],
@@ -30,6 +30,7 @@ var hierarchy =
       [ "AWD::BLOCKS::AnimationSet", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_animation_set.html", null ],
       [ "AWD::BLOCKS::Animator", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_animator.html", null ],
       [ "AWD::BLOCKS::Audio", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_audio.html", null ],
+      [ "AWD::BLOCKS::Billboard", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_billboard.html", null ],
       [ "AWD::BLOCKS::BitmapTexture", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html", null ],
       [ "AWD::BLOCKS::CubeTexture", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_cube_texture.html", null ],
       [ "AWD::BLOCKS::EffectMethod", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_effect_method.html", null ],
@@ -37,7 +38,9 @@ var hierarchy =
       [ "AWD::BLOCKS::Geometry", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html", null ],
       [ "AWD::BLOCKS::LightPicker", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_light_picker.html", null ],
       [ "AWD::BLOCKS::Material", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_material.html", null ],
+      [ "AWD::BLOCKS::MeshLibrary", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh_library.html", null ],
       [ "AWD::BLOCKS::MetaData", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_meta_data.html", null ],
+      [ "AWD::BLOCKS::MovieClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html", null ],
       [ "AWD::BLOCKS::Primitive", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_primitive.html", null ],
       [ "AWD::BLOCKS::ShadowMethod", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_shadow_method.html", null ],
       [ "AWD::BLOCKS::Skeleton", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html", null ],
@@ -45,7 +48,6 @@ var hierarchy =
       [ "AWD::BLOCKS::SkeletonPose", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton_pose.html", null ],
       [ "AWD::BLOCKS::TextElement", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_element.html", null ],
       [ "AWD::BLOCKS::TextFormat", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_format.html", null ],
-      [ "AWD::BLOCKS::Timeline", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_timeline.html", null ],
       [ "AWD::BLOCKS::UVAnimationClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_animation_clip.html", null ],
       [ "AWD::BLOCKS::UVPose", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_pose.html", null ],
       [ "AWD::BLOCKS::VertexAnimationClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html", null ],
@@ -57,6 +59,9 @@ var hierarchy =
     ] ],
     [ "AWD::GEOM::AWDPathIntersection", "class_a_w_d_1_1_g_e_o_m_1_1_a_w_d_path_intersection.html", null ],
     [ "AWD::BLOCK::blockInstance_file_connection", "struct_a_w_d_1_1_b_l_o_c_k_1_1block_instance__file__connection.html", null ],
+    [ "AWD::GEOM::BOUNDS2D", "struct_a_w_d_1_1_g_e_o_m_1_1_b_o_u_n_d_s2_d.html", null ],
+    [ "AWD::GEOM::BOUNDS3D", "struct_a_w_d_1_1_g_e_o_m_1_1_b_o_u_n_d_s3_d.html", null ],
+    [ "AWD::GEOM::ColorTransform", "class_a_w_d_1_1_g_e_o_m_1_1_color_transform.html", null ],
     [ "AWD::BASE::DataBlockBase", "class_a_w_d_1_1_b_a_s_e_1_1_data_block_base.html", [
       [ "AWD::BLOCKS::Audio", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_audio.html", null ],
       [ "AWD::BLOCKS::BitmapTexture", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html", null ]
@@ -64,29 +69,54 @@ var hierarchy =
     [ "AWD::GEOM::DataStreamAttr", "class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr.html", null ],
     [ "AWD::GEOM::DataStreamAttrDesc", "class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr_desc.html", null ],
     [ "AWD::GEOM::DataStreamRecipe", "class_a_w_d_1_1_g_e_o_m_1_1_data_stream_recipe.html", null ],
-    [ "DIR", "struct_d_i_r.html", null ],
     [ "dirent", "structdirent.html", null ],
+    [ "exception", null, [
+      [ "utf8::exception", "classutf8_1_1exception.html", [
+        [ "utf8::invalid_code_point", "classutf8_1_1invalid__code__point.html", null ],
+        [ "utf8::invalid_code_point", "classutf8_1_1invalid__code__point.html", null ],
+        [ "utf8::invalid_utf16", "classutf8_1_1invalid__utf16.html", null ],
+        [ "utf8::invalid_utf16", "classutf8_1_1invalid__utf16.html", null ],
+        [ "utf8::invalid_utf8", "classutf8_1_1invalid__utf8.html", null ],
+        [ "utf8::invalid_utf8", "classutf8_1_1invalid__utf8.html", null ],
+        [ "utf8::not_enough_room", "classutf8_1_1not__enough__room.html", null ],
+        [ "utf8::not_enough_room", "classutf8_1_1not__enough__room.html", null ]
+      ] ],
+      [ "utf8::exception", "classutf8_1_1exception.html", null ]
+    ] ],
     [ "AWD::FILES::FileReader", "class_a_w_d_1_1_f_i_l_e_s_1_1_file_reader.html", null ],
     [ "AWD::FILES::FileWriter", "class_a_w_d_1_1_f_i_l_e_s_1_1_file_writer.html", null ],
+    [ "AWD::GEOM::FilledRegion", "class_a_w_d_1_1_g_e_o_m_1_1_filled_region.html", null ],
+    [ "AWD::GEOM::FilledRegionGroup", "class_a_w_d_1_1_g_e_o_m_1_1_filled_region_group.html", null ],
     [ "AWD::FONT::FontShape", "class_a_w_d_1_1_f_o_n_t_1_1_font_shape.html", null ],
     [ "AWD::FONT::FontStyle", "class_a_w_d_1_1_f_o_n_t_1_1_font_style.html", null ],
-    [ "AWD::ANIM::FrameCommandBase", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_base.html", [
-      [ "AWD::ANIM::FrameCommandDisplayObject", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html", null ]
-    ] ],
+    [ "AWD::ANIM::FrameCommandDisplayObject", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html", null ],
+    [ "AWD::ANIM::FrameCommandRemoveObject", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_remove_object.html", null ],
+    [ "AWD::ANIM::FrameCommandSoundObject", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_sound_object.html", null ],
     [ "AWD::GEOM::GeomStreamElementBase", "class_a_w_d_1_1_g_e_o_m_1_1_geom_stream_element_base.html", [
       [ "AWD::GEOM::Triangle", "class_a_w_d_1_1_g_e_o_m_1_1_triangle.html", null ],
       [ "AWD::GEOM::Vertex2D", "class_a_w_d_1_1_g_e_o_m_1_1_vertex2_d.html", null ],
       [ "AWD::GEOM::Vertex3D", "class_a_w_d_1_1_g_e_o_m_1_1_vertex3_d.html", null ]
     ] ],
+    [ "AWD::ANIM::Graphic_instance", "struct_a_w_d_1_1_a_n_i_m_1_1_graphic__instance.html", null ],
+    [ "AWD::HTTPServer", "class_a_w_d_1_1_h_t_t_p_server.html", null ],
+    [ "iterator", null, [
+      [ "utf8::iterator< octet_iterator >", "classutf8_1_1iterator.html", null ],
+      [ "utf8::iterator< octet_iterator >", "classutf8_1_1iterator.html", null ],
+      [ "utf8::unchecked::iterator< octet_iterator >", "classutf8_1_1unchecked_1_1iterator.html", null ],
+      [ "utf8::unchecked::iterator< octet_iterator >", "classutf8_1_1unchecked_1_1iterator.html", null ]
+    ] ],
     [ "AWD::GEOM::MATRIX2x3", "class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x2x3.html", null ],
     [ "AWD::GEOM::MATRIX4x3", "class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x4x3.html", null ],
-    [ "AWD::GEOM::MATRIX4x5", "class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x4x5.html", null ],
     [ "AWD::TYPES::Message", "struct_a_w_d_1_1_t_y_p_e_s_1_1_message.html", null ],
     [ "NameSpace", "struct_name_space.html", null ],
     [ "AWD::TYPES::NameSpace_struct", "struct_a_w_d_1_1_t_y_p_e_s_1_1_name_space__struct.html", null ],
+    [ "NextToken", "struct_next_token.html", null ],
     [ "AWD::ATTR::NumAttrList", "class_a_w_d_1_1_a_t_t_r_1_1_num_attr_list.html", null ],
+    [ "AWD::GEOM::Path", "class_a_w_d_1_1_g_e_o_m_1_1_path.html", null ],
     [ "AWD::GEOM::PathSegment", "class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html", null ],
-    [ "Poly", "class_poly.html", null ],
+    [ "AWD::ANIM::PotentialTimelineChild", "struct_a_w_d_1_1_a_n_i_m_1_1_potential_timeline_child.html", null ],
+    [ "AWD::ANIM::PotentialTimelineChildGroup", "struct_a_w_d_1_1_a_n_i_m_1_1_potential_timeline_child_group.html", null ],
+    [ "ServerConfigParam", "struct_server_config_param.html", null ],
     [ "AWD::GEOM::SharedVertex3D", "class_a_w_d_1_1_g_e_o_m_1_1_shared_vertex3_d.html", null ],
     [ "AWD::BASE::StateElementBase", "class_a_w_d_1_1_b_a_s_e_1_1_state_element_base.html", [
       [ "AWD::AWDProject", "class_a_w_d_1_1_a_w_d_project.html", null ],
@@ -95,6 +125,7 @@ var hierarchy =
         [ "AWD::BLOCKS::AnimationSet", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_animation_set.html", null ],
         [ "AWD::BLOCKS::Animator", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_animator.html", null ],
         [ "AWD::BLOCKS::Audio", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_audio.html", null ],
+        [ "AWD::BLOCKS::Billboard", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_billboard.html", null ],
         [ "AWD::BLOCKS::BitmapTexture", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_bitmap_texture.html", null ],
         [ "AWD::BLOCKS::CubeTexture", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_cube_texture.html", null ],
         [ "AWD::BLOCKS::EffectMethod", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_effect_method.html", null ],
@@ -102,7 +133,9 @@ var hierarchy =
         [ "AWD::BLOCKS::Geometry", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html", null ],
         [ "AWD::BLOCKS::LightPicker", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_light_picker.html", null ],
         [ "AWD::BLOCKS::Material", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_material.html", null ],
+        [ "AWD::BLOCKS::MeshLibrary", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh_library.html", null ],
         [ "AWD::BLOCKS::MetaData", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_meta_data.html", null ],
+        [ "AWD::BLOCKS::MovieClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html", null ],
         [ "AWD::BLOCKS::Namespace", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_namespace.html", null ],
         [ "AWD::BLOCKS::Primitive", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_primitive.html", null ],
         [ "AWD::BLOCKS::ShadowMethod", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_shadow_method.html", null ],
@@ -111,7 +144,6 @@ var hierarchy =
         [ "AWD::BLOCKS::SkeletonPose", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton_pose.html", null ],
         [ "AWD::BLOCKS::TextElement", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_element.html", null ],
         [ "AWD::BLOCKS::TextFormat", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_format.html", null ],
-        [ "AWD::BLOCKS::Timeline", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_timeline.html", null ],
         [ "AWD::BLOCKS::UVAnimationClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_animation_clip.html", null ],
         [ "AWD::BLOCKS::UVPose", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_pose.html", null ],
         [ "AWD::BLOCKS::VertexAnimationClip", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html", null ],
@@ -123,7 +155,12 @@ var hierarchy =
     ] ],
     [ "AWD::GEOM::stream_ptr", "union_a_w_d_1_1_g_e_o_m_1_1stream__ptr.html", null ],
     [ "AWD::GEOM::SubGeomInternal", "class_a_w_d_1_1_g_e_o_m_1_1_sub_geom_internal.html", null ],
-    [ "AWD::GEOM::SubPathGeom", "class_a_w_d_1_1_g_e_o_m_1_1_sub_path_geom.html", null ],
+    [ "AWD::ANIM::TimelineChild_instance", "struct_a_w_d_1_1_a_n_i_m_1_1_timeline_child__instance.html", null ],
+    [ "AWD::ANIM::TimelineDepthLayer", "class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_layer.html", null ],
+    [ "AWD::ANIM::TimelineDepthManager", "class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_manager.html", null ],
+    [ "AWD::ANIM::TimelineFrame", "class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html", null ],
+    [ "AWD::ANIM::TimelineMaskLayer", "class_a_w_d_1_1_a_n_i_m_1_1_timeline_mask_layer.html", null ],
+    [ "ToXMLStringTool", "struct_to_x_m_l_string_tool.html", null ],
     [ "AWD::TYPES::union_ptr", "union_a_w_d_1_1_t_y_p_e_s_1_1union__ptr.html", null ],
     [ "AWD::ATTR::UserAttrList", "class_a_w_d_1_1_a_t_t_r_1_1_user_attr_list.html", null ],
     [ "AWD::GEOM::VECTOR2D", "struct_a_w_d_1_1_g_e_o_m_1_1_v_e_c_t_o_r2_d.html", null ],
@@ -133,5 +170,14 @@ var hierarchy =
       [ "AWD::SETTINGS::BlockSettings", "class_a_w_d_1_1_s_e_t_t_i_n_g_s_1_1_block_settings.html", [
         [ "AWD::SETTINGS::Settings", "class_a_w_d_1_1_s_e_t_t_i_n_g_s_1_1_settings.html", null ]
       ] ]
-    ] ]
+    ] ],
+    [ "XML", "struct_x_m_l.html", null ],
+    [ "XMLAttribute", "struct_x_m_l_attribute.html", null ],
+    [ "XMLCharacterEntity", "struct_x_m_l_character_entity.html", null ],
+    [ "XMLClear", "struct_x_m_l_clear.html", null ],
+    [ "XMLNode", "struct_x_m_l_node.html", null ],
+    [ "XMLNodeContents", "struct_x_m_l_node_contents.html", null ],
+    [ "XMLNode::XMLNodeDataTag", "struct_x_m_l_node_1_1_x_m_l_node_data_tag.html", null ],
+    [ "XMLParserBase64Tool", "struct_x_m_l_parser_base64_tool.html", null ],
+    [ "XMLResults", "struct_x_m_l_results.html", null ]
 ];

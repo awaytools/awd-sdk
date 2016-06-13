@@ -19,6 +19,12 @@ var awd__types_8h =
     [ "UINT16", "awd__types_8h.html#a075134ec2b704611a32263526f53a60e", null ],
     [ "UINT32", "awd__types_8h.html#a0633e60becfa73b1f2e7681b000314c0", null ],
     [ "UINT8", "awd__types_8h.html#a9b0ef4ec4c165261b02c26c50905fb44", null ],
+    [ "AlignMode", "awd__types_8h.html#ac6b6215f345306ac43c6bf61d5480469", [
+      [ "ALIGN_MODE_LEFT", "awd__types_8h.html#ac6b6215f345306ac43c6bf61d5480469a6b3c10ce724dba5ea8c76d46f2e64b21", null ],
+      [ "ALIGN_MODE_RIGHT", "awd__types_8h.html#ac6b6215f345306ac43c6bf61d5480469a9ef49354178481ece6492d17e468a029", null ],
+      [ "ALIGN_MODE_CENTER", "awd__types_8h.html#ac6b6215f345306ac43c6bf61d5480469ad7741b35083c7e764145a10d64adf352", null ],
+      [ "ALIGN_MODE_JUSTIFY", "awd__types_8h.html#ac6b6215f345306ac43c6bf61d5480469a48864bfbc608d756b945b155e0943bd5", null ]
+    ] ],
     [ "anim_type", "awd__types_8h.html#a2ad07caf0e83137fed356196acc78ce8", [
       [ "UNDEFINED", "awd__types_8h.html#a2ad07caf0e83137fed356196acc78ce8a0db45d2a4141101bdfe48e3314cfbca3", null ],
       [ "SKELETON", "awd__types_8h.html#a2ad07caf0e83137fed356196acc78ce8a057e1bb1892582c5b4b02ed27fddf4a7", null ],
@@ -31,43 +37,45 @@ var awd__types_8h =
       [ "BASELINE_DOWN", "awd__types_8h.html#a36dd97c671e026402a0ab16687219eb6a0198964176234a1d6c43851edfb79a29", null ]
     ] ],
     [ "block_type", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77", [
-      [ "NULL_REF", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a3ccfff833792cca1a5bc06a567fad822", null ],
-      [ "TRI_GEOM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac59b7ed774f5a1fac6cda3f4810e2a49", null ],
-      [ "PRIM_GEOM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77aed6bcb2acd3bc9c33ab7aded49733515", null ],
-      [ "SCENE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77af151a543099185593a5a87339c552698", null ],
-      [ "CONTAINER", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9bbab5f947b9e3fbb8a399ecc257459b", null ],
-      [ "MESH_INSTANCE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa39a7ee14f1db6d9413a06c990795e95", null ],
-      [ "SKYBOX", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae3d53ff832d50102618d4fd24ca85a85", null ],
-      [ "LIGHT", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77af8589806bbf66241917092b2a6e18c6f", null ],
-      [ "CAMERA", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77addf0d6b21537d984fea6544f58101fa8", null ],
-      [ "TEXTURE_PROJECTOR", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a879f2278a984cc7e04ca4263f3b8662e", null ],
-      [ "SOUND_SOURCE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8db80841434f1b9c82c570bcc11928e1", null ],
-      [ "LIGHTPICKER", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa14c6148ac3652c686ee00f83e2420ec", null ],
-      [ "BSP_TREE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a230854dd8610aec41ce8e856c38bccf5", null ],
-      [ "OCT_TREE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac3bf0fb08c73d8295153cfa1a2702374", null ],
-      [ "SIMPLE_MATERIAL", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a541d333000a6a4b09f3e9ee4bc0b68e6", null ],
-      [ "BITMAP_TEXTURE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a0f8cf74523a56db64354ed20ef85cac3", null ],
-      [ "CUBE_TEXTURE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a21871580a46b99e01e2a7c7b094a7fac", null ],
-      [ "CUBE_TEXTURE_ATF", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9fa659da9478d38fa7aa0e91271e853a", null ],
-      [ "EFFECT_METHOD", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77abc1c64936a05bbf41239469bbce8ce68", null ],
-      [ "SHADOW_METHOD", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac48c3123ba416f838eb37427aeddde5f", null ],
-      [ "SKELETON", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a057e1bb1892582c5b4b02ed27fddf4a7", null ],
-      [ "SKELETON_POSE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2e653c28fc2f484b32fbb5254891b0fd", null ],
-      [ "SKELETON_ANIM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77acae091784f141655b7fb1c2a35461842", null ],
-      [ "VERTEX_POSE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77af734f9060e953df16dc86a8420308466", null ],
-      [ "VERTEX_ANIM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac976bdfc088eadcc65e025f8e78723a3", null ],
-      [ "ANIMATION_SET", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a91f2972336d6b61ded647f62f8073c28", null ],
-      [ "ANIMATOR", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a16ca0d23ca4bd350aa6ab5146ad65b75", null ],
-      [ "UV_ANIM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77abe47bbd80943167e55d8a370db401cc8", null ],
-      [ "TIMELINE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7970cd1c3f3d736ce0164035d30be1e8", null ],
-      [ "TEXT_ELEMENT", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a1268b0b4e1b306dc9949ae9d354a40a6", null ],
-      [ "FONT", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a4aaf23261cd3bd2064183cf1b53f1023", null ],
-      [ "FORMAT", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a47c8929b6152d540597c758853ff95a2", null ],
-      [ "NAMESPACES", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ab0d6a3eb070feba72e0404d36a24a9be", null ],
-      [ "EXTERNAL_RESSOURCE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a97d1c402094fb4557ddc848f585c6ada", null ],
-      [ "COMMAND", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a26097a57f572fe88a7cdf80543422cb1", null ],
-      [ "NAMESPACE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7347fe5a0f184f79ef064e92e3beb297", null ],
-      [ "METADATA", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8a9c0818e0622aadfcb2e59cfe5299b4", null ]
+      [ "NULL_REF", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a3fdee9da3782e56f3e9ec6c4269662ff", null ],
+      [ "TRI_GEOM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77aacb9c9e00d1a113bbd04cfd9264d0fb0", null ],
+      [ "PRIM_GEOM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a55d4d724c63112aafa270707cde91459", null ],
+      [ "SCENE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77af666b1261061cbf988c00b86e9c9fe6f", null ],
+      [ "CONTAINER", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77afed11749346fd4ecea31fe14323200d7", null ],
+      [ "MESH_INSTANCE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77acc5ecf259822f9e51ab8c362dbcc599f", null ],
+      [ "MESH_INSTANCE_2", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77aff71be4be34696b90436a4bd448a2b5f", null ],
+      [ "BILLBOARD", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9910af7dc7a76f6615ad9e1e947b2f34", null ],
+      [ "SKYBOX", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa5621456bb9aacb54fac59528fb53e00", null ],
+      [ "LIGHT", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77aece03b903bf41262832316cd5af05f03", null ],
+      [ "CAMERA", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7ecb3bd525a857c3c352016358703818", null ],
+      [ "TEXTURE_PROJECTOR", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2c36a256acb72d237fd056608ea894e7", null ],
+      [ "SOUND_SOURCE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8226af7a9283d77313c6a9a31983247a", null ],
+      [ "LIGHTPICKER", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae7b4fbbc7de0c2511699a7ac08077ed7", null ],
+      [ "BSP_TREE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8d83f55225eb08fbbf0092012a208531", null ],
+      [ "OCT_TREE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7d27af6c410f3578ec19f565f20c10ea", null ],
+      [ "SIMPLE_MATERIAL", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2e404633c66e1c8e041c6a777027374b", null ],
+      [ "BITMAP_TEXTURE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77af73c041bbd2d215a18ff6673f7025078", null ],
+      [ "CUBE_TEXTURE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a71c8d8200de65e93e14ef36673d0e3c2", null ],
+      [ "CUBE_TEXTURE_ATF", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2d37c56e1b96d92103ba76be641ee26a", null ],
+      [ "EFFECT_METHOD", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2af581bdbe7f1a65d94fbefc631b9735", null ],
+      [ "SHADOW_METHOD", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa74a6bd520e170ae524251c61f7bb666", null ],
+      [ "SKELETON", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7266b33a16668dec1a0f8ab4200ae5f0", null ],
+      [ "SKELETON_POSE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a34f8b75a1390e56a551ac621e268284b", null ],
+      [ "SKELETON_ANIM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a609ed80a221aafeba2da29904084986b", null ],
+      [ "VERTEX_POSE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa4cc2b78b45739b4df84c3aca33f9440", null ],
+      [ "VERTEX_ANIM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a37f9cd2e5c77962b22017228298e812d", null ],
+      [ "ANIMATION_SET", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77af0ceaed206692c0b6631def22be9c615", null ],
+      [ "ANIMATOR", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac2a5dbf12f7cc01d278f543b9a93f2da", null ],
+      [ "UV_ANIM", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae03bc6cfee8d4de3f56532caa17f5b9a", null ],
+      [ "MOVIECLIP", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8903547db7f57e0702b14a74f30ca4e8", null ],
+      [ "TEXT_ELEMENT", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a5d3b46688bd7e89adfdbbfb5937ccb39", null ],
+      [ "FONT", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae3062ef7b7d298e13dabddf488e816dc", null ],
+      [ "TEXT_FORMAT", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9a5f07c347aebeb2db52ef5adfc08e2c", null ],
+      [ "NAMESPACES", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a4b2cd48b312cc6f44a4385165a35bd22", null ],
+      [ "EXTERNAL_RESSOURCE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9574dd12654610d57d977474a5ba80f5", null ],
+      [ "COMMAND", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a465ff0952d50d0815f7ee6fa4866e267", null ],
+      [ "NAMESPACE", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a350563b29cb73b89395eebaf5b213b02", null ],
+      [ "METADATA", "awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a6102ac66dbafae76fceae9ac021a2c19", null ]
     ] ],
     [ "cam_type", "awd__types_8h.html#ae59c388276364f90746ab641297155c8", [
       [ "AWD_CAM_FREE", "awd__types_8h.html#ae59c388276364f90746ab641297155c8ac343560ec956da54eb54a5902fb492ec", null ],
@@ -104,7 +112,9 @@ var awd__types_8h =
       [ "JOINT_WEIGTHS", "awd__types_8h.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a104f8608770dfca757d959f37547edbf", null ],
       [ "COLOR", "awd__types_8h.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a04bd834032febb3fda8c6936ee140949", null ],
       [ "CURVE_DATA_2D", "awd__types_8h.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a55e26e72e08180901c253382fa0c2cf5", null ],
-      [ "VERTEX_INDICIES", "awd__types_8h.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8abba5f5b09ae6169152c24abaa0a16d67", null ]
+      [ "VERTEX_INDICIES", "awd__types_8h.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8abba5f5b09ae6169152c24abaa0a16d67", null ],
+      [ "UV_2D", "awd__types_8h.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a14fb848abac611ad8881e334fcbbff06", null ],
+      [ "CURVE_DATA_2D_INT", "awd__types_8h.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a0ed765eee0790fb0a362ef10bf640530", null ]
     ] ],
     [ "data_types", "awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85a", [
       [ "INT8", "awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85aaee9d73311ff0658494edfff14c3ec1e3", null ],
@@ -126,12 +136,21 @@ var awd__types_8h =
       [ "MTX3x2", "awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85aa854d5a7764af1190c92b508e59e44620", null ],
       [ "MTX3x3", "awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85aa3b810c978e11acd04706f31a05e8eede", null ],
       [ "MTX4x3", "awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85aae35ae94bc45e66c945d1ecb46493e8a2", null ],
-      [ "MTX4x4", "awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85aa27f8f25d9d867090c3701e0920f6029b", null ]
+      [ "MTX4x4", "awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85aa27f8f25d9d867090c3701e0920f6029b", null ],
+      [ "MTX5x4", "awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85aa3244f20a4614e26f4b617e6e1fb467db", null ],
+      [ "VECTORINT3x1", "awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85aafd1bc048a79d70a40a1fc4ce632b09a0", null ]
     ] ],
     [ "display_object_mask_type", "awd__types_8h.html#ab0396eb1039a7a56b92dae9693d04b54", [
       [ "NO_MASKING", "awd__types_8h.html#ab0396eb1039a7a56b92dae9693d04b54aabdacc0890eea3dab009213a0c295b77", null ],
       [ "OBJECTS_ARE_MASKS", "awd__types_8h.html#ab0396eb1039a7a56b92dae9693d04b54a7653fd20d26bdc7d2cff0ce91daa19c7", null ],
       [ "OBJECTS_ARE_MASKED", "awd__types_8h.html#ab0396eb1039a7a56b92dae9693d04b54abf700b212cb2c0d36d6cd3c6cbc5ce73", null ]
+    ] ],
+    [ "edge_state", "awd__types_8h.html#ab44a78c6c261fbd699a1c006740bc542", [
+      [ "TEST_INTERSECTING", "awd__types_8h.html#ab44a78c6c261fbd699a1c006740bc542a884099188a9e62cd380e7e4202bc76c9", null ],
+      [ "NOT_INTERSECTING", "awd__types_8h.html#ab44a78c6c261fbd699a1c006740bc542ad4ccd0c7564e38390965bc1c09995865", null ],
+      [ "MAX_SUBDIVISION", "awd__types_8h.html#ab44a78c6c261fbd699a1c006740bc542a5c83d7c2c8861689b6a8f1523d2536e1", null ],
+      [ "SUBDIVIDED", "awd__types_8h.html#ab44a78c6c261fbd699a1c006740bc542a6be9cf726e2d107420b187083875bd67", null ],
+      [ "SUBDIVIDED_RESOLVED", "awd__types_8h.html#ab44a78c6c261fbd699a1c006740bc542a20deb82f52cedbe4d044d43bff26483c", null ]
     ] ],
     [ "edge_type", "awd__types_8h.html#ac828f41708cf978073f8129092144bff", [
       [ "INNER_EDGE", "awd__types_8h.html#ac828f41708cf978073f8129092144bffa9ed1994425c8ee525815a028a9633129", null ],
@@ -154,11 +173,20 @@ var awd__types_8h =
       [ "AWD_FXMETHOD_FRESNEL_ENVMAP", "awd__types_8h.html#af50b0947c93dad93f5b8f184c653c8dca437812b030569bc46538d36780557901", null ],
       [ "AWD_FXMETHOD_FOG", "awd__types_8h.html#af50b0947c93dad93f5b8f184c653c8dca8b082dfac5780c63463a61583bd5841e", null ]
     ] ],
+    [ "filled_region_type", "awd__types_8h.html#a681163f9785c24e6a06b37c3e63b673a", [
+      [ "STANDART_FILL", "awd__types_8h.html#a681163f9785c24e6a06b37c3e63b673aa03d49c37d2d91591b9a01471592d9e11", null ],
+      [ "FILL_CONVERTED_FROM_STROKE", "awd__types_8h.html#a681163f9785c24e6a06b37c3e63b673aa87aa6200fd35c88dfc43bc0f7a31a142", null ],
+      [ "GENERATED_FONT_OUTLINES", "awd__types_8h.html#a681163f9785c24e6a06b37c3e63b673aa3f4ae7354310a9d791bd4d1d86965e14", null ]
+    ] ],
     [ "frame_command_type", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7", [
-      [ "AWD_FRAME_COMMAND_UPDATE_OBJECT", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a987fcf233a00086f9eb430cf4aa04360", null ],
-      [ "AWD_FRAME_COMMAND_UPDATE_LOCALIZEDTEXT", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a4496b1342ddeb10bb770955f86fa2815", null ],
-      [ "AWD_FRAME_COMMAND_REMOVE_OBJECT", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7ae46e98779bea625601c20722f404e816", null ],
-      [ "AWD_FRAME_COMMAND_SOUND", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a7d7cb48e6f2e6a766c692104b98e4e63", null ]
+      [ "AWD_FRAME_COMMAND_UNDEFINED", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a5cca6c1af371814a20eddc8f33a5c457", null ],
+      [ "FRAME_COMMAND_REMOVE", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a4c383fff636a75cca0a43f4242fc2029", null ],
+      [ "FRAME_COMMAND_ADD_CHILD", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a8bee6b4e70c68e5d62ec3bf4f4025ec4", null ],
+      [ "FRAME_COMMAND_UPDATE", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a213a0ff88eb90d3a2f823c1f34a2de01", null ],
+      [ "AWD_FRAME_COMMAND_SOUND", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a7d7cb48e6f2e6a766c692104b98e4e63", null ],
+      [ "AWD_FRAME_COMMAND_SOUND_MULTIPLE", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7ad364efa24a90e2c5867869fd934a929e", null ],
+      [ "FRAME_COMMAND_ADD_BUTTON_CHILD", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7ae5344bd68f19c05c61d2b8aecfecb500", null ],
+      [ "AWD_FRAME_COMMAND_OBJECT_EXISTS", "awd__types_8h.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a8819f3391bbd7eb192e3c702d63e660d", null ]
     ] ],
     [ "frame_label_type", "awd__types_8h.html#ab38f8c72d4c2b0ba687a28fdc636a520", [
       [ "AWD_FRAME_LABEL_NONE", "awd__types_8h.html#ab38f8c72d4c2b0ba687a28fdc636a520afa85c4d49c7df9b79ef9e8cab87abe47", null ],
@@ -171,6 +199,11 @@ var awd__types_8h =
       [ "SMOOTH_ALL", "awd__types_8h.html#a71e9fbb5080ba797d9456b74ae2bfb3baacd4f4ff70fd5eb7ff1dace7073428b8", null ],
       [ "BREAK_WITH_MATERIAL", "awd__types_8h.html#a71e9fbb5080ba797d9456b74ae2bfb3ba255115aa9bb22edef2d47e258afc627b", null ],
       [ "BREAK_WITH_FACE_GROUP", "awd__types_8h.html#a71e9fbb5080ba797d9456b74ae2bfb3ba65299a5fc4e8a90585ad60cfac4975ce", null ]
+    ] ],
+    [ "GradientSpread", "awd__types_8h.html#a45a3d8a99f33c5409aff2004a7a8b19a", [
+      [ "GRADIENT_SPREAD_EXTEND", "awd__types_8h.html#a45a3d8a99f33c5409aff2004a7a8b19aa6fc681f736acef6a8a9cb565ecd95da1", null ],
+      [ "GRADIENT_SPREAD_REFLECT", "awd__types_8h.html#a45a3d8a99f33c5409aff2004a7a8b19aa8ba26598ccfd62b16024e8400bafca08", null ],
+      [ "GRADIENT_SPREAD_REPEAT", "awd__types_8h.html#a45a3d8a99f33c5409aff2004a7a8b19aad97265ff29c38da55faffa95c73d9e8e", null ]
     ] ],
     [ "instance_type", "awd__types_8h.html#a78c531673f9df0391b3483e8169586d1", [
       [ "BLOCK_EMBBED", "awd__types_8h.html#a78c531673f9df0391b3483e8169586d1a7aeeb0006e647ef0d0f4471e580c2463", null ],
@@ -187,15 +220,26 @@ var awd__types_8h =
       [ "AWD_LENS_ORTHO", "awd__types_8h.html#a5caf71023ab8a71707fd9d1359a18620a8ab5b72bca17843ac14a981d92099ea1", null ],
       [ "AWD_LENS_ORTHOOFFCENTER", "awd__types_8h.html#a5caf71023ab8a71707fd9d1359a18620a8adb74f20d233b80212e32f9569f5b87", null ]
     ] ],
+    [ "LineMode", "awd__types_8h.html#a7a31dd6f03e19381a3a16dbf14284ffe", [
+      [ "LINE_MODE_SINGLE", "awd__types_8h.html#a7a31dd6f03e19381a3a16dbf14284ffea54f47800e9a5da026d35633714f3839c", null ],
+      [ "LINE_MODE_MULTI", "awd__types_8h.html#a7a31dd6f03e19381a3a16dbf14284ffea7174052834766f5ffff62c8de2687bcf", null ],
+      [ "LINE_MODE_MULTI_NO_WRAP", "awd__types_8h.html#a7a31dd6f03e19381a3a16dbf14284ffeaa7ce4561882e64cbaeae73c78ca71c84", null ]
+    ] ],
+    [ "mask_type", "awd__types_8h.html#ae9d2e5bd5c2858e8f8b2b103075b75ed", [
+      [ "NONE", "awd__types_8h.html#ae9d2e5bd5c2858e8f8b2b103075b75edab50339a10e1de285ac99d4c3990b8693", null ],
+      [ "MASK", "awd__types_8h.html#ae9d2e5bd5c2858e8f8b2b103075b75eda0a9501840acacfc8efe7522f5340000c", null ],
+      [ "MASKED", "awd__types_8h.html#ae9d2e5bd5c2858e8f8b2b103075b75edaca70041e8ea06f895be6d512560c223e", null ],
+      [ "MASK_CHILD", "awd__types_8h.html#ae9d2e5bd5c2858e8f8b2b103075b75edac2544896bafb4547710b9c9816351e34", null ],
+      [ "MASKED_CHILD", "awd__types_8h.html#ae9d2e5bd5c2858e8f8b2b103075b75eda9de39cf80c4f0f4a25c3bb1dce638a94", null ]
+    ] ],
     [ "message_type", "awd__types_8h.html#a503fa4b335301c9e59a05c7486ddee3b", [
       [ "ERROR_MESSAGE", "awd__types_8h.html#a503fa4b335301c9e59a05c7486ddee3ba736d9fa7654d470e073a4be93dc65241", null ],
       [ "WARNING_MESSAGE", "awd__types_8h.html#a503fa4b335301c9e59a05c7486ddee3ba727ebca5c48b8d967807ec7e2d2cbfca", null ],
       [ "STATUS_MESSAGE", "awd__types_8h.html#a503fa4b335301c9e59a05c7486ddee3ba80598329a480c4d1c6dd9b47a98b9051", null ]
     ] ],
-    [ "path_geom_type", "awd__types_8h.html#a0d4d9f3cd58ee4105a554ab5c25b5667", [
-      [ "STANDART_FILL", "awd__types_8h.html#a0d4d9f3cd58ee4105a554ab5c25b5667a03d49c37d2d91591b9a01471592d9e11", null ],
-      [ "FILL_CONVERTED_FROM_STROKE", "awd__types_8h.html#a0d4d9f3cd58ee4105a554ab5c25b5667a87aa6200fd35c88dfc43bc0f7a31a142", null ],
-      [ "GENERATED_FONT_OUTLINES", "awd__types_8h.html#a0d4d9f3cd58ee4105a554ab5c25b5667a3f4ae7354310a9d791bd4d1d86965e14", null ]
+    [ "OrientationMode", "awd__types_8h.html#ae12b4b3e52ef85e1ae4f4387cd15a60b", [
+      [ "ORIENTATION_MODE_HORIZONTAL", "awd__types_8h.html#ae12b4b3e52ef85e1ae4f4387cd15a60ba2ca50ddc2e0689e166e1a30088b53550", null ],
+      [ "ORIENTATION_MODE_VERTICAL", "awd__types_8h.html#ae12b4b3e52ef85e1ae4f4387cd15a60bae77a166ebe487048456873ed1fd8f6d0", null ]
     ] ],
     [ "primitive_type", "awd__types_8h.html#a398252fa90d39b399d1bdf7f94411a75", [
       [ "UNDEFINED", "awd__types_8h.html#a398252fa90d39b399d1bdf7f94411a75a0db45d2a4141101bdfe48e3314cfbca3", null ],
@@ -247,7 +291,12 @@ var awd__types_8h =
       [ "RESULT_STRING_NOT_FOUND", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4ea2797c38497a33e31d4152e5b4b079412", null ],
       [ "DIFFERENT_PROPERTY_VALUE", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4eaffc58bc55c429bd4e3d433c8f4fddf02", null ],
       [ "SAME_PROPERTY_VALUE", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4eaa82a16b1c8883b6282c806212e47f3e5", null ],
-      [ "UNKNOWN_PROPERTY_DATA_TYPE", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4ea7b2217a68023751a70e168be8f38254c", null ]
+      [ "UNKNOWN_PROPERTY_DATA_TYPE", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4ea7b2217a68023751a70e168be8f38254c", null ],
+      [ "PATH_CONTAINS_LESS_THAN_THREE_SEGMENTS", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4eacc961818881654b00ff74d39a74a5846", null ],
+      [ "PATH_NOT_CLOSING", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4ead67c354f3e5db3b33fe94ba62bd8adb3", null ],
+      [ "COULD_NOT_DECIDE_ON_CURVE_TYPE", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4ea0c6025ece873234479bd2ab9bb6c9502", null ],
+      [ "SUBDIVIDED_PATHES", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4ea9db9836ef062ef90e86db326982e59c3", null ],
+      [ "NO_BLOCKS_FOUND", "awd__types_8h.html#acbb32719e1a2732edc69205b0bc0bc4ea125d841d929c8ce144fc43dd419f2591", null ]
     ] ],
     [ "shading_type", "awd__types_8h.html#a29f531757ff42f3f831f607cc34ec0d7", [
       [ "UNDEFINED", "awd__types_8h.html#a29f531757ff42f3f831f607cc34ec0d7a0db45d2a4141101bdfe48e3314cfbca3", null ],
@@ -304,7 +353,11 @@ var awd__types_8h =
     ] ],
     [ "stream_target", "awd__types_8h.html#ae731579988c9857b9a7e9f20b68b1c19", [
       [ "VERTEX_STREAM", "awd__types_8h.html#ae731579988c9857b9a7e9f20b68b1c19a7050daf4840239a6d7ed7f5a24731d0f", null ],
-      [ "TRIANGLE_STREAM", "awd__types_8h.html#ae731579988c9857b9a7e9f20b68b1c19a4733d54cb0cc0e19b752d6d53e35a7fc", null ]
+      [ "TRIANGLE_STREAM", "awd__types_8h.html#ae731579988c9857b9a7e9f20b68b1c19a4733d54cb0cc0e19b752d6d53e35a7fc", null ],
+      [ "INTERIOR_TRIANGLES", "awd__types_8h.html#ae731579988c9857b9a7e9f20b68b1c19a45b566278afdadad6613c1859f0b289b", null ],
+      [ "EXTERIOR_TRIANGLES", "awd__types_8h.html#ae731579988c9857b9a7e9f20b68b1c19a3f42d77fd0512bbc199b64376365aee9", null ],
+      [ "CONCAVE_TRIANGLES", "awd__types_8h.html#ae731579988c9857b9a7e9f20b68b1c19a30be6376771d8d9681491e30570e8b10", null ],
+      [ "CONVEX_TRIANGLES", "awd__types_8h.html#ae731579988c9857b9a7e9f20b68b1c19ac3ddd6384a8ac8c372621db50f31faf2", null ]
     ] ],
     [ "stream_type", "awd__types_8h.html#abad69a6000c7aad1e19393199de13057", [
       [ "VERTICES", "awd__types_8h.html#abad69a6000c7aad1e19393199de13057afa561e3cfc50676003b1b521657063b1", null ],
@@ -316,12 +369,28 @@ var awd__types_8h =
       [ "VERTEX_WEIGHTS", "awd__types_8h.html#abad69a6000c7aad1e19393199de13057ac2408f544a7211e7a030bf6a60599089", null ],
       [ "SUVS", "awd__types_8h.html#abad69a6000c7aad1e19393199de13057ab7cdef2fcf9e48bf6acc5728308a1245", null ],
       [ "ALLVERTDATA3D_13F", "awd__types_8h.html#abad69a6000c7aad1e19393199de13057a4fdd086ac272f58d32e90f1055e4d38b", null ],
-      [ "ALLVERTDATA2D__9F", "awd__types_8h.html#abad69a6000c7aad1e19393199de13057afe940aa3b15c67b60514ba5c4b2e9399", null ]
+      [ "ALLVERTDATA2D__9F", "awd__types_8h.html#abad69a6000c7aad1e19393199de13057afe940aa3b15c67b60514ba5c4b2e9399", null ],
+      [ "ALLVERTDATA2D__5F", "awd__types_8h.html#abad69a6000c7aad1e19393199de13057a70c372e04141cce4f4bcfbd5b671470d", null ],
+      [ "ALLVERTDATA2D__2F3B", "awd__types_8h.html#abad69a6000c7aad1e19393199de13057a4a4caa543678e4d5f966da95d48f040b", null ]
+    ] ],
+    [ "Textfield_type", "awd__types_8h.html#a849d1a4b5cc4de2dcda8a7d68b7aba82", [
+      [ "STATIC", "awd__types_8h.html#a849d1a4b5cc4de2dcda8a7d68b7aba82afe6f99ef1ec99efbdc19a9786cf1facc", null ],
+      [ "DYNAMIC", "awd__types_8h.html#a849d1a4b5cc4de2dcda8a7d68b7aba82a0fcc90da4811c877ba9f9c12f7d60bc9", null ],
+      [ "INPUT", "awd__types_8h.html#a849d1a4b5cc4de2dcda8a7d68b7aba82aa84cc046d48610b05c21fd3670d0c829", null ],
+      [ "INPUT_PSW", "awd__types_8h.html#a849d1a4b5cc4de2dcda8a7d68b7aba82af43b06c782374200aeb8d6fc349bdb03", null ]
+    ] ],
+    [ "TextFlow", "awd__types_8h.html#ad2f73e48ee65f865cc7404baf39f19f1", [
+      [ "TEXT_FLOW_LEFT_TO_RIGHT", "awd__types_8h.html#ad2f73e48ee65f865cc7404baf39f19f1a84cabd17b77b5b18e789cf37ce35ff5d", null ],
+      [ "TEXT_FLOW_RIGHT_TO_LEFT", "awd__types_8h.html#ad2f73e48ee65f865cc7404baf39f19f1a0ee19a13e3e503ce0e04502f12efdb4e", null ]
     ] ],
     [ "type", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4", [
       [ "UNDEFINED", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4a0db45d2a4141101bdfe48e3314cfbca3", null ],
-      [ "COLOR", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4a04bd834032febb3fda8c6936ee140949", null ],
-      [ "TEXTURE", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4a3f92f542bd9ec48f912b9350e22736ac", null ]
+      [ "COLOR_MATERIAL", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4a6a402c421f1617096526e6c33e55b297", null ],
+      [ "TEXTURE_MATERIAL", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4a9a7186e8f19caabc6a6ec68180036584", null ],
+      [ "SOLID_COLOR_MATERIAL", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4a0f1cfd30b0673a614c6df23663aa0782", null ],
+      [ "SOLID_TEXTUREATLAS_MATERIAL", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4a3b0c6f84de2f59646a00665236a59010", null ],
+      [ "LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4ae49bbf774e4b4154e3971111991de716", null ],
+      [ "RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL", "awd__types_8h.html#a1efca5533db2cca3ceace83c2bfbf1d4a81a0581bbbade953938e13acade1d126", null ]
     ] ],
     [ "type", "awd__types_8h.html#aef84be2dcb71d2cf1eb1e9d226b8cfd5", [
       [ "UNDEFINED", "awd__types_8h.html#aef84be2dcb71d2cf1eb1e9d226b8cfd5a0db45d2a4141101bdfe48e3314cfbca3", null ],
@@ -337,6 +406,7 @@ var awd__types_8h =
     [ "write_string_with", "awd__types_8h.html#ae9c947527642f949d2b2754550b70010", [
       [ "NO_LENGTH_VALUE", "awd__types_8h.html#ae9c947527642f949d2b2754550b70010a8ad4fb00085f55191bc97e4c877842af", null ],
       [ "LENGTH_AS_UINT16", "awd__types_8h.html#ae9c947527642f949d2b2754550b70010aa54043f088582c9421531f6c682c3987", null ],
-      [ "LENGTH_AS_UINT32", "awd__types_8h.html#ae9c947527642f949d2b2754550b70010a57d3b2464ba4514a279f22100eff1e7f", null ]
+      [ "LENGTH_AS_UINT32", "awd__types_8h.html#ae9c947527642f949d2b2754550b70010a57d3b2464ba4514a279f22100eff1e7f", null ],
+      [ "LENGTH_AS_UINT8", "awd__types_8h.html#ae9c947527642f949d2b2754550b70010a50af550cd5fefbcd7c09438789a22ce6", null ]
     ] ]
 ];

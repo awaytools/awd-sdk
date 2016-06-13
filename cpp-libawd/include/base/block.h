@@ -66,6 +66,8 @@ namespace AWD{
 				*/
 				virtual result write_body(FILES::FileWriter *, SETTINGS::BlockSettings *, FILES::AWDFile*)=0;
 
+				//virtual result write_body_log(FILES::FileWriter *, SETTINGS::BlockSettings *, FILES::AWDFile*)=0;
+
 				/**\brief Read the body of this AWDBlock from a AWDFile.
 				*/
 				result read_body(FILES::FileReader*, SETTINGS::BlockSettings *, FILES::AWDFile*);

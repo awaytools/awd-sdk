@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "utils/awd_types.h"
 
@@ -50,6 +51,7 @@ namespace AWD
 				std::string uv1_channel_id;
 				std::string uv2_channel_id;
 				std::vector<GEOM::DataStreamRecipe*> stream_recipes;
+				std::map<bool_settings, bool > all_bool_settings;
 	
 				// File header fields
 				compression compression;
@@ -69,16 +71,18 @@ namespace AWD
 				bool flipYaxis;
 				int max_iterations;
 				TYPES::F64 scale;
-				bool embbed_audio;
-				bool export_framescripts;
-				bool embbed_textures;
 				std::string sound_file_extension;
 				TYPES::UINT32 radial_gradient_size;
 
 			public:
 				BlockSettings(bool create_default);
 				~BlockSettings();
+
 				void add_stream_recipe(GEOM::DataStreamRecipe* );
+
+				bool get_bool(bool_settings);
+				void set_bool(bool_settings, bool);
+
 				GEOM::DataStreamRecipe* get_stream_by_type(GEOM::stream_type);
 				void remove_stream_by_type(GEOM::stream_type, bool);
 
@@ -100,13 +104,10 @@ namespace AWD
 				/**	\brief Get the channel-id that can be used to retrieve the correct value for the SecondaryUV-stream of a SubGeomInternal. 
 				*/
 				std::string& get_sound_file_extension();
-		
-				bool get_embbed_audio();
-				void set_embbed_audio(bool);
-				bool get_embbed_textures();
-				void set_embbed_textures(bool);
-				
+
+
 				void create_streams(bool tri_indices, bool uvs);
+
 				bool get_use_compression_per_block();
 				bool get_wide_matrix();
 				void set_wide_matrix(bool);
@@ -134,9 +135,8 @@ namespace AWD
 				void set_fps(TYPES::F64);
 				TYPES::UINT32 get_radial_gradient_size();
 				void set_radial_gradient_size(TYPES::UINT32);
-				bool get_export_framescripts();
-				void set_export_framescripts(bool);
 
+				
 				
 				SETTINGS::compression get_compression();
 				void set_compression(SETTINGS::compression);

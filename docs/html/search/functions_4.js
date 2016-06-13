@@ -1,9 +1,18 @@
 var searchData=
 [
-  ['effectmethod',['EffectMethod',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_effect_method.html#a6b7c3311258d2619f274ca429cfa5786',1,'AWD::BLOCKS::EffectMethod::EffectMethod(std::string &amp;, MATERIAL::effect_method_type)'],['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_effect_method.html#aae38c5d441a250065266b43513a4dba8',1,'AWD::BLOCKS::EffectMethod::EffectMethod()']]],
-  ['export_5ffile',['export_file',['../class_a_w_d_1_1_a_w_d_project.html#a30d53e9bb44bfc09b29fe705e274a022',1,'AWD::AWDProject']]],
-  ['extract_5fdirectory_5ffrom_5fpath',['extract_directory_from_path',['../namespace_a_w_d_1_1_f_i_l_e_s.html#ac6fef1c209f17b37b2cac118c04ef9f9',1,'AWD::FILES']]],
-  ['extract_5ffile_5fextension',['extract_file_extension',['../namespace_a_w_d_1_1_f_i_l_e_s.html#a8c95fbd89297a7545a5bd7356c264bc7',1,'AWD::FILES']]],
-  ['extract_5fname_5ffrom_5fpath',['extract_name_from_path',['../namespace_a_w_d_1_1_f_i_l_e_s.html#a1e8c95e63b6b4556e6614f71e07677b3',1,'AWD::FILES']]],
-  ['extract_5fpath_5fwithout_5ffile_5fextension',['extract_path_without_file_extension',['../namespace_a_w_d_1_1_f_i_l_e_s.html#a4c4add08a48a020d6a0793f6b32b5872',1,'AWD::FILES']]]
+  ['datablockbase',['DataBlockBase',['../class_a_w_d_1_1_b_a_s_e_1_1_data_block_base.html#aa473ac6ca27d2def12119a756a4a9981',1,'AWD::BASE::DataBlockBase']]],
+  ['datastreamattr',['DataStreamAttr',['../class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr.html#a52be6a3170e67ea0cad352982900259a',1,'AWD::GEOM::DataStreamAttr::DataStreamAttr(GEOM::data_stream_attr_type type, TYPES::union_ptr data)'],['../class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr.html#afcf9cbc6afd6f4daf0f1f5696f8a51e0',1,'AWD::GEOM::DataStreamAttr::DataStreamAttr()']]],
+  ['datastreamattrdesc',['DataStreamAttrDesc',['../class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr_desc.html#ac596f01804d17a1a962b15cfd598c0d4',1,'AWD::GEOM::DataStreamAttrDesc::DataStreamAttrDesc(GEOM::data_stream_attr_type type, TYPES::data_types data_type, TYPES::UINT32 data_length, TYPES::storage_precision_category storage_prec, bool use_scale, bool preserve_all_channels, bool force_unique, bool channel, const std::string &amp;channel_id)'],['../class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr_desc.html#aedf4ea451e093c27d91ed0a4a97877d9',1,'AWD::GEOM::DataStreamAttrDesc::DataStreamAttrDesc()']]],
+  ['datastreamrecipe',['DataStreamRecipe',['../class_a_w_d_1_1_g_e_o_m_1_1_data_stream_recipe.html#a6bf513dc04360c9a6748de0b01173cfe',1,'AWD::GEOM::DataStreamRecipe']]],
+  ['decode',['decode',['../struct_x_m_l_parser_base64_tool.html#a12b39ffa3ee05bea4f8b92fedc6e663b',1,'XMLParserBase64Tool::decode(XMLCSTR inString, int *outByteLen=NULL, XMLError *xe=NULL)'],['../struct_x_m_l_parser_base64_tool.html#a91a8601818d8909a53026c733a741cc8',1,'XMLParserBase64Tool::decode(XMLCSTR inString, unsigned char *outByteBuf, int inMaxByteOutBuflen, XMLError *xe=NULL)']]],
+  ['decodesize',['decodeSize',['../struct_x_m_l_parser_base64_tool.html#a26ad962b97def81f9bac751bcb84e01a',1,'XMLParserBase64Tool']]],
+  ['deepcopy',['deepCopy',['../group__navigate.html#gadb69f8d2db5997d84590ce3380e210f1',1,'XMLNode']]],
+  ['delete_5ffontshape',['delete_fontShape',['../class_a_w_d_1_1_f_o_n_t_1_1_font_style.html#afd12453dc8b6728b33d19cdf6e4a258f',1,'AWD::FONT::FontStyle']]],
+  ['deleteattribute',['deleteAttribute',['../group__xml_delete.html#ga61b2405305063594b35b309cc2e22c01',1,'XMLNode::deleteAttribute(int i=0)'],['../group__xml_delete.html#ga2b21339e5b370f1d7ebde2dc51217eed',1,'XMLNode::deleteAttribute(XMLCSTR lpszName)'],['../group__xml_delete.html#ga6f00d7c1b4eaa29cfdd9d4a709495aca',1,'XMLNode::deleteAttribute(XMLAttribute *anAttribute)']]],
+  ['deleteclear',['deleteClear',['../group__xml_delete.html#ga44b72c82310eb4319dba46eb9cc9f6e9',1,'XMLNode::deleteClear(int i=0)'],['../group__xml_delete.html#ga8fff4baa9a8000f8662ee302438fff64',1,'XMLNode::deleteClear(XMLCSTR lpszValue)'],['../group__xml_delete.html#gae92182823d3d5b40893103ad222ec4a8',1,'XMLNode::deleteClear(XMLClear *p)']]],
+  ['deletenodecontent',['deleteNodeContent',['../group__xml_delete.html#gaa4d133999da220e916bdf3a969d493c4',1,'XMLNode']]],
+  ['deletetext',['deleteText',['../group__xml_delete.html#ga14a49a23735ea10a44864cb6b4302250',1,'XMLNode::deleteText(int i=0)'],['../group__xml_delete.html#ga21ee499630d71ab6026753a85f02f582',1,'XMLNode::deleteText(XMLCSTR lpszValue)']]],
+  ['detachfromparent',['detachFromParent',['../struct_x_m_l_node.html#a0dcf2951f4bdb0ed4c38c2814e789a79',1,'XMLNode']]],
+  ['distance',['distance',['../namespaceutf8.html#ac2cd6005bab859b32fb7bb1cb999795d',1,'utf8::distance()'],['../namespaceutf8_1_1unchecked.html#a033fb7223533ef6d9c92ae7c38f57138',1,'utf8::unchecked::distance()']]],
+  ['distance_5fpoint_5fto_5fline',['distance_point_to_line',['../namespace_a_w_d_1_1_g_e_o_m.html#af4dc70e7f789b2750efaaebfaa147f1e',1,'AWD::GEOM']]]
 ];

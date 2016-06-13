@@ -34,6 +34,7 @@ Material::Material(std::string& name) :
 	this->isClone = false;
 	this->isDefault = true;
 	this->color = 0xffffff;
+	this->needsAlphaTex=false;
 
 
 	
@@ -49,6 +50,10 @@ Material::Material(std::string& name) :
 	default_union.v=malloc(sizeof(TYPES::F64));
 	*default_union.F64=1.0;
 	this->properties->add(PROP_MAT_ALPHA,	default_union, 4,   data_types::FLOAT64, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
+	
+	default_union.v=malloc(1);
+	*default_union.ui8=0;
+	this->properties->add(PROP_MAT_ALPHA_BLENDING,	default_union, 1,   data_types::UINT8, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
 
 	this->texture = NULL;
 	this->normalTexture = NULL;
@@ -85,6 +90,7 @@ Material::Material():
 	this->isCreated = false;//will be true, once the mtl is converted to awd
 	this->isClone = false;
 	this->isDefault = true;
+	this->needsAlphaTex=false;
 
 	this->color = 0xffffff;
 	this->color_components = GEOM::VECTOR4D (0.5, 0.5, 0.5, 1.0);
@@ -101,6 +107,10 @@ Material::Material():
 	default_union.v=malloc(sizeof(TYPES::F64));
 	*default_union.F64=1.0;
 	this->properties->add(PROP_MAT_ALPHA,	default_union, 4,   data_types::FLOAT64, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
+	
+	default_union.v=malloc(1);
+	*default_union.ui8=0;
+	this->properties->add(PROP_MAT_ALPHA_BLENDING,	default_union, 1,   data_types::UINT8, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
 
 	this->texture = NULL;
 	this->normalTexture = NULL;
@@ -733,7 +743,11 @@ Material::calc_body_length(AWDFile* awd_file, BlockSettings * settings)
 	properties_union.v=malloc(sizeof(TYPES::F64));
 	*properties_union.F64=this->alpha;
 	this->properties->set(PROP_MAT_ALPHA, properties_union, TYPES::UINT32(sizeof(TYPES::F32)));
-
+	
+	TYPES::union_ptr props_union2;
+	props_union2.v=malloc(1);
+	*props_union2.ui8=TYPES::UINT8(this->needsAlphaTex);
+	this->properties->set(PROP_MAT_ALPHA_BLENDING, props_union2, 1);
 	if (this->texture) {
 		if (this->texture->get_storage_type()!=storage_type::UNDEFINEDTEXTYPE){
 			TYPES::UINT32 block_addr;

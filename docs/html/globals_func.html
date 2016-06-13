@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -80,7 +80,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="globals_func.html"><span>Functions</span></a></li>
       <li><a href="globals_vars.html"><span>Variables</span></a></li>
       <li><a href="globals_type.html"><span>Typedefs</span></a></li>
+      <li><a href="globals_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="globals_eval.html"><span>Enumerator</span></a></li>
       <li><a href="globals_defs.html"><span>Macros</span></a></li>
+    </ul>
+  </div>
+  <div id="navrow4" class="tabs3">
+    <ul class="tablist">
+      <li><a href="#index__"><span>_</span></a></li>
+      <li><a href="#index_a"><span>a</span></a></li>
+      <li><a href="#index_c"><span>c</span></a></li>
+      <li><a href="#index_f"><span>f</span></a></li>
+      <li><a href="#index_g"><span>g</span></a></li>
+      <li><a href="#index_h"><span>h</span></a></li>
+      <li><a href="#index_i"><span>i</span></a></li>
+      <li><a href="#index_m"><span>m</span></a></li>
+      <li><a href="#index_o"><span>o</span></a></li>
+      <li><a href="#index_r"><span>r</span></a></li>
+      <li><a href="#index_s"><span>s</span></a></li>
+      <li class="current"><a href="#index_x"><span>x</span></a></li>
     </ul>
   </div>
 </div><!-- top -->
@@ -103,7 +121,7 @@ $(document).ready(function(){initNavTree('globals_func.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -113,31 +131,186 @@ $(document).ready(function(){initNavTree('globals_func.html','');});
 </div>
 
 <div class="contents">
-&#160;<ul>
+&#160;
+
+<h3><a class="anchor" id="index__"></a>- _ -</h3><ul>
+<li>_strnicmp()
+: <a class="el" href="xml_parser_8cpp.html#af77e3e2685487b9c492b20c36f3b864a">xmlParser.cpp</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
 <li>add_sub_mesh()
 : <a class="el" href="_vertex_pose_8cc.html#ad74c6b6cabb999c9e5bc9a47a4e188f9">VertexPose.cc</a>
 </li>
+</ul>
+
+
+<h3><a class="anchor" id="index_c"></a>- c -</h3><ul>
+<li>charmemset()
+: <a class="el" href="xml_parser_8cpp.html#a9a625f17c09a36e3ad532cdf16072609">xmlParser.cpp</a>
+</li>
 <li>closedir()
-: <a class="el" href="dirent_8h.html#a008fe2cb2468b06197c2f9bc406300a4">dirent.h</a>
-, <a class="el" href="_dirent_8cpp.html#ac0258906f9453b8abf03e945aa9c9676">Dirent.cpp</a>
+: <a class="el" href="dirent__win_8h.html#a008fe2cb2468b06197c2f9bc406300a4">dirent_win.h</a>
+</li>
+<li>CountLinesAndColumns()
+: <a class="el" href="xml_parser_8cpp.html#ae6aa5a367ab3cc92b47fd92f81add72a">xmlParser.cpp</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
+<li>freeXMLString()
+: <a class="el" href="group___string_alloc.html#ga6a510c9553d7fa49d0afdda1d7928669">xmlParser.h</a>
+, <a class="el" href="group___string_alloc.html#ga6a510c9553d7fa49d0afdda1d7928669">xmlParser.cpp</a>
+</li>
+<li>fromXMLString()
+: <a class="el" href="xml_parser_8cpp.html#a36502225dcdc2b09467919e6c9647e9d">xmlParser.cpp</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_g"></a>- g -</h3><ul>
+<li>get_max_val()
+: <a class="el" href="texture__atlas__util_8cc.html#acd8d7e256adbe5e5ee6f6239097cee97">texture_atlas_util.cc</a>
+</li>
+<li>get_min_val()
+: <a class="el" href="texture__atlas__util_8cc.html#ab9a7aeb75dbec2cd3135deafe4a4adda">texture_atlas_util.cc</a>
 </li>
 <li>get_num_subs()
 : <a class="el" href="_vertex_pose_8cc.html#a8ef4b0d72172d799fa796c17a715a9f2">VertexPose.cc</a>
 </li>
-<li>opendir()
-: <a class="el" href="dirent_8h.html#ae7302925fc2f556fe0bbb2f97e488d45">dirent.h</a>
-, <a class="el" href="_dirent_8cpp.html#a1632d8c06c14f295c6d9407b7fec67af">Dirent.cpp</a>
+<li>get_ressource_ids()
+: <a class="el" href="_block_base_8cc.html#a6609a637bc224ae05c9a4d919ab9db49">BlockBase.cc</a>
 </li>
+<li>GetColorsFromRgbInt()
+: <a class="el" href="texture__atlas__util_8cc.html#a9a9ba9315514ba9ad5271c06b6cc3953">texture_atlas_util.cc</a>
+</li>
+<li>getNextChar()
+: <a class="el" href="xml_parser_8cpp.html#af03c1c87ed4ddb95f7b49d53d9117c53">xmlParser.cpp</a>
+</li>
+<li>GetNextToken()
+: <a class="el" href="xml_parser_8cpp.html#acf103e2756ced6c7d3f14f38f198c920">xmlParser.cpp</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_h"></a>- h -</h3><ul>
+<li>HSVtoRGB()
+: <a class="el" href="texture__atlas__util_8cc.html#a72acea4e7933697d088d0e1ddd186e51">texture_atlas_util.cc</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_i"></a>- i -</h3><ul>
+<li>interceptOnCircle()
+: <a class="el" href="texture__atlas__util_8cc.html#a207882cb8dec74397547026fd79b0959">texture_atlas_util.cc</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
+<li>mmin()
+: <a class="el" href="xml_parser_8cpp.html#ae4635e3ac4b32772021240a9c16864ee">xmlParser.cpp</a>
+</li>
+<li>myFree()
+: <a class="el" href="xml_parser_8cpp.html#afb8a3dc2a8f2bfeed032e25b2257fddf">xmlParser.cpp</a>
+</li>
+<li>myIsTextWideChar()
+: <a class="el" href="xml_parser_8cpp.html#ad9a5c911a8e21bb89427d29d33e2797e">xmlParser.cpp</a>
+</li>
+<li>myRealloc()
+: <a class="el" href="xml_parser_8cpp.html#a8415cb910267a0487e1003a34069d012">xmlParser.cpp</a>
+</li>
+<li>myTagCompare()
+: <a class="el" href="xml_parser_8cpp.html#adb64c4d1e8097d63e6c5e85a614be02a">xmlParser.cpp</a>
+</li>
+<li>myWideCharToMultiByte()
+: <a class="el" href="xml_parser_8cpp.html#ad7ec02a171e7641c1d364d5d367199a3">xmlParser.cpp</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
+<li>opendir()
+: <a class="el" href="dirent__win_8h.html#ae7302925fc2f556fe0bbb2f97e488d45">dirent_win.h</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_r"></a>- r -</h3><ul>
 <li>readdir()
-: <a class="el" href="dirent_8h.html#a9154b30b8d94a9fb7ee33c58ff790704">dirent.h</a>
-, <a class="el" href="_dirent_8cpp.html#ae4d263c5a1d3825c9511a898762513b2">Dirent.cpp</a>
+: <a class="el" href="dirent__win_8h.html#a9154b30b8d94a9fb7ee33c58ff790704">dirent_win.h</a>
 </li>
 <li>rewinddir()
-: <a class="el" href="dirent_8h.html#a3fb58a6b4088367ccb71909e80ebbb1d">dirent.h</a>
-, <a class="el" href="_dirent_8cpp.html#aa9b34669494ad61ee2035dee1eefee4f">Dirent.cpp</a>
+: <a class="el" href="dirent__win_8h.html#a3fb58a6b4088367ccb71909e80ebbb1d">dirent_win.h</a>
+</li>
+<li>RGBtoHSV()
+: <a class="el" href="texture__atlas__util_8cc.html#aa034511d56c5266d8c97482addfdd523">texture_atlas_util.cc</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_s"></a>- s -</h3><ul>
+<li>set_ressource_ids()
+: <a class="el" href="_block_base_8cc.html#abdd6473b80c1f97632cdc14b92f3327d">BlockBase.cc</a>
 </li>
 <li>set_Yoffset()
 : <a class="el" href="_primitive_8cc.html#af8be2e79ab1723ad8826193e7c91a704">Primitive.cc</a>
+</li>
+<li>stringDup()
+: <a class="el" href="group___string_alloc.html#gac35b3be05a320f835b3976179637fe76">xmlParser.h</a>
+, <a class="el" href="group___string_alloc.html#gac35b3be05a320f835b3976179637fe76">xmlParser.cpp</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_x"></a>- x -</h3><ul>
+<li>xfopen()
+: <a class="el" href="xml_parser_8cpp.html#a8dd6e6cada28ea03e5cacd075b1be7f6">xmlParser.cpp</a>
+</li>
+<li>xmltoa()
+: <a class="el" href="group__ato_x.html#ga20998546f61a5d41ed3fe4553702473a">xmlParser.h</a>
+, <a class="el" href="group__ato_x.html#ga20998546f61a5d41ed3fe4553702473a">xmlParser.cpp</a>
+</li>
+<li>xmltob()
+: <a class="el" href="group__ato_x.html#gac93e613b4563072bf7b43f91d2696c75">xmlParser.h</a>
+, <a class="el" href="group__ato_x.html#gac93e613b4563072bf7b43f91d2696c75">xmlParser.cpp</a>
+</li>
+<li>xmltoc()
+: <a class="el" href="group__ato_x.html#gaa929f34f436c3466e66196e5e2091e73">xmlParser.h</a>
+, <a class="el" href="group__ato_x.html#gaa929f34f436c3466e66196e5e2091e73">xmlParser.cpp</a>
+</li>
+<li>xmltof()
+: <a class="el" href="group__ato_x.html#gaf820a1a0f8055c8e4a006a566be9500a">xmlParser.h</a>
+, <a class="el" href="group__ato_x.html#gaf820a1a0f8055c8e4a006a566be9500a">xmlParser.cpp</a>
+</li>
+<li>xmltoi()
+: <a class="el" href="group__ato_x.html#ga17b00a11ddc49e8e253160cc56d6377f">xmlParser.h</a>
+, <a class="el" href="group__ato_x.html#ga17b00a11ddc49e8e253160cc56d6377f">xmlParser.cpp</a>
+</li>
+<li>xmltol()
+: <a class="el" href="group__ato_x.html#ga0100abf0559559ac6aa78f2368852163">xmlParser.h</a>
+, <a class="el" href="group__ato_x.html#ga0100abf0559559ac6aa78f2368852163">xmlParser.cpp</a>
+</li>
+<li>xstrcpy()
+: <a class="el" href="xml_parser_8cpp.html#a73c2349b2f386ee50130a3961bd2dbab">xmlParser.cpp</a>
+</li>
+<li>xstricmp()
+: <a class="el" href="xml_parser_8cpp.html#a2e64ea95685df2d289c31a50419b532d">xmlParser.cpp</a>
+</li>
+<li>xstrlen()
+: <a class="el" href="xml_parser_8cpp.html#a49fa66f65d2d28ce7b7e0b1752425915">xmlParser.cpp</a>
+</li>
+<li>xstrncmp()
+: <a class="el" href="xml_parser_8cpp.html#a3165858f70cd74ffab31ebc2ddc9e104">xmlParser.cpp</a>
+</li>
+<li>xstrnicmp()
+: <a class="el" href="xml_parser_8cpp.html#a17c9570640aed10b61deec9047cb0940">xmlParser.cpp</a>
+</li>
+<li>xstrstr()
+: <a class="el" href="xml_parser_8cpp.html#a696ca59a310359980c57de039f137697">xmlParser.cpp</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -145,7 +318,7 @@ $(document).ready(function(){initNavTree('globals_func.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:30 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:47 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

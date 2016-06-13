@@ -1,6 +1,7 @@
 #include "blocks/geometry.h"
 
 #include "utils/awd_types.h"
+#include "utils/util.h"
 #include "base/block.h"
 
 #include "base/attr.h"
@@ -178,7 +179,7 @@ Geometry::add_vertex3D(Vertex3D*  vert)
 	TYPES::UINT32 original_idx=vert->get_original_idx();
 	if(true){		
 		VECTOR3D position = vert->get_position();
-		std::string lookup_string = std::to_string(position.x)+"/"+std::to_string(position.y)+"/"+std::to_string(position.z);
+		std::string lookup_string = FILES::num_to_string(position.x)+"/"+FILES::num_to_string(position.y)+"/"+FILES::num_to_string(position.z);
 		if(this->shared_verts_idx_map.find(lookup_string)==shared_verts_idx_map.end())
 			shared_verts_idx_map[lookup_string]=original_idx;
 		else
@@ -402,7 +403,87 @@ Geometry::merge_subgeos()
 }
 
 result 
-Geometry::merge_for_textureatlas(BLOCKS::Material* this_material)
+Geometry::write_uvs(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * settings, FILES::AWDFile* awd_file)
+{
+	TYPES::UINT16 num_subs=0;
+	for(SubGeom * subGeom: this->subGeometries){
+		num_subs += subGeom->get_num_subs();
+	}
+	fileWriter->writeUINT16(num_subs);
+	for(SubGeom * subGeom: this->subGeometries){
+
+		// color  = tx / ty
+		// linear = a / c / tx / ty / ?spread
+		// radial = a / b / c / d / tx / ty / ?spread / ?focalPoint
+		
+		if(fileWriter->writeUINT8(TYPES::UINT8(subGeom->mat_type))!=result::AWD_SUCCESS)
+			return result::AWD_ERROR;
+
+		if(subGeom->mat_type==MATERIAL::type::SOLID_COLOR_MATERIAL){
+			fileWriter->writeFLOAT32(subGeom->uv_tl->x);
+			fileWriter->writeFLOAT32(subGeom->uv_tl->y);
+		}
+		else if(subGeom->mat_type==MATERIAL::type::LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL){
+			TYPES::F64* uv_transform = subGeom->uv_transform->get();
+			fileWriter->writeFLOAT32(uv_transform[0]);
+			fileWriter->writeFLOAT32(uv_transform[2]);
+			fileWriter->writeFLOAT32(uv_transform[4]);
+			fileWriter->writeFLOAT32(uv_transform[5]);
+		}
+		else if(subGeom->mat_type==MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL){
+			fileWriter->writeFLOAT32(subGeom->uv_tl->x);
+			fileWriter->writeFLOAT32(subGeom->uv_tl->y);
+			fileWriter->writeFLOAT32(subGeom->uv_br->x);
+			fileWriter->writeFLOAT32(subGeom->uv_br->y);
+			subGeom->uv_transform->write_to_file(fileWriter, settings);
+		}
+		else if(subGeom->mat_type==MATERIAL::type::SOLID_TEXTUREATLAS_MATERIAL){
+			subGeom->uv_transform->write_to_file(fileWriter, settings);
+		}
+		// todo: optional subgeom properties ()
+		fileWriter->writeUINT32(0);
+
+	}
+
+	return result::AWD_SUCCESS;
+}
+
+TYPES::UINT32  
+Geometry::get_uv_bytesize(FILES::AWDFile*, SETTINGS::BlockSettings *)
+{
+	TYPES::UINT32 uv_bytesize=0;
+	for(SubGeom * subGeom: this->subGeometries){
+		uv_bytesize += sizeof(TYPES::UINT8); // type
+
+		if(subGeom->mat_type==MATERIAL::type::SOLID_COLOR_MATERIAL){
+			uv_bytesize += 2*sizeof(TYPES::F32);
+		}
+		else if(subGeom->mat_type==MATERIAL::type::LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL){
+			uv_bytesize += 4*sizeof(TYPES::F32);
+		}
+		else if(subGeom->mat_type==MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL){
+			uv_bytesize += 10*sizeof(TYPES::F32);
+		}
+		else if(subGeom->mat_type==MATERIAL::type::SOLID_TEXTUREATLAS_MATERIAL){
+			uv_bytesize += 6*sizeof(TYPES::F32);
+		}
+		// todo: optional subgeom properties
+		uv_bytesize += sizeof(TYPES::UINT32);
+	}
+	return uv_bytesize;
+}
+result 
+Geometry::merge_stream(GEOM::SubGeom* target_sub){	
+	if(this->subGeometries.size()==0){
+		return result::AWD_ERROR;
+	}
+	for(SubGeom * subGeom: this->subGeometries){
+		subGeom->merge_stream(target_sub);
+	}
+}
+
+result 
+Geometry::merge_for_textureatlas(BLOCKS::Material* thisMat, BLOCKS::Material* thisMat_alpha, BLOCKS::Material* radial_mat,  BLOCKS::Material* radial_mat_alpha)
 {
 	if(this->subGeometries.size()==0){
 		return result::AWD_ERROR;
@@ -411,14 +492,32 @@ Geometry::merge_for_textureatlas(BLOCKS::Material* this_material)
 		subGeom->set_uvs();
 		BLOCKS::Material* subgeom_mat = reinterpret_cast<BLOCKS::Material*>(subGeom->material_block);
 		if(subgeom_mat!=NULL){
-			AWDBlock* tex1=this_material->get_texture();
-			AWDBlock* tex2=subgeom_mat->get_texture();
-			if(tex1==tex2){
-				subGeom->material_block=this_material;
+			BLOCKS::Material* merged_mat=NULL;
+			if(subgeom_mat->get_material_type()==MATERIAL::type::SOLID_COLOR_MATERIAL){
+				if(subgeom_mat->needsAlphaTex)
+					merged_mat=thisMat_alpha;
+				else
+					merged_mat=thisMat;
+			}
+			else if(subgeom_mat->get_material_type()==MATERIAL::type::LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL){
+				if(subgeom_mat->needsAlphaTex)
+					merged_mat=thisMat_alpha;
+				else
+					merged_mat=thisMat;
+			}
+			else if(subgeom_mat->get_material_type()==MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL){
+				if(subgeom_mat->needsAlphaTex)
+					merged_mat=radial_mat_alpha;
+				else
+					merged_mat=radial_mat;
+			}
+			if(merged_mat!=NULL){
+				subGeom->material_block=merged_mat;
 			}
 		}
 	}
 
+	
 	std::vector<SubGeom* > new_subgeos;
 	new_subgeos.push_back(this->subGeometries.back());
 	for(SubGeom * subGeom: this->subGeometries){
@@ -439,18 +538,30 @@ Geometry::merge_for_textureatlas(BLOCKS::Material* this_material)
 	for(SubGeom * subGeom: new_subgeos){
 		this->subGeometries.push_back(subGeom);
 	}
+	
 	return result::AWD_SUCCESS;
+}
+
+int Geometry::subgeomcnt=0;
+void Geometry::set_addr_on_subgeom(FILES::AWDFile* file){
+	TYPES::UINT32 adress;
+	this->get_block_addr(file, adress);
+	this->subGeometries[0]->merged_address = adress;
 }
 result
 Geometry::write_body(FileWriter * fileWriter, BlockSettings *settings, FILES::AWDFile* file)
 {
-	
 	// Write name and sub count
 	fileWriter->writeSTRING(this->get_name(), FILES::write_string_with::LENGTH_AS_UINT16);
 	TYPES::UINT16 num_subs=0;
+	TYPES::UINT16 num_subs_simple=0;
 	for(SubGeom * subGeom: this->subGeometries){
 		num_subs += subGeom->get_num_subs();
+		num_subs_simple+=1;
 	}
+	if(num_subs_simple!=num_subs){
+	}
+	BLOCKS::Geometry::subgeomcnt+=num_subs;
 	fileWriter->writeUINT16(num_subs);
 
 	// Write list of optional properties

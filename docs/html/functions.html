@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -81,6 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -133,7 +136,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -151,6 +154,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>add()
 : <a class="el" href="class_a_w_d_1_1_a_t_t_r_1_1_num_attr_list.html#aaa73618c32d5bc9318d0805c18089b88">AWD::ATTR::NumAttrList</a>
+</li>
+<li>add_adobe_frame()
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a087f3c161cfb31f74cb7b49d46f30430">AWD::BLOCKS::MovieClip</a>
 </li>
 <li>add_block()
 : <a class="el" href="class_a_w_d_1_1_a_w_d_project.html#a508ef632e04f55af35e8d769eade69d9">AWD::AWDProject</a>
@@ -187,8 +193,17 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>add_child()
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_scene_block_base.html#a3c17ebd7b1b3029128e82f5c5b058885">AWD::BASE::SceneBlockBase</a>
 </li>
+<li>add_child_after_child()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_manager.html#a1ed78184820b9db18b9e1909705cfc11">AWD::ANIM::TimelineDepthManager</a>
+</li>
+<li>add_child_after_layer()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_manager.html#a5990d4bbace647e67723e2966ee01898">AWD::ANIM::TimelineDepthManager</a>
+</li>
 <li>add_child_joint()
 : <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_skeleton_joint.html#a1444665128ba4e526625869e6232dbd2">AWD::ANIM::SkeletonJoint</a>
+</li>
+<li>add_child_stream
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#ab70069c2e4db746d155267aafe452eac">AWD::BLOCKS::MovieClip</a>
 </li>
 <li>add_children_to_file()
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_scene_block_base.html#aefccb053806691a3f3a477aa52099c39">AWD::BASE::SceneBlockBase</a>
@@ -203,28 +218,41 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_shadow_method.html#a418b5935dd227a57c941a7cdede5c160">AWD::BLOCKS::ShadowMethod</a>
 </li>
 <li>add_command()
-: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#aff29876d95b24880c845b990cb1c4a2a">AWD::ANIM::TimelineFrame</a>
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#a697eceb97b4010de557207de47abc3a3">AWD::ANIM::TimelineFrame</a>
 </li>
 <li>add_dependencies()
-: <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_a_w_d_block.html#ade9ceaf1b8a84ac0b125d089cf79117c">AWD::BASE::AWDBlock</a>
+: <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_paragraph.html#a629eb098a9167fd56f192c750541fdfa">AWD::FONT::Paragraph</a>
+, <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_text_run.html#a0d3a7b0ecb0020e815d005842a626961">AWD::FONT::TextRun</a>
 </li>
 <li>add_dependency_block()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a9c7cd562428441f00ba4a0ebde0502cf">AWD::FILES::AWDFile</a>
 </li>
-<li>add_dirty_layer()
-: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#ac50f2be9b096e5cf37ddb6d50964d442">AWD::ANIM::TimelineFrame</a>
+<li>add_depth_for_mask()
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#adf141455b6325ebe95bd2eaa993028b2">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>add_depth_for_masked()
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#afe1ee61e0ab6ebbe5e06ca3a352d9b3a">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>add_display_object_by_id()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#ae81c48aa79a67d2e7278bfebf38e2ad3">AWD::ANIM::TimelineFrame</a>
+, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a0f329ad22dad9ad2186d86c0fa8ea166">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>add_existing_path()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_filled_region.html#a58edf2059d9b26b43d9c11c62a0a42e3">AWD::GEOM::FilledRegion</a>
 </li>
 <li>add_export_block_category()
 : <a class="el" href="class_a_w_d_1_1_s_e_t_t_i_n_g_s_1_1_settings.html#a68e3995142b72b975a13fe974c85d921">AWD::SETTINGS::Settings</a>
 </li>
+<li>add_filled_region()
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#a4a10e368ecab8b822db65e1422bb4ad1">AWD::BLOCKS::Geometry</a>
+, <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_filled_region_group.html#a7164d7b0681f82235abb7c141e24c0d4">AWD::GEOM::FilledRegionGroup</a>
+</li>
 <li>add_final_material()
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh.html#a4a918734a99467772e98d35285a6de42">AWD::BLOCKS::Mesh</a>
+, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh_library.html#a33e9eab9448492f3c2933dd32ab430d6">AWD::BLOCKS::MeshLibrary</a>
 </li>
 <li>add_frame()
-: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_timeline.html#a4956932b256518a53a6a6ffb26ff715f">AWD::BLOCKS::Timeline</a>
-</li>
-<li>add_inActivecommand()
-: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#a1fdbd0b74011deee551fa1ae37782fd7">AWD::ANIM::TimelineFrame</a>
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#aece32ff599b7a8cd98cdd18a5c58fdd1">AWD::BLOCKS::MovieClip</a>
 </li>
 <li>add_int16_shadow_prop()
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_shadow_method.html#a4b5eb7ac44674b64574112b7ab0b30d0">AWD::BLOCKS::ShadowMethod</a>
@@ -244,8 +272,11 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>add_library_block()
 : <a class="el" href="class_a_w_d_1_1_a_w_d_project.html#a7adbeb71eca3f5f5a48275dadabc37bc">AWD::AWDProject</a>
 </li>
+<li>add_mask_childs()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html#abd2ac5a1a8a4c478c7508ce29b894920">AWD::ANIM::FrameCommandDisplayObject</a>
+</li>
 <li>add_mesh_inst()
-: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#acdbf588ae296a20ca7c794adaaeb4c7f">AWD::BLOCKS::Geometry</a>
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#a011cac4e008b04464c2181ade539174d">AWD::BLOCKS::Geometry</a>
 </li>
 <li>add_message()
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_state_element_base.html#aed8f0f33c25d8c327c45a6cb431f3919">AWD::BASE::StateElementBase</a>
@@ -258,6 +289,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>add_namespace_by_id()
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a3abdee2ffcc5ae9905265a8f6a6b6b03">AWD::FILES::AWDFile</a>
+</li>
+<li>add_new_child()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_layer.html#a377823153c82f1f5a729bc6c8ca52590">AWD::ANIM::TimelineDepthLayer</a>
 </li>
 <li>add_number_method_prop()
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_effect_method.html#a7834fe9713f0fa66f9540739ac9909c3">AWD::BLOCKS::EffectMethod</a>
@@ -276,19 +310,29 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_element.html#a89926b886b432e3edde1a2afbd00fe36">AWD::BLOCKS::TextElement</a>
 </li>
 <li>add_path()
-: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_path_geom.html#a959b65c84831a1757216b267eb334a23">AWD::GEOM::SubPathGeom</a>
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_filled_region.html#a1494c0502305c8043567ef62dfd71054">AWD::GEOM::FilledRegion</a>
 </li>
 <li>add_path_intersections()
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#aaa25f6b8bb9f2e8ba7b8ff29596548eb">AWD::GEOM::PathSegment</a>
 </li>
-<li>add_path_shape()
-: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#a1da8e1cef63d2573f7c619b55ee5848a">AWD::BLOCKS::Geometry</a>
-</li>
 <li>add_properties_description()
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_attr_element_base.html#aa26308335f060c4487fb61c0518cc3e2">AWD::BASE::AttrElementBase</a>
 </li>
+<li>add_res_id()
+: <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_a_w_d_block.html#a8ba5ebc07854a2b127f7f97282521305">AWD::BASE::AWDBlock</a>
+</li>
+<li>add_res_id_geom()
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#acd5496c4dfec115abd5940e416ce5fe0">AWD::BLOCKS::Geometry</a>
+</li>
+<li>add_scene_name()
+: <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_a_w_d_block.html#a6620f6b2dcf45a8980df35869d36338b">AWD::BASE::AWDBlock</a>
+</li>
 <li>add_segment()
-: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_path_geom.html#a553cb8bfebdf16a53bbc6c382b95a6c1">AWD::GEOM::SubPathGeom</a>
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_filled_region.html#af6fbcd9c7db7b0a73fee4a489f201ac4">AWD::GEOM::FilledRegion</a>
+, <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#af4dcaea2060b88d9571a661af0030a62">AWD::GEOM::Path</a>
+</li>
+<li>add_segment_fonts()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#aa3e400637dd154311815ad00530f2581">AWD::GEOM::Path</a>
 </li>
 <li>add_shading_bool_property()
 : <a class="el" href="class_a_w_d_1_1_m_a_t_e_r_i_a_l_1_1_shading_method.html#ad24c4db20ea7bae706fcefca342dd19f">AWD::MATERIAL::ShadingMethod</a>
@@ -328,6 +372,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 , <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom.html#a3f55818d68cacfd9e8c4395c44ce5b7c">AWD::GEOM::SubGeom</a>
 , <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom_internal.html#aa83a0746576fe75ad127fdd766b1a68d">AWD::GEOM::SubGeomInternal</a>
 </li>
+<li>add_triangle_by_type()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom_internal.html#a4c9b3fff6f597ed618cd5d1a6f372c71">AWD::GEOM::SubGeomInternal</a>
+</li>
 <li>add_uint16_property()
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_attr_element_base.html#a3efebe1da7bebd8552ace6267bc3afb7">AWD::BASE::AttrElementBase</a>
 </li>
@@ -344,6 +391,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom.html#a64880c160c75f17a4b90eb787e2073aa">AWD::GEOM::SubGeom</a>
 , <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom_internal.html#abc78ccc7d5a65ba7f9363c730edec398">AWD::GEOM::SubGeomInternal</a>
 </li>
+<li>add_vertex2D()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom.html#ac5885da7a073f06ce5a59df3ed24c096">AWD::GEOM::SubGeom</a>
+</li>
 <li>add_vertex3D()
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#a798a8ad63dd3ed49dd16eab6d3995aa0">AWD::BLOCKS::Geometry</a>
 </li>
@@ -351,20 +401,89 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom_internal.html#af446090c7caaab04261a97926d2f57dc">AWD::GEOM::SubGeomInternal</a>
 </li>
 <li>add_with_dependencies()
-: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_1_1_block_instance.html#af19ddc10bbe24bfaee4e900430d2113b">AWD::BLOCK::BlockInstance</a>
+: <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_a_w_d_block.html#a4711dc539b6d449c165893bd9c747082">AWD::BASE::AWDBlock</a>
+, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_1_1_block_instance.html#af19ddc10bbe24bfaee4e900430d2113b">AWD::BLOCK::BlockInstance</a>
+</li>
+<li>addAttribute()
+: <a class="el" href="group__creation.html#ga7938c43648ce7ed32efc9f0a5e3b5d2c">XMLNode</a>
+</li>
+<li>addAttribute_priv()
+: <a class="el" href="struct_x_m_l_node.html#ab467137f476e8dee1f10a55a065d51d1">XMLNode</a>
+</li>
+<li>addAttribute_WOSD()
+: <a class="el" href="group__xml_w_o_s_d.html#ga45d1c57025ef576313d7412920d7a326">XMLNode</a>
+</li>
+<li>addChild()
+: <a class="el" href="group__creation.html#ga51baa56a48f69cdea6f41ed38a2cbadd">XMLNode</a>
+</li>
+<li>addChild_priv()
+: <a class="el" href="struct_x_m_l_node.html#ae6d79fd7b2860409d5e3ba6bc40dd0cf">XMLNode</a>
+</li>
+<li>addChild_WOSD()
+: <a class="el" href="group__xml_w_o_s_d.html#ga24b13602fdff0194b087df4eaf28e703">XMLNode</a>
+</li>
+<li>addClear()
+: <a class="el" href="group__creation.html#gab933d009523f94a4fd1dee09e1a3c931">XMLNode</a>
+</li>
+<li>addClear_priv()
+: <a class="el" href="struct_x_m_l_node.html#af120cb7a12014509ef143804585bb87d">XMLNode</a>
+</li>
+<li>addClear_WOSD()
+: <a class="el" href="group__xml_w_o_s_d.html#gad92450b1a8380678f52ad53a54fd068c">XMLNode</a>
 </li>
 <li>addr
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_1_1_block_instance.html#a78f894d9fa1f0d349f07ff265bf2151c">AWD::BLOCK::BlockInstance</a>
 , <a class="el" href="union_a_w_d_1_1_t_y_p_e_s_1_1union__ptr.html#a051d80004be5b7c39848970675eecf13">AWD::TYPES::union_ptr</a>
 </li>
+<li>addText()
+: <a class="el" href="group__creation.html#ga1de718e237befa215381d294fc644f11">XMLNode</a>
+</li>
+<li>addText_priv()
+: <a class="el" href="struct_x_m_l_node.html#a2a73c243d97fbc8e80687ade10b67a07">XMLNode</a>
+</li>
+<li>addText_WOSD()
+: <a class="el" href="group__xml_w_o_s_d.html#ga90944eacfeb994486e3ca83a68c35b6a">XMLNode</a>
+</li>
+<li>addToOrder()
+: <a class="el" href="struct_x_m_l_node.html#a1c1ab628165ad947257634cdea6bfae8">XMLNode</a>
+</li>
+<li>advance_frame()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_layer.html#ab21fe3c36f95a6f2051ce575e49facd5">AWD::ANIM::TimelineDepthLayer</a>
+, <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_manager.html#ab443dfd05a33c1446bfa5b7280f8e1b5">AWD::ANIM::TimelineDepthManager</a>
+, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a527048792851ce89e5ddb336ee09dae7">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>advanceValue
+: <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_font_shape.html#a23b3b2210d0b8600315bc19ee7fae4c1">AWD::FONT::FontShape</a>
+</li>
+<li>alignment
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_format.html#a66022aa90af44d7cf375130f2b98d82f">AWD::BLOCKS::TextFormat</a>
+</li>
 <li>all_blocks
 : <a class="el" href="class_a_w_d_1_1_a_w_d_project.html#a385f4a7a9b5a4d9173c14dcf822473f1">AWD::AWDProject</a>
+</li>
+<li>all_filled_regions
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#ae208765c8343fa50b1165f7213d67496">AWD::BLOCKS::Geometry</a>
+</li>
+<li>all_int_vecs
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a2a7e06be8791344552a99535a5617c2d">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>all_optional_f32_vecs
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a568fae8a611fa42ee7666a760e7f2038">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>all_optional_int_vecs
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a482f2a34ed9eab56b3005ccd02dde6a5">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>all_optional_string_vecs
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#afb69d39efbad86b96cc5c68d88b45d80">AWD::BLOCKS::MovieClip</a>
 </li>
 <li>all_parsed
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_file_reader.html#a9bdca0d445b3facfcfb0cd4868009968">AWD::FILES::FileReader</a>
 </li>
-<li>all_path_shapes
-: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#a16841df18506c5ef56b6fa40d20b98f5">AWD::BLOCKS::Geometry</a>
+<li>all_scripts
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#abffd7b80f3e7141cecb91d6aa186eece">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>alloc()
+: <a class="el" href="struct_x_m_l_parser_base64_tool.html#a73db2e808f9ebe44eb9d8486453117ee">XMLParserBase64Tool</a>
 </li>
 <li>allowed_tris
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom.html#a87425c502620bbbbf75cbd8afbfab4e0">AWD::GEOM::SubGeom</a>
@@ -407,11 +526,12 @@ $(document).ready(function(){initNavTree('functions.html','');});
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_animator.html#aba66b77e90b9c77abe3b26ea84fef91d">AWD::BLOCKS::Animator</a>
 </li>
 <li>Animator()
-: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_animator.html#a701eeb9283612be2027425efb06bbff7">AWD::BLOCKS::Animator</a>
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_animator.html#abf4c8f1148dc494e63def3b5e690a0c3">AWD::BLOCKS::Animator</a>
 </li>
 <li>animator
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_material.html#a209919992634a6b40c41b4540c1cae63">AWD::BLOCKS::Material</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh.html#aaa2ca1bfe62953fcaf984565cdbe722e">AWD::BLOCKS::Mesh</a>
+, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh_library.html#ad022a82cbf18230b815f4e3d3e9034b1">AWD::BLOCKS::MeshLibrary</a>
 </li>
 <li>animator_targets
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_animator.html#a8463f92068e1162ee4998d85d125406a">AWD::BLOCKS::Animator</a>
@@ -425,10 +545,30 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>animSet_type
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_animation_set.html#a332a11b4b232a9e749ffb67193516fb5">AWD::BLOCKS::AnimationSet</a>
 </li>
+<li>append()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x2x3.html#a35391c45fa0d6613df3a8d941de98c8c">AWD::GEOM::MATRIX2x3</a>
+</li>
 <li>append_duration_to_last_frame()
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton_animation_clip.html#a736b85cfb52d1875e9eb231cead55446">AWD::BLOCKS::SkeletonAnimationClip</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_u_v_animation_clip.html#a0b792c837e9cdbfd0c1f711d3ed4ffd3">AWD::BLOCKS::UVAnimationClip</a>
 , <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#ab1a775c743fcb4e96c46618d421b8aa8">AWD::BLOCKS::VertexAnimationClip</a>
+</li>
+<li>apply_add_command()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#aeb148addd62b81efef1276fb3dcab3ca">AWD::ANIM::TimelineFrame</a>
+</li>
+<li>apply_depth()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_layer.html#a333e27eb8f4d1cbc48ae5ce52eaf6cbd">AWD::ANIM::TimelineDepthLayer</a>
+, <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_manager.html#ac81c0fa3d803b8d90fb2f08dd037d43e">AWD::ANIM::TimelineDepthManager</a>
+</li>
+<li>apply_remove_command()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_depth_manager.html#ae361b0f6acb5dae55158e5b0704a9a56">AWD::ANIM::TimelineDepthManager</a>
+, <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#a0c03aec8c7633344cb6375480e78d702">AWD::ANIM::TimelineFrame</a>
+</li>
+<li>apply_update_command()
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#a527b71928fc518f8e1a64a11c3e79acd">AWD::ANIM::TimelineFrame</a>
+</li>
+<li>ascent
+: <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_font_style.html#aa1eaa6c8195860d12a036d69b5eee94f">AWD::FONT::FontStyle</a>
 </li>
 <li>aspect_ratio
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_texture_projector.html#a72ddcb6ad5b2981c9e26be6b619388c5">AWD::BLOCKS::TextureProjector</a>
@@ -441,6 +581,9 @@ $(document).ready(function(){initNavTree('functions.html','');});
 </li>
 <li>AttrElementBase()
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_attr_element_base.html#a869863cd8fdad4be2be2b11b7563df1a">AWD::BASE::AttrElementBase</a>
+</li>
+<li>attrib
+: <a class="el" href="struct_x_m_l_node_contents.html#a0fd3093b1eac5edcb67bec9cf40cdaac">XMLNodeContents</a>
 </li>
 <li>attributes
 : <a class="el" href="class_a_w_d_1_1_a_t_t_r_1_1_num_attr_list.html#aab3d28c1f41e622af41e668172f01c01">AWD::ATTR::NumAttrList</a>
@@ -458,8 +601,16 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <li>autoApply
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_shadow_method.html#a7141a040d68bce2208074761ebdab133">AWD::BLOCKS::ShadowMethod</a>
 </li>
+<li>autokerning
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_format.html#ac98a4e7e5b20c68c1b0a0bf3d70dc739">AWD::BLOCKS::TextFormat</a>
+</li>
 <li>available_materials
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh.html#aea4ea0d7345548d93e19f5592c401bf9">AWD::BLOCKS::Mesh</a>
+, <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_mesh_library.html#a4287eb24aafaa4a2a2137a816f7e36af">AWD::BLOCKS::MeshLibrary</a>
+</li>
+<li>awd_block
+: <a class="el" href="struct_a_w_d_1_1_a_n_i_m_1_1_potential_timeline_child.html#ab9da46c6daa8137b66016617c0aa70ea">AWD::ANIM::PotentialTimelineChild</a>
+, <a class="el" href="struct_a_w_d_1_1_a_n_i_m_1_1_potential_timeline_child_group.html#ab81b7d0a0b709fd9de9094e9e10bc12f">AWD::ANIM::PotentialTimelineChildGroup</a>
 </li>
 <li>awd_project
 : <a class="el" href="class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a84f85d12751eb0930bcb904786b30382">AWD::FILES::AWDFile</a>
@@ -513,7 +664,7 @@ $(document).ready(function(){initNavTree('functions.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:29 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:44 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -2,7 +2,8 @@
 #include "utils/awd_types.h"
 #include "base/attr.h"
 #include "utils/settings.h"
-#include "blocks/timeline.h"
+#include "utils/util.h"
+#include "blocks/movieclip.h"
 #include "Stdafx.h"
 
 
@@ -327,6 +328,7 @@ void
 TimelineFrame::finalize_commands()
 {
 	std::vector<FrameCommandDisplayObject*> new_commands;
+	std::vector<FrameCommandDisplayObject*> invalid_objects;
 	for (FrameCommandDisplayObject * f : this->display_commands) 
 	{
 		f->resolve_parenting();
@@ -334,11 +336,13 @@ TimelineFrame::finalize_commands()
 		if(f->has_active_properties())
 			new_commands.push_back(f);
 		else
-			delete f;
+			invalid_objects.push_back(f);
 	}
 	this->display_commands.clear();
 	for (FrameCommandDisplayObject * f : new_commands) 
 		this->display_commands.push_back(f);
+	//for (FrameCommandDisplayObject * f : invalid_objects) 
+		//delete f;
 	new_commands.clear();
 
 }
@@ -382,8 +386,8 @@ TimelineFrame::build_final_commands()
 	while(sorted_cnt--){
 		ANIM::FrameCommandDisplayObject* f = new_cmds[Sorted[sorted_cnt]];
 		if(f->get_command_type()==ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD){
-			if(f->child->child->awd_block->get_type()==BLOCK::block_type::TIMELINE){
-				BLOCKS::Timeline* thistimeline = reinterpret_cast<BLOCKS::Timeline*>(f->child->child->awd_block);
+			if(f->child->child->awd_block->get_type()==BLOCK::block_type::MOVIECLIP){
+				BLOCKS::MovieClip* thistimeline = reinterpret_cast<BLOCKS::MovieClip*>(f->child->child->awd_block);
 				if(thistimeline->isButton)
 					f->set_command_type(ANIM::frame_command_type::FRAME_COMMAND_ADD_BUTTON_CHILD);
 			}
@@ -394,6 +398,11 @@ TimelineFrame::build_final_commands()
 	}
 	DELETEARRAY(InputValues_depth);
 	//DELETEARRAY(Sorted);
+}
+
+void
+TimelineFrame::create_mask_layers()
+{
 }
 void
 TimelineFrame::calc_mask_ids()
@@ -450,7 +459,7 @@ TimelineFrame::get_frame_info(std::vector<std::string>& infos)
 	if(this->remove_commands.size()>0){
 		std::string remove_infos = "		remove objects at depth: ";
 		for (FrameCommandRemoveObject * f_remove : this->remove_commands) 
-			remove_infos+=std::to_string(f_remove->child->depth)+"|";
+			remove_infos+=FILES::int_to_string(f_remove->child->depth)+"|";
 		infos.push_back(remove_infos);
 	}
 	for (FrameCommandDisplayObject * f : this->display_commands) 
@@ -487,7 +496,7 @@ TimelineFrame::calc_frame_length(BlockSettings * blockSettings)
 	}
 
 	
-	if(!blockSettings->get_export_framescripts())
+	if(!blockSettings->get_bool(SETTINGS::bool_settings::ExportFrameScript))
 		this->frame_code="";
 	
     len += sizeof(TYPES::UINT32) +  TYPES::UINT32(this->frame_code.size()); 

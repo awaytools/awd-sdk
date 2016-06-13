@@ -143,6 +143,7 @@ namespace AWD
 				result read_from_file(FILES::FileReader*, SETTINGS::BlockSettings *);
 				result write_to_file(FILES::FileWriter*, SETTINGS::BlockSettings *);
 				result prepend(MATRIX2x3*);
+				bool compare(MATRIX2x3*);
 				bool is_identity();
 				TYPES::UINT8 get_save_type();
 				result append(MATRIX2x3*);

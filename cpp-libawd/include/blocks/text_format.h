@@ -22,7 +22,7 @@ namespace AWD
 				std::string fontName;
 				std::string fontStyle;
 				int fontSize;
-				int letterSpacing;
+				double letterSpacing;
 				bool is_rotated;
 				bool autokerning;
 				AWDBlock* fill_material;
@@ -67,8 +67,8 @@ namespace AWD
 				void set_font(AWDBlock*);
 				int get_fontSize();
 				void set_fontSize(int);
-				int get_letterSpacing();
-				void set_letterSpacing(int);
+				double get_letterSpacing();
+				void set_letterSpacing(double);
 				bool get_is_rotated();
 				void set_is_rotated(bool);
 				bool get_autokerning();

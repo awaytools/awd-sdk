@@ -3,7 +3,7 @@ var class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton =
     [ "Skeleton", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#a3d6902e1c4106264513af07fe71141cc", null ],
     [ "Skeleton", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#af01a02f1ce9ae4c801cd6e66ccf7407f", null ],
     [ "~Skeleton", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#aeece886a4e2f039128144f94f25efd10", null ],
-    [ "calc_body_length", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#a3846500c4aa5831164794ab626e74be0", null ],
+    [ "calc_body_length", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#a401d535e58f9fc96ceefd210b3561476", null ],
     [ "collect_dependencies", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#a607fcd4b86d89d1c746c4086df3d00fc", null ],
     [ "get_clip_blocks", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#a15eb7503f5c66329b8eabae30c8ccd0e", null ],
     [ "get_joints_per_vert", "class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#af2f06487a7f1a9d0d0bcb63e347d4058", null ],

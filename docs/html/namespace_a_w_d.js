@@ -11,5 +11,6 @@ var namespace_a_w_d =
     [ "MATERIAL", "namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html", "namespace_a_w_d_1_1_m_a_t_e_r_i_a_l" ],
     [ "SETTINGS", "namespace_a_w_d_1_1_s_e_t_t_i_n_g_s.html", "namespace_a_w_d_1_1_s_e_t_t_i_n_g_s" ],
     [ "TYPES", "namespace_a_w_d_1_1_t_y_p_e_s.html", "namespace_a_w_d_1_1_t_y_p_e_s" ],
-    [ "AWDProject", "class_a_w_d_1_1_a_w_d_project.html", "class_a_w_d_1_1_a_w_d_project" ]
+    [ "AWDProject", "class_a_w_d_1_1_a_w_d_project.html", "class_a_w_d_1_1_a_w_d_project" ],
+    [ "HTTPServer", "class_a_w_d_1_1_h_t_t_p_server.html", "class_a_w_d_1_1_h_t_t_p_server" ]
 ];

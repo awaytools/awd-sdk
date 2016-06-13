@@ -111,6 +111,7 @@ FontShape::FontShape()
 {
 	shape_data=false;
 	subShape=NULL;
+	this->advanceValue=0;
 }
 
 FontShape::~FontShape()
@@ -148,6 +149,7 @@ TYPES::UINT32 FontShape::calc_body_length(SETTINGS::BlockSettings* settings)
 	TYPES::UINT32 len =0;
 	len += 4; // charcode
 	len += 4; // subgeom_length
+	len += 4; // advanceValue
 	if(subShape!=NULL){
 		if(subShape->get_sub_geoms().size()>0)
 			len += subShape->calc_subgeom_streams_length(subShape->get_sub_geoms()[0]);
@@ -157,6 +159,7 @@ TYPES::UINT32 FontShape::calc_body_length(SETTINGS::BlockSettings* settings)
 result FontShape::write_body(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings* settings, double font_size) 
 {
 	fileWriter->writeUINT32(this->charCode);
+	fileWriter->writeFLOAT32(this->advanceValue);
 	if(subShape!=NULL){
 		if(subShape->get_sub_geoms().size()>0){
 			
@@ -194,6 +197,14 @@ std::string& FontStyle::get_style_name()
 void FontStyle::set_style_size(int style_size) 
 {
 	this->style_size=style_size;
+}
+void FontStyle::set_ascent(double ascent) 
+{
+	this->ascent=ascent;
+}
+void FontStyle::set_descent(double descent) 
+{
+	this->descent=descent;
 }
 void FontStyle::set_whitespace_size(int whitespace_size) 
 {
@@ -235,6 +246,13 @@ FontShape* FontStyle::get_fontShape(int char_code)
 	}
 	return shapesmap[char_code];
 }
+void FontStyle::get_fontshapes_from(FontStyle* font_style) 
+{
+	for(it_type iterator = font_style->shapesmap.begin(); iterator != font_style->shapesmap.end(); iterator++) {
+		// iterator->first = key
+		this->get_fontShape(iterator->first);
+	}
+}
 TYPES::UINT32 FontStyle::calc_body_length(SETTINGS::BlockSettings* settings) 
 {
 	
@@ -243,6 +261,8 @@ TYPES::UINT32 FontStyle::calc_body_length(SETTINGS::BlockSettings* settings)
 	len += sizeof(TYPES::UINT16) + this->get_style_name().size(); //name
     len += sizeof(TYPES::UINT32); //size;
     len += sizeof(TYPES::UINT32); //white-space-size;
+    len += sizeof(TYPES::F32); //ascent
+    len += sizeof(TYPES::F32); //descent
     len += sizeof(TYPES::UINT32); //char_count;
 	
 	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {
@@ -258,6 +278,8 @@ result FontStyle::write_body(FILES::FileWriter* fileWriter, SETTINGS::BlockSetti
 	fileWriter->writeSTRING(this->get_style_name(), FILES::write_string_with::LENGTH_AS_UINT16);	
 	fileWriter->writeUINT32(this->style_size);
 	fileWriter->writeUINT32(this->whitespace_size);
+	fileWriter->writeFLOAT32(this->ascent);
+	fileWriter->writeFLOAT32(this->descent);
 	fileWriter->writeUINT32(this->shapesmap.size());//charcount
 	
 	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {

@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -81,6 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions.html"><span>All</span></a></li>
       <li class="current"><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -106,6 +109,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="functions_func_u.html#index_u"><span>u</span></a></li>
       <li><a href="functions_func_v.html#index_v"><span>v</span></a></li>
       <li><a href="functions_func_w.html#index_w"><span>w</span></a></li>
+      <li><a href="functions_func_x.html#index_x"><span>x</span></a></li>
       <li><a href="functions_func_~.html#index_~"><span>~</span></a></li>
     </ul>
   </div>
@@ -129,7 +133,7 @@ $(document).ready(function(){initNavTree('functions_func_d.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -149,13 +153,37 @@ $(document).ready(function(){initNavTree('functions_func_d.html','');});
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr.html#a52be6a3170e67ea0cad352982900259a">AWD::GEOM::DataStreamAttr</a>
 </li>
 <li>DataStreamAttrDesc()
-: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr_desc.html#aedf4ea451e093c27d91ed0a4a97877d9">AWD::GEOM::DataStreamAttrDesc</a>
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr_desc.html#ac596f01804d17a1a962b15cfd598c0d4">AWD::GEOM::DataStreamAttrDesc</a>
 </li>
 <li>DataStreamRecipe()
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_data_stream_recipe.html#a6bf513dc04360c9a6748de0b01173cfe">AWD::GEOM::DataStreamRecipe</a>
 </li>
+<li>decode()
+: <a class="el" href="struct_x_m_l_parser_base64_tool.html#a91a8601818d8909a53026c733a741cc8">XMLParserBase64Tool</a>
+</li>
+<li>decodeSize()
+: <a class="el" href="struct_x_m_l_parser_base64_tool.html#a26ad962b97def81f9bac751bcb84e01a">XMLParserBase64Tool</a>
+</li>
+<li>deepCopy()
+: <a class="el" href="group__navigate.html#gadb69f8d2db5997d84590ce3380e210f1">XMLNode</a>
+</li>
 <li>delete_fontShape()
 : <a class="el" href="class_a_w_d_1_1_f_o_n_t_1_1_font_style.html#afd12453dc8b6728b33d19cdf6e4a258f">AWD::FONT::FontStyle</a>
+</li>
+<li>deleteAttribute()
+: <a class="el" href="group__xml_delete.html#ga61b2405305063594b35b309cc2e22c01">XMLNode</a>
+</li>
+<li>deleteClear()
+: <a class="el" href="group__xml_delete.html#ga8fff4baa9a8000f8662ee302438fff64">XMLNode</a>
+</li>
+<li>deleteNodeContent()
+: <a class="el" href="group__xml_delete.html#gaa4d133999da220e916bdf3a969d493c4">XMLNode</a>
+</li>
+<li>deleteText()
+: <a class="el" href="group__xml_delete.html#ga14a49a23735ea10a44864cb6b4302250">XMLNode</a>
+</li>
+<li>detachFromParent()
+: <a class="el" href="struct_x_m_l_node.html#a0dcf2951f4bdb0ed4c38c2814e789a79">XMLNode</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -163,7 +191,7 @@ $(document).ready(function(){initNavTree('functions_func_d.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:29 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:45 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

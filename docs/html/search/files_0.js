@@ -21,7 +21,6 @@ var searchData=
   ['awd_5fproject_2eh',['awd_project.h',['../awd__project_8h.html',1,'']]],
   ['awd_5fproperties_2eh',['awd_properties.h',['../awd__properties_8h.html',1,'']]],
   ['awd_5fspecs_2edox',['awd_specs.dox',['../awd__specs_8dox.html',1,'']]],
-  ['awd_5fspecs_5fintroduction_2edox',['awd_specs_introduction.dox',['../awd__specs__introduction_8dox.html',1,'']]],
   ['awd_5fspecs_5fpart_5f1_2edox',['awd_specs_part_1.dox',['../awd__specs__part__1_8dox.html',1,'']]],
   ['awd_5fspecs_5fpart_5f2_2edox',['awd_specs_part_2.dox',['../awd__specs__part__2_8dox.html',1,'']]],
   ['awd_5fspecs_5fpart_5f3_2edox',['awd_specs_part_3.dox',['../awd__specs__part__3_8dox.html',1,'']]],

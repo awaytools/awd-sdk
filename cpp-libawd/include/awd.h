@@ -31,7 +31,7 @@
 #include "blocks/texture_projector.h"
 #include "blocks/text_element.h"
 #include "blocks/text_format.h"
-#include "blocks/timeline.h"
+#include "blocks/movieclip.h"
 #include "blocks/uv_anim_clip.h"
 #include "blocks/uv_pose.h"
 #include "blocks/vertex_anim_clip.h"

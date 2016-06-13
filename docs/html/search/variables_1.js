@@ -1,13 +1,24 @@
 var searchData=
 [
   ['b',['b',['../union_a_w_d_1_1_t_y_p_e_s_1_1union__ptr.html#a85549b3cf8974eb93b3850c61f9e2dfc',1,'AWD::TYPES::union_ptr']]],
+  ['base64decodetable',['base64DecodeTable',['../xml_parser_8cpp.html#a95ccd1205d9804edc09860687720143e',1,'xmlParser.cpp']]],
+  ['base64encodetable',['base64EncodeTable',['../xml_parser_8cpp.html#ae13e84010d00fd34a924641daef8898c',1,'xmlParser.cpp']]],
+  ['base64fillchar',['base64Fillchar',['../xml_parser_8cpp.html#a7df6854a1d5f21b00ea7aba244c7ca79',1,'xmlParser.cpp']]],
   ['base_5fmethod',['base_method',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_shadow_method.html#a146a622bb1c5681276577308f69d4f59',1,'AWD::BLOCKS::ShadowMethod']]],
   ['baselineshift',['baseLineShift',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_format.html#a031e255040c4cb3e9d075c7542a1853c',1,'AWD::BLOCKS::TextFormat']]],
   ['bind_5fmtx',['bind_mtx',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#a3980463c9b44543303071c32053439f9',1,'AWD::BLOCKS::Geometry::bind_mtx()'],['../class_a_w_d_1_1_a_n_i_m_1_1_skeleton_joint.html#a5b4287197d486aeedb5d49ca3572337e',1,'AWD::ANIM::SkeletonJoint::bind_mtx()']]],
+  ['bit_5fid',['bit_id',['../class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#aa9262096df18eed44257e168db369abe',1,'AWD::GEOM::PathSegment']]],
+  ['bit_5fid_5fx',['bit_id_x',['../class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#ad2e11677703ece6d908ac4ac94454f90',1,'AWD::GEOM::PathSegment::bit_id_x()'],['../class_a_w_d_1_1_g_e_o_m_1_1_filled_region_group.html#ab534183893457e597f94fa2914e55b6b',1,'AWD::GEOM::FilledRegionGroup::bit_id_x()']]],
+  ['bit_5fid_5fy',['bit_id_y',['../class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#a7cfbf97e00f1857c51786aa3b118249e',1,'AWD::GEOM::PathSegment::bit_id_y()'],['../class_a_w_d_1_1_g_e_o_m_1_1_filled_region_group.html#afabdb85a23a88d19ce300a022f4a0073',1,'AWD::GEOM::FilledRegionGroup::bit_id_y()']]],
   ['blendmode',['blendMode',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_material.html#a205a1397535afa86131a0a9c5dc94962',1,'AWD::BLOCKS::Material::blendMode()'],['../class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html#ac5ad3d587a259f68a7d8600bd6e422d6',1,'AWD::ANIM::FrameCommandDisplayObject::blendMode()']]],
   ['block_5fheader_5fflag',['block_header_flag',['../class_a_w_d_1_1_s_e_t_t_i_n_g_s_1_1_block_settings.html#af75d104b87dd890770111d253afcb53e',1,'AWD::SETTINGS::BlockSettings']]],
+  ['block_5fid_5fcnt',['block_id_cnt',['../class_a_w_d_1_1_a_w_d_project.html#a8da1820f04c567ff435f54ecb3b3db86',1,'AWD::AWDProject']]],
   ['block_5finstance',['block_instance',['../struct_a_w_d_1_1_b_l_o_c_k_1_1block_instance__file__connection.html#a206fa1431c14b7724c06aa2e11aeacb9',1,'AWD::BLOCK::blockInstance_file_connection']]],
   ['block_5finstances',['block_instances',['../class_a_w_d_1_1_b_a_s_e_1_1_a_w_d_block.html#a5457078592bd42a86ea3eef4d7f24de5',1,'AWD::BASE::AWDBlock::block_instances()'],['../class_a_w_d_1_1_f_i_l_e_s_1_1_a_w_d_file.html#a926f90d42b2fbd675c80beedfb97af9e',1,'AWD::FILES::AWDFile::block_instances()']]],
+  ['bom',['bom',['../namespaceutf8.html#a7b8061bd4677fc3283d0407c74c59fe2',1,'utf8']]],
   ['both_5fsides',['both_sides',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_material.html#a6c6ce296f47531042d2039c4e6b4ec4b',1,'AWD::BLOCKS::Material']]],
-  ['bounds',['bounds',['../class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#ad4376d9eb86a6aa20e26c7f99a78d6a2',1,'AWD::GEOM::PathSegment']]]
+  ['bounds',['bounds',['../class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_element.html#ad91e27c923999b441ae52642553cf199',1,'AWD::BLOCKS::TextElement']]],
+  ['buf',['buf',['../struct_to_x_m_l_string_tool.html#a7c1744df32f207ecc8e4e478c350e83a',1,'ToXMLStringTool::buf()'],['../struct_x_m_l_parser_base64_tool.html#ad20588e28651b5c7b2d92baf284ea237',1,'XMLParserBase64Tool::buf()']]],
+  ['buflen',['buflen',['../struct_to_x_m_l_string_tool.html#a3d8ae5dc73498c16afdb2905bf00c9d0',1,'ToXMLStringTool::buflen()'],['../struct_x_m_l_parser_base64_tool.html#aa86710e29c87e2d78d6f4eacf74b854d',1,'XMLParserBase64Tool::buflen()']]],
+  ['byte_5fcnt',['byte_cnt',['../class_a_w_d_1_1_b_a_s_e_1_1_a_w_d_block.html#abaf91666011d7c24c3ad8a7715a3c16e',1,'AWD::BASE::AWDBlock']]]
 ];

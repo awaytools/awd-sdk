@@ -74,11 +74,11 @@ FileWriter::writeUINTSasSmallestData(std::vector<TYPES::UINT32> value_32)
 	std::vector<TYPES::UINT16> value_16;
 	std::vector<TYPES::UINT8> value_8;
 	for(TYPES::UINT32 one_int: value_32){
-		if(one_int > std::numeric_limits<unsigned short int>::max()){
+		if(one_int >= std::numeric_limits<unsigned short int>::max()){
 			storage_precision=4;
 			break;
 		}
-		if((storage_precision==1)&&(one_int > std::numeric_limits<unsigned char>::max())){
+		if((storage_precision==1)&&(one_int >= std::numeric_limits<unsigned char>::max())){
 			storage_precision=2;
 		}
 		value_16.push_back(TYPES::UINT16(one_int));

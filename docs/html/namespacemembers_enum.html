@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -81,6 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="namespacemembers_vars.html"><span>Variables</span></a></li>
       <li><a href="namespacemembers_type.html"><span>Typedefs</span></a></li>
       <li class="current"><a href="namespacemembers_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="namespacemembers_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -95,10 +96,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="#index_i"><span>i</span></a></li>
       <li><a href="#index_l"><span>l</span></a></li>
       <li><a href="#index_m"><span>m</span></a></li>
+      <li><a href="#index_o"><span>o</span></a></li>
       <li><a href="#index_p"><span>p</span></a></li>
       <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
       <li><a href="#index_t"><span>t</span></a></li>
+      <li><a href="#index_u"><span>u</span></a></li>
       <li><a href="#index_v"><span>v</span></a></li>
       <li class="current"><a href="#index_w"><span>w</span></a></li>
     </ul>
@@ -123,7 +126,7 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -136,6 +139,9 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 &#160;
 
 <h3><a class="anchor" id="index_a"></a>- a -</h3><ul>
+<li>AlignMode
+: <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ac6b6215f345306ac43c6bf61d5480469">AWD::FONT</a>
+</li>
 <li>anim_type
 : <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a2ad07caf0e83137fed356196acc78ce8">AWD::ANIM</a>
 </li>
@@ -182,6 +188,9 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 
 
 <h3><a class="anchor" id="index_e"></a>- e -</h3><ul>
+<li>edge_state
+: <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ab44a78c6c261fbd699a1c006740bc542">AWD::GEOM</a>
+</li>
 <li>edge_type
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ac828f41708cf978073f8129092144bff">AWD::GEOM</a>
 </li>
@@ -192,6 +201,9 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 
 
 <h3><a class="anchor" id="index_f"></a>- f -</h3><ul>
+<li>filled_region_type
+: <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a681163f9785c24e6a06b37c3e63b673a">AWD::TYPES</a>
+</li>
 <li>frame_command_type
 : <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7">AWD::ANIM</a>
 </li>
@@ -204,6 +216,9 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 <h3><a class="anchor" id="index_g"></a>- g -</h3><ul>
 <li>geom_smoothing_mode
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a71e9fbb5080ba797d9456b74ae2bfb3b">AWD::GEOM</a>
+</li>
+<li>GradientSpread
+: <a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a45a3d8a99f33c5409aff2004a7a8b19a">AWD::MATERIAL</a>
 </li>
 </ul>
 
@@ -222,20 +237,30 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 <li>lens_type
 : <a class="el" href="namespace_a_w_d_1_1_c_a_m_e_r_a.html#a5caf71023ab8a71707fd9d1359a18620">AWD::CAMERA</a>
 </li>
+<li>LineMode
+: <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a7a31dd6f03e19381a3a16dbf14284ffe">AWD::FONT</a>
+</li>
 </ul>
 
 
 <h3><a class="anchor" id="index_m"></a>- m -</h3><ul>
+<li>mask_type
+: <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ae9d2e5bd5c2858e8f8b2b103075b75ed">AWD::ANIM</a>
+</li>
 <li>message_type
 : <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a503fa4b335301c9e59a05c7486ddee3b">AWD::TYPES</a>
 </li>
 </ul>
 
 
-<h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
-<li>path_geom_type
-: <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a0d4d9f3cd58ee4105a554ab5c25b5667">AWD::TYPES</a>
+<h3><a class="anchor" id="index_o"></a>- o -</h3><ul>
+<li>OrientationMode
+: <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ae12b4b3e52ef85e1ae4f4387cd15a60b">AWD::FONT</a>
 </li>
+</ul>
+
+
+<h3><a class="anchor" id="index_p"></a>- p -</h3><ul>
 <li>primitive_type
 : <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a398252fa90d39b399d1bdf7f94411a75">AWD::GEOM</a>
 </li>
@@ -287,9 +312,22 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 
 
 <h3><a class="anchor" id="index_t"></a>- t -</h3><ul>
+<li>Textfield_type
+: <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a849d1a4b5cc4de2dcda8a7d68b7aba82">AWD::FONT</a>
+</li>
+<li>TextFlow
+: <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ad2f73e48ee65f865cc7404baf39f19f1">AWD::FONT</a>
+</li>
 <li>type
 : <a class="el" href="namespace_a_w_d_1_1_l_i_g_h_t_s.html#aef84be2dcb71d2cf1eb1e9d226b8cfd5">AWD::LIGHTS</a>
 , <a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4">AWD::MATERIAL</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_u"></a>- u -</h3><ul>
+<li>utf_error
+: <a class="el" href="namespaceutf8_1_1internal.html#a9e96c2bc98b37e336b787a281090392c">utf8::internal</a>
 </li>
 </ul>
 
@@ -311,7 +349,7 @@ $(document).ready(function(){initNavTree('namespacemembers_enum.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:29 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:43 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -33,6 +33,7 @@ namespace AWD
 				Font();
 				~Font();
 
+				Font* delegate_to_font;
 				FONT::FontStyle* get_font_style(const std::string&);
 				std::vector<FONT::FontStyle*> get_font_styles();
 		};

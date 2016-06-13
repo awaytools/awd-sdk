@@ -5,11 +5,13 @@
 #include "ShellApi.h"
 #endif
 
+#include <iostream>
+#include <fstream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
-
+#include <sstream>
 #include "awd_project.h"
 #include "utils/awd_globals.h"
 #include "elements/block_instance.h"
@@ -116,8 +118,8 @@ AWDFile::process()
 					if(blockInstance->get_awdBlock()->is_category(block_category)){
 						if(blockInstance->get_process_state()==process_state::UNPROCESSED){
 							if(block_category==BLOCK::category::SCENE_OBJECT){
-								if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TIMELINE){
-									BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline*>( blockInstance->get_awdBlock());
+								if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::MOVIECLIP){
+									BLOCKS::MovieClip* timeline = reinterpret_cast<BLOCKS::MovieClip*>( blockInstance->get_awdBlock());
 									if(timeline->get_is_scene())
 										blockInstance->add_with_dependencies();
 								}
@@ -135,14 +137,18 @@ AWDFile::process()
 			}
 		}
 	}*/
-	for(BlockInstance* blockInstance : unordered_blocks){
-		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::SOUND_SOURCE){
-			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
-				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
-					blockInstance->add_with_dependencies();
+	if((this->awd_project->get_settings()->get_bool(SETTINGS::bool_settings::ExportLibSounds))||(this->awd_project->get_settings()->get_bool(SETTINGS::bool_settings::ExportTimelineSounds))){
+
+		for(BlockInstance* blockInstance : unordered_blocks){
+			if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::SOUND_SOURCE){
+				if(blockInstance->get_awdBlock()->get_state()==state::VALID){
+					if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+						blockInstance->add_with_dependencies();
+				}
 			}
 		}
 	}
+	
 	for(BlockInstance* blockInstance : unordered_blocks){
 		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::BITMAP_TEXTURE){
 			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
@@ -170,13 +176,16 @@ AWDFile::process()
 	for(BlockInstance* blockInstance : unordered_blocks){
 		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::FONT){
 			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
-				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
-					blockInstance->add_with_dependencies();
+				BLOCKS::Font * awd_font = reinterpret_cast<BLOCKS::Font *>(blockInstance->get_awdBlock());
+				if(awd_font->delegate_to_font==NULL){
+					if(blockInstance->get_process_state()==process_state::UNPROCESSED)
+						blockInstance->add_with_dependencies();
+				}
 			}
 		}
 	}
 	for(BlockInstance* blockInstance : unordered_blocks){
-		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::FORMAT){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TEXT_FORMAT){
 			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
 				if(blockInstance->get_process_state()==process_state::UNPROCESSED)
 					blockInstance->add_with_dependencies();
@@ -191,6 +200,7 @@ AWDFile::process()
 			}
 		}
 	}
+
 	for(BlockInstance* blockInstance : unordered_blocks){
 		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TRI_GEOM){
 			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
@@ -211,10 +221,10 @@ AWDFile::process()
 	// now export all library-symbols. 
 	// this are timelines that are not on the stage of any other timeline, and are no scene	
 	for(BlockInstance* blockInstance : unordered_blocks){
-		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TIMELINE){
+		if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::MOVIECLIP){
 			if(blockInstance->get_awdBlock()->get_state()==state::VALID){
 				if(blockInstance->get_process_state()==process_state::UNPROCESSED){
-					BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline*>( blockInstance->get_awdBlock());
+					BLOCKS::MovieClip* timeline = reinterpret_cast<BLOCKS::MovieClip*>( blockInstance->get_awdBlock());
 					if(!timeline->is_grafic_instance){
 						if((timeline->instance_cnt==0)&&(!timeline->get_is_scene()))
 							blockInstance->add_with_dependencies();
@@ -234,8 +244,8 @@ AWDFile::process()
 				if(blockInstance->get_state()!=state::INVALID){
 					if(blockInstance->get_process_state()==process_state::UNPROCESSED){
 						if(blockInstance->get_awdBlock()->is_category(BLOCK::category::SCENE_OBJECT)){
-							if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::TIMELINE){
-								BLOCKS::Timeline* timeline = reinterpret_cast<BLOCKS::Timeline*>( blockInstance->get_awdBlock());
+							if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::MOVIECLIP){
+								BLOCKS::MovieClip* timeline = reinterpret_cast<BLOCKS::MovieClip*>( blockInstance->get_awdBlock());
 								if(!timeline->is_grafic_instance){
 									if(timeline->get_is_scene())
 										blockInstance->add_with_dependencies();
@@ -247,12 +257,114 @@ AWDFile::process()
 			//}
 		}
 	//}
-	
+		if((this->settings->get_bool(bool_settings::ExportFrameScript))||(this->settings->get_bool(bool_settings::ExternalScripts))){
+			
+		int scripts_cnt=0;
+		for(BlockInstance* blockInstance : this->block_instances){
+			if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::MOVIECLIP){
+				BLOCKS::MovieClip* thisMC = reinterpret_cast<BLOCKS::MovieClip*>(blockInstance->get_awdBlock());
+				scripts_cnt+=thisMC->frame_scripts_stream.size();
+			}
+		}
+		if(scripts_cnt>0){
+
+			std::ofstream ousrfile;
+			std::string path_no_extension;
+			FILES::extract_path_without_file_extension( this->url, path_no_extension);
+			std::string script_path=path_no_extension+"_scripts.js";
+			std::string file_name;
+			FILES::extract_name_from_path( path_no_extension, file_name);
+		
+			if(this->settings->get_bool(bool_settings::ExternalScripts)){
+				ousrfile.open(script_path.c_str());
+				//ousrfile << "(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require==\"function\"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error(\"Cannot find module '\"+o+\"'\");throw f.code=\"MODULE_NOT_FOUND\",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require==\"function\"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({\"./src/Main_scripts.ts\":[function(require,module,exports){\n";
+    			ousrfile << "Color = require('awayjs-player/lib/adapters/AS2ColorAdapter');\n";
+				ousrfile << "System = require('awayjs-player/lib/adapters/AS2SystemAdapter');\n";
+				ousrfile << "Sound = require('awayjs-player/lib/adapters/AS2SoundAdapter');\n";
+				ousrfile << "Key = require('awayjs-player/lib/adapters/AS2KeyAdapter');\n";
+				ousrfile << "Mouse = require('awayjs-player/lib/adapters/AS2MouseAdapter');\n";
+				ousrfile << "Stage = require('awayjs-player/lib/adapters/AS2StageAdapter');\n";
+				ousrfile << "SharedObject = require('awayjs-player/lib/adapters/AS2SharedObjectAdapter');\n";
+				ousrfile << "int = function (value) { return Math.floor(value) | 0; };\n";
+				ousrfile << "string = function (value) { return value.toString(); };\n";
+				ousrfile << "getURL = function (value) { return value; };\n";
+				ousrfile << "\nvar "+file_name+"_scripts = {\n";
+			}
+
+			for(BlockInstance* blockInstance : this->block_instances){
+				if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::MOVIECLIP){
+					BLOCKS::MovieClip* timeline = reinterpret_cast<BLOCKS::MovieClip*>(blockInstance->get_awdBlock());
+					int cnt_scripts=0;
+					std::vector<std::string> new_script_stream;
+					for(std::string original_script: timeline->frame_scripts_stream){
+
+						std::string functionMCName=timeline->frame_scripts_mc_names[cnt_scripts];
+						TYPES::UINT32 functionindexe=timeline->frame_scripts_frameindex[cnt_scripts++];
+						std::string functionName=FILES::RemoveSpecialCharacters(functionMCName) + "_f" + std::to_string(functionindexe);
+					
+						if(this->settings->get_bool(bool_settings::ExternalScripts)){
+							ousrfile << "\n    //AnimateCC: Symbol: "+functionMCName+" #frame: "+std::to_string(functionindexe);
+							ousrfile << "\n    '"+ functionName +"' : function(){\n";
+							std::istringstream iss(original_script);
+							for (std::string line; std::getline(iss, line); )
+							{
+								//if(line!="var _this = this;"){
+								ousrfile << "        "+line+"\n";
+								//}
+							}
+							ousrfile << "    },\n";
+						}
+						std::string updatedScript="//"+functionName+"\n"+original_script;
+						new_script_stream.push_back(updatedScript);
+					}
+					timeline->frame_scripts_stream.clear();
+					if(this->settings->get_bool(bool_settings::ExportFrameScript)){
+						for(std::string new_script: new_script_stream){
+							timeline->frame_scripts_stream.push_back(new_script);
+						}
+					}
+				}
+			}
+			
+			if(this->settings->get_bool(bool_settings::ExternalScripts)){
+				ousrfile << "};\n";
+				//ousrfile << "export = Framescripts;\n";
+				/*
+				ousrfile << "	return Framescripts;\n";
+				ousrfile << "})();\n";
+				ousrfile << "module.exports = Framescripts;";
+				ousrfile << "},{\"awayjs-player/lib/adapters/AS2ColorAdapter\":undefined,\"awayjs-player/lib/adapters/AS2KeyAdapter\":undefined,\"awayjs-player/lib/adapters/AS2MouseAdapter\":undefined,\"awayjs-player/lib/adapters/AS2SharedObjectAdapter\":undefined,\"awayjs-player/lib/adapters/AS2SoundAdapter\":undefined,\"awayjs-player/lib/adapters/AS2StageAdapter\":undefined,\"awayjs-player/lib/adapters/AS2SystemAdapter\":undefined}]},{},[\"./src/Main_scripts.ts\"])";
+		
+				*/
+
+				ousrfile.close();
+			}
+		}
+	}
 	TYPES::UINT32 addr_cnt=0;
 	for(BlockInstance* blockInstance : this->block_instances){
 		blockInstance->set_addr(addr_cnt);
 		addr_cnt++;
 	}
+	if(this->settings->get_bool(SETTINGS::bool_settings::CreateAudioMap)){
+		std::string path_no_extension;
+		FILES::extract_path_without_file_extension( this->url, path_no_extension);
+		std::string audio_map_path=path_no_extension+"_audio_map.txt";
+		std::ofstream ousrfile_audio;
+		ousrfile_audio.open(audio_map_path.c_str());
+		ousrfile_audio << "Audio-map:";
+		for(BlockInstance* blockInstance : this->block_instances){
+			if(blockInstance->get_awdBlock()->get_type()==BLOCK::block_type::SOUND_SOURCE){
+				BLOCKS::Audio* audio_block = reinterpret_cast<BLOCKS::Audio*>(blockInstance->get_awdBlock());
+				std::string filename;
+				FILES::extract_name_from_path(audio_block->get_url(), filename);
+				std::string map_string=audio_block->get_name()+"="+filename+"\n";
+				ousrfile_audio << map_string;
+			}
+		}
+		ousrfile_audio.close();
+	}
+	this->awd_project->shared_geom->set_addr_on_subgeom(this);
 	this->set_process_state(process_state::PROCESSED);
 	return result::AWD_SUCCESS;
 }
@@ -359,14 +471,55 @@ AWDFile::add_block(BASE::AWDBlock* awd_block, BLOCK::instance_type instance_type
 }
 
 result 
+AWDFile::get_statistics_for_type(BLOCK::block_type block_type, std::vector<std::string>& output_list)
+{
+	std::vector<BASE::AWDBlock*> blocks;
+	this->awd_project->get_blocks_by_type(blocks, block_type);
+	
+	std::string output_str="	";
+	std::string sizeLength=std::to_string(blocks.size());
+	for(int i=0; i<6;i++){
+		if(sizeLength.size()>i)
+			output_str+=sizeLength[i];
+		else
+			output_str+=" ";
+	}
+	output_str+="x ";
+	std::string asset_type_str;
+	get_asset_type_as_string(block_type, asset_type_str);
+	for(int i=0; i<15;i++){
+		if(asset_type_str.size()>i)
+			output_str+=asset_type_str[i];
+		else
+			output_str+=" ";
+	}
+	
+	int this_bytes=0;
+	for(AWDBlock* awd_block : blocks){
+		this_bytes += awd_block->byte_cnt;
+	}
+	output_str+=" - bytes: ";
+	std::string bytes_length=std::to_string(this_bytes);
+	for(int i=0; i<20;i++){
+		if(bytes_length.size()>i)
+			output_str+=bytes_length[i];
+		else
+			output_str+=" ";
+	}
+	output_list.push_back(output_str);
+	return result::AWD_SUCCESS;
+
+}
+result 
 AWDFile::get_statistics(std::vector<std::string>& output_list)
 {
 	std::string stat_str =	"AWDFile stats\n";
 	stat_str += "	Output-url = '"+this->get_settings()->get_root_directory()+"'\n";
 	stat_str += "	AWDBlockInstances =	"+std::to_string(this->get_block_cnt())+"\n";
-	
+	int all_bytes=0;
 	output_list.push_back(stat_str);
 	for(BlockInstance* block_inst : this->block_instances){
+		all_bytes+=block_inst->get_awdBlock()->byte_cnt;
 		std::string asset_type_str;
 		get_asset_type_as_string(block_inst->get_awdBlock()->get_type(), asset_type_str);
 		
@@ -387,7 +540,11 @@ AWDFile::get_statistics(std::vector<std::string>& output_list)
 		std::string this_name="";
 		if(block_inst->get_awdBlock()->get_name().size()>0)
 			this_name=" | name = '"+block_inst->get_awdBlock()->get_name()+"'";;
-
+		
+		if(block_inst->get_awdBlock()->get_type()==block_type::TRI_GEOM){
+			BLOCKS::Geometry* thisGeom=reinterpret_cast<BLOCKS::Geometry*>(block_inst->get_awdBlock());
+			additional_infos+=" | subgeo-count = '"+std::to_string(thisGeom->get_num_subs());
+		}
 		if(block_inst->get_awdBlock()->get_type()==block_type::TEXT_ELEMENT){
 			BLOCKS::TextElement* thisText=reinterpret_cast<BLOCKS::TextElement*>(block_inst->get_awdBlock());
 			additional_infos+=" | text = '"+thisText->get_text()+"'";
@@ -402,7 +559,7 @@ AWDFile::get_statistics(std::vector<std::string>& output_list)
 			}
 			additional_infos+="'";
 		}
-		if(block_inst->get_awdBlock()->get_type()==block_type::FORMAT){
+		if(block_inst->get_awdBlock()->get_type()==block_type::TEXT_FORMAT){
 			BLOCKS::TextFormat* thisfont=reinterpret_cast<BLOCKS::TextFormat*>(block_inst->get_awdBlock());
 			additional_infos+=" | font: "+thisfont->get_font()->get_name();
 			additional_infos+=" | font-style: "+thisfont->get_fontStyle();
@@ -428,10 +585,22 @@ AWDFile::get_statistics(std::vector<std::string>& output_list)
 			}
 		}
 
-		std::string stat_str_block = "	ID = "+std::to_string(block_inst->get_addr())+" | "+asset_type_output + " | "+std::to_string((block_inst->get_awdBlock()->byte_cnt/1024))+" kb" + usage + this_name + additional_infos;
+		std::string stat_str_block = "	ID = "+std::to_string(block_inst->get_addr())+" | "+asset_type_output + " | "+std::to_string((block_inst->get_awdBlock()->byte_cnt))+" b" + usage + this_name + additional_infos;
 		output_list.push_back(stat_str_block);
 		
 	}
+	std::string stat_str_block = "\n All blocks bytes: "+std::to_string(all_bytes)+"\n";
+	output_list.push_back(stat_str_block);
+	get_statistics_for_type(block_type::MOVIECLIP, output_list);
+	get_statistics_for_type(block_type::BITMAP_TEXTURE, output_list);
+	get_statistics_for_type(block_type::SOUND_SOURCE, output_list);
+	get_statistics_for_type(block_type::FONT, output_list);
+	get_statistics_for_type(block_type::TEXT_ELEMENT, output_list);
+	get_statistics_for_type(block_type::TEXT_FORMAT, output_list);
+	get_statistics_for_type(block_type::TRI_GEOM, output_list);
+	get_statistics_for_type(block_type::BILLBOARD, output_list);
+	get_statistics_for_type(block_type::SIMPLE_MATERIAL, output_list);
+	get_statistics_for_type(block_type::MESH_INSTANCE_2, output_list);
 
 	return result::AWD_SUCCESS;
 }
@@ -483,7 +652,7 @@ AWDFile::write_to_disc()
 	// write all blocks into the tmp file
 	TYPES::UINT32 body_length = 0;
 	for(BlockInstance* blockInstance : this->block_instances){
-	//	if((blockInstance->get_awdBlock()->get_type()!=BLOCK::block_type::TIMELINE)&&(blockInstance->get_awdBlock()->get_type()!=BLOCK::block_type::SIMPLE_MATERIAL))
+	//	if((blockInstance->get_awdBlock()->get_type()!=BLOCK::block_type::MOVIECLIP)&&(blockInstance->get_awdBlock()->get_type()!=BLOCK::block_type::SIMPLE_MATERIAL))
 		body_length += blockInstance->write_block(fileWriter);
 	}
 	
@@ -527,6 +696,7 @@ AWDFile::write_to_disc()
 		return result::DIFFERENT_PROPERTY_VALUE;
 	
 	//delete body_buffer
+    // todo: on mac freeing the buffer causes unexpected behaviour
 	free(body_buf);
 	
 	return result::AWD_SUCCESS;

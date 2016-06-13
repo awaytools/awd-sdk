@@ -1,7 +1,8 @@
 var frame__commands_8h =
 [
-    [ "FrameCommandBase", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_base.html", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_base" ],
+    [ "FrameCommandRemoveObject", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_remove_object.html", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_remove_object" ],
     [ "FrameCommandDisplayObject", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object" ],
+    [ "FrameCommandSoundObject", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_sound_object.html", "class_a_w_d_1_1_a_n_i_m_1_1_frame_command_sound_object" ],
     [ "CMD_PROPS_INSTANCENAME", "frame__commands_8h.html#a4a3998647ccb6d85b75c9787a3382379", null ],
     [ "CMD_PROPS_MATRIX2X3", "frame__commands_8h.html#a04425f9d6c38328e7a9816f5fa7b9882", null ],
     [ "CMD_PROPS_OBJID", "frame__commands_8h.html#a7420ab1b3e8eb6fc7d3af4ae8be44fcc", null ],

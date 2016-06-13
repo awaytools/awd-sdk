@@ -17,12 +17,14 @@ Font::Font(const std::string& name):
 	AWDBlock(BLOCK::block_type::FONT, name),    
     AttrElementBase()
 {
+	this->delegate_to_font=NULL;
 }
 
 Font::Font():
 	AWDBlock(block_type::FONT),
 	AttrElementBase()
 {
+	this->delegate_to_font=NULL;
 }
 Font::~Font()
 {

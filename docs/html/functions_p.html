@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -81,6 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -133,7 +136,7 @@ $(document).ready(function(){initNavTree('functions_p.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -153,11 +156,38 @@ $(document).ready(function(){initNavTree('functions_p.html','');});
 : <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_skeleton_joint.html#aade0f08a4b14fa36f89a439146a51801">AWD::ANIM::SkeletonJoint</a>
 , <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_scene_block_base.html#a7ef8583d606cdc58cab5d83e0e4a116a">AWD::BASE::SceneBlockBase</a>
 </li>
-<li>path_intersections
-: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#ac0a4dbb66dc7b7194f09cf47b41f37dd">AWD::GEOM::PathSegment</a>
+<li>parent_child
+: <a class="el" href="struct_a_w_d_1_1_a_n_i_m_1_1_timeline_child__instance.html#a48d7a97f31097137a9a1725755146b8a">AWD::ANIM::TimelineChild_instance</a>
+</li>
+<li>parent_grafic
+: <a class="el" href="struct_a_w_d_1_1_a_n_i_m_1_1_timeline_child__instance.html#a400f13ce5f31983f875aaa0892b43eb1">AWD::ANIM::TimelineChild_instance</a>
+</li>
+<li>parseClearTag()
+: <a class="el" href="struct_x_m_l_node.html#a9ab5c0e463d037ebb9aa45c67f7cdc15">XMLNode</a>
+</li>
+<li>parseFile()
+: <a class="el" href="group__conversions.html#ga5e5968e052d58350918cd91e3535624b">XMLNode</a>
+</li>
+<li>parseString()
+: <a class="el" href="group__conversions.html#gacb95f4f00e4cf3756aac0e3a53765248">XMLNode</a>
+</li>
+<li>ParseXMLElement()
+: <a class="el" href="struct_x_m_l_node.html#a79f4910d7336078e4f923e8c187252f8">XMLNode</a>
+</li>
+<li>Path()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#ad87bd068005b719d704c21f31ce798f7">AWD::GEOM::Path</a>
+</li>
+<li>path_seg_indicies
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#a7951316697918abd8bcc084727b09a63">AWD::GEOM::Path</a>
+</li>
+<li>path_seg_indicies_inner
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#a3732e8d8115828727a4da5ff247701b4">AWD::GEOM::Path</a>
+</li>
+<li>path_segments
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#afe0d435bb2aedcaf361946cd8aa3c195">AWD::GEOM::Path</a>
 </li>
 <li>pathes
-: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_path_geom.html#a134e9e2f14bc1347132a1c210cf26d0a">AWD::GEOM::SubPathGeom</a>
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_filled_region.html#a08efd98ad1fc1e8e8d4b1a3cbfefec9b">AWD::GEOM::FilledRegion</a>
 </li>
 <li>pathSeg1
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_a_w_d_path_intersection.html#a970d76fb74166ba55351f24884eea533">AWD::GEOM::AWDPathIntersection</a>
@@ -168,9 +198,63 @@ $(document).ready(function(){initNavTree('functions_p.html','');});
 <li>PathSegment()
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#a23dfe323ec117bf5bbe89cb4042cf327">AWD::GEOM::PathSegment</a>
 </li>
+<li>pAttribute
+: <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#a163b01a6c240bfe901273183decec34d">XMLNode::XMLNodeDataTag</a>
+</li>
+<li>pChild
+: <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#abbe8b236c3f33c78184e06f76dc0cb08">XMLNode::XMLNodeDataTag</a>
+</li>
+<li>pClear
+: <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#aa7628a478ecef051f1de900efe805193">XMLNode::XMLNodeDataTag</a>
+</li>
+<li>pClr
+: <a class="el" href="struct_next_token.html#abdf8ae1822a48d9d753cef22974b661a">NextToken</a>
+</li>
+<li>point_inside_path()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#a473c5805b46bfc88036f4d724e01f6f0">AWD::GEOM::Path</a>
+</li>
+<li>point_inside_path_bool()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#aa5f39ece7f50d947cbf79739820530e8">AWD::GEOM::Path</a>
+</li>
+<li>point_inside_path_get_intersections()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#aedc92235cacddcf1fabca2f894f9b34a">AWD::GEOM::Path</a>
+</li>
+<li>polyCorners
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#ad37d7b9cbfa7820c13f71c4b6f294c5b">AWD::GEOM::Path</a>
+</li>
+<li>polyX
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#a171c650feb84020e13c2c6949fb6b224">AWD::GEOM::Path</a>
+</li>
+<li>polyY
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#a259fa738322526407def34c53d33c74f">AWD::GEOM::Path</a>
+</li>
+<li>pOrder
+: <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#a030e9e8acf2373bd2a3865161d3aa345">XMLNode::XMLNodeDataTag</a>
+</li>
+<li>port
+: <a class="el" href="struct_server_config_param.html#a980df60a8484567f7ac4c559558ea478">ServerConfigParam</a>
+</li>
 <li>position
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_vertex2_d.html#a0f76e49d8ac03e36e6f6e92817bd9e44">AWD::GEOM::Vertex2D</a>
 , <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_vertex3_d.html#a1d48da0ad276e9b9520c2851bcfc74ea">AWD::GEOM::Vertex3D</a>
+</li>
+<li>positionOfChildNode()
+: <a class="el" href="group__xml_position.html#gac98af1de6ed1218e5d26f7e509b8678f">XMLNode</a>
+</li>
+<li>positionOfClear()
+: <a class="el" href="group__xml_position.html#gafbeb4c6fcb5f164a4e5501d048c0f714">XMLNode</a>
+</li>
+<li>positionOfText()
+: <a class="el" href="group__xml_position.html#ga4376524698201e37c805bfa37945a600">XMLNode</a>
+</li>
+<li>PotentialTimelineChild()
+: <a class="el" href="struct_a_w_d_1_1_a_n_i_m_1_1_potential_timeline_child.html#a685a8df19524be545701c1d6bea9b0a5">AWD::ANIM::PotentialTimelineChild</a>
+</li>
+<li>PotentialTimelineChildGroup()
+: <a class="el" href="struct_a_w_d_1_1_a_n_i_m_1_1_potential_timeline_child_group.html#a5ed1b09bf4112435ed960a50aeacae20">AWD::ANIM::PotentialTimelineChildGroup</a>
+</li>
+<li>pParent
+: <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#aec72ce3701f4b42f2b9ea73d7edcfb32">XMLNode::XMLNodeDataTag</a>
 </li>
 <li>preAnimationClipNodes
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_animation_set.html#a6532250f39d99b237506819605a7956c">AWD::BLOCKS::AnimationSet</a>
@@ -178,11 +262,21 @@ $(document).ready(function(){initNavTree('functions_p.html','');});
 <li>premultiplied
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_material.html#a45b35c0742ea1f4f955a66f3801fca6e">AWD::BLOCKS::Material</a>
 </li>
+<li>prepare()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path.html#a2f4db6ef661764358a5c33b44be39fa3">AWD::GEOM::Path</a>
+</li>
+<li>prepend()
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_color_transform.html#abfb678cd6636b54d3e65b7e078bf051e">AWD::GEOM::ColorTransform</a>
+, <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x2x3.html#a07a49db25438515d319fdd5002ce41a0">AWD::GEOM::MATRIX2x3</a>
+</li>
 <li>preserve_all_channels
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr_desc.html#a64053c5cc6ddcbf7022406c6510dd3de">AWD::GEOM::DataStreamAttrDesc</a>
 </li>
 <li>preserve_channels()
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_data_stream_attr_desc.html#a46ad3b8aef4a4a5ec14288f3782f47a2">AWD::GEOM::DataStreamAttrDesc</a>
+</li>
+<li>prev_obj
+: <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_frame_command_display_object.html#ae2e78c026a00d568885b02b7e00432a5">AWD::ANIM::FrameCommandDisplayObject</a>
 </li>
 <li>prim_type
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_primitive.html#ab3e2513dca2fc238b0d90a59a3d2a1a7">AWD::BLOCKS::Primitive</a>
@@ -199,8 +293,38 @@ $(document).ready(function(){initNavTree('functions_p.html','');});
 <li>properties
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_attr_element_base.html#a59009dc15d276b57cf2e94384df336ed">AWD::BASE::AttrElementBase</a>
 </li>
+<li>properties_stream_f32_ct
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a6e626ce0bafb140ff334d5dce003986e">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>properties_stream_f32_mtx
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a14e17c3699f6242b8e2c030374d9fe27">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>properties_stream_f32_mtx_pos
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a812fb158313158b376077aad83c9c0e7">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>properties_stream_f32_mtx_scale
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#ae5e3ba24e6fe542ce4f36290586ea753">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>properties_stream_int
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a41613d2703078e66d2dbf725b2ef8053">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>properties_stream_strings
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#ab66ee51fbe3857e6a09f3f6cc60434fd">AWD::BLOCKS::MovieClip</a>
+</li>
 <li>property_descriptions
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_attr_element_base.html#a278dd4781e61863fe45d1591c8911385">AWD::BASE::AttrElementBase</a>
+</li>
+<li>property_index_stream
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a1b3e467747f08da2c2136c320532c257">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>property_type_stream
+: <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a50017c47b337e8abfc5ee9ca1ef76db8">AWD::BLOCKS::MovieClip</a>
+</li>
+<li>pStr
+: <a class="el" href="struct_next_token.html#a235b34c915ba7bba132d9f166af6ab37">NextToken</a>
+</li>
+<li>pText
+: <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#a49a90f30757f9a7e778ac7a960c32546">XMLNode::XMLNodeDataTag</a>
 </li>
 </ul>
 </div><!-- contents -->
@@ -208,7 +332,7 @@ $(document).ready(function(){initNavTree('functions_p.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:29 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:44 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

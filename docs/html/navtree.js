@@ -3,14 +3,16 @@ var NAVTREE =
   [ "cpp-libawd", "index.html", [
     [ "Documentation", "index.html", "index" ],
     [ "Todo List", "todo.html", null ],
+    [ "Modules", "modules.html", "modules" ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
       [ "Namespace Members", "namespacemembers.html", [
-        [ "All", "namespacemembers.html", null ],
+        [ "All", "namespacemembers.html", "namespacemembers_dup" ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ]
+        [ "Enumerations", "namespacemembers_enum.html", null ],
+        [ "Enumerator", "namespacemembers_eval.html", null ]
       ] ]
     ] ],
     [ "Classes", null, [
@@ -20,16 +22,21 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", "functions_vars" ]
+        [ "Variables", "functions_vars.html", "functions_vars" ],
+        [ "Typedefs", "functions_type.html", null ],
+        [ "Enumerations", "functions_enum.html", null ],
+        [ "Enumerator", "functions_eval.html", null ]
       ] ]
     ] ],
     [ "Files", null, [
       [ "File List", "files.html", "files" ],
       [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
+        [ "All", "globals.html", "globals_dup" ],
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
         [ "Typedefs", "globals_type.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
+        [ "Enumerator", "globals_eval.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -38,17 +45,23 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"_a_w_d_file_8cc.html",
-"awd__types_8h.html#a2ad07caf0e83137fed356196acc78ce8a057e1bb1892582c5b4b02ed27fddf4a7",
-"awd_specs_1.html",
-"class_a_w_d_1_1_a_n_i_m_1_1_timeline_frame.html#a0877670ca672d0fb6f0c1fd06b53dbf6",
-"class_a_w_d_1_1_b_a_s_e_1_1_state_element_base.html",
-"class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html#a768755a1c2e44284d63c6fc29bcf891b",
-"class_a_w_d_1_1_b_l_o_c_k_s_1_1_namespace.html#a48ea0a02ab574157470afa0118887d2e",
-"class_a_w_d_1_1_b_l_o_c_k_s_1_1_vertex_animation_clip.html#a55ddf81ddbcc4941f3ce9c532a7c25a1",
-"class_a_w_d_1_1_g_e_o_m_1_1_m_a_t_r_i_x4x3.html",
-"class_a_w_d_1_1_s_e_t_t_i_n_g_s_1_1_block_settings.html#a9c5f54879b54fab63f459e09c9ea6c72",
-"meta_8h_source.html"
+"_8__texture__atlas__util_8cc.html",
+"awd__types_8h.html#a1a9e24d5e59e1e3dc0451cf158adf85aa48d8f1a723d44ff4a87db1bb6c551c62",
+"awd__types_8h.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2e404633c66e1c8e041c6a777027374b",
+"block_8h_source.html",
+"class_a_w_d_1_1_a_w_d_project.html#a3a743a6ca69483dbaa85788f123eb8ef",
+"class_a_w_d_1_1_b_l_o_c_k_s_1_1_animation_set.html#accd6521c92cf5138a67828e567b4f4d6",
+"class_a_w_d_1_1_b_l_o_c_k_s_1_1_light.html#a68e00291c3288e9d2e00c3804e566de4",
+"class_a_w_d_1_1_b_l_o_c_k_s_1_1_movie_clip.html#a087f3c161cfb31f74cb7b49d46f30430",
+"class_a_w_d_1_1_b_l_o_c_k_s_1_1_text_element.html#a9fd7ce822055d7f13bb0547909df4b56",
+"class_a_w_d_1_1_f_o_n_t_1_1_font_style.html#a8785d98b62439cf7310900c88ad89f4c",
+"class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#a1d19165e0daf6a723b95fb0da122d460",
+"class_a_w_d_1_1_m_a_t_e_r_i_a_l_1_1_shading_method.html#af72fe55f1856d5d1c122d322a9d2929d",
+"dir_9bdd025833a80e12431bf8bdfe3bf212.html",
+"group__navigate.html#ga9561f62b9ed1fa653fe9135c4f16a41d",
+"namespace_a_w_d_1_1_l_i_g_h_t_s.html",
+"struct_x_m_l.html#a73e0e13cd36312460aa828627b75a285",
+"xml_parser_8cpp.html#aac926d375d0365773d3f250022ae413fade6467ce2e3f78ce9abb9da71e473844"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

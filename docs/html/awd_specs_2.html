@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -88,7 +88,7 @@ $(document).ready(function(){initNavTree('awd_specs_2.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -142,7 +142,7 @@ File header</h2>
 <h3><a class="anchor" id="awd_pt2_file_header_1"></a>
 Flags</h3>
 <p>The flags field is a two-byte bitflag field where each bit is a boolean (0=false, 1=true) that defines a configuration parameter for the entire file. The meaning of each bit is defined and described in the table below.</p>
-<p>In cpp-libAWD, the bitflag is converted to or from settings inside the functions <a class="el" href="class_a_w_d_1_1_s_e_t_t_i_n_g_s_1_1_settings.html#aa3bd0282644e09586e939b525a52a67f">AWD::SETTINGS::Settings::get_file_header_flag()</a> and <a class="el" href="class_a_w_d_1_1_s_e_t_t_i_n_g_s_1_1_settings.html#af85e82d12ff6cb8a03149c69ed9d728f">AWD::SETTINGS::Settings::set_file_header_flag()</a></p>
+<p>In cpp-libAWD, the bitflag is converted to or from settings inside the functions AWD::SETTINGS::Settings::get_path_2() and AWD::SETTINGS::Settings::set_path_2()</p>
 <table class="doxtable">
 <tr>
 <th>Bit </th><th>Value </th><th>Name </th><th>Description  </th></tr>
@@ -579,7 +579,7 @@ The type of geometry is only indirectly defined, by the SubGeometry-Streams foun
 <blockquote class="doxtable">
 <p><b>libawd:</b><br />
  <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a5c8a18382d0bf3c857c44411dc436acb">Documentation for ProcessMeshGeometry</a><br />
- <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#abd567aff18741d42cddc830866ebb2a8">Documentation for ProcessShapeGeometry</a><br />
+ <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#afd971a860f8a2f2c5ec91d9d715608fc">Documentation for ProcessShapeGeometry</a><br />
  <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_geometry.html">Geometry (AWDBlock)</a><br />
  <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom.html">SubGeom (Element)</a><br />
 </p>
@@ -2151,8 +2151,8 @@ UV Animation Frame</h3>
 <td>24 </td><td>1 </td><td>uint16 </td><td>Duration in milliseconds </td></tr>
 </table>
 <h2><a class="anchor" id="awd_pt2_14_7"></a>
-TimeLine</h2>
-<p>No already existing Block to compare to. A Timeline is what a MovieClip is called in FlashUI. It consists of a number of frames. Each Frame containsa number of frame-commands. The frame-commands are used to put display-objects into the scenegraph. A timeline can be added to another timeline, using these commands.</p>
+MovieClip</h2>
+<p>A MovieClip (mc) is a object that conains a timeline. A timeline consists of a number of frames. The frame-commands are used to put display-objects into the scenegraph. A timeline can be added to another timeline, using these commands.</p>
 <table class="doxtable">
 <tr>
 <th>Offset </th><th>Size </th><th>Type </th><th>Description  </th></tr>
@@ -2161,148 +2161,131 @@ TimeLine</h2>
 <tr>
 <td>11 </td><td>variable </td><td>VarString </td><td>Name </td></tr>
 <tr>
-<td>variable </td><td>1 </td><td>bool </td><td>IsScene (isRoot) </td></tr>
+<td>variable </td><td>1 </td><td>uint16 </td><td>Number of Potential Children that are only used once on timeline </td></tr>
 <tr>
-<td>variable </td><td>1 </td><td>uint8 </td><td>SceneID (if we have multiple scenes) </td></tr>
+<td>variable </td><td>variable </td><td>List of BlockAddr </td><td>BlockAdress for each potential children </td></tr>
 <tr>
-<td>variable </td><td>1 </td><td>uint16 </td><td>Number of Frames </td></tr>
+<td>variable </td><td>1 </td><td>uint16 </td><td>Number of Potential Children that might be used 2 times at the same frame </td></tr>
 <tr>
-<td>variable </td><td>variable </td><td>List of AWDTimeLineFrame </td><td>All the TimeLine Frames </td></tr>
+<td>variable </td><td>variable </td><td>List of BlockAddr + UINT16 </td><td>BlockAdress for each potential children + the number of instances that are using this potential child at same time </td></tr>
 <tr>
-<td>variable </td><td>variable </td><td>NumAttrList </td><td>Timeline-properties </td></tr>
+<td>variable </td><td>1 </td><td>uint16 </td><td>Number of Potential Sounds </td></tr>
+<tr>
+<td>variable </td><td>variable </td><td>List of BlockAddr </td><td>BlockAdress for each potential Sound </td></tr>
+<tr>
+<td>variable </td><td>1 </td><td>uint8 </td><td>Number of <a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_int">Movieclip Stream Int</a> + <a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_int_opt">Movieclip Stream Int Optional</a> </td></tr>
+<tr>
+<td>variable </td><td>1 </td><td>list of <a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_int">Movieclip Stream Int</a> </td><td>always six non-optional streams. the typs of these streams is the index e.g. this streams have types 0-5 </td></tr>
+<tr>
+<td>variable </td><td>1 </td><td>list of <a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_int_opt">Movieclip Stream Int Optional</a> </td><td>non optional streams. they need to read in the addional streamtype </td></tr>
+<tr>
+<td>variable </td><td>1 </td><td>uint8 </td><td>Number of <a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_various">Movieclip Stream Various</a> </td></tr>
+<tr>
+<td>variable </td><td>1 </td><td>list of <a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_various">Movieclip Stream Various</a> </td><td><a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_various">Movieclip Stream Various</a> </td></tr>
+<tr>
+<td>variable </td><td>variable </td><td>NumAttrList </td><td>MovieClip-properties </td></tr>
 <tr>
 <td>variable </td><td>variable </td><td>UserAttrList </td><td>User Attributes </td></tr>
 </table>
-<h3><a class="anchor" id="awd_pt2_14_7_1"></a>
-AWDTimeLineFrame</h3>
-<p>Each Frame has a duration, so on import we can count the durations up to total duration.</p>
+<h3><a class="anchor" id="awd_pt2_mc_stream_int"></a>
+Movieclip Stream Int</h3>
 <table class="doxtable">
 <tr>
 <th>Offset </th><th>Size </th><th>Type </th><th>Description  </th></tr>
 <tr>
-<td>0 </td><td>4 </td><td>Float32 </td><td>Frame Duration </td></tr>
+<td>variable </td><td>1 </td><td>uint8 </td><td>datatype (int8 / int16 / int32) </td></tr>
 <tr>
-<td>0 </td><td>2 </td><td>uint16 </td><td>number of Frame-labels - the next 2 properties are parsed for each frame-label </td></tr>
+<td>variable </td><td>1 </td><td>uint32 </td><td>size of stream </td></tr>
 <tr>
-<td>variable </td><td>2 </td><td>uint8 </td><td>Frame Identifier-type (type of frame label) </td></tr>
-<tr>
-<td>variable </td><td>variable </td><td>VarString </td><td>Frame Identifier (Frame label </td></tr>
-<tr>
-<td>variable </td><td>1 </td><td>uint16 </td><td>Number of AWDFrameCommand </td></tr>
-<tr>
-<td>variable </td><td>variable </td><td>List of Frame-Command-Blocks </td><td>Frame Command-blocks </td></tr>
-<tr>
-<td>variable </td><td>4 </td><td>uint32 </td><td>Length of code-string </td></tr>
-<tr>
-<td>variable </td><td>Length of code-string</td><td>String </td><td>The frame-script (js-code) </td></tr>
-<tr>
-<td>variable </td><td>variable </td><td>UserAttrList </td><td>User Attributes </td></tr>
+<td>variable </td><td>1 </td><td>uint8 / uint16 / uint32 </td><td>stream data </td></tr>
 </table>
-<h2><a class="anchor" id="awd_pt2_14_8"></a>
-AWDFrameCommand</h2>
-<p>Adobes Frame-Generator provides us with FrameCommands for all the different properties that we might want to update on a object.<br />
-This means, that we might have multiple Commands for the same object and the same frame.<br />
-For <a class="el" href="namespace_a_w_d.html" title="The namespace used for the complete libawd. ">AWD</a> we will merge the commands, so we only will ever have 1 command per frame and object.<br />
-The types of AWD-frameCommands are:</p>
+<h3><a class="anchor" id="awd_pt2_mc_stream_int_opt"></a>
+Movieclip Stream Int Optional</h3>
+<p>Wraps around the <a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_int">Movieclip Stream Int</a> to add a type to it</p>
 <table class="doxtable">
-<tr>
-<th>ID </th><th>FrameCommand-Name  </th></tr>
-<tr>
-<td>0 </td><td>Update Object </td></tr>
-<tr>
-<td>1 </td><td>Remove Object </td></tr>
-<tr>
-<td>2 </td><td>Update Sound </td></tr>
-</table>
-<h3><a class="anchor" id="awd_pt2_14_8_1"></a>
-Remove Object Command</h3>
-<table class="doxtable">
-<tr>
-<th>Offset </th><th>Size </th><th>Type </th><th>Description </th><th>Default  </th></tr>
-<tr>
-<td>1 </td><td>4 </td><td>uint32 </td><td>The ObjectID of the object to remove </td><td>0 (ERROR) </td></tr>
-</table>
-<h3><a class="anchor" id="awd_pt2_add_sound_command"></a>
-Add Sound Command</h3>
-<p>The Add Sound Command is s asepperate Command, because the properties for a this command are very different than the properties for the commands that affect other type of objects.</p>
-<table class="doxtable">
-<tr>
-<th>Offset </th><th>Size </th><th>Type </th><th>Description </th><th>Default  </th></tr>
-<tr>
-<td>1 </td><td>4 </td><td>uint32 </td><td>The ObjectID that should be applied to the Sound </td><td>0 (ERROR) </td></tr>
-<tr>
-<td>1 </td><td>4 </td><td>uint32 </td><td>The Ressource (<a class="el" href="namespace_a_w_d.html" title="The namespace used for the complete libawd. ">AWD</a>) ID of the Sound to add </td><td>0 (ERROR) </td></tr>
-</table>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>Sound-properties like Loop, should be added here</dd></dl>
-<h3><a class="anchor" id="awd_pt2_14_8_3"></a>
-Update Object Command</h3>
-<p>The UpdateObject command includes all the other commands that adobe outputs. <br />
-We first read a list of bool, to decide what properties of the objects should be updated. <br />
-The first of the bool decides whether we are updating an existing item, or if we want to add a new item to the timelines-display list. <br />
- </p><table class="doxtable">
 <tr>
 <th>Offset </th><th>Size </th><th>Type </th><th>Description  </th></tr>
 <tr>
-<td>0 </td><td>9 </td><td>Update Object Command Header </td><td>defines what is expected as body </td></tr>
-<tr>
-<td>9 </td><td>variable </td><td>Update Object Command Body </td><td>the variable body of the Command </td></tr>
+<td>variable </td><td>1 </td><td>uint8 </td><td><a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_int_types">Movieclip Stream Int Types</a> </td></tr>
 </table>
-<h3><a class="anchor" id="awd_pt2_14_8_34"></a>
-Update Object Command -  header</h3>
+<p>variable |1 |<a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_int">Movieclip Stream Int</a> |</p>
+<h3><a class="anchor" id="awd_pt2_mc_stream_int_types"></a>
+Movieclip Stream Int Types</h3>
 <table class="doxtable">
 <tr>
-<th>Offset </th><th>Size </th><th>Type </th><th>Name </th><th>Description  </th></tr>
+<th>ID </th><th>Description  </th></tr>
 <tr>
-<td>0 </td><td>1 </td><td>boolean </td><td>addOrUpdate </td><td>new = 0 / update = 1 </td></tr>
+<td>0 </td><td>keyframe_durations </td></tr>
 <tr>
-<td>1 </td><td>1 </td><td>boolean </td><td>updateDisplayMatrix </td><td>no-displaymatrix = 0 / displaymatrix = 1 </td></tr>
+<td>1 </td><td>frame_command_indices </td></tr>
 <tr>
-<td>2 </td><td>1 </td><td>boolean </td><td>updateColorMatrix </td><td>no-colormatrix = 0 / colormatrix = 1 </td></tr>
+<td>2 </td><td>frame_recipe </td></tr>
 <tr>
-<td>3 </td><td>1 </td><td>boolean </td><td>changeDepth </td><td>no-depth-change = 0 / depth-change = 1 </td></tr>
+<td>3 </td><td>command_length_stream </td></tr>
 <tr>
-<td>4 </td><td>1 </td><td>boolean </td><td>changeFilter </td><td>no-filter-change = 0 / filter-change = 1 </td></tr>
+<td>4 </td><td>command_index_stream </td></tr>
 <tr>
-<td>5 </td><td>1 </td><td>boolean </td><td>changeVisibility </td><td>no-visible-change = 0 / visibility-change = 1 </td></tr>
+<td>5 </td><td>add_child_stream </td></tr>
 <tr>
-<td>6 </td><td>1 </td><td>boolean </td><td>changeBlendMode </td><td>no-blendmode = 0 / blendmode = 1 </td></tr>
+<td>6 </td><td>remove_child_stream </td></tr>
 <tr>
-<td>7 </td><td>1 </td><td>boolean </td><td>updateMaskDepth </td><td>no-maskDepth= 0 / maskDepth= 1 </td></tr>
+<td>7 </td><td>update_child_stream </td></tr>
+<tr>
+<td>8 </td><td>update_child_props_indices_stream </td></tr>
+<tr>
+<td>9 </td><td>update_child_props_length_stream </td></tr>
+<tr>
+<td>10 </td><td>property_type_stream </td></tr>
+<tr>
+<td>11 </td><td>property_index_stream </td></tr>
+<tr>
+<td>12 </td><td>properties_stream_int </td></tr>
 </table>
-<h3><a class="anchor" id="awd_pt2_14_8_35"></a>
-Update Object Command -  Body</h3>
+<p>timelineDataStreamsVarious</p>
+<h3><a class="anchor" id="awd_pt2_mc_stream_various"></a>
+Movieclip Stream Various</h3>
 <table class="doxtable">
 <tr>
-<th>Offset </th><th>Size </th><th>Type </th><th>Description </th><th>Parse if  </th></tr>
+<th>Offset </th><th>Size </th><th>Type </th><th>Description  </th></tr>
 <tr>
-<td>0 </td><td>4 </td><td>uint32 </td><td>Object ID - This is not depentant on any boolean (objectID must always be included). It is either the ID that is assigned to the new object, or the ID of the already existing object, that should be updated</td><td>always </td></tr>
+<td>variable </td><td>1 </td><td>uint8 </td><td><a class="el" href="awd_specs_2.html#awd_pt2_mc_stream_various_types">Movieclip Stream Various Types</a> </td></tr>
 <tr>
-<td>4 </td><td>4 </td><td>Blockaddr </td><td>The AWD-ID of the object to add or update. </td><td>addOrUpdate=false </td></tr>
+<td>variable </td><td>1 </td><td>uint32 </td><td>size of stream </td></tr>
 <tr>
-<td>variable </td><td>24 </td><td>6 x float32 </td><td>DisplayMatrix2x3 </td><td>updateDisplayMatrix </td></tr>
-<tr>
-<td>variable </td><td>24 </td><td>20 x float32 </td><td>ColorMatrix4x5 </td><td>updateColorMatrix </td></tr>
-<tr>
-<td>variable </td><td>4 </td><td>uint32 </td><td>Depth of the Clip </td><td>changeDepth </td></tr>
-<tr>
-<td>variable </td><td>TODO </td><td>TODO </td><td>TODO:specs for filter </td><td>changeFilter </td></tr>
-<tr>
-<td>variable </td><td>1 </td><td>boolean </td><td>Visible state of object </td><td>changeVisibility </td></tr>
-<tr>
-<td>variable </td><td>variable </td><td>varString </td><td>The instance-name of the new object. </td><td>setInstanceName </td></tr>
-<tr>
-<td>variable </td><td>1 </td><td>uint8 </td><td>BlendMode </td><td>changeBlendMode </td></tr>
-<tr>
-<td>variable </td><td>1 </td><td>uint32 </td><td>The depth of clip-mask. 0=not used as mask </td><td>updateMaskDepth </td></tr>
-<tr>
-<td>variable </td><td>2 </td><td>uint16 </td><td>Number of subshapes </td><td>This should always be parsed, but should be 0 if the object found at objectID / ressourceID is not a shape </td></tr>
-<tr>
-<td>variable </td><td>variable </td><td>list of BlockAddr </td><td>The awd-ID to the fill-object for each subMesh </td><td>If number of subshapes is &gt; 0 </td></tr>
+<td>variable </td><td>1 </td><td>uint8 / uint16 / uint32 </td><td>variable stream content </td></tr>
 </table>
-<blockquote class="doxtable">
-<p>Claus suggested to get rid of the object-id, because we could use the objects-depth instead. I think in <a class="el" href="namespace_a_w_d.html" title="The namespace used for the complete libawd. ">AWD</a> this is not possible, because we rely heavily on that the objectID is correct for a object for all FrameCommands for this timeline, <br />
- even if changing the object depth. </p>
-</blockquote>
+<h3><a class="anchor" id="awd_pt2_mc_stream_various_types"></a>
+Movieclip Stream Various Types</h3>
+<table class="doxtable">
+<tr>
+<th>id </th><th>Description </th><th>interpret data as  </th></tr>
+<tr>
+<td>0 </td><td>mtx_scale </td><td>TYPES::F32 </td></tr>
+<tr>
+<td>1 </td><td>mtx_pos </td><td>TYPES::F32 </td></tr>
+<tr>
+<td>2 </td><td>mtx_all </td><td>TYPES::F32 </td></tr>
+<tr>
+<td>3 </td><td>colortransforms </td><td>TYPES::F32 </td></tr>
+<tr>
+<td>4 </td><td>framelabels </td><td>TYPES::UINT16 (label count) - for labelcount: VarString (name) + TYPES::UINT16 (frameindex) </td></tr>
+<tr>
+<td>5 </td><td>string properties </td><td>TYPES::UINT16 (string count)- for stringcount: TYPES::UINT16 (string-length) + string-length*TYPES::UINT8(text) </td></tr>
+<tr>
+<td>6 </td><td>script_stream </td><td>TYPES::UINT16 (script count)- for scriptcount:TYPES::UINT16 (frameindex) + TYPES::UINT32 (script-length) + script-length*TYPES::UINT8(text) </td></tr>
+</table>
+<h3><a class="anchor" id="awd_pt2_mc_properties"></a>
+MovieClip-properties</h3>
+<table class="doxtable">
+<tr>
+<th>ID </th><th>Size </th><th>Type </th><th>Name </th><th>Description  </th></tr>
+<tr>
+<td>1 </td><td>4 </td><td>Float </td><td>FPS </td><td>The fps of the movieclip. not used yet, because we use global fps right now </td></tr>
+<tr>
+<td>2 </td><td>1 </td><td>UINT8 </td><td>Script-Type </td><td>The type of script, for now we only support AS2 </td></tr>
+<tr>
+<td>3 </td><td>2 </td><td>uint16 </td><td>sceneID </td><td>The sceneID. if no sceneID is present, the id is considered 0 (= no scene) </td></tr>
+</table>
 <h1><a class="anchor" id="awd_pt2_15"></a>
 Sound Blocks</h1>
 <h2><a class="anchor" id="awd_pt2_15_1"></a>
@@ -2312,14 +2295,6 @@ They only differ in their Block-Type, and in the type of properties they can hav
  As with textures, the sound can be present in the file as embed data, or as URL.<br />
 In either way, the parser will stop parsing the current <a class="el" href="namespace_a_w_d.html" title="The namespace used for the complete libawd. ">AWD</a>, hand the sound-data over to the Parsing-system, and wait until processing has finished.<br />
 </p>
-<h5>Sound-properties</h5>
-<table class="doxtable">
-<tr>
-<th>ID </th><th>Size </th><th>Type </th><th>Name </th><th>Description  </th></tr>
-<tr>
-<td>TODO </td><td>TODO </td><td>TODO </td><td>TODO </td><td>TODO </td></tr>
-</table>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>The sound-properties are defined in the <a class="el" href="awd_specs_2.html#awd_pt2_add_sound_command">Add Sound Command</a>, so we should not need to store any properties on the sound-block.</dd></dl>
 <h1><a class="anchor" id="awd_pt2_16"></a>
 Text BLocks</h1>
 <h2><a class="anchor" id="awd_pt2_16_1"></a>
@@ -2590,7 +2565,7 @@ Meta-data blocks (ID 255)</h2>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="index.html">Documentation</a></li><li class="navelem"><a class="el" href="awd_specs.html">AWD 3.0 Specifications</a></li>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:26 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:33 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

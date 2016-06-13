@@ -14,7 +14,7 @@ namespace AWD
 {
 	namespace BLOCKS
 	{
-		class Timeline;
+		class MovieClip;
 	}
 	namespace ANIM
 	{	
@@ -48,7 +48,7 @@ namespace AWD
 		class TimelineDepthLayer;
 		struct Graphic_instance
 		{
-			BLOCKS::Timeline* graphic_timeline;
+			BLOCKS::MovieClip* graphic_timeline;
 			ANIM::TimelineChild_instance* graphic_child;
 			ANIM::TimelineDepthLayer* insert_layer;
 			std::vector<ANIM::TimelineChild_instance*> graphic_childs;
@@ -88,14 +88,19 @@ namespace AWD
 			ANIM::TimelineChild_instance* parent_grafic;
 			GEOM::MATRIX2x3* current_matrix;
 			GEOM::ColorTransform* current_ct;
+			ANIM::mask_type mask_state;
 			
 			bool is_masked;			//used for graphic clip merging
 			bool is_mask;			//used for graphic clip merging
 			int depth;
 			int start_frame;
 			int end_frame;
+			int sessionID;
+			int obj_id;
+			int mask_until_objID;
 			TimelineChild_instance()
 			{
+				mask_state=ANIM::mask_type::NONE;
 				current_matrix=new GEOM::MATRIX2x3();
 				current_ct=new GEOM::ColorTransform();
 				parent_grafic=NULL;
@@ -107,12 +112,27 @@ namespace AWD
 				depth=0;
 				start_frame=1;
 				end_frame=1;
+				sessionID=-1;
+				obj_id=-1;
+				mask_until_objID=-1;
 			}
 			~TimelineChild_instance()
 			{
 				delete current_matrix;
 				delete current_ct;
 			}
+		};
+		class TimelineMaskLayer
+		{
+			public:
+				TimelineMaskLayer();
+				~TimelineMaskLayer();
+
+				std::vector<TYPES::UINT32> mask_depths;
+				std::vector<TYPES::UINT32> maskee_depths;
+				std::vector<TimelineChild_instance*> mask_objects;
+
+			
 		};
 		class TimelineDepthLayer
 		{

@@ -119,7 +119,7 @@ ShadingMethod::collect_dependencies(FILES::AWDFile* target_file, BLOCK::instance
 		this->shading_props->set(PROPS_BADDR4, tex_val, sizeof(BADDR), TYPES::data_types::BADDR);
 	}
 	*/
-	return result::AWD_SUCCESS;
+    return result::AWD_SUCCESS;
 }
 
 TYPES::UINT32

@@ -12,13 +12,13 @@ using namespace AWD::BLOCK;
 using namespace AWD::FONT;
 
 TextFormat::TextFormat(const std::string& name) :
-	BASE::AWDBlock(BLOCK::block_type::FORMAT, name),
+	BASE::AWDBlock(BLOCK::block_type::TEXT_FORMAT, name),
     BASE::AttrElementBase()
 {
 	this->init();
 }
 TextFormat::TextFormat() :
-	AWDBlock(BLOCK::block_type::FORMAT),
+	AWDBlock(BLOCK::block_type::TEXT_FORMAT),
     AttrElementBase()
 {
 	this->init();
@@ -39,9 +39,9 @@ void TextFormat::init()
 	*default_union.ui16=12;
 	this->properties->add(PROP_TEXTFORMAT_FONTSIZE,	default_union, 2,   data_types::UINT16, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
 			
-	default_union.v=malloc(2);
-	*default_union.ui16=0;
-	this->properties->add(PROP_TEXTFORMAT_LETTER_SPACING,	default_union, 2,   data_types::UINT16, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
+	default_union.v=malloc(8);
+	*default_union.F64=0;
+	this->properties->add(PROP_TEXTFORMAT_LETTER_SPACING,	default_union, 4,   data_types::FLOAT64, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
 	
 	default_union.v=malloc(1);
 	*default_union.ui8=0;
@@ -59,21 +59,21 @@ void TextFormat::init()
 	*default_union.ui8=0;
 	this->properties->add(PROP_TEXTFORMAT_ALIGNMENT,	default_union, 1,   data_types::UINT8, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
 	
-	default_union.v=malloc(2);
-	*default_union.ui16=0;
-	this->properties->add(PROP_TEXTFORMAT_INDENT,	default_union, 2,   data_types::UINT16, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
+	default_union.v=malloc(8);
+	*default_union.F64=0;
+	this->properties->add(PROP_TEXTFORMAT_INDENT,	default_union, 4,   data_types::FLOAT64, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
 	
-	default_union.v=malloc(2);
-	*default_union.ui16=0;
-	this->properties->add(PROP_TEXTFORMAT_LEFT_MARGIN,	default_union, 2,   data_types::UINT16, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
+	default_union.v=malloc(8);
+	*default_union.F64=0;
+	this->properties->add(PROP_TEXTFORMAT_LEFT_MARGIN,	default_union, 4,   data_types::FLOAT64, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
 	
-	default_union.v=malloc(2);
-	*default_union.ui16=0;
-	this->properties->add(PROP_TEXTFORMAT_RIGHT_MARGIN,	default_union, 2,   data_types::UINT16, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
+	default_union.v=malloc(8);
+	*default_union.F64=0;
+	this->properties->add(PROP_TEXTFORMAT_RIGHT_MARGIN,	default_union, 4,   data_types::FLOAT64, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
 	
-	default_union.v=malloc(2);
-	*default_union.ui16=0;
-	this->properties->add(PROP_TEXTFORMAT_LINE_SPACING,	default_union, 2,   data_types::UINT16, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
+	default_union.v=malloc(8);
+	*default_union.F64=0;
+	this->properties->add(PROP_TEXTFORMAT_LINE_SPACING,	default_union, 4,   data_types::FLOAT64, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
 	
 }	
 TextFormat::~TextFormat()
@@ -162,11 +162,11 @@ void TextFormat::set_fontSize(int fontSize)
 {
 	this->fontSize=fontSize;
 }
-int TextFormat::get_letterSpacing()
+double TextFormat::get_letterSpacing()
 {
 	return this->letterSpacing;
 }
-void TextFormat::set_letterSpacing(int letterSpacing)
+void TextFormat::set_letterSpacing(double letterSpacing)
 {
 	this->letterSpacing=letterSpacing;
 }
@@ -191,9 +191,9 @@ TextFormat::calc_body_length(AWDFile* awd_file, SETTINGS::BlockSettings * settin
 	this->properties->set(PROP_TEXTFORMAT_FONTSIZE, properties_union_size, 2);
 
 	TYPES::union_ptr properties_union_letter_space;
-	properties_union_letter_space.v=malloc(2);
-	*properties_union_letter_space.ui16=this->letterSpacing;
-	this->properties->set(PROP_TEXTFORMAT_LETTER_SPACING, properties_union_letter_space, 2);
+	properties_union_letter_space.v=malloc(8);
+	*properties_union_letter_space.F64=this->letterSpacing;
+	this->properties->set(PROP_TEXTFORMAT_LETTER_SPACING, properties_union_letter_space, 4);
 	
 	TYPES::union_ptr properties_union_is_rotated;
 	properties_union_is_rotated.v=malloc(1);
@@ -216,24 +216,24 @@ TextFormat::calc_body_length(AWDFile* awd_file, SETTINGS::BlockSettings * settin
 	this->properties->set(PROP_TEXTFORMAT_ALIGNMENT, properties_union_align, 1);
 	
 	TYPES::union_ptr properties_union_indent;
-	properties_union_indent.v=malloc(2);
-	*properties_union_indent.ui16=(TYPES::UINT16)this->indent;
-	this->properties->set(PROP_TEXTFORMAT_INDENT, properties_union_indent, 2);
+	properties_union_indent.v=malloc(8);
+	*properties_union_indent.F64=(TYPES::F64)this->indent;
+	this->properties->set(PROP_TEXTFORMAT_INDENT, properties_union_indent, 4);
 
 	TYPES::union_ptr properties_left_margin;
-	properties_left_margin.v=malloc(2);
-	*properties_left_margin.ui16=(TYPES::UINT16)this->left_margin;
-	this->properties->set(PROP_TEXTFORMAT_LEFT_MARGIN, properties_left_margin, 2);
+	properties_left_margin.v=malloc(8);
+	*properties_left_margin.F64=(TYPES::F64)this->left_margin;
+	this->properties->set(PROP_TEXTFORMAT_LEFT_MARGIN, properties_left_margin, 4);
 
 	TYPES::union_ptr properties_right_margin;
-	properties_right_margin.v=malloc(2);
-	*properties_right_margin.ui16=(TYPES::UINT16)this->right_margin;
-	this->properties->set(PROP_TEXTFORMAT_RIGHT_MARGIN, properties_right_margin, 2);
+	properties_right_margin.v=malloc(8);
+	*properties_right_margin.F64=(TYPES::F64)this->right_margin;
+	this->properties->set(PROP_TEXTFORMAT_RIGHT_MARGIN, properties_right_margin, 4);
 	
 	TYPES::union_ptr properties_line_spacing;
-	properties_line_spacing.v=malloc(2);
-	*properties_line_spacing.ui16=(TYPES::UINT16)this->line_spacing;
-	this->properties->set(PROP_TEXTFORMAT_LINE_SPACING, properties_line_spacing, 2);
+	properties_line_spacing.v=malloc(8);
+	*properties_line_spacing.F64=(TYPES::F64)this->line_spacing;
+	this->properties->set(PROP_TEXTFORMAT_LINE_SPACING, properties_line_spacing, 4);
 
 
 	TYPES::UINT32 length = sizeof(TYPES::UINT16) + this->get_name().size();//name

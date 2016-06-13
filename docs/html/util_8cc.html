@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('util_8cc.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -109,6 +109,9 @@ $(document).ready(function(){initNavTree('util_8cc.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="util_8h_source.html">utils/util.h</a>&quot;</code><br />
+<code>#include &quot;dirent.h&quot;</code><br />
+<code>#include &lt;sys/time.h&gt;</code><br />
+<code>#include &lt;ctime&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;fstream&gt;</code><br />
 <code>#include &lt;istream&gt;</code><br />
@@ -116,15 +119,14 @@ $(document).ready(function(){initNavTree('util_8cc.html','');});
 <code>#include &lt;iostream&gt;</code><br />
 <code>#include &lt;iomanip&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
-<code>#include &quot;direct.h&quot;</code><br />
 <code>#include &lt;sys/stat.h&gt;</code><br />
-<code>#include &quot;<a class="el" href="dirent_8h_source.html">utils/dirent.h</a>&quot;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;cstring&gt;</code><br />
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &quot;<a class="el" href="anim__set_8h_source.html">blocks/anim_set.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="animator_8h_source.html">blocks/animator.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="bitmap__texture_8h_source.html">blocks/bitmap_texture.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="billboard_8h_source.html">blocks/billboard.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="camera_8h_source.html">blocks/camera.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="command_8h_source.html">blocks/command.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="cube__texture_8h_source.html">blocks/cube_texture.h</a>&quot;</code><br />
@@ -134,6 +136,7 @@ $(document).ready(function(){initNavTree('util_8cc.html','');});
 <code>#include &quot;<a class="el" href="light__picker_8h_source.html">blocks/light_picker.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="material_8h_source.html">blocks/material.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="mesh__inst_8h_source.html">blocks/mesh_inst.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="mesh__library_8h_source.html">blocks/mesh_library.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="meta_8h_source.html">blocks/meta.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="namespace_8h_source.html">blocks/namespace.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="objectcontainer_8h_source.html">blocks/objectcontainer.h</a>&quot;</code><br />
@@ -149,13 +152,14 @@ $(document).ready(function(){initNavTree('util_8cc.html','');});
 <code>#include &quot;<a class="el" href="uv__pose_8h_source.html">blocks/uv_pose.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vertex__anim__clip_8h_source.html">blocks/vertex_anim_clip.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="vertex__pose_8h_source.html">blocks/vertex_pose.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_h_t_t_p_server_8h_source.html">HTTPServer.h</a>&quot;</code><br />
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_df5ed10f6fba5340c67facb6abec7d17.html">src</a></li><li class="navelem"><a class="el" href="dir_f8dff7a6fb252896c5c40d815e40d74c.html">utils</a></li><li class="navelem"><a class="el" href="util_8cc.html">util.cc</a></li>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:26 for cpp-libawd by
+    <li class="navelem"><a class="el" href="dir_233d66e35ddc143fa25cd72ec3c18f7c.html">src</a></li><li class="navelem"><a class="el" href="dir_311727f6afbe60e1115c4b20e4902043.html">utils</a></li><li class="navelem"><a class="el" href="util_8cc.html">util.cc</a></li>
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:33 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

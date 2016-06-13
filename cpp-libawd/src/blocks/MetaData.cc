@@ -3,6 +3,7 @@
 #include "utils/awd_types.h"
 #include "utils/awd_properties.h"
 #include "utils/awd_globals.h"
+#include "utils/util.h"
 #include "base/block.h"
 #include "base/attr.h"
 #include "base/state_element_base.h"
@@ -25,7 +26,7 @@ MetaData::MetaData(const std::string& generator_name, const std::string& generat
 	this->generator_name=generator_name;
 	this->generator_version=generator_version;
 	this->encoder_name = "libawd";
-	this->encoder_version = std::to_string(AWD::VERSION_MAJOR) + "." + std::to_string(AWD::VERSION_MINOR) + "." + std::to_string(AWD::VERSION_BUILD) +"." + AWD::VERSION_RELEASE;
+    this->encoder_version = FILES::int_to_string(AWD::VERSION_MAJOR) + "." + FILES::int_to_string(AWD::VERSION_MINOR) + "." + FILES::int_to_string(AWD::VERSION_BUILD) +"." + AWD::VERSION_RELEASE;
 
 	//	Create default-properties for every property that should be able to set on MetaData.
 	//	String are getting set with a NULL pointer as default.

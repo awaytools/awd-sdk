@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -81,6 +81,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li class="current"><a href="functions.html"><span>All</span></a></li>
       <li><a href="functions_func.html"><span>Functions</span></a></li>
       <li><a href="functions_vars.html"><span>Variables</span></a></li>
+      <li><a href="functions_type.html"><span>Typedefs</span></a></li>
+      <li><a href="functions_enum.html"><span>Enumerations</span></a></li>
+      <li><a href="functions_eval.html"><span>Enumerator</span></a></li>
     </ul>
   </div>
   <div id="navrow4" class="tabs3">
@@ -133,7 +136,7 @@ $(document).ready(function(){initNavTree('functions_n.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -148,7 +151,7 @@ $(document).ready(function(){initNavTree('functions_n.html','');});
 <h3><a class="anchor" id="index_n"></a>- n -</h3><ul>
 <li>name
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_a_w_d_block.html#af458f9f600237fd4cadc148939f20e12">AWD::BASE::AWDBlock</a>
-, <a class="el" href="struct_d_i_r.html#a4fe4e280f69fedd266c98f65d8f23f73">DIR</a>
+, <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_sub_geom.html#a826534db29c472aa949f79336ebea113">AWD::GEOM::SubGeom</a>
 </li>
 <li>name_space
 : <a class="el" href="class_a_w_d_1_1_a_w_d_project.html#aadb7a53ae4b8f5aa88986400b246bef7">AWD::AWDProject</a>
@@ -169,8 +172,43 @@ $(document).ready(function(){initNavTree('functions_n.html','');});
 <li>NameSpace_struct()
 : <a class="el" href="struct_a_w_d_1_1_t_y_p_e_s_1_1_name_space__struct.html#ac9dc97832d5dcd742c67fcbcfcf3c1b3">AWD::TYPES::NameSpace_struct</a>
 </li>
+<li>nAttribute()
+: <a class="el" href="group__navigate.html#ga9561f62b9ed1fa653fe9135c4f16a41d">XMLNode</a>
+, <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#afc265fac21f1f54ef2a9729d785106bf">XMLNode::XMLNodeDataTag</a>
+</li>
+<li>nChild
+: <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#a04bab521d6ff1e4644468cd8090530ce">XMLNode::XMLNodeDataTag</a>
+</li>
+<li>nChildNode()
+: <a class="el" href="group__navigate.html#ga8e52198f258167cd796dae21f1ffc352">XMLNode</a>
+</li>
+<li>nClear()
+: <a class="el" href="group__navigate.html#ga87d34f1ba1ba7d49e8aeacc63548dead">XMLNode</a>
+, <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#aef6eed6eb052360cdaca01db58d8c377">XMLNode::XMLNodeDataTag</a>
+</li>
+<li>nColumn
+: <a class="el" href="struct_x_m_l_results.html#af0d1358dbb7b124d2e8e4d9052509c8e">XMLResults</a>
+</li>
+<li>nElement()
+: <a class="el" href="group__navigate.html#ga8e9538deb9144dcab39b3a510a8202f1">XMLNode</a>
+</li>
 <li>neutralPose
 : <a class="el" href="class_a_w_d_1_1_b_l_o_c_k_s_1_1_skeleton.html#a837ee3138c6df441207e34ce9e4a2d8a">AWD::BLOCKS::Skeleton</a>
+</li>
+<li>next
+: <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#ab3eceae2d4fbe95ee120115e8c5cccb9">AWD::GEOM::PathSegment</a>
+</li>
+<li>nFirst
+: <a class="el" href="struct_x_m_l.html#a49f39e41382ff416ec5c0b5aedfd3735">XML</a>
+</li>
+<li>nIndex
+: <a class="el" href="struct_x_m_l.html#a73a28b836fcc0656097c7e751b87460d">XML</a>
+</li>
+<li>nIndexMissigEndTag
+: <a class="el" href="struct_x_m_l.html#a31832d9cbe0dc08449dbededa9a2d469">XML</a>
+</li>
+<li>nLine
+: <a class="el" href="struct_x_m_l_results.html#a8741d887c2843fc1ce8fffc12f662595">XMLResults</a>
 </li>
 <li>no_intersecting
 : <a class="el" href="class_a_w_d_1_1_g_e_o_m_1_1_path_segment.html#abd2c14f77243e04b37121f40a80457b3">AWD::GEOM::PathSegment</a>
@@ -189,6 +227,10 @@ $(document).ready(function(){initNavTree('functions_n.html','');});
 </li>
 <li>ns_handle
 : <a class="el" href="class_a_w_d_1_1_b_a_s_e_1_1_a_w_d_block.html#a8b06d1752250f4580f063468138554e7">AWD::BASE::AWDBlock</a>
+</li>
+<li>nText()
+: <a class="el" href="group__navigate.html#ga22e7e7cf8f173a1ec3ec3d6ff60819d9">XMLNode</a>
+, <a class="el" href="struct_x_m_l_node_1_1_x_m_l_node_data_tag.html#ace4ec863994d39bc5cb0acf84cbb43d1">XMLNode::XMLNodeDataTag</a>
 </li>
 <li>num_children
 : <a class="el" href="class_a_w_d_1_1_a_n_i_m_1_1_skeleton_joint.html#a53ea9ad1fb8e0d5047983ce36610075e">AWD::ANIM::SkeletonJoint</a>
@@ -211,7 +253,7 @@ $(document).ready(function(){initNavTree('functions_n.html','');});
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:29 for cpp-libawd by
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:44 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

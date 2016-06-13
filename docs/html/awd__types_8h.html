@@ -28,7 +28,6 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
-  <td id="projectlogo"><img alt="Logo" src="Logo_AwayTools_300x300.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">cpp-libawd
    </div>
@@ -47,6 +46,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -94,7 +94,7 @@ $(document).ready(function(){initNavTree('awd__types_8h.html','');});
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Modules</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -115,6 +115,7 @@ $(document).ready(function(){initNavTree('awd__types_8h.html','');});
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 </div>
 <p><a href="awd__types_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -245,7 +246,13 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4eaffc58bc55c429bd4e3d433c8f4fddf02">AWD::result::DIFFERENT_PROPERTY_VALUE</a>, 
 <a class="el" href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4eaa82a16b1c8883b6282c806212e47f3e5">AWD::result::SAME_PROPERTY_VALUE</a>, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4ea7b2217a68023751a70e168be8f38254c">AWD::result::UNKNOWN_PROPERTY_DATA_TYPE</a>
+&#160;&#160;<a class="el" href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4ea7b2217a68023751a70e168be8f38254c">AWD::result::UNKNOWN_PROPERTY_DATA_TYPE</a>, 
+<a class="el" href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4eacc961818881654b00ff74d39a74a5846">AWD::result::PATH_CONTAINS_LESS_THAN_THREE_SEGMENTS</a>, 
+<a class="el" href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4ead67c354f3e5db3b33fe94ba62bd8adb3">AWD::result::PATH_NOT_CLOSING</a>, 
+<a class="el" href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4ea0c6025ece873234479bd2ab9bb6c9502">AWD::result::COULD_NOT_DECIDE_ON_CURVE_TYPE</a>, 
+<br />
+&#160;&#160;<a class="el" href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4ea9db9836ef062ef90e86db326982e59c3">AWD::result::SUBDIVIDED_PATHES</a>, 
+<a class="el" href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4ea125d841d929c8ce144fc43dd419f2591">AWD::result::NO_BLOCKS_FOUND</a>
 <br />
  }</td></tr>
 <tr class="memdesc:acbb32719e1a2732edc69205b0bc0bc4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of result . Use AWD::GetMessageForMessageCode, to get the std::string for this result  <a href="namespace_a_w_d.html#acbb32719e1a2732edc69205b0bc0bc4e">More...</a><br /></td></tr>
@@ -273,11 +280,11 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#ab101b7f5b510c8b6ec6d3715ecc1821ca4c6126013a0cbc4e0013c3c8244aa706">AWD::TYPES::property_storage_type::UPDATED_PROPERTY</a>
  }</td></tr>
 <tr class="separator:ab101b7f5b510c8b6ec6d3715ecc1821c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d4d9f3cd58ee4105a554ab5c25b5667"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a0d4d9f3cd58ee4105a554ab5c25b5667">AWD::TYPES::path_geom_type</a> { <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a0d4d9f3cd58ee4105a554ab5c25b5667a03d49c37d2d91591b9a01471592d9e11">AWD::TYPES::path_geom_type::STANDART_FILL</a> =0, 
-<a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a0d4d9f3cd58ee4105a554ab5c25b5667a87aa6200fd35c88dfc43bc0f7a31a142">AWD::TYPES::path_geom_type::FILL_CONVERTED_FROM_STROKE</a>, 
-<a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a0d4d9f3cd58ee4105a554ab5c25b5667a3f4ae7354310a9d791bd4d1d86965e14">AWD::TYPES::path_geom_type::GENERATED_FONT_OUTLINES</a>
+<tr class="memitem:a681163f9785c24e6a06b37c3e63b673a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a681163f9785c24e6a06b37c3e63b673a">AWD::TYPES::filled_region_type</a> { <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a681163f9785c24e6a06b37c3e63b673aa03d49c37d2d91591b9a01471592d9e11">AWD::TYPES::filled_region_type::STANDART_FILL</a> =0, 
+<a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a681163f9785c24e6a06b37c3e63b673aa87aa6200fd35c88dfc43bc0f7a31a142">AWD::TYPES::filled_region_type::FILL_CONVERTED_FROM_STROKE</a>, 
+<a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a681163f9785c24e6a06b37c3e63b673aa3f4ae7354310a9d791bd4d1d86965e14">AWD::TYPES::filled_region_type::GENERATED_FONT_OUTLINES</a>
  }</td></tr>
-<tr class="separator:a0d4d9f3cd58ee4105a554ab5c25b5667"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a681163f9785c24e6a06b37c3e63b673a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac1f7856fff9745508de0058fd9c34a6c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#ac1f7856fff9745508de0058fd9c34a6c">AWD::TYPES::state</a> { <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#ac1f7856fff9745508de0058fd9c34a6cac9f1a6384b1c466d4612f513bd8e13ea">AWD::TYPES::state::VALID</a> =0, 
 <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#ac1f7856fff9745508de0058fd9c34a6caba2b45bdc11e2a4a6e86aab2ac693cbb">AWD::TYPES::state::EMPTY</a> =1, 
 <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#ac1f7856fff9745508de0058fd9c34a6caccc0377a8afbf50e7094f5c23a8af223">AWD::TYPES::state::INVALID</a> =2, 
@@ -315,7 +322,10 @@ Enumerations</h2></td></tr>
 &#160;&#160;<a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85aa854d5a7764af1190c92b508e59e44620">AWD::TYPES::data_types::MTX3x2</a>, 
 <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85aa3b810c978e11acd04706f31a05e8eede">AWD::TYPES::data_types::MTX3x3</a>, 
 <a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85aae35ae94bc45e66c945d1ecb46493e8a2">AWD::TYPES::data_types::MTX4x3</a>, 
-<a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85aa27f8f25d9d867090c3701e0920f6029b">AWD::TYPES::data_types::MTX4x4</a>
+<a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85aa27f8f25d9d867090c3701e0920f6029b">AWD::TYPES::data_types::MTX4x4</a>, 
+<br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85aa3244f20a4614e26f4b617e6e1fb467db">AWD::TYPES::data_types::MTX5x4</a>, 
+<a class="el" href="namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85aafd1bc048a79d70a40a1fc4ce632b09a0">AWD::TYPES::data_types::VECTORINT3x1</a>
 <br />
  }</td></tr>
 <tr class="memdesc:a1a9e24d5e59e1e3dc0451cf158adf85a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Numeric identifier for all basic data-types contained in TYPES.  <a href="namespace_a_w_d_1_1_t_y_p_e_s.html#a1a9e24d5e59e1e3dc0451cf158adf85a">More...</a><br /></td></tr>
@@ -333,16 +343,29 @@ Enumerations</h2></td></tr>
 <tr class="separator:ab0396eb1039a7a56b92dae9693d04b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae9c947527642f949d2b2754550b70010"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#ae9c947527642f949d2b2754550b70010">AWD::FILES::write_string_with</a> { <a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#ae9c947527642f949d2b2754550b70010a8ad4fb00085f55191bc97e4c877842af">AWD::FILES::write_string_with::NO_LENGTH_VALUE</a> =0, 
 <a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#ae9c947527642f949d2b2754550b70010aa54043f088582c9421531f6c682c3987">AWD::FILES::write_string_with::LENGTH_AS_UINT16</a> =1, 
-<a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#ae9c947527642f949d2b2754550b70010a57d3b2464ba4514a279f22100eff1e7f">AWD::FILES::write_string_with::LENGTH_AS_UINT32</a> =2
+<a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#ae9c947527642f949d2b2754550b70010a57d3b2464ba4514a279f22100eff1e7f">AWD::FILES::write_string_with::LENGTH_AS_UINT32</a> =2, 
+<a class="el" href="namespace_a_w_d_1_1_f_i_l_e_s.html#ae9c947527642f949d2b2754550b70010a50af550cd5fefbcd7c09438789a22ce6">AWD::FILES::write_string_with::LENGTH_AS_UINT8</a> =3
  }</td></tr>
 <tr class="memdesc:ae9c947527642f949d2b2754550b70010"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines if a string should be saved or read with any length-indicator.  <a href="namespace_a_w_d_1_1_f_i_l_e_s.html#ae9c947527642f949d2b2754550b70010">More...</a><br /></td></tr>
 <tr class="separator:ae9c947527642f949d2b2754550b70010"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1efca5533db2cca3ceace83c2bfbf1d4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4">AWD::MATERIAL::type</a> { <a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4a0db45d2a4141101bdfe48e3314cfbca3">AWD::MATERIAL::type::UNDEFINED</a> =0, 
-<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4a04bd834032febb3fda8c6936ee140949">AWD::MATERIAL::type::COLOR</a> =1, 
-<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4a3f92f542bd9ec48f912b9350e22736ac">AWD::MATERIAL::type::TEXTURE</a> =2
+<tr class="memitem:a1efca5533db2cca3ceace83c2bfbf1d4"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4">AWD::MATERIAL::type</a> { <br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4a0db45d2a4141101bdfe48e3314cfbca3">AWD::MATERIAL::type::UNDEFINED</a> = 0, 
+<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4a6a402c421f1617096526e6c33e55b297">AWD::MATERIAL::type::COLOR_MATERIAL</a> = 1, 
+<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4a9a7186e8f19caabc6a6ec68180036584">AWD::MATERIAL::type::TEXTURE_MATERIAL</a> = 2, 
+<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4a0f1cfd30b0673a614c6df23663aa0782">AWD::MATERIAL::type::SOLID_COLOR_MATERIAL</a> = 3, 
+<br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4a3b0c6f84de2f59646a00665236a59010">AWD::MATERIAL::type::SOLID_TEXTUREATLAS_MATERIAL</a> = 4, 
+<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4ae49bbf774e4b4154e3971111991de716">AWD::MATERIAL::type::LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL</a> = 5, 
+<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4a81a0581bbbade953938e13acade1d126">AWD::MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL</a> = 6
+<br />
  }</td></tr>
 <tr class="memdesc:a1efca5533db2cca3ceace83c2bfbf1d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The material types.  <a href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a1efca5533db2cca3ceace83c2bfbf1d4">More...</a><br /></td></tr>
 <tr class="separator:a1efca5533db2cca3ceace83c2bfbf1d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45a3d8a99f33c5409aff2004a7a8b19a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a45a3d8a99f33c5409aff2004a7a8b19a">AWD::MATERIAL::GradientSpread</a> { <a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a45a3d8a99f33c5409aff2004a7a8b19aa6fc681f736acef6a8a9cb565ecd95da1">AWD::MATERIAL::GradientSpread::GRADIENT_SPREAD_EXTEND</a>, 
+<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a45a3d8a99f33c5409aff2004a7a8b19aa8ba26598ccfd62b16024e8400bafca08">AWD::MATERIAL::GradientSpread::GRADIENT_SPREAD_REFLECT</a>, 
+<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a45a3d8a99f33c5409aff2004a7a8b19aad97265ff29c38da55faffa95c73d9e8e">AWD::MATERIAL::GradientSpread::GRADIENT_SPREAD_REPEAT</a>
+ }</td></tr>
+<tr class="separator:a45a3d8a99f33c5409aff2004a7a8b19a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29f531757ff42f3f831f607cc34ec0d7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a29f531757ff42f3f831f607cc34ec0d7">AWD::MATERIAL::shading_type</a> { <br />
 &#160;&#160;<a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a29f531757ff42f3f831f607cc34ec0d7a0db45d2a4141101bdfe48e3314cfbca3">AWD::MATERIAL::shading_type::UNDEFINED</a> = 0, 
 <a class="el" href="namespace_a_w_d_1_1_m_a_t_e_r_i_a_l.html#a29f531757ff42f3f831f607cc34ec0d7a86e4027d8a7cff23716bd55189003838">AWD::MATERIAL::shading_type::AWD_SHADEMETHOD_ENV_AMBIENT</a> =1, 
@@ -440,8 +463,15 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a398252fa90d39b399d1bdf7f94411a75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types for primitves.  <a href="namespace_a_w_d_1_1_g_e_o_m.html#a398252fa90d39b399d1bdf7f94411a75">More...</a><br /></td></tr>
 <tr class="separator:a398252fa90d39b399d1bdf7f94411a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae731579988c9857b9a7e9f20b68b1c19"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19">AWD::GEOM::stream_target</a> { <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19a7050daf4840239a6d7ed7f5a24731d0f">AWD::GEOM::stream_target::VERTEX_STREAM</a> =1, 
-<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19a4733d54cb0cc0e19b752d6d53e35a7fc">AWD::GEOM::stream_target::TRIANGLE_STREAM</a> =2
+<tr class="memitem:ae731579988c9857b9a7e9f20b68b1c19"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19">AWD::GEOM::stream_target</a> { <br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19a7050daf4840239a6d7ed7f5a24731d0f">AWD::GEOM::stream_target::VERTEX_STREAM</a> =1, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19a4733d54cb0cc0e19b752d6d53e35a7fc">AWD::GEOM::stream_target::TRIANGLE_STREAM</a> =2, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19a45b566278afdadad6613c1859f0b289b">AWD::GEOM::stream_target::INTERIOR_TRIANGLES</a> =11, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19a3f42d77fd0512bbc199b64376365aee9">AWD::GEOM::stream_target::EXTERIOR_TRIANGLES</a> =12, 
+<br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19a30be6376771d8d9681491e30570e8b10">AWD::GEOM::stream_target::CONCAVE_TRIANGLES</a> =13, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19ac3ddd6384a8ac8c372621db50f31faf2">AWD::GEOM::stream_target::CONVEX_TRIANGLES</a> =14
+<br />
  }</td></tr>
 <tr class="memdesc:ae731579988c9857b9a7e9f20b68b1c19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines if stream is a triangle stream or a vertex stream.  <a href="namespace_a_w_d_1_1_g_e_o_m.html#ae731579988c9857b9a7e9f20b68b1c19">More...</a><br /></td></tr>
 <tr class="separator:ae731579988c9857b9a7e9f20b68b1c19"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -469,6 +499,16 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:ac828f41708cf978073f8129092144bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab44a78c6c261fbd699a1c006740bc542"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ab44a78c6c261fbd699a1c006740bc542">AWD::GEOM::edge_state</a> { <br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ab44a78c6c261fbd699a1c006740bc542a884099188a9e62cd380e7e4202bc76c9">AWD::GEOM::edge_state::TEST_INTERSECTING</a>, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ab44a78c6c261fbd699a1c006740bc542ad4ccd0c7564e38390965bc1c09995865">AWD::GEOM::edge_state::NOT_INTERSECTING</a>, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ab44a78c6c261fbd699a1c006740bc542a5c83d7c2c8861689b6a8f1523d2536e1">AWD::GEOM::edge_state::MAX_SUBDIVISION</a>, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ab44a78c6c261fbd699a1c006740bc542a6be9cf726e2d107420b187083875bd67">AWD::GEOM::edge_state::SUBDIVIDED</a>, 
+<br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#ab44a78c6c261fbd699a1c006740bc542a20deb82f52cedbe4d044d43bff26483c">AWD::GEOM::edge_state::SUBDIVIDED_RESOLVED</a>
+<br />
+ }</td></tr>
+<tr class="separator:ab44a78c6c261fbd699a1c006740bc542"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb65b149d45f90a34c113595e49574cc"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#adb65b149d45f90a34c113595e49574cc">AWD::GEOM::intersect_state</a> { <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#adb65b149d45f90a34c113595e49574cca874584b84df5da74c3964d8efbff7a02">AWD::GEOM::intersect_state::RESOLVED</a> =1, 
 <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#adb65b149d45f90a34c113595e49574ccacb05b13dd1c5294579396a615f2fae82">AWD::GEOM::intersect_state::UNCHECKED</a> =2, 
 <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#adb65b149d45f90a34c113595e49574cca054f7f4d2545b2f552ac7ed06a9d85b0">AWD::GEOM::intersect_state::UNSOLVEABLE</a> =3
@@ -487,7 +527,10 @@ Enumerations</h2></td></tr>
 <br />
 &#160;&#160;<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a04bd834032febb3fda8c6936ee140949">AWD::GEOM::data_stream_attr_type::COLOR</a> =9, 
 <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a55e26e72e08180901c253382fa0c2cf5">AWD::GEOM::data_stream_attr_type::CURVE_DATA_2D</a> =10, 
-<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8abba5f5b09ae6169152c24abaa0a16d67">AWD::GEOM::data_stream_attr_type::VERTEX_INDICIES</a> =11
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8abba5f5b09ae6169152c24abaa0a16d67">AWD::GEOM::data_stream_attr_type::VERTEX_INDICIES</a> =11, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a14fb848abac611ad8881e334fcbbff06">AWD::GEOM::data_stream_attr_type::UV_2D</a> =12, 
+<br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#a70c5f9dd9e2e024ff9ddd4b01a7526f8a0ed765eee0790fb0a362ef10bf640530">AWD::GEOM::data_stream_attr_type::CURVE_DATA_2D_INT</a> =13
 <br />
  }</td></tr>
 <tr class="separator:a70c5f9dd9e2e024ff9ddd4b01a7526f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -503,7 +546,9 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#abad69a6000c7aad1e19393199de13057ab7cdef2fcf9e48bf6acc5728308a1245">AWD::GEOM::stream_type::SUVS</a> =8, 
 <br />
 &#160;&#160;<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#abad69a6000c7aad1e19393199de13057a4fdd086ac272f58d32e90f1055e4d38b">AWD::GEOM::stream_type::ALLVERTDATA3D_13F</a> =9, 
-<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#abad69a6000c7aad1e19393199de13057afe940aa3b15c67b60514ba5c4b2e9399">AWD::GEOM::stream_type::ALLVERTDATA2D__9F</a> =10
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#abad69a6000c7aad1e19393199de13057afe940aa3b15c67b60514ba5c4b2e9399">AWD::GEOM::stream_type::ALLVERTDATA2D__9F</a> =10, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#abad69a6000c7aad1e19393199de13057a70c372e04141cce4f4bcfbd5b671470d">AWD::GEOM::stream_type::ALLVERTDATA2D__5F</a> =11, 
+<a class="el" href="namespace_a_w_d_1_1_g_e_o_m.html#abad69a6000c7aad1e19393199de13057a4a4caa543678e4d5f966da95d48f040b">AWD::GEOM::stream_type::ALLVERTDATA2D__2F3B</a> =12
 <br />
  }</td></tr>
 <tr class="memdesc:abad69a6000c7aad1e19393199de13057"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types for SubGeometryStream.  <a href="namespace_a_w_d_1_1_g_e_o_m.html#abad69a6000c7aad1e19393199de13057">More...</a><br /></td></tr>
@@ -521,52 +566,54 @@ Enumerations</h2></td></tr>
 <tr class="memdesc:a78c531673f9df0391b3483e8169586d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Describes the type of a instance_type as TYPES::UINT8.  <a href="namespace_a_w_d_1_1_b_l_o_c_k.html#a78c531673f9df0391b3483e8169586d1">More...</a><br /></td></tr>
 <tr class="separator:a78c531673f9df0391b3483e8169586d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad248dcc3c94ce1c0f4263f577ebc5a77"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77">AWD::BLOCK::block_type</a> { <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a3ccfff833792cca1a5bc06a567fad822">AWD::BLOCK::block_type::NULL_REF</a> =0, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac59b7ed774f5a1fac6cda3f4810e2a49">AWD::BLOCK::block_type::TRI_GEOM</a> =1, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aed6bcb2acd3bc9c33ab7aded49733515">AWD::BLOCK::block_type::PRIM_GEOM</a> =11, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77af151a543099185593a5a87339c552698">AWD::BLOCK::block_type::SCENE</a> =21, 
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a3fdee9da3782e56f3e9ec6c4269662ff">AWD::BLOCK::NULL_REF</a> =0, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aacb9c9e00d1a113bbd04cfd9264d0fb0">AWD::BLOCK::TRI_GEOM</a> =1, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a55d4d724c63112aafa270707cde91459">AWD::BLOCK::PRIM_GEOM</a> =11, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77af666b1261061cbf988c00b86e9c9fe6f">AWD::BLOCK::SCENE</a> =21, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9bbab5f947b9e3fbb8a399ecc257459b">AWD::BLOCK::block_type::CONTAINER</a> =22, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa39a7ee14f1db6d9413a06c990795e95">AWD::BLOCK::block_type::MESH_INSTANCE</a> =23, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae3d53ff832d50102618d4fd24ca85a85">AWD::BLOCK::block_type::SKYBOX</a> =31, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77af8589806bbf66241917092b2a6e18c6f">AWD::BLOCK::block_type::LIGHT</a> =41, 
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77afed11749346fd4ecea31fe14323200d7">AWD::BLOCK::CONTAINER</a> =22, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77acc5ecf259822f9e51ab8c362dbcc599f">AWD::BLOCK::MESH_INSTANCE</a> =23, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aff71be4be34696b90436a4bd448a2b5f">AWD::BLOCK::MESH_INSTANCE_2</a> =24, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9910af7dc7a76f6615ad9e1e947b2f34">AWD::BLOCK::BILLBOARD</a> =25, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77addf0d6b21537d984fea6544f58101fa8">AWD::BLOCK::block_type::CAMERA</a> =42, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a879f2278a984cc7e04ca4263f3b8662e">AWD::BLOCK::block_type::TEXTURE_PROJECTOR</a> =43, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8db80841434f1b9c82c570bcc11928e1">AWD::BLOCK::block_type::SOUND_SOURCE</a> =44, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa14c6148ac3652c686ee00f83e2420ec">AWD::BLOCK::block_type::LIGHTPICKER</a> =51, 
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa5621456bb9aacb54fac59528fb53e00">AWD::BLOCK::SKYBOX</a> =31, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aece03b903bf41262832316cd5af05f03">AWD::BLOCK::LIGHT</a> =41, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7ecb3bd525a857c3c352016358703818">AWD::BLOCK::CAMERA</a> =42, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2c36a256acb72d237fd056608ea894e7">AWD::BLOCK::TEXTURE_PROJECTOR</a> =43, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a230854dd8610aec41ce8e856c38bccf5">AWD::BLOCK::block_type::BSP_TREE</a> =61, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac3bf0fb08c73d8295153cfa1a2702374">AWD::BLOCK::block_type::OCT_TREE</a> =62, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a541d333000a6a4b09f3e9ee4bc0b68e6">AWD::BLOCK::block_type::SIMPLE_MATERIAL</a> =81, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a0f8cf74523a56db64354ed20ef85cac3">AWD::BLOCK::block_type::BITMAP_TEXTURE</a> =82, 
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8226af7a9283d77313c6a9a31983247a">AWD::BLOCK::SOUND_SOURCE</a> =44, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae7b4fbbc7de0c2511699a7ac08077ed7">AWD::BLOCK::LIGHTPICKER</a> =51, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8d83f55225eb08fbbf0092012a208531">AWD::BLOCK::BSP_TREE</a> =61, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7d27af6c410f3578ec19f565f20c10ea">AWD::BLOCK::OCT_TREE</a> =62, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a21871580a46b99e01e2a7c7b094a7fac">AWD::BLOCK::block_type::CUBE_TEXTURE</a> =83, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9fa659da9478d38fa7aa0e91271e853a">AWD::BLOCK::block_type::CUBE_TEXTURE_ATF</a> =84, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77abc1c64936a05bbf41239469bbce8ce68">AWD::BLOCK::block_type::EFFECT_METHOD</a> =91, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac48c3123ba416f838eb37427aeddde5f">AWD::BLOCK::block_type::SHADOW_METHOD</a> =92, 
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2e404633c66e1c8e041c6a777027374b">AWD::BLOCK::SIMPLE_MATERIAL</a> =81, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77af73c041bbd2d215a18ff6673f7025078">AWD::BLOCK::BITMAP_TEXTURE</a> =82, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a71c8d8200de65e93e14ef36673d0e3c2">AWD::BLOCK::CUBE_TEXTURE</a> =83, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2d37c56e1b96d92103ba76be641ee26a">AWD::BLOCK::CUBE_TEXTURE_ATF</a> =84, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a057e1bb1892582c5b4b02ed27fddf4a7">AWD::BLOCK::block_type::SKELETON</a> =101, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2e653c28fc2f484b32fbb5254891b0fd">AWD::BLOCK::block_type::SKELETON_POSE</a> =102, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77acae091784f141655b7fb1c2a35461842">AWD::BLOCK::block_type::SKELETON_ANIM</a> =103, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77af734f9060e953df16dc86a8420308466">AWD::BLOCK::block_type::VERTEX_POSE</a> =111, 
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a2af581bdbe7f1a65d94fbefc631b9735">AWD::BLOCK::EFFECT_METHOD</a> =91, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa74a6bd520e170ae524251c61f7bb666">AWD::BLOCK::SHADOW_METHOD</a> =92, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7266b33a16668dec1a0f8ab4200ae5f0">AWD::BLOCK::SKELETON</a> =101, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a34f8b75a1390e56a551ac621e268284b">AWD::BLOCK::SKELETON_POSE</a> =102, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac976bdfc088eadcc65e025f8e78723a3">AWD::BLOCK::block_type::VERTEX_ANIM</a> =112, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a91f2972336d6b61ded647f62f8073c28">AWD::BLOCK::block_type::ANIMATION_SET</a> =113, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a16ca0d23ca4bd350aa6ab5146ad65b75">AWD::BLOCK::block_type::ANIMATOR</a> =122, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77abe47bbd80943167e55d8a370db401cc8">AWD::BLOCK::block_type::UV_ANIM</a> =121, 
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a609ed80a221aafeba2da29904084986b">AWD::BLOCK::SKELETON_ANIM</a> =103, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77aa4cc2b78b45739b4df84c3aca33f9440">AWD::BLOCK::VERTEX_POSE</a> =111, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a37f9cd2e5c77962b22017228298e812d">AWD::BLOCK::VERTEX_ANIM</a> =112, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77af0ceaed206692c0b6631def22be9c615">AWD::BLOCK::ANIMATION_SET</a> =113, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7970cd1c3f3d736ce0164035d30be1e8">AWD::BLOCK::block_type::TIMELINE</a> =133, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a1268b0b4e1b306dc9949ae9d354a40a6">AWD::BLOCK::block_type::TEXT_ELEMENT</a> =134, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a4aaf23261cd3bd2064183cf1b53f1023">AWD::BLOCK::block_type::FONT</a> =135, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a47c8929b6152d540597c758853ff95a2">AWD::BLOCK::block_type::FORMAT</a> =136, 
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ac2a5dbf12f7cc01d278f543b9a93f2da">AWD::BLOCK::ANIMATOR</a> =122, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae03bc6cfee8d4de3f56532caa17f5b9a">AWD::BLOCK::UV_ANIM</a> =121, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8903547db7f57e0702b14a74f30ca4e8">AWD::BLOCK::MOVIECLIP</a> =133, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a5d3b46688bd7e89adfdbbfb5937ccb39">AWD::BLOCK::TEXT_ELEMENT</a> =134, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ab0d6a3eb070feba72e0404d36a24a9be">AWD::BLOCK::block_type::NAMESPACES</a> =251, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a97d1c402094fb4557ddc848f585c6ada">AWD::BLOCK::block_type::EXTERNAL_RESSOURCE</a> =252, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a26097a57f572fe88a7cdf80543422cb1">AWD::BLOCK::block_type::COMMAND</a> =253, 
-<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a7347fe5a0f184f79ef064e92e3beb297">AWD::BLOCK::block_type::NAMESPACE</a> =254, 
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77ae3062ef7b7d298e13dabddf488e816dc">AWD::BLOCK::FONT</a> =135, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9a5f07c347aebeb2db52ef5adfc08e2c">AWD::BLOCK::TEXT_FORMAT</a> =136, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a4b2cd48b312cc6f44a4385165a35bd22">AWD::BLOCK::NAMESPACES</a> =251, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a9574dd12654610d57d977474a5ba80f5">AWD::BLOCK::EXTERNAL_RESSOURCE</a> =252, 
 <br />
-&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a8a9c0818e0622aadfcb2e59cfe5299b4">AWD::BLOCK::block_type::METADATA</a> =255
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a465ff0952d50d0815f7ee6fa4866e267">AWD::BLOCK::COMMAND</a> =253, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a350563b29cb73b89395eebaf5b213b02">AWD::BLOCK::NAMESPACE</a> =254, 
+<a class="el" href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77a6102ac66dbafae76fceae9ac021a2c19">AWD::BLOCK::METADATA</a> =255
 <br />
  }</td></tr>
 <tr class="memdesc:ad248dcc3c94ce1c0f4263f577ebc5a77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type for block. The block_type of a block is set in the constructor of the classes that implement block.  <a href="namespace_a_w_d_1_1_b_l_o_c_k.html#ad248dcc3c94ce1c0f4263f577ebc5a77">More...</a><br /></td></tr>
@@ -583,6 +630,41 @@ Enumerations</h2></td></tr>
 <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a36dd97c671e026402a0ab16687219eb6a0198964176234a1d6c43851edfb79a29">AWD::FONT::baselineshift_type::BASELINE_DOWN</a> =2
  }</td></tr>
 <tr class="separator:a36dd97c671e026402a0ab16687219eb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2f73e48ee65f865cc7404baf39f19f1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ad2f73e48ee65f865cc7404baf39f19f1">AWD::FONT::TextFlow</a> { <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ad2f73e48ee65f865cc7404baf39f19f1a84cabd17b77b5b18e789cf37ce35ff5d">AWD::FONT::TextFlow::TEXT_FLOW_LEFT_TO_RIGHT</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ad2f73e48ee65f865cc7404baf39f19f1a0ee19a13e3e503ce0e04502f12efdb4e">AWD::FONT::TextFlow::TEXT_FLOW_RIGHT_TO_LEFT</a>
+ }</td></tr>
+<tr class="separator:ad2f73e48ee65f865cc7404baf39f19f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae12b4b3e52ef85e1ae4f4387cd15a60b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ae12b4b3e52ef85e1ae4f4387cd15a60b">AWD::FONT::OrientationMode</a> { <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ae12b4b3e52ef85e1ae4f4387cd15a60ba2ca50ddc2e0689e166e1a30088b53550">AWD::FONT::OrientationMode::ORIENTATION_MODE_HORIZONTAL</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ae12b4b3e52ef85e1ae4f4387cd15a60bae77a166ebe487048456873ed1fd8f6d0">AWD::FONT::OrientationMode::ORIENTATION_MODE_VERTICAL</a>
+ }</td></tr>
+<tr class="separator:ae12b4b3e52ef85e1ae4f4387cd15a60b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a849d1a4b5cc4de2dcda8a7d68b7aba82"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a849d1a4b5cc4de2dcda8a7d68b7aba82">AWD::FONT::Textfield_type</a> { <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a849d1a4b5cc4de2dcda8a7d68b7aba82afe6f99ef1ec99efbdc19a9786cf1facc">AWD::FONT::Textfield_type::STATIC</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a849d1a4b5cc4de2dcda8a7d68b7aba82a0fcc90da4811c877ba9f9c12f7d60bc9">AWD::FONT::Textfield_type::DYNAMIC</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a849d1a4b5cc4de2dcda8a7d68b7aba82aa84cc046d48610b05c21fd3670d0c829">AWD::FONT::Textfield_type::INPUT</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a849d1a4b5cc4de2dcda8a7d68b7aba82af43b06c782374200aeb8d6fc349bdb03">AWD::FONT::Textfield_type::INPUT_PSW</a>
+ }</td></tr>
+<tr class="separator:a849d1a4b5cc4de2dcda8a7d68b7aba82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a31dd6f03e19381a3a16dbf14284ffe"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a7a31dd6f03e19381a3a16dbf14284ffe">AWD::FONT::LineMode</a> { <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a7a31dd6f03e19381a3a16dbf14284ffea54f47800e9a5da026d35633714f3839c">AWD::FONT::LineMode::LINE_MODE_SINGLE</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a7a31dd6f03e19381a3a16dbf14284ffea7174052834766f5ffff62c8de2687bcf">AWD::FONT::LineMode::LINE_MODE_MULTI</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#a7a31dd6f03e19381a3a16dbf14284ffeaa7ce4561882e64cbaeae73c78ca71c84">AWD::FONT::LineMode::LINE_MODE_MULTI_NO_WRAP</a>
+ }</td></tr>
+<tr class="separator:a7a31dd6f03e19381a3a16dbf14284ffe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6b6215f345306ac43c6bf61d5480469"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ac6b6215f345306ac43c6bf61d5480469">AWD::FONT::AlignMode</a> { <a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ac6b6215f345306ac43c6bf61d5480469a6b3c10ce724dba5ea8c76d46f2e64b21">AWD::FONT::AlignMode::ALIGN_MODE_LEFT</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ac6b6215f345306ac43c6bf61d5480469a9ef49354178481ece6492d17e468a029">AWD::FONT::AlignMode::ALIGN_MODE_RIGHT</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ac6b6215f345306ac43c6bf61d5480469ad7741b35083c7e764145a10d64adf352">AWD::FONT::AlignMode::ALIGN_MODE_CENTER</a>, 
+<a class="el" href="namespace_a_w_d_1_1_f_o_n_t.html#ac6b6215f345306ac43c6bf61d5480469a48864bfbc608d756b945b155e0943bd5">AWD::FONT::AlignMode::ALIGN_MODE_JUSTIFY</a>
+ }</td></tr>
+<tr class="separator:ac6b6215f345306ac43c6bf61d5480469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9d2e5bd5c2858e8f8b2b103075b75ed"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ae9d2e5bd5c2858e8f8b2b103075b75ed">AWD::ANIM::mask_type</a> { <br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ae9d2e5bd5c2858e8f8b2b103075b75edab50339a10e1de285ac99d4c3990b8693">AWD::ANIM::mask_type::NONE</a> =0, 
+<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ae9d2e5bd5c2858e8f8b2b103075b75eda0a9501840acacfc8efe7522f5340000c">AWD::ANIM::mask_type::MASK</a> =1, 
+<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ae9d2e5bd5c2858e8f8b2b103075b75edaca70041e8ea06f895be6d512560c223e">AWD::ANIM::mask_type::MASKED</a> =2, 
+<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ae9d2e5bd5c2858e8f8b2b103075b75edac2544896bafb4547710b9c9816351e34">AWD::ANIM::mask_type::MASK_CHILD</a> =3, 
+<br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ae9d2e5bd5c2858e8f8b2b103075b75eda9de39cf80c4f0f4a25c3bb1dce638a94">AWD::ANIM::mask_type::MASKED_CHILD</a> =4
+<br />
+ }</td></tr>
+<tr class="separator:ae9d2e5bd5c2858e8f8b2b103075b75ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ad07caf0e83137fed356196acc78ce8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a2ad07caf0e83137fed356196acc78ce8">AWD::ANIM::anim_type</a> { <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a2ad07caf0e83137fed356196acc78ce8a0db45d2a4141101bdfe48e3314cfbca3">AWD::ANIM::anim_type::UNDEFINED</a> =0, 
 <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a2ad07caf0e83137fed356196acc78ce8a057e1bb1892582c5b4b02ed27fddf4a7">AWD::ANIM::anim_type::SKELETON</a> =1, 
 <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a2ad07caf0e83137fed356196acc78ce8a0c3e47aef93a7f244f41ab309a33634b">AWD::ANIM::anim_type::VERTEX</a> =2, 
@@ -590,10 +672,17 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a2ad07caf0e83137fed356196acc78ce8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types for AWDAnimation.  <a href="namespace_a_w_d_1_1_a_n_i_m.html#a2ad07caf0e83137fed356196acc78ce8">More...</a><br /></td></tr>
 <tr class="separator:a2ad07caf0e83137fed356196acc78ce8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4530468bb4be45fbdcc0a5a1f0fa52e7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7">AWD::ANIM::frame_command_type</a> { <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a987fcf233a00086f9eb430cf4aa04360">AWD::ANIM::frame_command_type::AWD_FRAME_COMMAND_UPDATE_OBJECT</a> =1, 
-<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a4496b1342ddeb10bb770955f86fa2815">AWD::ANIM::frame_command_type::AWD_FRAME_COMMAND_UPDATE_LOCALIZEDTEXT</a> =2, 
-<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7ae46e98779bea625601c20722f404e816">AWD::ANIM::frame_command_type::AWD_FRAME_COMMAND_REMOVE_OBJECT</a> =3, 
-<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a7d7cb48e6f2e6a766c692104b98e4e63">AWD::ANIM::frame_command_type::AWD_FRAME_COMMAND_SOUND</a> =4
+<tr class="memitem:a4530468bb4be45fbdcc0a5a1f0fa52e7"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7">AWD::ANIM::frame_command_type</a> { <br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a5cca6c1af371814a20eddc8f33a5c457">AWD::ANIM::frame_command_type::AWD_FRAME_COMMAND_UNDEFINED</a>, 
+<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a4c383fff636a75cca0a43f4242fc2029">AWD::ANIM::frame_command_type::FRAME_COMMAND_REMOVE</a>, 
+<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a8bee6b4e70c68e5d62ec3bf4f4025ec4">AWD::ANIM::frame_command_type::FRAME_COMMAND_ADD_CHILD</a>, 
+<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a213a0ff88eb90d3a2f823c1f34a2de01">AWD::ANIM::frame_command_type::FRAME_COMMAND_UPDATE</a>, 
+<br />
+&#160;&#160;<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a7d7cb48e6f2e6a766c692104b98e4e63">AWD::ANIM::frame_command_type::AWD_FRAME_COMMAND_SOUND</a>, 
+<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7ad364efa24a90e2c5867869fd934a929e">AWD::ANIM::frame_command_type::AWD_FRAME_COMMAND_SOUND_MULTIPLE</a>, 
+<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7ae5344bd68f19c05c61d2b8aecfecb500">AWD::ANIM::frame_command_type::FRAME_COMMAND_ADD_BUTTON_CHILD</a>, 
+<a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#a4530468bb4be45fbdcc0a5a1f0fa52e7a8819f3391bbd7eb192e3c702d63e660d">AWD::ANIM::frame_command_type::AWD_FRAME_COMMAND_OBJECT_EXISTS</a>
+<br />
  }</td></tr>
 <tr class="separator:a4530468bb4be45fbdcc0a5a1f0fa52e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab38f8c72d4c2b0ba687a28fdc636a520"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ab38f8c72d4c2b0ba687a28fdc636a520">AWD::ANIM::frame_label_type</a> { <a class="el" href="namespace_a_w_d_1_1_a_n_i_m.html#ab38f8c72d4c2b0ba687a28fdc636a520afa85c4d49c7df9b79ef9e8cab87abe47">AWD::ANIM::frame_label_type::AWD_FRAME_LABEL_NONE</a> =1, 
@@ -663,8 +752,8 @@ Enumerations</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_3593973d3f3ce48db6dd5f67386144dc.html">include</a></li><li class="navelem"><a class="el" href="dir_ed4a566ff08f5fcac08feb44963ec789.html">utils</a></li><li class="navelem"><a class="el" href="awd__types_8h.html">awd_types.h</a></li>
-    <li class="footer">Generated on Mon Feb 2 2015 18:04:26 for cpp-libawd by
+    <li class="navelem"><a class="el" href="dir_561f3568cfdfac9dcb563ea1c597e741.html">include</a></li><li class="navelem"><a class="el" href="dir_737ccff37cb0b1471c716a02b6696fdb.html">utils</a></li><li class="navelem"><a class="el" href="awd__types_8h.html">awd_types.h</a></li>
+    <li class="footer">Generated on Tue Mar 1 2016 22:58:30 for cpp-libawd by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

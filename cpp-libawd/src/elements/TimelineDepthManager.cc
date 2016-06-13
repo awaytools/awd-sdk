@@ -22,6 +22,14 @@ using namespace AWD::SETTINGS;
 using namespace AWD::ANIM;
  
 
+TimelineMaskLayer::TimelineMaskLayer() 
+{
+}
+
+TimelineMaskLayer::~TimelineMaskLayer()
+{
+}
+
 TimelineDepthLayer::TimelineDepthLayer() 
 {
 	this->depth=0;

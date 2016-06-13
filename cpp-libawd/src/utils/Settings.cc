@@ -96,8 +96,6 @@ BlockSettings::BlockSettings(bool create_default_streams):
 {
 	this->radial_gradient_size=512;
 	this->sound_file_extension="keep";
-	this->embbed_audio=true;
-	this->embbed_textures=true;
 	this->compression = compression::UNCOMPRESSED;
 	this->wideMatrix=false;
 	this->wideGeom=false;
@@ -111,14 +109,31 @@ BlockSettings::BlockSettings(bool create_default_streams):
 	this->exterior_threshold_for_strokes=0.0;
 	this->flipYaxis=false;
 	this->flipXaxis=false;
-	this->export_framescripts=false;
 	if(create_default_streams){
 		create_streams(false, true);
 	}
+	this->all_bool_settings[bool_settings::OpenPreview]=true;
+	this->all_bool_settings[bool_settings::CopyRuntime]=true;
+	this->all_bool_settings[bool_settings::PrintExportLog]=false;
+	this->all_bool_settings[bool_settings::PrintExportLogTimelines]=false;
 }
-
+bool
+BlockSettings::get_bool(bool_settings id)
+{
+	if(this->all_bool_settings.find(id)==this->all_bool_settings.end()){
+		//todo:raise alert
+		return false;
+	}
+	return this->all_bool_settings[id];
+}
+void
+BlockSettings::set_bool(bool_settings id, bool value)
+{
+	this->all_bool_settings[id]=value;
+}
 BlockSettings::~BlockSettings()
 {
+	this->all_bool_settings.clear();
 }
 
 void
@@ -139,17 +154,18 @@ BlockSettings::create_streams(bool tri_indices, bool uvs)
 	GEOM::DataStreamAttrDesc attribute_desc_position2d = DataStreamAttrDesc(data_stream_attr_type::POSITION2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
 	vertex2D_attributes.push_back(attribute_desc_position2d);
 
-	GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+	GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D_INT, data_types::VECTORINT3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+	//GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
 	vertex2D_attributes.push_back(attribute_desc_curve_data);
 		
 	if(uvs){
-		GEOM::DataStreamAttrDesc attribute_desc_uv2d_data = DataStreamAttrDesc(data_stream_attr_type::UV_2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-		vertex2D_attributes.push_back(attribute_desc_uv2d_data);
+		//GEOM::DataStreamAttrDesc attribute_desc_uv2d_data = DataStreamAttrDesc(data_stream_attr_type::UV_2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+		//vertex2D_attributes.push_back(attribute_desc_uv2d_data);
 			//GEOM::DataStreamAttrDesc attribute_desc_color = DataStreamAttrDesc(data_stream_attr_type::COLOR, data_types::VECTOR4x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
 			//vertex2D_attributes.push_back(attribute_desc_color);
 	}
 
-	this->stream_recipes.push_back(new DataStreamRecipe(stream_type::ALLVERTDATA2D__9F,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+	this->stream_recipes.push_back(new DataStreamRecipe(stream_type::ALLVERTDATA2D__2F3B,	stream_target::VERTEX_STREAM, vertex2D_attributes));
 		
 		/*
 
@@ -276,16 +292,7 @@ BlockSettings::set_radial_gradient_size(TYPES::UINT32 radial_gradient_size)
 {
 	this->radial_gradient_size=radial_gradient_size;
 }
-bool
-BlockSettings::get_export_framescripts()
-{
-	return this->export_framescripts;
-}
-void
-BlockSettings::set_export_framescripts(bool export_framescripts)
-{
-	this->export_framescripts=export_framescripts;
-}
+
 
 int
 BlockSettings::get_max_iterations()
@@ -317,26 +324,6 @@ void
 BlockSettings::set_sound_file_extension(const std::string& sound_file_extension)
 {
 	this->sound_file_extension = sound_file_extension;
-}
-bool
-BlockSettings::get_embbed_audio()
-{
-	return this->embbed_audio;
-}
-void
-BlockSettings::set_embbed_audio(bool embbed_audio)
-{
-	this->embbed_audio=embbed_audio;
-}
-bool
-BlockSettings::get_embbed_textures()
-{
-	return this->embbed_textures;
-}
-void
-BlockSettings::set_embbed_textures(bool embbed_textures)
-{
-	this->embbed_textures=embbed_textures;
 }
 bool
 BlockSettings::get_wide_geom()
@@ -404,10 +391,32 @@ BlockSettings*
 BlockSettings::clone_block_settings()
 {
 	BlockSettings* new_blockSettings = new BlockSettings(true);
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportFrameScript, this->get_bool(SETTINGS::bool_settings::ExportFrameScript));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExternalScripts, this->get_bool(SETTINGS::bool_settings::ExternalScripts));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::EmbbedAllChars, this->get_bool(SETTINGS::bool_settings::EmbbedAllChars));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::OpenPreview, this->get_bool(SETTINGS::bool_settings::OpenPreview));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::CopyRuntime, this->get_bool(SETTINGS::bool_settings::CopyRuntime));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::PrintExportLog, this->get_bool(SETTINGS::bool_settings::PrintExportLog));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::PrintExportLogTimelines, this->get_bool(SETTINGS::bool_settings::PrintExportLogTimelines));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportTimelines, this->get_bool(SETTINGS::bool_settings::ExportTimelines));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::IncludeInvisibleTimelineLayer, this->get_bool(SETTINGS::bool_settings::IncludeInvisibleTimelineLayer));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportGeometries, this->get_bool(SETTINGS::bool_settings::ExportGeometries));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportShapesInDebugMode, this->get_bool(SETTINGS::bool_settings::ExportShapesInDebugMode));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportFonts, this->get_bool(SETTINGS::bool_settings::ExportFonts));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportLibFonts, this->get_bool(SETTINGS::bool_settings::ExportLibFonts));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportBitmaps, this->get_bool(SETTINGS::bool_settings::ExportBitmaps));
+	
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ForceTextureOverwrite, this->get_bool(SETTINGS::bool_settings::ForceTextureOverwrite));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::EmbbedTextures, this->get_bool(SETTINGS::bool_settings::EmbbedTextures));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportLibBitmaps, this->get_bool(SETTINGS::bool_settings::ExportLibBitmaps));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportSounds, this->get_bool(SETTINGS::bool_settings::ExportSounds));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ForceSoundOverwrite, this->get_bool(SETTINGS::bool_settings::ForceSoundOverwrite));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::EmbbedSounds, this->get_bool(SETTINGS::bool_settings::EmbbedSounds));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportLibSounds, this->get_bool(SETTINGS::bool_settings::ExportLibSounds));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportTimelineSounds, this->get_bool(SETTINGS::bool_settings::ExportTimelineSounds));
+	new_blockSettings->set_bool(SETTINGS::bool_settings::CreateAudioMap, this->get_bool(SETTINGS::bool_settings::CreateAudioMap));
+
 	// todo: fill the blocksettings from original
-	new_blockSettings->set_embbed_audio(this->embbed_audio);
-	new_blockSettings->set_embbed_textures(this->embbed_textures);
-	new_blockSettings->set_export_framescripts(this->export_framescripts);
 	return new_blockSettings;
 }
 

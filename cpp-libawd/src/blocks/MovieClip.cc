@@ -474,7 +474,8 @@ MovieClip::create_timeline_streams()
 				}
 				if(displaycmd->get_hasBlendModeChange()){
 					// hack to export blendmode:erase as cacheing
-					if(false){
+                    bool xbool=false;
+					if(xbool){
 						num_updated_props++;
 						this->property_type_stream.push_back(8);
 						if(displaycmd->get_blendmode()==10){//todo: get correct int for erase (10 is multiply)

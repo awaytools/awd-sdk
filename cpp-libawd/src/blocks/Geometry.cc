@@ -479,7 +479,8 @@ Geometry::merge_stream(GEOM::SubGeom* target_sub){
 	}
 	for(SubGeom * subGeom: this->subGeometries){
 		subGeom->merge_stream(target_sub);
-	}
+    }
+    return result::AWD_SUCCESS;
 }
 
 result 

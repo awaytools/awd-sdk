@@ -872,7 +872,10 @@ TYPES::get_single_val_data_type_size(data_types type, bool storage_precision)
 		case data_types::BYTEARRAY:
 			// Can't know
 			elem_size = 0;
-			break;
+            break;
+        case data_types::VECTORINT3x1:
+            elem_size = 0;
+            break;
 	}
 
 	return elem_size;

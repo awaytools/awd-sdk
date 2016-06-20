@@ -140,16 +140,18 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 ///			we calculate the center of the line start-point <-> end-point, and move it a little step pixel in direction of the control-point.\n
 ///			Now even for nearly-intersecting pathes, we can savly decide on the type of curve.\n
 	
-		if(awd_project->get_settings()->get_export_curves()){
+		//if(awd_project->get_settings()->get_export_curves()){
 			for(GEOM::Path* one_path: filled_region->get_pathes()){
 				one_path->get_curve_types(awd_project->get_settings());	
 			}
-		}
+		//}
+			/*
 		else{
 			// tranform all curves into linear segments.
 			for(GEOM::Path* one_path: filled_region->get_pathes())
 				one_path->make_linear();				
 		}	
+		*/
 
 		if(all_min_x>filled_region->get_pathes()[0]->min_x)
 			all_min_x=filled_region->get_pathes()[0]->min_x;
@@ -793,54 +795,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 		BLOCKS::Material* this_mat = reinterpret_cast<BLOCKS::Material*>(filled_region->get_material());
 		new_subgeom->set_material(this_mat);
 		new_subgeom->uv_transform->set(filled_region->uv_transform->get());
-		// different pointers for subgeos, all point to the same subgeo, unless we want to split the shape across multiple subgeos (debug mode)
-		GEOM::SubGeom* new_subgeom_inner = new_subgeom;
-		GEOM::SubGeom* new_subgeom_outter = new_subgeom;
-		GEOM::SubGeom* new_subgeom_concave = new_subgeom;
-		GEOM::SubGeom* new_subgeom_convex = new_subgeom;
-		GEOM::SubGeom* new_subgeom_intersect = new_subgeom;
-		
-		// if we want to split the shape into multiple subgeos, we crreate the subgeos, and the needed materials.
-		if(awd_project->get_settings()->get_export_shapes_in_debug_mode()){
-			new_subgeom_inner = new SubGeom(subgeom_settings);
-			new_subgeom_outter = new SubGeom(subgeom_settings);
-			new_subgeom_concave = new SubGeom(subgeom_settings);
-			new_subgeom_convex = new SubGeom(subgeom_settings);
-			new_subgeom_intersect = new SubGeom(subgeom_settings);
-			BLOCKS::Material* this_mat0 = reinterpret_cast<BLOCKS::Material*>(awd_project->get_default_material_by_color(0xffff0000, true, MATERIAL::type::SOLID_COLOR_MATERIAL));
-			BLOCKS::Material* this_mat1 = reinterpret_cast<BLOCKS::Material*>(awd_project->get_default_material_by_color(0xff00bdbd, true, MATERIAL::type::SOLID_COLOR_MATERIAL));
-			BLOCKS::Material* this_mat2 = reinterpret_cast<BLOCKS::Material*>(awd_project->get_default_material_by_color(0xff00ff00, true, MATERIAL::type::SOLID_COLOR_MATERIAL));
-			BLOCKS::Material* this_mat3 = reinterpret_cast<BLOCKS::Material*>(awd_project->get_default_material_by_color(0xff0000ff, true, MATERIAL::type::SOLID_COLOR_MATERIAL));
-			BLOCKS::Material* this_mat4 = reinterpret_cast<BLOCKS::Material*>(awd_project->get_default_material_by_color(0xff000000, true, MATERIAL::type::SOLID_COLOR_MATERIAL));
-			this_mat0->set_color_components(255,0,0,128);
-			this_mat1->set_color_components(0,128,128,128);
-			this_mat2->set_color_components(0,255,0,128);
-			this_mat3->set_color_components(0,0,255, 128);
-			this_mat4->set_color_components(0,0,0,128);
-			this_mat0->set_name("Debug_mat_0");
-			this_mat1->set_name("Debug_mat_1");
-			this_mat2->set_name("Debug_mat_2");
-			this_mat3->set_name("Debug_mat_3");
-			this_mat4->set_name("Debug_mat_4");
-			this_mat0->set_alpha(0.5);
-			this_mat1->set_alpha(0.5);
-			this_mat2->set_alpha(0.5);
-			this_mat3->set_alpha(0.5);
-			this_mat4->set_alpha(0.5);
-			new_subgeom_intersect->set_material(this_mat0);
-			new_subgeom_outter->set_material(this_mat1);
-			new_subgeom_concave->set_material(this_mat2);
-			new_subgeom_convex->set_material(this_mat3);
-			new_subgeom_inner->set_material(this_mat4);
-		}
-		else{
-			// if we do not want to split the shape into multiple subgeos for debug mode, there is still a chance that we want to split between interior and exterior tris. 
-			if(awd_project->get_settings()->get_distinglish_interior_exterior_triangles_2d()){
-				new_subgeom_inner = new SubGeom(awd_project->get_settings());
-				new_subgeom_inner->set_material(this_mat);
-			}
-		}
-		
+	
 		/*
 
 		geom_message  += "\n tesselation result: tricnt: " + std::to_string(nelems);
@@ -864,11 +819,9 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 			triangle_vecs[1]=all_verts[p[1]];
 			triangle_vecs[2]=all_verts[p[2]];
 					
-			if(((!awd_project->get_settings()->get_distinglish_interior_exterior_triangles_2d())&&(!awd_project->get_settings()->get_keep_verticles_in_path_order()))){
-				all_inner_tris.push_back(triangle_vecs);
-				continue;
-			}
-
+			all_inner_tris.push_back(triangle_vecs);
+			//continue;
+			/*
 			TYPES::INT32 vert_idx0 = vinds[p[0]];
 			TYPES::INT32 vert_idx1 = vinds[p[1]];
 			TYPES::INT32 vert_idx2 = vinds[p[2]];
@@ -908,8 +861,6 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 					path_segs_found.push_back(seg_edge);
 				}			
 			}
-			/*
-			*/
 				
 			std::vector<GEOM::VECTOR2D> new_tri1;
 			std::vector<GEOM::VECTOR2D> new_tri2;
@@ -1031,15 +982,11 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 				path_segs_found[first_idx+1]->set_export_this_linear(true);
 				continue;
 			}
+			*/
 		}
 		tessDeleteTess(tess);
 		
 /// \subsection PathGeoStep6 Step 6: Create and fill SubGeometries.	
-///	-	For each FilledRegion, we create a new SubGeometry.\n
-///		The SubGeometries can optionally be merged later.
-///	-	we want the triangle-list to be in synch with the path-order.
-///		e.g. we run over the path and for each segment we add 1 triangle to the list.
-///		triangles that are considered to be inner-trianlges (not having any outside edges) are coming last.
 		
 		int cnt_error_segments=0;
 		for(GEOM::Path* one_path: filled_region->get_pathes()){
@@ -1050,8 +997,8 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 						SUBGEOM_ID_STRING subGeo_id;
 						if(pathSeg->get_export_this_linear()){
 							SUBGEOM_ID_STRING subGeo_id;
-							new_subgeom_outter->get_internal_id(subGeo_id);
-							new_subgeom_outter->create_triangle(edge_type::OUTTER_EDGE, pathSeg->get_startPoint(), pathSeg->get_controlPoint(), pathSeg->get_endPoint());
+							new_subgeom->get_internal_id(subGeo_id);
+							new_subgeom->create_triangle(edge_type::OUTTER_EDGE, pathSeg->get_startPoint(), pathSeg->get_controlPoint(), pathSeg->get_endPoint());
 						}
 						else
 							cnt_error_segments++;
@@ -1066,17 +1013,17 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 					{
 						SUBGEOM_ID_STRING subGeo_id;
 						if(inner_seg->subdivion_cnt>0){
-							new_subgeom_intersect->get_internal_id(subGeo_id);
-							new_subgeom_intersect->create_triangle(inner_seg->get_edgeType(), inner_seg->get_startPoint(), inner_seg->get_controlPoint(), inner_seg->get_endPoint());
+							new_subgeom->get_internal_id(subGeo_id);
+							new_subgeom->create_triangle(inner_seg->get_edgeType(), inner_seg->get_startPoint(), inner_seg->get_controlPoint(), inner_seg->get_endPoint());
 						}
 						else{
 							if(inner_seg->get_edgeType()==GEOM::edge_type::CONCAVE_EDGE){
-								new_subgeom_concave->get_internal_id(subGeo_id);
-								new_subgeom_concave->create_triangle(inner_seg->get_edgeType(), inner_seg->get_startPoint(), inner_seg->get_controlPoint(), inner_seg->get_endPoint());
+								new_subgeom->get_internal_id(subGeo_id);
+								new_subgeom->create_triangle(inner_seg->get_edgeType(), inner_seg->get_startPoint(), inner_seg->get_controlPoint(), inner_seg->get_endPoint());
 							}
 							else if(inner_seg->get_edgeType()==GEOM::edge_type::CONVEX_EDGE){
-								new_subgeom_convex->get_internal_id(subGeo_id);
-								new_subgeom_convex->create_triangle(inner_seg->get_edgeType(), inner_seg->get_startPoint(), inner_seg->get_controlPoint(), inner_seg->get_endPoint());
+								new_subgeom->get_internal_id(subGeo_id);
+								new_subgeom->create_triangle(inner_seg->get_edgeType(), inner_seg->get_startPoint(), inner_seg->get_controlPoint(), inner_seg->get_endPoint());
 							}
 						}
 					}
@@ -1089,31 +1036,14 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 				*/	
 		for(std::vector<GEOM::VECTOR2D> one_tri : all_inner_tris){
 			SUBGEOM_ID_STRING subGeo_id;
-			new_subgeom_inner->get_internal_id(subGeo_id);
-			new_subgeom_inner->create_triangle(edge_type::INNER_EDGE, one_tri[0], one_tri[1], one_tri[2]);
+			new_subgeom->get_internal_id(subGeo_id);
+			new_subgeom->create_triangle(edge_type::INNER_EDGE, one_tri[0], one_tri[1], one_tri[2]);
 		}
 		
-
-		if((awd_project->get_settings()->get_export_shapes_in_debug_mode())||(awd_project->get_settings()->get_distinglish_interior_exterior_triangles_2d())){
-			if(new_subgeom_inner->get_tri_cnt()>0)
-				geom->add_subgeo(new_subgeom_inner);
+		if(new_subgeom->get_tri_cnt()>0){
+			geom->add_subgeo(new_subgeom);
+			has_valid_shape=true;
 		}
-
-		if(awd_project->get_settings()->get_export_shapes_in_debug_mode()){
-			if(new_subgeom_outter->get_tri_cnt()>0)
-				geom->add_subgeo(new_subgeom_outter);
-			if(new_subgeom_concave->get_tri_cnt()>0)
-				geom->add_subgeo(new_subgeom_concave);
-			if(new_subgeom_convex->get_tri_cnt()>0)
-				geom->add_subgeo(new_subgeom_convex);
-			if(new_subgeom_intersect->get_tri_cnt()>0)
-				geom->add_subgeo(new_subgeom_intersect);
-		}
-		else{
-			if(new_subgeom->get_tri_cnt()>0)
-				geom->add_subgeo(new_subgeom);
-		}
-		has_valid_shape=true;
 		region_cnt++;
 	}
 	// if have not processed anything successfully, we add a error on the geometry and set it to be invalid

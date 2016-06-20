@@ -61,10 +61,10 @@ using namespace AWD::BASE;
 using namespace AWD::SETTINGS;
 using namespace AWD::MATERIAL;
 
-std::string FILES::num_to_string(double input){
+const std::string FILES::num_to_string(double input){
     return std::to_string(input);
 }
-std::string FILES::int_to_string(int input){
+const std::string FILES::int_to_string(int input){
     return std::to_string(input);
 }
 
@@ -299,21 +299,20 @@ BLOCK::create_block_for_block_type(BASE::AWDBlock** awdBlock, BLOCK::block_type 
 	return result::AWD_SUCCESS;
 }
 
-result
-AWD::get_string_for_result(AWD::result the_result, std::string& outString)
+const std::string
+AWD::get_string_for_result(AWD::result the_result)
 {
 	switch (the_result) {
 		case AWD::result::AWD_SUCCESS:
-			outString="AWD opperation was successful";
-			return AWD::result::AWD_SUCCESS;
+			return "AWD opperation was successful";
 			break;
 		case AWD::result::FILE_ALREADY_EXISTS:
-			outString="AWD file already exists";
-			return AWD::result::AWD_SUCCESS;
+			return "AWD file already exists";
 			break;
 		default:
-			return AWD::result::RESULT_STRING_NOT_FOUND;
+			return "No ErrorMessage found for ErrorCode: "+FILES::int_to_string((int)the_result);
 	}
+	return "No ErrorMessage found for ErrorCode: "+FILES::int_to_string((int)the_result);
 }
 
 result 
@@ -418,8 +417,10 @@ FILES::open_preview(FILES::AWDFile* output_file, std::string& preview_file, std:
 	if(res!=result::AWD_SUCCESS)
 		return res;
 	
-	// recursivly copy all files from source-directory to output-directory, except for the preview-file (index.html)
-	res = copy_files_from_directory(preview_root_directory, out_root_directory, preview_filename);
+	if(output_file->get_settings()->get_bool(AWD::SETTINGS::bool_settings::CopyRuntime)){
+		// recursivly copy all files from source-directory to output-directory, except for the preview-file (index.html)
+		res = copy_files_from_directory(preview_root_directory, out_root_directory, preview_filename);
+	}
 
 	
 	// modify the preview_file, and save it with updated name. (leave extension untouched)

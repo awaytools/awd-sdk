@@ -9,5 +9,7 @@ namespace AWD
 	static const char VERSION_RELEASE = 'b';	///< The Release version char of libAWD
 
 	static const int RESSOURCE_LIMIT = 3 * 0xffffff;		///< The Maximal stream length in bytes \todo Make sure this is correct.
+	
+	static std::vector<std::string> errormessages;		///< The Maximal stream length in bytes \todo Make sure this is correct.
 }
 #endif

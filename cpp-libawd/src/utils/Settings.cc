@@ -116,6 +116,8 @@ BlockSettings::BlockSettings(bool create_default_streams):
 	this->all_bool_settings[bool_settings::CopyRuntime]=true;
 	this->all_bool_settings[bool_settings::PrintExportLog]=false;
 	this->all_bool_settings[bool_settings::PrintExportLogTimelines]=false;
+	this->all_bool_settings[bool_settings::CreateAudioMap]=false;
+	this->all_bool_settings[bool_settings::ExternalScripts]=false;
 }
 bool
 BlockSettings::get_bool(bool_settings id)
@@ -401,7 +403,6 @@ BlockSettings::clone_block_settings()
 	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportTimelines, this->get_bool(SETTINGS::bool_settings::ExportTimelines));
 	new_blockSettings->set_bool(SETTINGS::bool_settings::IncludeInvisibleTimelineLayer, this->get_bool(SETTINGS::bool_settings::IncludeInvisibleTimelineLayer));
 	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportGeometries, this->get_bool(SETTINGS::bool_settings::ExportGeometries));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportShapesInDebugMode, this->get_bool(SETTINGS::bool_settings::ExportShapesInDebugMode));
 	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportFonts, this->get_bool(SETTINGS::bool_settings::ExportFonts));
 	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportLibFonts, this->get_bool(SETTINGS::bool_settings::ExportLibFonts));
 	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportBitmaps, this->get_bool(SETTINGS::bool_settings::ExportBitmaps));

@@ -752,7 +752,6 @@ namespace AWD
 			ExportFrameScript,
 			ExternalScripts,
 			ExportGeometries,
-			ExportShapesInDebugMode,
 			ExportFonts,
 			ExportLibFonts,
 			EmbbedAllChars,

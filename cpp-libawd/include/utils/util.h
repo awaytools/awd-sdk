@@ -45,13 +45,13 @@ namespace AWD
 	*	@param[out] outString The std::string to fill
 	* @return AWD::result::AWD_SUCCESS or AWD::result::NOT_FOUND.
 	*/
-	AWD::result get_string_for_result(AWD::result result, std::string& outString);
+	const std::string get_string_for_result(AWD::result result);
 	
     
     namespace FILES
     {
-        std::string num_to_string(double input);
-        std::string int_to_string(int input);
+        const std::string num_to_string(double input);
+        const std::string int_to_string(int input);
     }
     
 	namespace BLOCK

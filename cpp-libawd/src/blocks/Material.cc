@@ -63,7 +63,7 @@ Material::Material(std::string& name) :
 	this->mipmap = false;
 	this->both_sides = false;
 	this->premultiplied = false;
-	this->alpha_blending = false;
+	this->alpha_blending = true;
 	this->blendMode = 0;
 	this->alpha = 1.0;
 	this->alpha_threshold = 0.0f;
@@ -90,7 +90,7 @@ Material::Material():
 	this->isCreated = false;//will be true, once the mtl is converted to awd
 	this->isClone = false;
 	this->isDefault = true;
-	this->needsAlphaTex=false;
+	this->needsAlphaTex=true;
 
 	this->color = 0xffffff;
 	this->color_components = GEOM::VECTOR4D (0.5, 0.5, 0.5, 1.0);

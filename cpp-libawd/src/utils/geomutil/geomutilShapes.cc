@@ -688,7 +688,15 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 		int all_pnt_cnt=0;
 		int path_start_point_idx=0;
 		path_cnt=0;
-
+		
+		for(GEOM::Path* one_path: filled_region->get_pathes()){
+			for(PathSegment* pathSeg:one_path->get_segments())
+			{
+				if((pathSeg->get_edgeType()==GEOM::edge_type::CONVEX_EDGE)||(pathSeg->get_edgeType()==GEOM::edge_type::CONCAVE_EDGE)){
+					pathSeg->tesselateCurve(subgeom_settings);
+				}
+			}
+		}
 		for(GEOM::Path* one_path: filled_region->get_pathes()){
 			pnt_cnt=one_path->get_point_count(GEOM::edge_type::CONVEX_EDGE);
 			
@@ -781,10 +789,11 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 		
 		GEOM::SubGeom* new_subgeom = new SubGeom(subgeom_settings);
 		if(filled_region->get_type()==filled_region_type::GENERATED_FONT_OUTLINES){
-			new_subgeom->get_settings()->create_streams(false, false);
+			new_subgeom->get_settings()->create_streams(true, false);
 		}
 		else{
-			new_subgeom->isMerged=true;
+			//new_subgeom->isMerged=true;
+			new_subgeom->isMerged_refactor=true;
 			/*
 			new_subgeom->target_subgeom=awd_project->shared_geom->get_sub_at(0);
 			new_subgeom->startIDX = new_subgeom->target_subgeom->tri_cnt * 3;

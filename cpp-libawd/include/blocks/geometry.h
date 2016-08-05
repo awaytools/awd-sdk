@@ -83,6 +83,7 @@ namespace AWD
 
 				result merge_subgeos();
 				result merge_for_textureatlas(BLOCKS::Material*, BLOCKS::Material*, BLOCKS::Material*, BLOCKS::Material* );
+				result merge_for_textureatlas_refactor(BLOCKS::Material*, BLOCKS::Material*, BLOCKS::Material*, BLOCKS::Material* , AWD::SETTINGS::Settings* settings);
 				void clear_mesh_inst_list();
 
 				TYPES::UINT32 get_num_subs();

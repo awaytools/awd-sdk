@@ -25,6 +25,7 @@ namespace AWD
 				double letterSpacing;
 				bool is_rotated;
 				bool autokerning;
+				TYPES::COLOR color;
 				AWDBlock* fill_material;
 				AWDBlock* font;
 				FONT::baselineshift_type baseLineShift;
@@ -49,7 +50,9 @@ namespace AWD
 				~TextFormat();
 				AWDBlock* get_fill_material();
 				void set_fill_material(AWDBlock*);
-
+				
+				void set_color(TYPES::COLOR);
+				TYPES::COLOR get_color();
 				void set_alignment(FONT::AlignMode alignment);
 				void set_indent(double);
 				void set_linespacing(double);

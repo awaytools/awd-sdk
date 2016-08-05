@@ -86,6 +86,7 @@ namespace AWD
 				
 				GEOM::SubGeom* target_subgeom;
 				bool isMerged;
+				bool isMerged_refactor;
 				TYPES::UINT32 merged_address;
 				TYPES::UINT32 startIDX;
 				TYPES::UINT32 vertCnt;
@@ -110,6 +111,7 @@ namespace AWD
 				BASE::AWDBlock* material_block;
 				TYPES::UINT32 allowed_tris;
 				result merge_subgeo(SubGeom*);
+				result merge_stream_refactor(GEOM::SubGeom* project);
 				result merge_stream(GEOM::SubGeom* project);
 				result add_merged_stream_tri(GEOM::edge_type edge_type, GEOM::Vertex2D v1, GEOM::Vertex2D v2, GEOM::Vertex2D v3);
 				result set_uvs();

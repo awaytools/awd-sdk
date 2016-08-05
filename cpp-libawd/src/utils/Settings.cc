@@ -110,7 +110,7 @@ BlockSettings::BlockSettings(bool create_default_streams):
 	this->flipYaxis=false;
 	this->flipXaxis=false;
 	if(create_default_streams){
-		create_streams(false, true);
+		create_streams(true, true);
 	}
 	this->all_bool_settings[bool_settings::OpenPreview]=true;
 	this->all_bool_settings[bool_settings::CopyRuntime]=true;
@@ -156,9 +156,9 @@ BlockSettings::create_streams(bool tri_indices, bool uvs)
 	GEOM::DataStreamAttrDesc attribute_desc_position2d = DataStreamAttrDesc(data_stream_attr_type::POSITION2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
 	vertex2D_attributes.push_back(attribute_desc_position2d);
 
-	GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D_INT, data_types::VECTORINT3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+	//GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D_INT, data_types::VECTORINT3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
 	//GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-	vertex2D_attributes.push_back(attribute_desc_curve_data);
+	//vertex2D_attributes.push_back(attribute_desc_curve_data);
 		
 	if(uvs){
 		//GEOM::DataStreamAttrDesc attribute_desc_uv2d_data = DataStreamAttrDesc(data_stream_attr_type::UV_2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
@@ -167,7 +167,7 @@ BlockSettings::create_streams(bool tri_indices, bool uvs)
 			//vertex2D_attributes.push_back(attribute_desc_color);
 	}
 
-	this->stream_recipes.push_back(new DataStreamRecipe(stream_type::ALLVERTDATA2D__2F3B,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+	this->stream_recipes.push_back(new DataStreamRecipe(stream_type::POSITIONS_2D,	stream_target::VERTEX_STREAM, vertex2D_attributes));
 		
 		/*
 
@@ -259,7 +259,7 @@ BlockSettings::get_curve_threshold()
 		this->curve_threshold=1;
 	}
 	if(this->curve_threshold<=0){
-		this->curve_threshold=0.005;
+		this->curve_threshold=0.0001;
 	}
 	return this->curve_threshold;
 }

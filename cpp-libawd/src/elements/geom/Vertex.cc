@@ -100,9 +100,9 @@ Vertex2D::intern_get_vertex_string()
 {
 	this->lookup_string = std::to_string(this->position.x);
 	this->lookup_string += "#" + std::to_string(this->position.y);
-	this->lookup_string += "#" + std::to_string(this->curve_attributes.x);
-	this->lookup_string += "#" + std::to_string(this->curve_attributes.y);
-	this->lookup_string += "#" + std::to_string(this->curve_attributes.z);
+	//this->lookup_string += "#" + std::to_string(this->curve_attributes.x);
+	//this->lookup_string += "#" + std::to_string(this->curve_attributes.y);
+	//this->lookup_string += "#" + std::to_string(this->curve_attributes.z);
 	return this->lookup_string;
 }
 

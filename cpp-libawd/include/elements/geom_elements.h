@@ -325,8 +325,9 @@ namespace AWD
 				std::vector<GEOM::PathSegment*>& get_subdivided_path();
 
 				result subdividePath(SETTINGS::Settings*);
+				result tesselateCurve(SETTINGS::Settings*);
 
-
+				
 
 		};
 		

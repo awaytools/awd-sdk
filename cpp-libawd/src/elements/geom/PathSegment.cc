@@ -303,3 +303,48 @@ PathSegment::subdividePath(SETTINGS::Settings* settings)
 	
 	return result::AWD_SUCCESS;
 }
+
+result
+PathSegment::tesselateCurve(SETTINGS::Settings* settings)
+{
+	std::vector<PathSegment*> newPath;
+	PathSegment* newSeg;
+	get_subdivided_path();
+	//state=edge_state::MAX_SUBDIVISION;
+	bool hasSomethingTosubdivide=true;
+	while (hasSomethingTosubdivide){
+		newPath.clear();
+		hasSomethingTosubdivide=false;
+		for(PathSegment* pathSeg: this->subdividedPath){
+			if((pathSeg->get_length()<1)||(pathSeg->get_curviness() <= settings->get_curve_threshold())){
+				newPath.push_back(pathSeg);
+			}
+			else{
+				hasSomethingTosubdivide=true;
+				std::vector<double> newPoints;
+				GEOM::subdivideCurve(pathSeg->get_startPoint().x, pathSeg->get_startPoint().y, pathSeg->get_controlPoint().x, pathSeg->get_controlPoint().y,  pathSeg->get_endPoint().x,  pathSeg->get_endPoint().y, newPoints);					
+		
+				pathSeg->set_startPoint(VECTOR2D(newPoints[0], newPoints[1]));
+				pathSeg->set_controlPoint(VECTOR2D(newPoints[2], newPoints[3]));
+				pathSeg->set_endPoint(VECTOR2D(newPoints[4], newPoints[5]));
+				pathSeg->set_edgeType(this->edgeType);
+				pathSeg->set_dirty();
+				pathSeg->calculate_bounds();
+				newPath.push_back(pathSeg);
+			
+
+				newSeg = new PathSegment();
+				newSeg->set_startPoint(VECTOR2D(newPoints[4], newPoints[5]));
+				newSeg->set_controlPoint(VECTOR2D(newPoints[6], newPoints[7]));
+				newSeg->set_endPoint(VECTOR2D(newPoints[8], newPoints[9]));
+				newSeg->set_edgeType(this->edgeType);
+				newSeg->calculate_bounds();
+				newPath.push_back(newSeg);
+			}
+		}
+		subdividedPath.clear();
+		this->subdividedPath = newPath;
+	}
+	
+	return result::AWD_SUCCESS;
+}

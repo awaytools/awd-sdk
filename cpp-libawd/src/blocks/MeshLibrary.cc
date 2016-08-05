@@ -82,6 +82,7 @@ result
 MeshLibrary::collect_dependencies(FILES::AWDFile* target_file, BLOCK::instance_type instance_type)
 {
 	BLOCKS::Geometry* thisGeom = reinterpret_cast<BLOCKS::Geometry*> (this->geom);
+	this->materials.clear();
 	thisGeom->get_material_blocks(this->materials);
 	if (this->geom != NULL)
 		this->geom->add_with_dependencies(target_file, instance_type);

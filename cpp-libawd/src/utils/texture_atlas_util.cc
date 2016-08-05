@@ -626,7 +626,7 @@ AWD::create_TextureAtlasfor_timelines_refactor(AWDProject* awd_project, const st
 	for(AWDBlock* one_block:all_geometries){
 		BLOCKS::Geometry* this_geom = reinterpret_cast<BLOCKS::Geometry*>(one_block);
 		if(this_geom!=NULL){
-			this_geom->merge_for_textureatlas(new_fill_material, new_fill_material_alpha, new_fill_material_radial, new_fill_material_radial_alpha);
+			this_geom->merge_for_textureatlas_refactor(new_fill_material, new_fill_material_alpha, new_fill_material_radial, new_fill_material_radial_alpha, awd_project->get_settings());
 		}
 	}
 
@@ -635,7 +635,7 @@ AWD::create_TextureAtlasfor_timelines_refactor(AWDProject* awd_project, const st
 	for(AWDBlock* one_block:all_text_formats){
 		BLOCKS::TextFormat* this_format = reinterpret_cast<BLOCKS::TextFormat*>(one_block);
 		if(this_format!=NULL){
-			this_format->merge_for_textureatlas(new_fill_material);
+			this_format->merge_for_textureatlas(new_fill_material_alpha);
 		}
 	}
 	return result::AWD_SUCCESS;

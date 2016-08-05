@@ -27,6 +27,7 @@ SubGeom::SubGeom(SETTINGS::BlockSettings* subGeomSettings):
 	this->material_block=NULL;
 	this->allowed_tris=0;
 	this->isMerged=false;
+	this->isMerged_refactor=false;
 	this->merged_address=0;
 	this->settings = subGeomSettings->clone_block_settings();
 	this->max_x=std::numeric_limits<double>::max()*-1;
@@ -96,7 +97,7 @@ SubGeom::get_internal_id(std::string& output_str)
 	this->allowed_tris = (RESSOURCE_LIMIT / max_attr_length)*9999999;
 	
 	SubGeomInternal* this_subGeo = new SubGeomInternal();
-	this_subGeo->isMerged=this->isMerged;
+	this_subGeo->isMerged=this->isMerged || this->isMerged_refactor;
 	this->sub_geoms.push_back(this_subGeo);
 
 	output_str=FILES::int_to_string(this->sub_geoms.size()-1);
@@ -174,7 +175,7 @@ SubGeom::merge_subgeo(SubGeom* subgeom_to_merge)
 	}
 	this->sub_geoms.push_back(last_subgeo);
 	std::vector<GEOM::GeomStreamElementBase*> verts = subgeom_to_merge->get_sub_geoms().back()->get_vertices();
-	if((subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__5F)!=NULL)||(subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__2F3B)!=NULL)){
+	if((subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::POSITIONS_2D)!=NULL)||(subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__5F)!=NULL)||(subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__2F3B)!=NULL)){
 		for(GEOM::Triangle* tri: subgeom_to_merge->get_sub_geoms().back()->get_triangles()){
 			std::string id;
 			this->get_internal_id(id);
@@ -407,6 +408,27 @@ SubGeom::set_uvs()
 }
 
 result 
+SubGeom::merge_stream_refactor(GEOM::SubGeom* target_geom){
+	
+	if(!this->isMerged_refactor){
+		return result::AWD_ERROR;
+	}
+	this->startIDX = target_geom->tri_cnt * 3;
+	std::vector<GEOM::GeomStreamElementBase*> verts = this->sub_geoms.back()->get_vertices();
+	int vert_cnt=0;
+	for(GEOM::Triangle* tri: this->sub_geoms.back()->get_triangles()){
+		SUBGEOM_ID_STRING subGeo_id;
+		target_geom->get_internal_id(subGeo_id);
+		int idx1=target_geom->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_1()]), true);
+		int idx2=target_geom->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_2()]), true);
+		int idx3=target_geom->add_vertex2D(reinterpret_cast<GEOM::Vertex2D*>(verts[tri->get_output_idx_3()]), true);
+		GEOM::Triangle* new_triangle = new Triangle(idx1, idx2, idx3);
+		target_geom->add_triangle(new_triangle);
+	}
+	
+	return result::AWD_SUCCESS;
+}
+result 
 SubGeom::merge_stream(GEOM::SubGeom* target_geom){
 	
 	if(!this->isMerged){
@@ -481,7 +503,7 @@ SubGeom::create_triangle(GEOM::edge_type edge_type, GEOM::VECTOR2D v1, GEOM::VEC
 		vert2->set_curve_attributes(127, 0, -128);
 		vert3->set_curve_attributes(127, 0, -128);
 	}
-	if((this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__5F)!=NULL)||(this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__2F3B)!=NULL)){
+	if((this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__5F)!=NULL)||(this->settings->get_stream_by_type(GEOM::stream_type::POSITIONS_2D)!=NULL)||(this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__2F3B)!=NULL)){
 		TYPES::UINT32 idx1 = this->add_vertex2D(vert1, false);
 		TYPES::UINT32 idx2 = this->add_vertex2D(vert2, false);
 		TYPES::UINT32 idx3 = this->add_vertex2D(vert3, false);
@@ -629,6 +651,17 @@ SubGeom::calc_sub_length()
 		len += 4;//target_geom_id
 		len += 1;//target_subgeom id
 	}
+	else if(this->isMerged_refactor){
+		len += 4; // length element
+		len += 8; // properties + attr
+		
+		len += 1;// stream_type
+		len += 1;// stream_data_type
+		len += 4;// stream_length
+
+		len += 4;// startIndex
+		len += 4;// vertCnt
+	}
 	else{
 		for(SubGeomInternal* subGeom : this->sub_geoms){
 			len += 4 + this->calc_subgeom_streams_length(subGeom);
@@ -769,6 +802,18 @@ SubGeom::write_sub(FileWriter* fileWriter)
 		
 		fileWriter->writeUINT32(this->target_subgeom->merged_address);//target_geom_id
 		fileWriter->writeUINT8(0);//target_geom_id
+		fileWriter->writeUINT32(this->startIDX);// startIndex
+		fileWriter->writeUINT32(this->tri_cnt*3);// vertCnt
+		fileWriter->writeUINT32(0); // user attr
+	}
+	else if(this->isMerged_refactor){
+		fileWriter->writeUINT32(17); // 6stream header + 12 streamdata + 4 props
+		fileWriter->writeUINT32(0); // properties
+		
+		fileWriter->writeUINT8((TYPES::UINT8)GEOM::stream_type::CONCANETEDSTREAM_INCL_INDICES);// stream_type
+		fileWriter->writeUINT8(0);// stream_data_type
+		fileWriter->writeUINT32(8);// stream_length
+		
 		fileWriter->writeUINT32(this->startIDX);// startIndex
 		fileWriter->writeUINT32(this->tri_cnt*3);// vertCnt
 		fileWriter->writeUINT32(0); // user attr

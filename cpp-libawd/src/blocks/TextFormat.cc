@@ -34,10 +34,15 @@ void TextFormat::init()
 	this->font=NULL;
 	this->is_rotated=false;
 	this->autokerning=true;
+	this->color = 0xffffff;
 	TYPES::union_ptr default_union;
 	default_union.v=malloc(2);
 	*default_union.ui16=12;
 	this->properties->add(PROP_TEXTFORMAT_FONTSIZE,	default_union, 2,   data_types::UINT16, storage_precision_category::PROPERIES_VALUES, property_storage_type::STATIC_PROPERTY);
+	
+	default_union.v=malloc(sizeof(TYPES::COLOR));
+	*default_union.col=0xcccccc;
+	this->properties->add(PROP_TEXTFORMAT_COLOR,	default_union, 4,   data_types::COLOR, storage_precision_category::UNDEFINED_STORAGE_PRECISION, property_storage_type::STATIC_PROPERTY);
 			
 	default_union.v=malloc(8);
 	*default_union.F64=0;
@@ -180,6 +185,16 @@ void TextFormat::set_fill_material(AWDBlock* fill_material)
 	this->fill_material=fill_material;
 }
 
+COLOR
+TextFormat::get_color()
+{
+	return this->color;
+}
+void
+TextFormat::set_color(COLOR color)
+{
+	this->color = color;
+}
 
 TYPES::UINT32
 TextFormat::calc_body_length(AWDFile* awd_file, SETTINGS::BlockSettings * settings)
@@ -189,6 +204,11 @@ TextFormat::calc_body_length(AWDFile* awd_file, SETTINGS::BlockSettings * settin
 	properties_union_size.v=malloc(2);
 	*properties_union_size.ui16=this->fontSize;
 	this->properties->set(PROP_TEXTFORMAT_FONTSIZE, properties_union_size, 2);
+	
+	TYPES::union_ptr properties_union;
+	properties_union.v=malloc(sizeof(TYPES::COLOR));
+	*properties_union.col=this->color;
+	this->properties->set(PROP_TEXTFORMAT_COLOR, properties_union, TYPES::UINT32(sizeof(TYPES::UINT32)));
 
 	TYPES::union_ptr properties_union_letter_space;
 	properties_union_letter_space.v=malloc(8);

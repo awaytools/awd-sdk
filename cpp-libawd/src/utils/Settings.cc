@@ -144,10 +144,12 @@ BlockSettings::create_streams(bool tri_indices, bool uvs)
 	this->stream_recipes.clear();
 	// define streams for triangle. this is the same for 2d and 3d verts
 	if(tri_indices){
+        /*
 		std::vector<GEOM::DataStreamAttrDesc> triangle_attrs;
 		GEOM::DataStreamAttrDesc triangle_attr_indicies = DataStreamAttrDesc(data_stream_attr_type::VERTEX_INDICIES, data_types::UINT16, 3, storage_precision_category::UNDEFINED_STORAGE_PRECISION, true, true, true, false, "");
 		triangle_attrs.push_back(triangle_attr_indicies);
 		this->stream_recipes.push_back(new DataStreamRecipe(stream_type::TRIANGLES,	stream_target::TRIANGLE_STREAM, triangle_attrs));
+         */
 		
 	}
 	// define streams for combined vertex stuff 2d:
@@ -167,7 +169,7 @@ BlockSettings::create_streams(bool tri_indices, bool uvs)
 			//vertex2D_attributes.push_back(attribute_desc_color);
 	}
 
-	this->stream_recipes.push_back(new DataStreamRecipe(stream_type::POSITIONS_2D,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+	this->stream_recipes.push_back(new DataStreamRecipe(stream_type::COMBINED_POSITION_2D,	stream_target::VERTEX_STREAM, vertex2D_attributes));
 		
 		/*
 

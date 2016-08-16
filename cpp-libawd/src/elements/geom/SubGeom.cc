@@ -173,9 +173,9 @@ SubGeom::merge_subgeo(SubGeom* subgeom_to_merge)
 			this->sub_geoms.push_back(subGeom);
 		}
 	}
-	this->sub_geoms.push_back(last_subgeo);
+    this->sub_geoms.push_back(last_subgeo);
 	std::vector<GEOM::GeomStreamElementBase*> verts = subgeom_to_merge->get_sub_geoms().back()->get_vertices();
-	if((subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::POSITIONS_2D)!=NULL)||(subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__5F)!=NULL)||(subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__2F3B)!=NULL)){
+	if((subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::COMBINED_POSITION_2D)!=NULL)||(subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::POSITIONS_2D)!=NULL)||(subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__5F)!=NULL)||(subgeom_to_merge->get_settings()->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__2F3B)!=NULL)){
 		for(GEOM::Triangle* tri: subgeom_to_merge->get_sub_geoms().back()->get_triangles()){
 			std::string id;
 			this->get_internal_id(id);
@@ -460,12 +460,6 @@ SubGeom::create_triangle(GEOM::edge_type edge_type, GEOM::VECTOR2D v1, GEOM::VEC
 		return result::AWD_ERROR;
 	this->tri_cnt++;
 
-	/*
-	if(this->isMerged){
-		this->target_subgeom->create_triangle(edge_type, v1, v2, v3);
-	}
-	*/
-
 	
 	GEOM::VECTOR2D vert_1 = v1;
 	GEOM::VECTOR2D vert_ctr = v2;
@@ -503,7 +497,7 @@ SubGeom::create_triangle(GEOM::edge_type edge_type, GEOM::VECTOR2D v1, GEOM::VEC
 		vert2->set_curve_attributes(127, 0, -128);
 		vert3->set_curve_attributes(127, 0, -128);
 	}
-	if((this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__5F)!=NULL)||(this->settings->get_stream_by_type(GEOM::stream_type::POSITIONS_2D)!=NULL)||(this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__2F3B)!=NULL)){
+	if((this->settings->get_stream_by_type(GEOM::stream_type::COMBINED_POSITION_2D)!=NULL)||(this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__5F)!=NULL)||(this->settings->get_stream_by_type(GEOM::stream_type::POSITIONS_2D)!=NULL)||(this->settings->get_stream_by_type(GEOM::stream_type::ALLVERTDATA2D__2F3B)!=NULL)){
 		TYPES::UINT32 idx1 = this->add_vertex2D(vert1, false);
 		TYPES::UINT32 idx2 = this->add_vertex2D(vert2, false);
 		TYPES::UINT32 idx3 = this->add_vertex2D(vert3, false);

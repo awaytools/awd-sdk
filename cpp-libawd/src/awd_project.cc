@@ -65,9 +65,9 @@ AWDProject::AWDProject(project_type new_project_type, const std::string& initial
 	}
 
 	this->settings=new SETTINGS::Settings(root_directory, generator_name, generator_version);
-	//this->shared_geom = new BLOCKS::Geometry();
-	//GEOM::SubGeom* new_subgeom = new GEOM::SubGeom(this->settings);
-	//this->shared_geom->add_subgeo(new_subgeom);
+	this->shared_geom = new BLOCKS::Geometry();
+	GEOM::SubGeom* new_subgeom = new GEOM::SubGeom(this->settings);
+	this->shared_geom->add_subgeo(new_subgeom);
 	
 	res = this->get_file_for_path(initial_path, &this->active_file);
 	if(res!=result::AWD_SUCCESS){
@@ -78,7 +78,7 @@ AWDProject::AWDProject(project_type new_project_type, const std::string& initial
 		}
 		this->add_message("AWDProject (constructor): No AWDFile was created", TYPES::message_type::WARNING_MESSAGE);
 	}
-	//this->add_block(this->shared_geom);
+	this->add_block(this->shared_geom);
 	
 }	
 

@@ -530,7 +530,8 @@ namespace AWD
 			CURVE_DATA_2D=10,	
 			VERTEX_INDICIES=11,	
 			UV_2D=12,	
-			CURVE_DATA_2D_INT=13,	
+            CURVE_DATA_2D_INT=13,
+            COMBINED_POSITION2D=14,
 		};
 
 		/** \enum stream_type
@@ -551,7 +552,8 @@ namespace AWD
 			ALLVERTDATA2D__2F3B=12,		///< The Combined Vertices Data	
 			CONCANETEDSTREAM_2F3B=13,		///< The Combined Vertices Data	
 			POSITIONS_2D=14,		///< 2DPosition Data
-			CONCANETEDSTREAM_INCL_INDICES=15,		///< 2DPosition Data
+            CONCANETEDSTREAM_INCL_INDICES=15,		///< 2DPosition Data
+            COMBINED_POSITION_2D=16,		///< 2DPosition Data
 			/*
 			POINTS=11,		///< The Combined Vertices Data	
 			INTERIOR_TRIANGLES=12,		///< The index data for faces

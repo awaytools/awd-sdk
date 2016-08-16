@@ -291,11 +291,11 @@ void
 Geometry::get_material_blocks(std::vector<BASE::AWDBlock*>& material_list)
 {
 	// refactored!!!
-	int cnt =0;
+	//int cnt =0;
 	for(SubGeom* subgeo: this->subGeometries){
-		if(cnt!=0)
+		//if(cnt!=0)
 			subgeo->get_material_blocks(material_list);
-		cnt++;
+		//cnt++;
 	}
 }
 
@@ -411,17 +411,17 @@ result
 Geometry::write_uvs(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * settings, FILES::AWDFile* awd_file)
 {
 	TYPES::UINT16 num_subs=0;
-	int cnt = 0;
+	//int cnt = 0;
 	for(SubGeom * subGeom: this->subGeometries){
-		if(cnt!=0)
+		//if(cnt!=0)
 			num_subs += subGeom->get_num_subs();
-		cnt++;
+		//cnt++;
 	}
 	fileWriter->writeUINT16(num_subs);
-	cnt=0;
+	//cnt=0;
 	for(SubGeom * subGeom: this->subGeometries){
 		
-		if(cnt!=0){
+		//if(cnt!=0){
 			// color  = tx / ty
 			// linear = a / c / tx / ty / ?spread
 			// radial = a / b / c / d / tx / ty / ?spread / ?focalPoint
@@ -452,8 +452,8 @@ Geometry::write_uvs(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * se
 			}
 			// todo: optional subgeom properties ()
 			fileWriter->writeUINT32(0);
-		}
-		cnt++;
+		//}
+		//cnt++;
 
 	}
 
@@ -464,9 +464,9 @@ TYPES::UINT32
 Geometry::get_uv_bytesize(FILES::AWDFile*, SETTINGS::BlockSettings *)
 {
 	TYPES::UINT32 uv_bytesize=0;
-	int cnt=0;
+	//int cnt=0;
 	for(SubGeom * subGeom: this->subGeometries){
-		if(cnt!=0){
+		//if(cnt!=0){
 			uv_bytesize += sizeof(TYPES::UINT8); // type
 
 			if(subGeom->mat_type==MATERIAL::type::SOLID_COLOR_MATERIAL){
@@ -483,8 +483,8 @@ Geometry::get_uv_bytesize(FILES::AWDFile*, SETTINGS::BlockSettings *)
 			}
 			// todo: optional subgeom properties
 			uv_bytesize += sizeof(TYPES::UINT32);
-		}
-		cnt++;
+		//}
+		//cnt++;
 	}
 	return uv_bytesize;
 }

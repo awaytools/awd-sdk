@@ -316,9 +316,12 @@ PathSegment::tesselateCurve(SETTINGS::Settings* settings)
 		newPath.clear();
 		hasSomethingTosubdivide=false;
 		for(PathSegment* pathSeg: this->subdividedPath){
-			if((pathSeg->get_length()<1)||(pathSeg->get_curviness() <= settings->get_curve_threshold())){
+			if((pathSeg->get_length()<3)||(pathSeg->get_curviness() <= settings->get_curve_threshold())){
 				newPath.push_back(pathSeg);
-			}
+            }
+            else if((pathSeg->get_length()<8)&&(pathSeg->get_curviness() <= settings->get_curve_threshold()*2)){
+                newPath.push_back(pathSeg);
+            }
 			else{
 				hasSomethingTosubdivide=true;
 				std::vector<double> newPoints;

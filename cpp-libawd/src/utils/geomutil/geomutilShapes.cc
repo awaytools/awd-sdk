@@ -792,8 +792,8 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 			new_subgeom->get_settings()->create_streams(true, false);
 		}
 		else{
-			//new_subgeom->isMerged=true;
-			new_subgeom->isMerged_refactor=true;
+			new_subgeom->isMerged=true;
+			//new_subgeom->isMerged_refactor=true;
 			/*
 			new_subgeom->target_subgeom=awd_project->shared_geom->get_sub_at(0);
 			new_subgeom->startIDX = new_subgeom->target_subgeom->tri_cnt * 3;

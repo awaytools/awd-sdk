@@ -364,7 +364,7 @@ AWDFile::process()
 		}
 		ousrfile_audio.close();
 	}
-	//this->awd_project->shared_geom->set_addr_on_subgeom(this);
+	this->awd_project->shared_geom->set_addr_on_subgeom(this);
 	this->set_process_state(process_state::PROCESSED);
 	return result::AWD_SUCCESS;
 }

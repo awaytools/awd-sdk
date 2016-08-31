@@ -265,14 +265,15 @@ TYPES::UINT32 FontStyle::calc_body_length(SETTINGS::BlockSettings* settings)
     len += sizeof(TYPES::F32); //descent
     len += sizeof(TYPES::UINT32); //char_count;
 	
-	/*
+	if(settings->get_bool(AWD::SETTINGS::bool_settings::ExportEmptyFontsForFNT)){
+		return len;
+	}	
 	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {
 		// iterator->first = key
 		if(iterator->second->has_shape_data()){	
 			len+=iterator->second->calc_body_length(settings);
 		}
-	}
-	*/
+	}	
 	return len;
 }
 result FontStyle::write_body(FILES::FileWriter* fileWriter, SETTINGS::BlockSettings* settings) 
@@ -282,14 +283,17 @@ result FontStyle::write_body(FILES::FileWriter* fileWriter, SETTINGS::BlockSetti
 	fileWriter->writeUINT32(this->whitespace_size);
 	fileWriter->writeFLOAT32(this->ascent);
 	fileWriter->writeFLOAT32(this->descent);
-	fileWriter->writeUINT32(0);//charcount
-	//fileWriter->writeUINT32(this->shapesmap.size());//charcount
-	/*
+	
+	if(settings->get_bool(AWD::SETTINGS::bool_settings::ExportEmptyFontsForFNT)){
+		fileWriter->writeUINT32(0);//charcount
+		return result::AWD_SUCCESS;
+	}	
+	fileWriter->writeUINT32(this->shapesmap.size());//charcount	
 	for(it_type iterator = shapesmap.begin(); iterator != shapesmap.end(); iterator++) {
 		if(iterator->second->has_shape_data()){	
 			iterator->second->write_body(fileWriter, settings, this->style_size);
 		}
-	}*/
+	}
 	return result::AWD_SUCCESS;
 }
 

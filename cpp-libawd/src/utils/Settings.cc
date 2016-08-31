@@ -118,6 +118,7 @@ BlockSettings::BlockSettings(bool create_default_streams):
 	this->all_bool_settings[bool_settings::PrintExportLogTimelines]=false;
 	this->all_bool_settings[bool_settings::CreateAudioMap]=false;
 	this->all_bool_settings[bool_settings::ExternalScripts]=false;
+	this->all_bool_settings[bool_settings::ExportEmptyFontsForFNT]=false;
 }
 bool
 BlockSettings::get_bool(bool_settings id)

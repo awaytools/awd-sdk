@@ -768,7 +768,8 @@ namespace AWD
 			EmbbedSounds,
 			ExportLibSounds,
 			ExportTimelineSounds,
-			CreateAudioMap
+			CreateAudioMap,
+			ExportEmptyFontsForFNT
 		};
 		/** \enum compression
 		 * \brief Types of compression.

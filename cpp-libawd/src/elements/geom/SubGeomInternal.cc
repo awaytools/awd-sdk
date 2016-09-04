@@ -19,8 +19,8 @@ SubGeomInternal::SubGeomInternal()
 SubGeomInternal::~SubGeomInternal()
 {  
 	if(!this->isMerged){
-		for(GeomStreamElementBase* vert : this->vertices)        
-			delete vert;
+		//for(GeomStreamElementBase* vert : this->vertices)        
+			//delete vert;
 	}
 	for(Triangle* tri : this->triangles)
 		delete tri;	

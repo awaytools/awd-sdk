@@ -769,7 +769,29 @@ namespace AWD
 			ExportLibSounds,
 			ExportTimelineSounds,
 			CreateAudioMap,
-			ExportEmptyFontsForFNT
+			ExportEmptyFontsForFNT,
+			TesselateGraphics,
+			TesselateGlyphs
+		};
+		enum class double_settings{
+			TessellateThresholdGraphics,
+			TessellateThresholdGlyphs,
+			TessThresholdx2Graphics,
+			TessThresholdx2Glyphs,
+			TessMinLenghtGraphics,
+			TessMinLenghtGlpyhs
+		};
+		enum class int32_settings{
+			OpenPreview,
+			CopyRuntime
+		};
+		enum class uint32_settings{
+			OpenPreview,
+			CopyRuntime
+		};
+		enum class string_settings{
+			OpenPreview,
+			CopyRuntime
 		};
 		/** \enum compression
 		 * \brief Types of compression.

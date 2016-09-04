@@ -46,7 +46,19 @@ FontStyle* Font::get_font_style(const std::string& fontstyleName)
 	return font_styles.back();
 }
 
-
+void Font::addFontCharsFromFont(Font* font){
+	
+	FontStyle* thisFontStlye=NULL;
+	for(FontStyle* font_style: font_styles){
+		thisFontStlye=font->get_font_style(font_style->get_style_name());
+		if(thisFontStlye!=NULL){
+			font_style->addFontCharsFromFont(thisFontStlye);
+		}
+		else{
+			//todo: throw error
+		}
+	}
+}
 std::vector<FontStyle*> Font::get_font_styles()
 {
 	return font_styles;

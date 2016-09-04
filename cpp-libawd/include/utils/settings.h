@@ -50,8 +50,6 @@ namespace AWD
 			private:
 				std::string uv1_channel_id;
 				std::string uv2_channel_id;
-				std::vector<GEOM::DataStreamRecipe*> stream_recipes;
-				std::map<bool_settings, bool > all_bool_settings;
 	
 				// File header fields
 				compression compression;
@@ -63,6 +61,8 @@ namespace AWD
 				TYPES::UINT8 block_header_flag;
 				TYPES::F64 fps;
 				bool resolve_intersections;
+				TYPES::F64 curve_minLength;
+				TYPES::F64 curve_thresholdx2;
 				TYPES::F64 curve_threshold;
 				TYPES::F64 exterior_threshold;
 				TYPES::F64 exterior_threshold_for_strokes;
@@ -77,11 +77,24 @@ namespace AWD
 			public:
 				BlockSettings(bool create_default);
 				~BlockSettings();
+				
+				std::map<bool_settings, bool > all_bool_settings;
+				std::map<double_settings, AWD::TYPES::F64 > all_double_settings;
+				std::map<uint32_settings, AWD::TYPES::UINT32 > all_uint32_settings;
+				std::map<string_settings, std::string > all_string_settings;
+				std::vector<GEOM::DataStreamRecipe*> stream_recipes;
 
 				void add_stream_recipe(GEOM::DataStreamRecipe* );
 
 				bool get_bool(bool_settings);
 				void set_bool(bool_settings, bool);
+				
+				AWD::TYPES::F64 get_double(double_settings);
+				void set_double(double_settings, double);
+				AWD::TYPES::UINT32 get_uint32(uint32_settings);
+				void set_uint32(uint32_settings, AWD::TYPES::UINT32);
+				std::string get_string(string_settings);
+				void set_string(string_settings, std::string);
 
 				GEOM::DataStreamRecipe* get_stream_by_type(GEOM::stream_type);
 				void remove_stream_by_type(GEOM::stream_type, bool);
@@ -106,7 +119,7 @@ namespace AWD
 				std::string& get_sound_file_extension();
 
 
-				void create_streams(bool tri_indices, bool uvs);
+				void create_streams(bool tri_indices, bool uvs, bool curveData);
 
 				bool get_use_compression_per_block();
 				bool get_wide_matrix();
@@ -127,8 +140,13 @@ namespace AWD
 				void set_resolve_intersections(bool);
 				TYPES::F64 get_exterior_threshold(TYPES::filled_region_type );
 				void set_exterior_threshold(TYPES::F64, TYPES::filled_region_type );
+
+				// these are needed as they spit out the correct settings based on filled_region_type (glyphs vs graphic)
+				void set_curve_threshold(TYPES::filled_region_type);
 				TYPES::F64 get_curve_threshold();
-				void set_curve_threshold(TYPES::F64);
+				TYPES::F64 get_minLength();
+				TYPES::F64 get_thresholdx2();
+
 				int get_max_iterations();
 				void set_max_iterations(int);
 				TYPES::F64 get_fps();

@@ -629,13 +629,26 @@ AWD::create_TextureAtlasfor_timelines_refactor(AWDProject* awd_project, const st
 			this_geom->merge_for_textureatlas(new_fill_material, new_fill_material_alpha, new_fill_material_radial, new_fill_material_radial_alpha);
 		}
 	}
+	
+	BLOCKS::Material* new_fill_material_fonts=reinterpret_cast<BLOCKS::Material*>(awd_project->get_block_by_name_and_type("FontMaterial",  BLOCK::block_type::SIMPLE_MATERIAL, true));
+	new_fill_material_fonts->add_scene_name("Textureatlas");
+	if(newtextureAlpha!=NULL)
+		new_fill_material_fonts->set_texture(newtextureAlpha);
+	else
+		new_fill_material_fonts->set_state(TYPES::state::INVALID);
+	new_fill_material_fonts->set_material_type(MATERIAL::type::SOLID_COLOR_MATERIAL);
+
+	if(awd_project->get_settings()->get_bool(AWD::SETTINGS::bool_settings::TesselateGlyphs)==awd_project->get_settings()->get_bool(AWD::SETTINGS::bool_settings::TesselateGraphics)){
+		new_fill_material_fonts->set_state(TYPES::state::INVALID);		
+		new_fill_material_fonts=new_fill_material_alpha;
+	}
 
 	std::vector<AWDBlock*> all_text_formats;
 	awd_project->get_blocks_by_type(all_text_formats, BLOCK::block_type::TEXT_FORMAT);
 	for(AWDBlock* one_block:all_text_formats){
 		BLOCKS::TextFormat* this_format = reinterpret_cast<BLOCKS::TextFormat*>(one_block);
 		if(this_format!=NULL){
-			this_format->merge_for_textureatlas(new_fill_material_alpha);
+			this_format->merge_for_textureatlas(new_fill_material_fonts);
 		}
 	}
 	return result::AWD_SUCCESS;

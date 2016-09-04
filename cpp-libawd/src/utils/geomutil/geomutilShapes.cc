@@ -463,6 +463,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 		region_cnt=0;
 		final_filled_regions_list = valid_regions;
 		for(FilledRegion* filled_region : valid_regions){
+			subgeom_settings->set_curve_threshold(filled_region->get_type());
 			region_cnt++;
 			FilledRegionGroup* region_group = new FilledRegionGroup();
 			// set the 32bit value for the BitGridCell
@@ -650,15 +651,15 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 			subSeg2->set_state(edge_state::SUBDIVIDED);
 		if(seg_1->get_edgeType()==edge_type::OUTTER_EDGE){
 			curve_line_intersects++;
-			resolve_line_curve_intersection(seg_2, seg_1, awd_project->get_settings());
+			resolve_line_curve_intersection(seg_2, seg_1, subgeom_settings);
 		}
 		else if(seg_2->get_edgeType()==edge_type::OUTTER_EDGE){
 			curve_line_intersects++;
-			resolve_line_curve_intersection(seg_1, seg_2, awd_project->get_settings());
+			resolve_line_curve_intersection(seg_1, seg_2, subgeom_settings);
 		}
 		else{
 			curve_curve_intersects++;
-			resolve_curve_curve_intersection(seg_1, seg_2, awd_project->get_settings());
+			resolve_curve_curve_intersection(seg_1, seg_2, subgeom_settings);
 		}
 	}
 	
@@ -666,6 +667,7 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 	
 	region_cnt=0;
 	for(FilledRegion* filled_region : final_filled_regions_list){	
+		subgeom_settings->set_curve_threshold(filled_region->get_type());
 		region_cnt++;
 /// \subsection PathGeoStep5 Step 5: tesselation.	
 ///	-	Create a new tesselator from libtess2.
@@ -688,14 +690,20 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 		int all_pnt_cnt=0;
 		int path_start_point_idx=0;
 		path_cnt=0;
-		
-		for(GEOM::Path* one_path: filled_region->get_pathes()){
-			for(PathSegment* pathSeg:one_path->get_segments())
-			{
-				if((pathSeg->get_edgeType()==GEOM::edge_type::CONVEX_EDGE)||(pathSeg->get_edgeType()==GEOM::edge_type::CONCAVE_EDGE)){
-					pathSeg->tesselateCurve(subgeom_settings);
+		if(((filled_region->get_type()!=TYPES::filled_region_type::GENERATED_FONT_OUTLINES)
+			&&(awd_project->get_settings()->get_bool(AWD::SETTINGS::bool_settings::TesselateGraphics)))
+			||
+			((filled_region->get_type()==TYPES::filled_region_type::GENERATED_FONT_OUTLINES)
+			&&(awd_project->get_settings()->get_bool(AWD::SETTINGS::bool_settings::TesselateGlyphs)))
+			){
+			for(GEOM::Path* one_path: filled_region->get_pathes()){
+				for(PathSegment* pathSeg:one_path->get_segments())
+				{
+					if((pathSeg->get_edgeType()==GEOM::edge_type::CONVEX_EDGE)||(pathSeg->get_edgeType()==GEOM::edge_type::CONCAVE_EDGE)){
+						pathSeg->tesselateCurve(subgeom_settings);
+					}
 				}
-			}
+		}
 		}
 		for(GEOM::Path* one_path: filled_region->get_pathes()){
 			pnt_cnt=one_path->get_point_count(GEOM::edge_type::CONVEX_EDGE);
@@ -789,10 +797,12 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 		
 		GEOM::SubGeom* new_subgeom = new SubGeom(subgeom_settings);
 		if(filled_region->get_type()==filled_region_type::GENERATED_FONT_OUTLINES){
-			new_subgeom->get_settings()->create_streams(true, false);
+			new_subgeom->get_settings()->create_streams(true, false, !subgeom_settings->get_bool(bool_settings::TesselateGlyphs));
+
 		}
 		else{
 			new_subgeom->isMerged=true;
+			new_subgeom->get_settings()->create_streams(true, false, !subgeom_settings->get_bool(bool_settings::TesselateGraphics));
 			//new_subgeom->isMerged_refactor=true;
 			/*
 			new_subgeom->target_subgeom=awd_project->shared_geom->get_sub_at(0);

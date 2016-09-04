@@ -97,7 +97,7 @@ SubGeom::get_internal_id(std::string& output_str)
 	this->allowed_tris = (RESSOURCE_LIMIT / max_attr_length)*9999999;
 	
 	SubGeomInternal* this_subGeo = new SubGeomInternal();
-	this_subGeo->isMerged=this->isMerged || this->isMerged_refactor;
+	this_subGeo->isMerged=this->isMerged;
 	this->sub_geoms.push_back(this_subGeo);
 
 	output_str=FILES::int_to_string(this->sub_geoms.size()-1);

@@ -177,6 +177,7 @@ result FontShape::write_body(FILES::FileWriter* fileWriter, SETTINGS::BlockSetti
 }
 
 
+typedef std::map<int, FontShape*>::iterator it_type;
 
 FontStyle::FontStyle(const std::string& name) 
 {
@@ -194,6 +195,14 @@ std::string& FontStyle::get_style_name()
 	return this->style_name;
 }
 
+
+void FontStyle::addFontCharsFromFont(FontStyle* fontstyle) 
+{
+	for(it_type iterator = fontstyle->shapesmap.begin(); iterator !=  fontstyle->shapesmap.end(); iterator++) {
+		this->get_fontShape(iterator->first);
+	}
+	this->style_size=style_size;
+}
 void FontStyle::set_style_size(int style_size) 
 {
 	this->style_size=style_size;
@@ -210,7 +219,6 @@ void FontStyle::set_whitespace_size(int whitespace_size)
 {
 	this->whitespace_size=whitespace_size;
 }
-typedef std::map<int, FontShape*>::iterator it_type;
 std::vector<FontShape*> FontStyle::get_ungenerated_chars()
 {
 	std::vector<FontShape*> returner;

@@ -109,9 +109,7 @@ BlockSettings::BlockSettings(bool create_default_streams):
 	this->exterior_threshold_for_strokes=0.0;
 	this->flipYaxis=false;
 	this->flipXaxis=false;
-	if(create_default_streams){
-		create_streams(true, true);
-	}
+
 	this->all_bool_settings[bool_settings::OpenPreview]=true;
 	this->all_bool_settings[bool_settings::CopyRuntime]=true;
 	this->all_bool_settings[bool_settings::PrintExportLog]=false;
@@ -134,13 +132,59 @@ BlockSettings::set_bool(bool_settings id, bool value)
 {
 	this->all_bool_settings[id]=value;
 }
+AWD::TYPES::F64
+BlockSettings::get_double(double_settings id)
+{
+	if(this->all_double_settings.find(id)==this->all_double_settings.end()){
+		//todo:raise alert
+		return 0.0;
+	}
+	return this->all_double_settings[id];
+}
+void
+BlockSettings::set_double(double_settings id, double value)
+{
+	this->all_double_settings[id]=value;
+}
+
+AWD::TYPES::UINT32
+BlockSettings::get_uint32(uint32_settings id)
+{
+	if(this->all_uint32_settings.find(id)==this->all_uint32_settings.end()){
+		//todo:raise alert
+		return 0.0;
+	}
+	return this->all_uint32_settings[id];
+}
+void
+BlockSettings::set_uint32(uint32_settings id, AWD::TYPES::UINT32 value)
+{
+	this->all_uint32_settings[id]=value;
+}
+std::string 
+BlockSettings::get_string(string_settings id)
+{
+	if(this->all_string_settings.find(id)==this->all_string_settings.end()){
+		//todo:raise alert
+		return "";
+	}
+	return this->all_string_settings[id];
+}
+void
+BlockSettings::set_string(string_settings id, std::string  value)
+{
+	this->all_string_settings[id]=value;
+}
+
+
+
 BlockSettings::~BlockSettings()
 {
 	this->all_bool_settings.clear();
 }
 
 void
-BlockSettings::create_streams(bool tri_indices, bool uvs)
+BlockSettings::create_streams(bool tri_indices, bool uvs, bool curveData)
 {
 	this->stream_recipes.clear();
 	// define streams for triangle. this is the same for 2d and 3d verts
@@ -158,19 +202,25 @@ BlockSettings::create_streams(bool tri_indices, bool uvs)
 
 	GEOM::DataStreamAttrDesc attribute_desc_position2d = DataStreamAttrDesc(data_stream_attr_type::POSITION2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
 	vertex2D_attributes.push_back(attribute_desc_position2d);
-
-	//GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D_INT, data_types::VECTORINT3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-	//GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-	//vertex2D_attributes.push_back(attribute_desc_curve_data);
-		
+	
+	if(curveData){
+		GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D_INT, data_types::VECTORINT3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+		//GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+		vertex2D_attributes.push_back(attribute_desc_curve_data);
+	}	
 	if(uvs){
 		//GEOM::DataStreamAttrDesc attribute_desc_uv2d_data = DataStreamAttrDesc(data_stream_attr_type::UV_2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
 		//vertex2D_attributes.push_back(attribute_desc_uv2d_data);
 			//GEOM::DataStreamAttrDesc attribute_desc_color = DataStreamAttrDesc(data_stream_attr_type::COLOR, data_types::VECTOR4x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
 			//vertex2D_attributes.push_back(attribute_desc_color);
 	}
-
-	this->stream_recipes.push_back(new DataStreamRecipe(stream_type::COMBINED_POSITION_2D,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+	
+	if(curveData){
+		this->stream_recipes.push_back(new DataStreamRecipe(stream_type::ALLVERTDATA2D__2F3B,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+	}
+	else{
+		this->stream_recipes.push_back(new DataStreamRecipe(stream_type::COMBINED_POSITION_2D,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+	}
 		
 		/*
 
@@ -258,25 +308,63 @@ BlockSettings::set_exterior_threshold(TYPES::F64 exterior_threshold, filled_regi
 TYPES::F64
 BlockSettings::get_curve_threshold()
 {
+	return this->curve_threshold;
+}
+TYPES::F64
+BlockSettings::get_minLength()
+{
+	return this->curve_minLength;
+}
+TYPES::F64
+BlockSettings::get_thresholdx2()
+{
+	return this->curve_thresholdx2;
+}
+void
+BlockSettings::set_curve_threshold(filled_region_type filled_region_type)
+{
+	double new_curve_threshold=0.0;
+	double curve_minLength=1;
+	double curve_thresholdx2=1;
+	if(filled_region_type==filled_region_type::GENERATED_FONT_OUTLINES){
+
+		new_curve_threshold=this->get_double(double_settings::TessellateThresholdGlyphs);
+		curve_minLength=this->get_double(double_settings::TessMinLenghtGraphics);
+		curve_thresholdx2=this->get_double(double_settings::TessThresholdx2Graphics);
+	}
+	else{
+
+		new_curve_threshold=this->get_double(double_settings::TessellateThresholdGraphics);
+		curve_minLength=this->get_double(double_settings::TessMinLenghtGlpyhs);
+		curve_thresholdx2=this->get_double(double_settings::TessThresholdx2Glyphs);
+	}
 	if(this->curve_threshold>1){
 		this->curve_threshold=1;
 	}
 	if(this->curve_threshold<=0){
 		this->curve_threshold=0.0001;
 	}
-	return this->curve_threshold;
-}
-void
-BlockSettings::set_curve_threshold(TYPES::F64 curve_threshold)
-{
-	if(this->curve_threshold>10){
-		this->curve_threshold=10;
+	if(this->curve_minLength>100){
+		this->curve_minLength=100;
 	}
-	if(this->curve_threshold<=0){
-		this->curve_threshold=0;
+	if(this->curve_minLength<=0){
+		this->curve_minLength=1;
 	}
-	this->curve_threshold=curve_threshold;
+	if(this->curve_thresholdx2>100){
+		this->curve_thresholdx2=100;
+	}
+	if(this->curve_thresholdx2<=0){
+		this->curve_thresholdx2=1;
+	}
+	if(this->curve_thresholdx2<=this->curve_minLength){
+		this->curve_thresholdx2=this->curve_minLength;
+	}
+	this->curve_threshold=new_curve_threshold;
+	this->curve_minLength=curve_minLength;
+	this->curve_thresholdx2=curve_thresholdx2;
 }
+
+
 TYPES::F64
 BlockSettings::get_fps()
 {
@@ -396,30 +484,12 @@ BlockSettings*
 BlockSettings::clone_block_settings()
 {
 	BlockSettings* new_blockSettings = new BlockSettings(true);
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportFrameScript, this->get_bool(SETTINGS::bool_settings::ExportFrameScript));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExternalScripts, this->get_bool(SETTINGS::bool_settings::ExternalScripts));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::EmbbedAllChars, this->get_bool(SETTINGS::bool_settings::EmbbedAllChars));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::OpenPreview, this->get_bool(SETTINGS::bool_settings::OpenPreview));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::CopyRuntime, this->get_bool(SETTINGS::bool_settings::CopyRuntime));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::PrintExportLog, this->get_bool(SETTINGS::bool_settings::PrintExportLog));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::PrintExportLogTimelines, this->get_bool(SETTINGS::bool_settings::PrintExportLogTimelines));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportTimelines, this->get_bool(SETTINGS::bool_settings::ExportTimelines));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::IncludeInvisibleTimelineLayer, this->get_bool(SETTINGS::bool_settings::IncludeInvisibleTimelineLayer));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportGeometries, this->get_bool(SETTINGS::bool_settings::ExportGeometries));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportFonts, this->get_bool(SETTINGS::bool_settings::ExportFonts));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportLibFonts, this->get_bool(SETTINGS::bool_settings::ExportLibFonts));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportBitmaps, this->get_bool(SETTINGS::bool_settings::ExportBitmaps));
+	new_blockSettings->all_bool_settings=this->all_bool_settings;
+	new_blockSettings->all_double_settings=this->all_double_settings;
+	new_blockSettings->all_uint32_settings=this->all_uint32_settings;
+	new_blockSettings->all_string_settings=this->all_string_settings;
 	
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ForceTextureOverwrite, this->get_bool(SETTINGS::bool_settings::ForceTextureOverwrite));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::EmbbedTextures, this->get_bool(SETTINGS::bool_settings::EmbbedTextures));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportLibBitmaps, this->get_bool(SETTINGS::bool_settings::ExportLibBitmaps));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportSounds, this->get_bool(SETTINGS::bool_settings::ExportSounds));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ForceSoundOverwrite, this->get_bool(SETTINGS::bool_settings::ForceSoundOverwrite));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::EmbbedSounds, this->get_bool(SETTINGS::bool_settings::EmbbedSounds));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportLibSounds, this->get_bool(SETTINGS::bool_settings::ExportLibSounds));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::ExportTimelineSounds, this->get_bool(SETTINGS::bool_settings::ExportTimelineSounds));
-	new_blockSettings->set_bool(SETTINGS::bool_settings::CreateAudioMap, this->get_bool(SETTINGS::bool_settings::CreateAudioMap));
-
+	new_blockSettings->stream_recipes=this->stream_recipes;
 	// todo: fill the blocksettings from original
 	return new_blockSettings;
 }

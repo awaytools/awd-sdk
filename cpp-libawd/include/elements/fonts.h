@@ -63,6 +63,7 @@ namespace AWD
 				~FontStyle();
 				std::map<int, FontShape*> shapesmap;
 				std::vector<FontShape*> get_ungenerated_chars();
+				void addFontCharsFromFont(FontStyle* fontstyle);
 				void set_style_size(int);
 				void set_ascent(double);
 				void set_descent(double);

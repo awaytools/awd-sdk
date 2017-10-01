@@ -78,6 +78,11 @@ MovieClip::MovieClip():
 	default_union.v=malloc(sizeof(TYPES::UINT8));
 	*default_union.ui8=0;
 	this->properties->add(3,	default_union, 1,   data_types::UINT8, storage_precision_category::UNDEFINED_STORAGE_PRECISION, property_storage_type::STATIC_PROPERTY);
+
+	default_union.v=malloc(sizeof(TYPES::UINT8));
+	*default_union.ui8=0;
+	this->properties->add(4,	default_union, 1,   data_types::UINT8, storage_precision_category::UNDEFINED_STORAGE_PRECISION, property_storage_type::STATIC_PROPERTY);
+
 	
 	
 }
@@ -1245,7 +1250,12 @@ MovieClip::calc_body_length(AWDFile* awd_file, BlockSettings *curBlockSettings)
 	properties_union.v=malloc(sizeof(TYPES::UINT8));
 	*properties_union.ui8=1;
 	this->properties->set(3, properties_union, TYPES::UINT32(sizeof(TYPES::UINT8)));
-
+	
+	if((this->frames.size()>0)&&(this->frames[0]->slice9scaleValues.size()>0)){
+		properties_union.v=malloc(sizeof(TYPES::UINT8));
+		*properties_union.ui8=1;
+		this->properties->set(4, properties_union, TYPES::UINT32(sizeof(TYPES::UINT8)));
+	}
 
     TYPES::UINT32 len;
 

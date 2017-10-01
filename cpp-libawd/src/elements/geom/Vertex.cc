@@ -122,12 +122,33 @@ Vertex2D::set_position(TYPES::F64 x, TYPES::F64 y)
 	data_stream_attr->set_data(new_data);
 }
 
+GEOM::VECTOR2D_UINT16  
+Vertex2D::get_position_uint16()
+{
+	return this->position_uint16;
+}
+
+void 
+Vertex2D::set_position_uint16(TYPES::UINT16 x, TYPES::UINT16 y)
+{
+	this->position_uint16=VECTOR2D_UINT16(x,y);
+	GEOM::DataStreamAttr* data_stream_attr;
+	TYPES::union_ptr new_data;
+	new_data.v = (TYPES::UINT16*) malloc (2 * sizeof(TYPES::UINT16*));
+	result res = this->get_attribute(GEOM::data_stream_attr_type::POSITION2D_UINT16, &data_stream_attr);
+	if(res!=result::AWD_SUCCESS){
+		data_stream_attr=new GEOM::DataStreamAttr(GEOM::data_stream_attr_type::POSITION2D_UINT16, new_data);
+		this->set_attribute(data_stream_attr);
+		return;
+	}
+	data_stream_attr->set_data(new_data);
+}
+
 GEOM::VECTOR2D  
 Vertex2D::get_position()
 {
 	return this->position;
 }
-
 GEOM::VECTOR3D  
 Vertex2D::get_curve_attributes()
 {

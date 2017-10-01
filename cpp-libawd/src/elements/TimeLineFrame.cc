@@ -5,8 +5,9 @@
 #include "utils/util.h"
 #include "blocks/movieclip.h"
 #include "Stdafx.h"
-
-
+#include <iostream>
+#include <sstream>
+#include <string>
 using namespace IceCore;
 #define SORTER	RadixSort
 
@@ -78,6 +79,21 @@ TimelineFrame::add_label(frame_label_type label_type, const std::string& label)
 void
 TimelineFrame::set_frame_code(const std::string& frame_code)
 {
+	
+	std::size_t found=frame_code.find("#AWAYSLICE9SCALE");
+	if (found==0)	  {		  
+		this->slice9scaleValues.clear();
+		std::istringstream iss(frame_code);
+		int cnt=0;
+		for(std::string s; iss >> s; ){
+			if(cnt>0){
+				this->slice9scaleValues.push_back(std::stod(s));
+			}
+			cnt++;
+
+		}
+		return;
+	}
 	this->frame_code=this->frame_code+frame_code;
 }
 

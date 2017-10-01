@@ -18,6 +18,27 @@ namespace AWD
 {	
 	namespace GEOM
 	{	
+		class SubShapePath
+		{
+
+
+			public:
+				SubShapePath();
+				~SubShapePath();
+
+				std::vector<TYPES::F32> path_data;
+
+				int color;
+				float thickness;
+				int jointStlye;
+				int capStyle;
+				float mitter;
+				TYPES::UINT32 get_bytesize();
+				result writeToFile(FILES::FileWriter*);
+
+
+		};
+	
 		/** \class SubGeomInternal
 		*	\brief A SubGeomInternal contains a list of DataStream.
 		* 
@@ -39,6 +60,8 @@ namespace AWD
 				TYPES::UINT32 startIDX;
 				TYPES::UINT32 vertCnt;
 				
+				void createSlice9Scale(TYPES::F32 x, TYPES::F32 y, TYPES::F32 width, TYPES::F32 height, std::vector<GEOM::SubGeomInternal*>& result);
+
 				result modify_font_char(double size);
 				std::vector<GEOM::Triangle*> exterior_triangles;
 				std::vector<GEOM::Triangle*> interior_triangles;
@@ -70,10 +93,6 @@ namespace AWD
 			private:
 				std::vector<GEOM::SubGeomInternal*> sub_geoms;
 				SETTINGS::BlockSettings* settings;
-				TYPES::F64 max_x;
-				TYPES::F64 max_y;
-				TYPES::F64 min_x;
-				TYPES::F64 min_y;
 				std::string name;
 				
 				
@@ -84,16 +103,28 @@ namespace AWD
 				SubGeom(SETTINGS::BlockSettings *);
 				~SubGeom();
 				
+				std::vector<TYPES::INT32> slice9ScaleStream;
+				std::vector<TYPES::F32> slice9ScalePositionsStream;
 				GEOM::SubGeom* target_subgeom;
 				bool isMerged;
+				bool isScaled9;
 				bool isMerged_refactor;
 				TYPES::UINT32 merged_address;
 				TYPES::UINT32 startIDX;
 				TYPES::UINT32 vertCnt;
 				TYPES::UINT32 tri_cnt;
-
+				
+				TYPES::F64 max_x;
+				TYPES::F64 max_y;
+				TYPES::F64 min_x;
+				TYPES::F64 min_y;
+				TYPES::F64 uint16_offsetX;
+				TYPES::F64 uint16_offsetY;
+				TYPES::F64 uint16_scaleX;
+				TYPES::F64 uint16_scaleY;
 				MATERIAL::type mat_type;
 				GEOM::MATRIX2x3* uv_transform;
+				GEOM::MATRIX2x3* registration_uv_transform;
 				/**
 				*\brief Get the name.
 				*/
@@ -115,6 +146,20 @@ namespace AWD
 				result merge_stream(GEOM::SubGeom* project);
 				result add_merged_stream_tri(GEOM::edge_type edge_type, GEOM::Vertex2D v1, GEOM::Vertex2D v2, GEOM::Vertex2D v3);
 				result set_uvs();
+				TYPES::F32 get_y_for_x_between_verts(GEOM::Vertex2D* v1, GEOM::Vertex2D* v2, TYPES::F32 x);
+				TYPES::F32 get_x_for_y_between_verts(GEOM::Vertex2D* v1, GEOM::Vertex2D* v2, TYPES::F32 x);
+				
+				void split_tris_into_horizontal_groups(std::vector<GEOM::Triangle*>& input, std::vector<GEOM::Triangle*>& result1, std::vector<GEOM::Triangle*>& result2, std::vector<GEOM::Triangle*>& result3, TYPES::F32 x, TYPES::F32 width);
+				void split_tris_into_vertical_groups(std::vector<GEOM::Triangle*>& input, std::vector<GEOM::Triangle*>& result1, std::vector<GEOM::Triangle*>& result2, std::vector<GEOM::Triangle*>& result3, TYPES::F32 y, TYPES::F32 height);
+				void split_tris_into_vertical_groups(TYPES::F32 y, GEOM::Triangle* tri1, GEOM::Triangle* tri2);
+				bool split_tri_horizontal(TYPES::F32 x, GEOM::Triangle* tri1, std::vector<GEOM::Triangle*>& tris1, std::vector<GEOM::Triangle*>& tris2);
+				bool split_tri_vertical(TYPES::F32 y, GEOM::Triangle* tri1,  std::vector<GEOM::Triangle*>& tris1, std::vector<GEOM::Triangle*>& tris2);
+
+				void createSlice9Scale(TYPES::F32 left, TYPES::F32 top, TYPES::F32 right, TYPES::F32 bottom, TYPES::F32 g_left, TYPES::F32 g_top, TYPES::F32 g_right, TYPES::F32 g_bottom);
+
+				result set_uint16_positions(double tx, double ty, double scaleX, double scaleY, double width, double height);
+				result calculate_bounds();
+				
 				TYPES::UINT32 get_tri_cnt_for_type(GEOM::edge_type edge_type);
 				TYPES::UINT32 get_tri_cnt();
 				void set_material(BASE::AWDBlock*);

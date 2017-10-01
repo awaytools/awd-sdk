@@ -55,9 +55,14 @@ GEOM::write_triangle_attr_to_file(FILES::FileWriter* file_writer, Triangle* tri,
 result
 GEOM::write_vertex_attr_to_file(FILES::FileWriter* file_writer,  Vertex2D* vert, DataStreamAttrDesc* attr_desc)
 {
-	if(attr_desc->get_type()==GEOM::data_stream_attr_type::POSITION2D){		
+	if(attr_desc->get_type()==GEOM::data_stream_attr_type::POSITION2D){
 		file_writer->writeFLOAT32(vert->get_position().x);
 		file_writer->writeFLOAT32(vert->get_position().y);
+		return result::AWD_SUCCESS;
+	}
+	else if(attr_desc->get_type()==GEOM::data_stream_attr_type::POSITION2D_UINT16){
+		file_writer->writeUINT16(vert->get_position_uint16().x);
+		file_writer->writeUINT16(vert->get_position_uint16().y);
 		return result::AWD_SUCCESS;
 	}
 	else if(attr_desc->get_type()==GEOM::data_stream_attr_type::COLOR){
@@ -109,6 +114,11 @@ TYPES::UINT32
 	if(attr_desc->get_type()==GEOM::data_stream_attr_type::POSITION2D){		
 		output_ptr.F32[all_cnt++] = vert->get_position().x;// \todo: add scale and storage precision
 		output_ptr.F32[all_cnt++] = vert->get_position().y;
+		return 2;
+	}
+	else if(attr_desc->get_type()==GEOM::data_stream_attr_type::POSITION2D_UINT16){		
+		output_ptr.ui16[all_cnt++] = vert->get_position_uint16().x;// \todo: add scale and storage precision
+		output_ptr.ui16[all_cnt++] = vert->get_position_uint16().y;
 		return 2;
 	}
 	else if(attr_desc->get_type()==GEOM::data_stream_attr_type::COLOR){

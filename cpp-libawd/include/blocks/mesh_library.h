@@ -4,6 +4,7 @@
 #include <string>
 #include "utils/awd_types.h"
 #include "base/scene_base.h"
+#include "base/attr.h"
 
 #include "base/state_element_base.h"
 
@@ -43,11 +44,13 @@ namespace AWD
 				~MeshLibrary();
 				
 				std::vector<AWDBlock*> materials;
+
 				/**
 				*\brief Clear the list of Material for this MeshLibrary. Should only be called from #GEOM::ProcessGeometry().
 				*/
 				void clear_final_materials();
-
+				
+				void createSlice9Scale(TYPES::F32 x, TYPES::F32 y, TYPES::F32 width, TYPES::F32 height);
 				/**
 				*\brief Add a Material to this MeshLibrary. Should only be called from #GEOM::ProcessGeometry().
 				*@param[in] final_mat BASE::AWDBlock Pointer to the Material to add.

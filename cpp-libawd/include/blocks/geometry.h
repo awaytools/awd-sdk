@@ -54,6 +54,7 @@ namespace AWD
 
 			protected:
 				TYPES::UINT32 calc_body_length(FILES::AWDFile*, SETTINGS::BlockSettings *);
+				result calculate_uint16_positions();
 				TYPES::state validate_block_state();								
 				result write_body(FILES::FileWriter *, SETTINGS::BlockSettings *, FILES::AWDFile*);
 				result read_body(FILES::FileWriter * fileWriter, SETTINGS::BlockSettings * settings, FILES::AWDFile* file);
@@ -70,12 +71,22 @@ namespace AWD
 				Geometry();
 				~Geometry();
 				static int subgeomcnt;
+				TYPES::F64 max_x;
+				TYPES::F64 max_y;
+				TYPES::F64 min_x;
+				TYPES::F64 min_y;
+				TYPES::F64 uint16_offsetX;
+				TYPES::F64 uint16_offsetY;
+				TYPES::F64 uint16_scaleX;
+				TYPES::F64 uint16_scaleY;
 				std::vector<GEOM::SubGeom *> subGeometries;
+				std::vector<GEOM::SubShapePath *> subShapePath;
 				void add_res_id_geom(const std::string&, GEOM::MATRIX2x3*);
 				GEOM::MATRIX2x3* has_res_id_geom(const std::string&);
 				void clear_res_ids_geom();
 				result add_filled_region(GEOM::FilledRegion* filled_regions);
-				
+				result add_path_subgeo(GEOM::SubShapePath* subShapePath);
+
 				result merge_stream(GEOM::SubGeom* project);
 
 				result write_uvs(FILES::FileWriter *, SETTINGS::BlockSettings *, FILES::AWDFile*);
@@ -134,6 +145,7 @@ namespace AWD
 				void set_split_faces(bool);
 				int get_originalPointCnt();
 				void set_originalPointCnt(int);
+				void createSlice9Scale(TYPES::F32 x, TYPES::F32 y, TYPES::F32 width, TYPES::F32 height);
 		};	
 	}
 }

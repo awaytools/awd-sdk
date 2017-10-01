@@ -67,7 +67,11 @@ namespace AWD
 		#define PROP_MAT_SPECULARCOLOR 20
 		#define PROP_MAT_SPECULARTEXTURE 21
 		#define PROP_MAT_LIGHTPICKER 22
-
+		
+		#define PROP_SPRITE_REGPOINTX 1
+		#define PROP_SPRITE_REGPOINTY 2
+		#define PROP_SPRITE_REGSCALEX 3
+		#define PROP_SPRITE_REGSCALEY 4
 		// primitive properties (todo: remove becasue we have the reusable props)
 		#define PROP_PRIM_NUMBER1 101
 		#define PROP_PRIM_NUMBER2 102

@@ -26,6 +26,10 @@ SubGeomInternal::~SubGeomInternal()
 		delete tri;	
 }
 
+void 
+SubGeomInternal::createSlice9Scale(TYPES::F32 x, TYPES::F32 y, TYPES::F32 width, TYPES::F32 height, std::vector<GEOM::SubGeomInternal*>& result){
+
+}
 result
 SubGeomInternal::modify_font_char(double size)
 {

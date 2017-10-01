@@ -278,13 +278,13 @@ AWDFile::process()
 			if(this->settings->get_bool(bool_settings::ExternalScripts)){
 				ousrfile.open(script_path.c_str());
 				//ousrfile << "(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require==\"function\"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error(\"Cannot find module '\"+o+\"'\");throw f.code=\"MODULE_NOT_FOUND\",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require==\"function\"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({\"./src/Main_scripts.ts\":[function(require,module,exports){\n";
-    			ousrfile << "Color = require('awayjs-player/lib/adapters/AS2ColorAdapter');\n";
+    			ousrfile << "/*Color = require('awayjs-player/lib/adapters/AS2ColorAdapter');\n";
 				ousrfile << "System = require('awayjs-player/lib/adapters/AS2SystemAdapter');\n";
 				ousrfile << "Sound = require('awayjs-player/lib/adapters/AS2SoundAdapter');\n";
 				ousrfile << "Key = require('awayjs-player/lib/adapters/AS2KeyAdapter');\n";
 				ousrfile << "Mouse = require('awayjs-player/lib/adapters/AS2MouseAdapter');\n";
 				ousrfile << "Stage = require('awayjs-player/lib/adapters/AS2StageAdapter');\n";
-				ousrfile << "SharedObject = require('awayjs-player/lib/adapters/AS2SharedObjectAdapter');\n";
+				ousrfile << "SharedObject = require('awayjs-player/lib/adapters/AS2SharedObjectAdapter');\n*/";
 				ousrfile << "int = function (value) { return Math.floor(value) | 0; };\n";
 				ousrfile << "string = function (value) { return value.toString(); };\n";
 				ousrfile << "getURL = function (value) { return value; };\n";

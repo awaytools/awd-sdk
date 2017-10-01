@@ -8,6 +8,7 @@
 #include "blocks/billboard.h"
 #include "base/state_element_base.h"
 #include "files/awd_file.h"
+#include "elements/timeline_depth_manager.h"
 
 
 #ifdef _WIN32
@@ -47,8 +48,6 @@ AWDProject::AWDProject(project_type new_project_type, const std::string& initial
 	this->current_time=(time.tv_sec * 1000) + (time.tv_usec / 1000);
 #endif
 	
-
-	/// \todo: fuck it
 	// check if the path contains a directory
 	std::string root_directory;
 	result res = FILES::extract_directory_from_path(initial_path, root_directory);
@@ -92,7 +91,7 @@ AWDProject::~AWDProject()
 		delete awd_file;
 	if(this->name_space!=NULL)
 		delete this->name_space;
-	//delete this->shared_geom; // aloready disposed, because its part of the blocklist
+	//this->shared_geom is already disposed, because its part of the blocklist
 }
 
 // OVERWRITE STATEELEMENTBASE:
@@ -190,6 +189,31 @@ AWDProject::finalize_timelines()
 		timeline->finalize();
 	}
 	return result::AWD_SUCCESS;
+}
+
+result
+AWDProject::processSlice9ScaleMcs()
+{
+	if (this->all_blocks.find(BLOCK::block_type::MOVIECLIP) == this->all_blocks.end())
+		return result::AWD_ERROR;
+	for(AWDBlock* one_awd_block : this->all_blocks[BLOCK::block_type::MOVIECLIP]){
+		BLOCKS::MovieClip* mc = reinterpret_cast<BLOCKS::MovieClip* >(one_awd_block);
+		std::vector<ANIM::TimelineFrame*> frames=mc->get_frames();
+		if(frames.size()>0 && frames[0]->slice9scaleValues.size()>0){			
+			ANIM::TimelineFrame* frame=frames[0];
+			for(ANIM::PotentialTimelineChildGroup* one_child : mc->timeline_childs){
+				if(one_child->awd_block->get_type()==BLOCK::block_type::MESH_INSTANCE_2){
+					BLOCKS::MeshLibrary* mesh = reinterpret_cast<BLOCKS::MeshLibrary* >(one_child->awd_block);
+					mesh->createSlice9Scale(
+						frame->slice9scaleValues[0],
+						frame->slice9scaleValues[1],
+						frame->slice9scaleValues[2],
+						frame->slice9scaleValues[3]);
+				}
+			}
+
+		}
+	}
 }
 result
 AWDProject::create_merged_streams()

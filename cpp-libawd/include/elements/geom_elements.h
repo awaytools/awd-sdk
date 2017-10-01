@@ -125,6 +125,25 @@ namespace AWD
 				y = newy;
 			}
 		};
+		/** \struct VECTOR2D_UINT16
+		*	\brief A VECTOR2D contains two values of type TYPES::F64 
+		* 
+		*/
+		struct VECTOR2D_UINT16 
+		{
+			TYPES::UINT16 x;
+			TYPES::UINT16 y;
+			VECTOR2D_UINT16()
+			{
+				x = 0;
+				y = 0;
+			}
+			VECTOR2D_UINT16(TYPES::UINT16 newx, TYPES::UINT16 newy)
+			{
+				x = newx;
+				y = newy;
+			}
+		};
 		
 		/**\brief A Matrix2x3 class, used for 2d scene-transformations or uv-transformation etc \n 
 		* 

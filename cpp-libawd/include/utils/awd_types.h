@@ -227,23 +227,23 @@ namespace AWD
 
 			// Derived numeric types
 			BOOL=21,	///<	Derived Numberic Value	- 1 byte - boolean
-			COLOR,			///<	Derived Numberic Value	- 4		bytes - AWD::TYPES::UINT32
-			BADDR,			///<	Derived Numberic Value	- 4		bytes - AWD::TYPES::UINT32 \n Represents the Adress of a AWDBlock inside a AWDFile
+			COLOR,		///<	Derived Numberic Value	- 4		bytes - AWD::TYPES::UINT32
+			BADDR,		///<	Derived Numberic Value	- 4		bytes - AWD::TYPES::UINT32 \n Represents the Adress of a AWDBlock inside a AWDFile
 
 			// Aggregate/array types
-			STRING,			///<	UTF8-encoded string (unicode)
-			BYTEARRAY,		///<	BigEndian ByteArray
+			STRING,		///<	UTF8-encoded string (unicode)
+			BYTEARRAY,	///<	BigEndian ByteArray
 
 			// Mathetmatical types
-			VECTOR2x1=41,///< Derived Numberic Value	-  8 / 16 byte (depents on storage precision) - Vector2x1
-			VECTOR3x1,				///< Derived Numberic Value		- 12 / 24	bytes (depents on storage precision) - Vector3x1
-			VECTOR4x1,				///< Derived Numberic Value		- 16 / 32	bytes (depents on storage precision) - Vector4x1
-			MTX3x2,					///< Derived Numberic Value		- 24 / 48	bytes (depents on storage precision) - Matrix3x2
-			MTX3x3,					///< Derived Numberic Value		- 36 / 72	bytes (depents on storage precision) - Matrix3x3
-			MTX4x3,					///< Derived Numberic Value		- 48 / 96	bytes (depents on storage precision) - Matrix4x3 
-			MTX4x4,					///< Derived Numberic Value		- 64 / 128	bytes (depents on storage precision) - Matrix4x4 
-			MTX5x4,					///< Derived Numberic Value		- 64 / 128	bytes (depents on storage precision) - Matrix4x4 
-			VECTORINT3x1,				///< Derived Numberic Value		- 12 / 24	bytes (depents on storage precision) - Vector3x1
+			VECTOR2x1=41,	///< Derived Numberic Value	-  8 / 16 byte (depents on storage precision) - Vector2x1
+			VECTOR3x1,		///< Derived Numberic Value		- 12 / 24	bytes (depents on storage precision) - Vector3x1
+			VECTOR4x1,		///< Derived Numberic Value		- 16 / 32	bytes (depents on storage precision) - Vector4x1
+			MTX3x2,			///< Derived Numberic Value		- 24 / 48	bytes (depents on storage precision) - Matrix3x2
+			MTX3x3,			///< Derived Numberic Value		- 36 / 72	bytes (depents on storage precision) - Matrix3x3
+			MTX4x3,			///< Derived Numberic Value		- 48 / 96	bytes (depents on storage precision) - Matrix4x3 
+			MTX4x4,			///< Derived Numberic Value		- 64 / 128	bytes (depents on storage precision) - Matrix4x4 
+			MTX5x4,			///< Derived Numberic Value		- 64 / 128	bytes (depents on storage precision) - Matrix4x4 
+			VECTORINT3x1,	///< Derived Numberic Value		- 12 / 24	bytes (depents on storage precision) - Vector3x1
 		};
 		
 		/** \enum message_type
@@ -532,6 +532,7 @@ namespace AWD
 			UV_2D=12,	
             CURVE_DATA_2D_INT=13,
             COMBINED_POSITION2D=14,
+            POSITION2D_UINT16=15,
 		};
 
 		/** \enum stream_type
@@ -554,6 +555,8 @@ namespace AWD
 			POSITIONS_2D=14,		///< 2DPosition Data
             CONCANETEDSTREAM_INCL_INDICES=15,		///< 2DPosition Data
             COMBINED_POSITION_2D=16,		///< 2DPosition Data
+            COMBINED_POSITION_2D_INT16=17,		///< 2DPosition Data
+			ALLVERTDATA2D_2xINT16_3xINT8=18,		///< The Combined Vertices Data	
 			/*
 			POINTS=11,		///< The Combined Vertices Data	
 			INTERIOR_TRIANGLES=12,		///< The index data for faces
@@ -771,7 +774,10 @@ namespace AWD
 			CreateAudioMap,
 			ExportEmptyFontsForFNT,
 			TesselateGraphics,
-			TesselateGlyphs
+			TesselateGlyphs,
+			Uint16Positions,
+			RealTimeStrokes,
+			RealTimeFills,
 		};
 		enum class double_settings{
 			TessellateThresholdGraphics,

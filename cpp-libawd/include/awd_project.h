@@ -145,7 +145,9 @@ namespace AWD
 			
 			result create_merged_streams();
 
-			result finalize_timelines();	
+			result finalize_timelines();
+
+			result processSlice9ScaleMcs();	
 			/**
 			* \brief Imports the active-file. This should result in a AWDFile that is fully processed and ready to export again.
 			* 

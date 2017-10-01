@@ -90,7 +90,6 @@ namespace AWD
 				std::vector<ANIM::TimelineFrame*> remove_frames;
 				std::string symbol_name;
 				std::map<TYPES::UINT32, ANIM::TimelineChild_instance*> timeline_childs_to_obj_id;
-				std::vector<ANIM::PotentialTimelineChildGroup*> timeline_childs;
 				std::vector<ANIM::PotentialTimelineChildGroup*> timeline_childs_one_instance;
 				std::vector<ANIM::PotentialTimelineChildGroup*> timeline_childs_multiple_instances;
 				ANIM::TimelineDepthManager* depth_manager;
@@ -115,6 +114,7 @@ namespace AWD
 				std::vector<std::string>	frame_scripts_mc_names;
 				std::vector<TYPES::UINT32>	frame_scripts_frameindex;
 				
+				std::vector<ANIM::PotentialTimelineChildGroup*> timeline_childs;
 				std::string all_scripts;
 				bool is_collected;
 				bool is_finalized;

@@ -28,6 +28,7 @@ namespace AWD
 				TYPES::UINT32 startframe;
 				void set_frame_duration(TYPES::UINT32);
 				TYPES::UINT32 get_frame_duration();
+				std::vector<TYPES::F64> slice9scaleValues;
 
 				std::vector<ANIM::FrameCommandDisplayObject*> display_commands;				
 				std::vector<ANIM::FrameCommandRemoveObject*> remove_commands;

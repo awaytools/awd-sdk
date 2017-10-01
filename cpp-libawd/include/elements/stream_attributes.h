@@ -127,6 +127,7 @@ namespace AWD
 				GEOM::VECTOR2D  position;
 				GEOM::VECTOR3D  curve_attributes;
 				GEOM::VECTOR2D  uv;
+				GEOM::VECTOR2D_UINT16  position_uint16;
 				
 
 
@@ -138,9 +139,11 @@ namespace AWD
 				Vertex2D();
 				~Vertex2D();
 				void set_position(TYPES::F64 x, TYPES::F64 y);
+				void set_position_uint16(TYPES::UINT16 x, TYPES::UINT16 y);
 				void set_curve_attributes(TYPES::F64 type, TYPES::F64 curve_1, TYPES::F64 curve_2);
 				void set_uv(TYPES::F64 u, TYPES::F64 v);
 				GEOM::VECTOR2D  get_position();
+				GEOM::VECTOR2D_UINT16  get_position_uint16();
 				GEOM::VECTOR2D  get_uv();
 				GEOM::VECTOR3D  get_curve_attributes();
 		};

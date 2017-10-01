@@ -797,12 +797,12 @@ GEOM::ProcessShapeGeometry(Geometry* geom, AWDProject* awd_project, SETTINGS::Se
 		
 		GEOM::SubGeom* new_subgeom = new SubGeom(subgeom_settings);
 		if(filled_region->get_type()==filled_region_type::GENERATED_FONT_OUTLINES){
-			new_subgeom->get_settings()->create_streams(true, false, !subgeom_settings->get_bool(bool_settings::TesselateGlyphs));
+			new_subgeom->get_settings()->create_streams(true, false, !subgeom_settings->get_bool(bool_settings::TesselateGlyphs), false);
 
 		}
 		else{
 			new_subgeom->isMerged=true;
-			new_subgeom->get_settings()->create_streams(true, false, !subgeom_settings->get_bool(bool_settings::TesselateGraphics));
+			new_subgeom->get_settings()->create_streams(true, false, !subgeom_settings->get_bool(bool_settings::TesselateGraphics), false);
 			//new_subgeom->isMerged_refactor=true;
 			/*
 			new_subgeom->target_subgeom=awd_project->shared_geom->get_sub_at(0);

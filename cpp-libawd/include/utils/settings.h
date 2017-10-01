@@ -119,7 +119,7 @@ namespace AWD
 				std::string& get_sound_file_extension();
 
 
-				void create_streams(bool tri_indices, bool uvs, bool curveData);
+				void create_streams(bool tri_indices, bool uvs, bool curveData, bool int16verts);
 
 				bool get_use_compression_per_block();
 				bool get_wide_matrix();

@@ -312,20 +312,22 @@ PathSegment::tesselateCurve(SETTINGS::Settings* settings)
 	get_subdivided_path();
 	//state=edge_state::MAX_SUBDIVISION;
 	bool hasSomethingTosubdivide=true;
-	while (hasSomethingTosubdivide){
+	int level = 0;
+	while ((level<=4)&&(hasSomethingTosubdivide)){
+		level++;
 		newPath.clear();
 		hasSomethingTosubdivide=false;
 		for(PathSegment* pathSeg: this->subdividedPath){
 			// if the segments length is smaller than the minLength, 
 			// or if the curviness value of the segment is smaller than the threshold, we stop subdividing
-			if((pathSeg->get_length()< settings->get_minLength())||(pathSeg->get_curviness() <= settings->get_curve_threshold())){
+			if((pathSeg->get_length()<=1.5)||(pathSeg->get_curviness() <= settings->get_curve_threshold())){
 				newPath.push_back(pathSeg);
             }
 			// if the segments length is greater than the minLength, but smaller than the thresholdx2 value, 
 			// we mutliply the threshold by 2 before testing the curviness against it.
-            else if((pathSeg->get_length()<settings->get_thresholdx2())&&(pathSeg->get_curviness() <= settings->get_curve_threshold()*2)){
-                newPath.push_back(pathSeg);
-            }
+            //else if((pathSeg->get_length()<settings->get_thresholdx2())&&(pathSeg->get_curviness() <= settings->get_curve_threshold()*2)){
+            //    newPath.push_back(pathSeg);
+            //}
 			else{
 				hasSomethingTosubdivide=true;
 				std::vector<double> newPoints;

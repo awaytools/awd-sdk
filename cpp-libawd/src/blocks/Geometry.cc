@@ -30,6 +30,10 @@ Geometry::Geometry(std::string& name) :
 	this->split_faces = false;
 	this->originalPointCnt = 0;
 	this->mesh_instance=NULL;
+	this->max_x=std::numeric_limits<double>::max()*-1;
+	this->max_y=std::numeric_limits<double>::max()*-1;
+	this->min_x=std::numeric_limits<double>::max();
+	this->min_y=std::numeric_limits<double>::max();
 }
 
 Geometry::Geometry():
@@ -44,6 +48,10 @@ Geometry::Geometry():
 	this->split_faces = false;
 	this->originalPointCnt = 0;
 	this->mesh_instance=NULL;
+	this->max_x=std::numeric_limits<double>::max()*-1;
+	this->max_y=std::numeric_limits<double>::max()*-1;
+	this->min_x=std::numeric_limits<double>::max();
+	this->min_y=std::numeric_limits<double>::max();
 }
 
 Geometry::Geometry(bool delete_subs):
@@ -58,6 +66,10 @@ Geometry::Geometry(bool delete_subs):
 	this->split_faces = false;
 	this->originalPointCnt = 0;
 	this->mesh_instance=NULL;
+	this->max_x=std::numeric_limits<double>::max()*-1;
+	this->max_y=std::numeric_limits<double>::max()*-1;
+	this->min_x=std::numeric_limits<double>::max();
+	this->min_y=std::numeric_limits<double>::max();
 }
 Geometry::~Geometry()
 {
@@ -164,7 +176,12 @@ Geometry::get_num_subs()
 	}
 	return subgeo_cnt;
 }
-
+result 
+Geometry::add_path_subgeo(GEOM::SubShapePath* subShapePath)
+{
+	this->subShapePath.push_back(subShapePath);
+	return result::AWD_SUCCESS;
+}
 result 
 Geometry::add_filled_region(GEOM::FilledRegion* filled_region)
 {
@@ -360,6 +377,92 @@ Geometry::set_originalPointCnt(int newPointCnt)
 	this->originalPointCnt = newPointCnt;
 }
 
+void
+Geometry::createSlice9Scale(TYPES::F32 x, TYPES::F32 y, TYPES::F32 width, TYPES::F32 height)
+{
+	this->max_x=std::numeric_limits<double>::max()*-1;
+	this->max_y=std::numeric_limits<double>::max()*-1;
+	this->min_x=std::numeric_limits<double>::max();
+	this->min_y=std::numeric_limits<double>::max();
+
+	for(SubGeom * subGeom: this->subGeometries){
+		subGeom->calculate_bounds();
+		if(subGeom->min_x<this->min_x){
+			this->min_x=subGeom->min_x;
+		}
+		if(subGeom->min_y<this->min_y){
+			this->min_y=subGeom->min_y;
+		}
+		if(subGeom->max_x>this->max_x){
+			this->max_x=subGeom->max_x;
+		}
+		if(subGeom->max_y>this->max_y){
+			this->max_y=subGeom->max_y;
+		}
+	}
+	if(this->max_x<width){
+		this->max_x=width;
+	}
+	if(this->min_x>x){
+		this->min_x=x;
+	}
+	if(this->max_y<height){
+		this->max_y=height;
+	}
+	if(this->min_y>y){
+		this->min_y=y;
+	}
+	for(SubGeom * subGeom: this->subGeometries){
+		subGeom->createSlice9Scale(x, y, width, height, this->min_x, this->min_y, this->max_x, this->max_y);
+	}
+}
+result
+Geometry::calculate_uint16_positions()
+{
+	this->max_x=std::numeric_limits<double>::max()*-1;
+	this->max_y=std::numeric_limits<double>::max()*-1;
+	this->min_x=std::numeric_limits<double>::max();
+	this->min_y=std::numeric_limits<double>::max();
+
+	for(SubGeom * subGeom: this->subGeometries){
+		subGeom->calculate_bounds();
+		if(subGeom->min_x<this->min_x){
+			this->min_x=subGeom->min_x;
+		}
+		if(subGeom->min_y<this->min_y){
+			this->min_y=subGeom->min_y;
+		}
+		if(subGeom->max_x>this->max_x){
+			this->max_x=subGeom->max_x;
+		}
+		if(subGeom->max_y>this->max_y){
+			this->max_y=subGeom->max_y;
+		}
+	}
+			
+	double shapeWidth = this->max_x - this->min_x;
+	double shapeHeight = this->max_y - this->min_y;
+
+	double shapeScaleX = 65535 / shapeWidth;
+	double shapeScaleY = 65535 / shapeHeight;
+	this->uint16_offsetX = -this->min_x;
+	this->uint16_offsetY = -this->min_y;
+	this->uint16_scaleX = 1/shapeScaleX;
+	this->uint16_scaleY = 1/shapeScaleY;
+	
+	for(SubGeom * subGeom: this->subGeometries){
+		subGeom->set_uint16_positions(this->min_x, this->min_y, shapeScaleX, shapeScaleY, shapeWidth, shapeHeight);
+		subGeom->uint16_offsetX=this->uint16_offsetX;
+		subGeom->uint16_offsetY=this->uint16_offsetY;
+		subGeom->uint16_scaleX=this->uint16_scaleX;
+		subGeom->uint16_scaleY=this->uint16_scaleY;
+	}
+
+
+	
+	
+	return result::AWD_SUCCESS;
+}
 TYPES::UINT32
 Geometry::calc_body_length(AWDFile* awd_file, BlockSettings * settings)
 {
@@ -375,6 +478,9 @@ Geometry::calc_body_length(AWDFile* awd_file, BlockSettings * settings)
 		mesh_len += subGeom->calc_sub_length();
 	}
 	
+	for(SubShapePath * subShape: this->subShapePath){
+		mesh_len += subShape->get_bytesize();
+	}
 
 	return mesh_len;
 }
@@ -505,6 +611,8 @@ Geometry::merge_for_textureatlas(BLOCKS::Material* thisMat, BLOCKS::Material* th
 	if(this->subGeometries.size()==0){
 		return result::AWD_ERROR;
 	}
+	
+	this->calculate_uint16_positions();
 	for(SubGeom * subGeom: this->subGeometries){
 		subGeom->set_uvs();
 		BLOCKS::Material* subgeom_mat = reinterpret_cast<BLOCKS::Material*>(subGeom->material_block);
@@ -556,76 +664,6 @@ Geometry::merge_for_textureatlas(BLOCKS::Material* thisMat, BLOCKS::Material* th
 		this->subGeometries.push_back(subGeom);
 	}
 	
-	return result::AWD_SUCCESS;
-}
-result 
-Geometry::merge_for_textureatlas_refactor(BLOCKS::Material* thisMat, BLOCKS::Material* thisMat_alpha, BLOCKS::Material* radial_mat,  BLOCKS::Material* radial_mat_alpha, AWD::SETTINGS::Settings* settings)
-{
-	// first normally merge the subgeom
-
-	if(this->subGeometries.size()==0){
-		return result::AWD_ERROR;
-	}
-	for(SubGeom * subGeom: this->subGeometries){
-		subGeom->set_uvs();
-		BLOCKS::Material* subgeom_mat = reinterpret_cast<BLOCKS::Material*>(subGeom->material_block);
-		if(subgeom_mat!=NULL){
-			BLOCKS::Material* merged_mat=NULL;
-			if(subgeom_mat->get_material_type()==MATERIAL::type::SOLID_COLOR_MATERIAL){
-				if(subgeom_mat->needsAlphaTex)
-					merged_mat=thisMat_alpha;
-				else
-					merged_mat=thisMat;
-			}
-			else if(subgeom_mat->get_material_type()==MATERIAL::type::LINEAR_GRADIENT_TEXTUREATLAS_MATERIAL){
-				if(subgeom_mat->needsAlphaTex)
-					merged_mat=thisMat_alpha;
-				else
-					merged_mat=thisMat;
-			}
-			else if(subgeom_mat->get_material_type()==MATERIAL::type::RADIAL_GRADIENT_TEXTUREATLAS_MATERIAL){
-				if(subgeom_mat->needsAlphaTex)
-					merged_mat=radial_mat_alpha;
-				else
-					merged_mat=radial_mat;
-			}
-			if(merged_mat!=NULL){
-				subGeom->material_block=merged_mat;
-			}
-		}
-	}
-
-	
-	std::vector<SubGeom* > new_subgeos;
-	new_subgeos.push_back(this->subGeometries.back());
-	for(SubGeom * subGeom: this->subGeometries){
-		if(subGeom!=this->subGeometries.back()){
-			bool found = false;
-			for(SubGeom * new_subgeo: new_subgeos){
-				if(new_subgeo->merge_subgeo(subGeom)==result::AWD_SUCCESS){
-					found=true;
-					break;
-				}
-			}
-			if(!found){
-				new_subgeos.push_back(subGeom);
-			}
-		}
-	}
-	this->subGeometries.clear();
-	GEOM::SubGeom* new_subgeom = new SubGeom(settings);
-	this->subGeometries.push_back(new_subgeom);
-	for(SubGeom * subGeom: new_subgeos){
-		subGeom->merge_stream_refactor(new_subgeom);
-		this->subGeometries.push_back(subGeom);
-	}
-	
-	// we create 1 new subgeom, that will store the indices and verts for all subgeos
-	// other subgeos only point into this subgeom
-
-
-
-
 	return result::AWD_SUCCESS;
 }
 
@@ -646,6 +684,9 @@ Geometry::write_body(FileWriter * fileWriter, BlockSettings *settings, FILES::AW
 		num_subs += subGeom->get_num_subs();
 		num_subs_simple+=1;
 	}
+	for(SubShapePath * subShape: this->subShapePath){
+		num_subs += 1;
+	}
 	if(num_subs_simple!=num_subs){
 	}
 	BLOCKS::Geometry::subgeomcnt+=num_subs;
@@ -657,6 +698,9 @@ Geometry::write_body(FileWriter * fileWriter, BlockSettings *settings, FILES::AW
 	// Write all sub-meshes
 	for(SubGeom * subGeom: this->subGeometries){
 		subGeom->write_sub(fileWriter);
+	}
+	for(SubShapePath * subShape: this->subShapePath){
+		subShape->writeToFile(fileWriter);
 	}
 
 	// Write list of user attributes

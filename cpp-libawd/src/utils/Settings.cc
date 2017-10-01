@@ -184,7 +184,7 @@ BlockSettings::~BlockSettings()
 }
 
 void
-BlockSettings::create_streams(bool tri_indices, bool uvs, bool curveData)
+BlockSettings::create_streams(bool tri_indices, bool uvs, bool curveData, bool int16verts)
 {
 	this->stream_recipes.clear();
 	// define streams for triangle. this is the same for 2d and 3d verts
@@ -200,26 +200,51 @@ BlockSettings::create_streams(bool tri_indices, bool uvs, bool curveData)
 	// define streams for combined vertex stuff 2d:
 	std::vector<GEOM::DataStreamAttrDesc> vertex2D_attributes;
 
-	GEOM::DataStreamAttrDesc attribute_desc_position2d = DataStreamAttrDesc(data_stream_attr_type::POSITION2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-	vertex2D_attributes.push_back(attribute_desc_position2d);
+	if(!int16verts){
+		GEOM::DataStreamAttrDesc attribute_desc_position2d = DataStreamAttrDesc(data_stream_attr_type::POSITION2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+		vertex2D_attributes.push_back(attribute_desc_position2d);
 	
-	if(curveData){
-		GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D_INT, data_types::VECTORINT3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-		//GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-		vertex2D_attributes.push_back(attribute_desc_curve_data);
-	}	
-	if(uvs){
-		//GEOM::DataStreamAttrDesc attribute_desc_uv2d_data = DataStreamAttrDesc(data_stream_attr_type::UV_2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-		//vertex2D_attributes.push_back(attribute_desc_uv2d_data);
-			//GEOM::DataStreamAttrDesc attribute_desc_color = DataStreamAttrDesc(data_stream_attr_type::COLOR, data_types::VECTOR4x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
-			//vertex2D_attributes.push_back(attribute_desc_color);
-	}
+		if(curveData){
+			GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D_INT, data_types::VECTORINT3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+			//GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+			vertex2D_attributes.push_back(attribute_desc_curve_data);
+		}	
+		if(uvs){
+			//GEOM::DataStreamAttrDesc attribute_desc_uv2d_data = DataStreamAttrDesc(data_stream_attr_type::UV_2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+			//vertex2D_attributes.push_back(attribute_desc_uv2d_data);
+				//GEOM::DataStreamAttrDesc attribute_desc_color = DataStreamAttrDesc(data_stream_attr_type::COLOR, data_types::VECTOR4x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+				//vertex2D_attributes.push_back(attribute_desc_color);
+		}
 	
-	if(curveData){
-		this->stream_recipes.push_back(new DataStreamRecipe(stream_type::ALLVERTDATA2D__2F3B,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+		if(curveData){
+			this->stream_recipes.push_back(new DataStreamRecipe(stream_type::ALLVERTDATA2D__2F3B,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+		}
+		else{
+			this->stream_recipes.push_back(new DataStreamRecipe(stream_type::COMBINED_POSITION_2D,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+		}
 	}
-	else{
-		this->stream_recipes.push_back(new DataStreamRecipe(stream_type::COMBINED_POSITION_2D,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+	if(int16verts){
+		GEOM::DataStreamAttrDesc attribute_desc_position2d = DataStreamAttrDesc(data_stream_attr_type::POSITION2D_UINT16, data_types::UINT16, 2, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+		vertex2D_attributes.push_back(attribute_desc_position2d);
+	
+		if(curveData){
+			GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D_INT, data_types::VECTORINT3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+			//GEOM::DataStreamAttrDesc attribute_desc_curve_data = DataStreamAttrDesc(data_stream_attr_type::CURVE_DATA_2D, data_types::VECTOR3x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+			vertex2D_attributes.push_back(attribute_desc_curve_data);
+		}	
+		if(uvs){
+			//GEOM::DataStreamAttrDesc attribute_desc_uv2d_data = DataStreamAttrDesc(data_stream_attr_type::UV_2D, data_types::VECTOR2x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+			//vertex2D_attributes.push_back(attribute_desc_uv2d_data);
+				//GEOM::DataStreamAttrDesc attribute_desc_color = DataStreamAttrDesc(data_stream_attr_type::COLOR, data_types::VECTOR4x1, 1, storage_precision_category::FORCE_FILESIZE, true, true, true, false, "");
+				//vertex2D_attributes.push_back(attribute_desc_color);
+		}
+	
+		if(curveData){
+			this->stream_recipes.push_back(new DataStreamRecipe(stream_type::ALLVERTDATA2D_2xINT16_3xINT8,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+		}
+		else{
+			this->stream_recipes.push_back(new DataStreamRecipe(stream_type::COMBINED_POSITION_2D_INT16,	stream_target::VERTEX_STREAM, vertex2D_attributes));
+		}
 	}
 		
 		/*

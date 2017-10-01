@@ -87,15 +87,21 @@ FileWriter::writeUINTSasSmallestData(std::vector<TYPES::UINT32> value_32)
 	this->writeUINT8(storage_precision);
 	if(storage_precision==1){
 		this->writeUINT32(value_8.size());
-		this->writeUINT8multi(&value_8[0], value_8.size());
+		if(value_8.size()>0){
+			this->writeUINT8multi(&value_8[0], value_8.size());
+		}
 	}
 	else if(storage_precision==2){
 		this->writeUINT32(value_16.size() * 2);
-		this->writeUINT16multi(&value_16[0], value_16.size());
+		if(value_16.size()>0){
+			this->writeUINT16multi(&value_16[0], value_16.size());
+		}
 	}
 	else{
 		this->writeUINT32(value_32.size() * 4);
-		this->writeUINT32multi(&value_32[0], value_32.size());
+		if(value_32.size()>0){
+			this->writeUINT32multi(&value_32[0], value_32.size());
+		}
 	}
 
 

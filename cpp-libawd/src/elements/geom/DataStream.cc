@@ -136,6 +136,10 @@ DataStreamRecipe::DataStreamRecipe(GEOM::stream_type stream_type, GEOM::stream_t
 			return;
 		}
 	}
+	if(this->stream_type==stream_type::ALLVERTDATA2D_2xINT16_3xINT8){
+		this->homogen=false;
+	}
+
 }
 DataStreamRecipe::~DataStreamRecipe()
 {

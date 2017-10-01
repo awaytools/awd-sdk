@@ -213,7 +213,9 @@ AWDProject::processSlice9ScaleMcs()
 			}
 
 		}
-	}
+    }
+    return result::AWD_SUCCESS;
+    
 }
 result
 AWDProject::create_merged_streams()
